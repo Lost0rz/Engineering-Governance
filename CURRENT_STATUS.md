@@ -4,39 +4,38 @@ Last verified: 2026-10-06
 
 ## Project
 
-- Repository: `Lost0rz/Engineering-Governance`.
-- Default branch: `main`.
-- Control baseline before this update: `a61163383bc55652443c6f20ecdc4595d4d2fb25`.
-- Current stage: **Phase 1 — Reference Audit / Governance Model synthesis**.
-- Governance model: **candidate, NOT frozen**.
-- Automation skills: **NOT implemented**.
-- MCP: **NOT authorized**.
-- First pilot: **InvestDesk**, for read-only reality checking.
+- Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
+- Live `origin/main` verified before this handoff update:
+  `8c94168beee6c93d3a86fae3bcac83c70cba0ec4`.
+- Active task branch: `codex/eg-v01-reference-synthesis`.
+- Task PR: [Draft PR #1](https://github.com/Lost0rz/Engineering-Governance/pull/1).
+- Current state: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+- Governance Model v0.1: documentary candidate; **NOT accepted or frozen**.
+- Bootstrap, Doctor, executable Audit, CLI, MCP, daemon, enforcement, and
+  remediation: not implemented/authorized by this task.
 
-## Candidate direction under review
+## Candidate and evidence
 
-- Seven lifecycle layers and six cross-cutting axes are hypotheses, not frozen
-  classifications; the reference audit may revise either count.
-- Keep canonical authorities Git-native and map project-specific ownership
-  locally.
-- Reuse one candidate model for future Bootstrap, Doctor, and Audit tools.
-- Separate check/evaluation decisions from enforcement actions.
-- Require executor evidence followed by independent Web audit before candidate
-  acceptance.
-
-## Active work
-
-- Task: `EG-V01-REFERENCE-SYNTHESIS-001`.
-- Current task contract: `CURRENT_TASK.md`.
-- Scope includes reference research, candidate synthesis, read-only InvestDesk
-  reality check, adversarial review, and an independent-audit handoff.
-- No InvestDesk files are authorized to change.
-
-## Verified recovery baseline
-
-- Engineering-Governance live `origin/main` at recovery: `a61163383bc55652443c6f20ecdc4595d4d2fb25`.
-- InvestDesk live `origin/main` and canonical local `main` after ff-only sync:
+- Eight primary-reference audits, common 14-question coverage, and explicit
+  ADOPT/ADAPT/DEFER/REJECT dispositions are under `docs/reference-audit/`.
+- Synthesis and `EngineeringGovernanceStandard` candidate are under
+  `docs/governance/v0.1/`.
+- InvestDesk read-only reality check is at
+  `docs/reality-checks/investdesk.md`; inspected canonical revision was
   `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- InvestDesk worktree was clean; only its canonical `main` worktree was listed.
-- InvestDesk active task is `MVP-D Decision ↔ Transaction Traceability
-  Planning Gate`, `ACTIVE — CONTRACT / AUTHORITY AUDIT ONLY`.
+- InvestDesk files were not modified by this task. Its active task remains
+  `MVP-D Decision ↔ Transaction Traceability Planning Gate`,
+  `ACTIVE — CONTRACT / AUTHORITY AUDIT ONLY`.
+- Adversarial review was executor-performed, not independent. No BLOCKER or
+  MAJOR remains; two MINOR model-stability/freshness questions are recorded.
+
+## Verification and handoff
+
+- Documentation static checks: `git diff --check`, local Markdown links,
+  eight audits × 14 questions, and required candidate concepts passed.
+- No tests or runtime checks were run; this task changes documentation only.
+- Before final control-plane synchronization, task branch checkpoint
+  `a2b8fd30221c8c783615bd2d8021e7057e7e94fd` matched its remote. The final
+  control-plane commit and pushed HEAD are verified in Git during handoff.
+- Draft PR remains open for independent Web audit; do not merge or accept on
+  behalf of the reviewer.
