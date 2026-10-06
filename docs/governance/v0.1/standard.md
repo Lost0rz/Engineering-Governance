@@ -13,7 +13,7 @@
 
 Version format uses `MAJOR.MINOR.PATCH` plus a prerelease label. A candidate
 version is unstable. After acceptance, a major increment may change authority
-semantics, required evidence meaning, profile precedence, or decision states;
+routing, required evidence meaning, profile semantics, or decision states;
 a minor increment may add backward-compatible optional fields or checks; a
 patch increment may clarify wording without changing obligations. If a
 purported patch changes meaning, it is a minor or major change instead.
@@ -25,14 +25,19 @@ purported patch changes meaning, it is a minor or major change instead.
    become that fact's authority.
 2. Every evaluation MUST identify the target, standard/profile version,
    applicable check version, evidence, evaluator/reviewer mode, and time.
-3. Unknown, unavailable, stale, not applicable, and failed are distinct
-   outcomes. Missing evidence MUST NOT be treated as pass.
-4. AI output is an input to review, never canonical project authority or a
-   final human acceptance.
+3. An evaluation result, evidence freshness, exception state, and project
+   decision disposition MUST be recorded separately. Missing evidence MUST
+   NOT be treated as pass.
+4. AI-derived analysis MUST cite underlying source evidence and MUST remain
+   derived/advisory. It MUST NOT independently satisfy a factual PASS/FAIL
+   evidence requirement unless the check explicitly evaluates the AI artifact
+   itself. AI output is never canonical project authority or final acceptance
+   of its own earlier output.
 5. Evaluation and enforcement MUST be separately identified. v0.1 is
    advisory; any gate requires an explicitly named human/project gate owner.
-6. A waiver changes the disposition of one bounded governance obligation; it
-   does not rewrite the underlying fact or make false evidence true.
+6. An exception or project decision may affect the current disposition of one
+   bounded governance obligation; neither rewrites an underlying fact or
+   historical evaluation result, nor makes false evidence true.
 7. Observed current state (`AS_IS`) and proposed future state (`TO_BE`) MUST
    be labeled separately.
 
@@ -49,12 +54,20 @@ currently conforms.
 
 ## Conformance and decision boundary
 
-An evaluation may produce `PASS`, `FAIL`, `UNVERIFIED`, `NOT_APPLICABLE`, or
-`STALE`. A `FAIL` may create a finding. Only the project's authorized
-decision-maker or an explicitly configured gate decides whether a finding
-blocks a project action. The evaluator MUST NOT repair source state. A status
-check or CI gate is an external decision consumer, not an implicit property
-of a check.
+An evaluation records `result`: `PASS`, `FAIL`, `UNVERIFIED`, or
+`NOT_APPLICABLE`. A separate, time-scoped freshness assessment records
+`CURRENT`, `STALE`, or `UNKNOWN` for its evidence and dependencies. The
+historical result MUST NOT be rewritten when freshness changes. A stale or
+unknown assessment cannot support a current PASS claim; it requires a new
+evaluation before a current conformance decision.
+
+Exception state and project decision disposition are separate records from
+both result and freshness. Expiry or revocation changes the exception's
+current state, not the historical result. A `FAIL` may create a finding. Only
+the project's authorized decision-maker or an explicitly configured gate
+decides the finding's current disposition and whether it blocks a project
+action. The evaluator MUST NOT repair source state. A status check or CI gate
+is an external decision consumer, not an implicit property of a check.
 
 Candidate state is `WAITING_FOR_INDEPENDENT_WEB_AUDIT`. Only that audit can
 accept, require correction, request more evidence, or declare the task

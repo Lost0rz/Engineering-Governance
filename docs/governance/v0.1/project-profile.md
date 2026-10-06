@@ -12,7 +12,6 @@ runtime truth.
 - `profile_id`, `profile_version`, `project_id`, `status` (`DRAFT`,
   `ACTIVE`, `RETIRED`).
 - `standard_id`, exact `standard_version`.
-- Optional `parent_profile` with exact identity/version; at most one parent.
 - `canonical_repository`, default branch, and verified revision for an
   evaluation snapshot.
 - `authority_map` location or inline reference to [authority-model.md](authority-model.md).
@@ -22,13 +21,18 @@ runtime truth.
   review date, and expiry when temporary.
 - `decision_owner` and project escalation/contact route.
 
-## Precedence
+## Profile resolution
 
 1. Non-overridable standard invariants.
-2. One selected parent profile's defaults, if any.
-3. Explicit project-local profile values and overrides.
+2. Defaults defined by the exact pinned standard version.
+3. Explicit values and overrides in this standalone project profile.
 4. Evaluation-time evidence can establish observed state but cannot rewrite
    the profile or canonical project fact.
+
+v0.1 profiles do not inherit from another profile. Parent-profile inheritance
+is deferred; projects that need different settings record them explicitly in
+their own profile until repeated cross-project evidence justifies a later
+versioned design.
 
 An accepted project contract/ADR defines semantics for its domain. A profile
 cannot contradict that contract by assigning a competing authority. If two
@@ -41,8 +45,8 @@ decision pending resolution. No implicit “last writer wins.”
 A small project may use a single short profile containing the pinned standard
 version, repository/revision, a few relevant authority owners, only the checks
 that apply, and evidence pointers. It need not create one artifact per
-lifecycle layer, a full architecture map, or a parent profile. Unselected
-checks are not represented as passes.
+lifecycle layer or a full architecture map. Unselected checks are not
+represented as passes.
 
 ## Adoption and change
 

@@ -17,21 +17,26 @@
 - Explicit lifecycle/status and rationale for material decisions (MADR).
 - Quality scenarios and prioritized risks/debt as linked architecture
   evidence (arc42).
-- Project-local overrides whose precedence and scope are reviewable (Allstar,
-  adapted away from its GitHub-specific control plane).
+- Explicit project-local override selection within the same configuration
+  class (Allstar, adapted away from its GitHub-specific control plane).
 
 ## Adapted mechanisms
 
 - **Catalog:** use a repository-local `ProjectProfile` and authority map;
   treat indexes and generated views only as projections that point back to
   canonical inputs.
-- **Policy configuration:** defaults flow to one optional parent profile and
-  then project overrides. Core authority and evidence invariants cannot be
-  overridden. A conflict with a canonical project fact is a blocker, not a
-  precedence trick.
-- **Automated results:** retain check identity, evaluator/input revisions,
-  reason, evidence and freshness. Unknown, unavailable, stale, and not
-  applicable remain different states.
+- **Policy configuration:** defaults come from the pinned standard, with
+  explicit project-local selections and overrides. Core invariants cannot be
+  overridden. Parent-profile inheritance is deferred from v0.1; a conflict
+  with a canonical project fact is a blocker, not a precedence trick.
+- **Authority routing:** map product/domain semantics, repository state,
+  current-state snapshots, execution scope, runtime/data facts, and derived
+  outputs by claim class. Resolve precedence only among competing sources for
+  the same claim/action class.
+- **Evaluation and freshness:** retain an immutable historical result with
+  evaluator/input revisions, reason, and evidence. Report freshness
+  (`CURRENT`, `STALE`, `UNKNOWN`) separately; exception status and project
+  decision disposition are separate again.
 - **Architecture relationships:** model only relevant owners, facts,
   consumers, and contract edges. Label current observations `AS_IS` and
   proposed changes `TO_BE` explicitly; this distinction is our adaptation,
@@ -52,6 +57,8 @@
 - A full arc42 package or mandatory context-map DSL for every project.
 - A broad reusable security check library and a long-term compatibility
   support policy.
+- Parent-profile inheritance; explicit project-local values are simpler for
+  the current evidence, which includes only one pilot project.
 - Tool-specific enforcement integrations, pending a later independently
   reviewed decision and authorization.
 
@@ -74,13 +81,10 @@
    especially the distinct runtime and incident-feedback boundaries?
 2. Are six cross-cutting axes understandable and non-overlapping enough to
    remain stable? They are descriptive review dimensions, not six more stages.
-3. Should all v0.1 profiles have one optional parent, or should inheritance be
-   removed entirely for the first implementation? Candidate default is at
-   most one parent to avoid diamond precedence.
-4. What minimum authority-map fields are useful for the smallest repository
+3. What minimum authority-map fields are useful for the smallest repository
    without creating documentation that merely repeats its AGENTS/ADR/task
    controls?
-5. Which future evaluator should consume the contract first, and what
+4. Which future evaluator should consume the contract first, and what
    explicit implementation and enforcement authorization would that require?
 
 ## Candidate decision

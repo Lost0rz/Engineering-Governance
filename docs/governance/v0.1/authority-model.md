@@ -39,28 +39,33 @@ source. A read projection may be authoritative for its own returned shape
 while still being derived from another canonical fact source; record both
 scopes explicitly.
 
-## Default authority order
+## Typed authority routing
 
-The applicable project controls declare actual authority. As a navigation
-order when inspecting an adopted repository:
+Authority classes are distinct; they do not form a total precedence list.
+Each claim or action is routed to the owner for its class:
 
-1. The canonical owner for the fact class in question.
-2. Accepted domain/product/architecture contract defining its semantics.
-3. Verified Git/GitHub state for repository, branch, commit, PR and CI facts.
-4. Root `AGENTS.md` for stable workflow boundaries.
-5. `CURRENT_STATUS.md` for concise current-state claims.
-6. `CURRENT_TASK.md` for active task scope and acceptance.
-7. Evaluations, findings, summaries, generated views, and AI suggestions as
-   derived evidence only.
+| Claim/action class | Authority and boundary |
+|---|---|
+| Product, domain, and architecture semantics | The project's declared canonical product/domain source and accepted contract/ADR define meaning. They do not grant permission to perform work outside the active task. |
+| Repository and remote-host state | Verified Git/GitHub state owns repository, branch, commit, PR, and CI claims. Those facts do not decide product semantics. |
+| Shared current-state snapshot | `CURRENT_STATUS.md` publishes a concise verified project snapshot for coordination. It is authoritative for the snapshot it declares, but cannot rewrite the underlying semantic, Git, runtime, or data facts it summarizes. |
+| Execution authorization and scope | User authorization and the active `CURRENT_TASK.md` define what work is allowed now, subject to durable `AGENTS.md` workflow rules. A task cannot rewrite canonical business/domain truth. |
+| Runtime and data facts | Use the project-declared runtime or data authority for that fact, with verified identity, scope, and observation time. |
+| Derived evidence and projections | Evaluations, findings, summaries, generated views, and AI analysis support claims but are not source authorities. |
 
-This list does not override a repository's explicit authority contract. If
-the declared owner differs, follow the declaration only if it is itself
-authorized and verified. Otherwise record a conflict and stop the affected
-decision.
+Business/domain truth does not authorize work outside `CURRENT_TASK.md`;
+`CURRENT_TASK.md` cannot rewrite business/domain truth; Git/GitHub facts do not
+decide product semantics; and findings, evidence, or projections do not
+become source authorities. When two sources compete for the same claim or
+action class, use that class's declared owner and resolution rule. If the
+owner is unclear or evidence cannot resolve a same-class conflict, stop the
+affected decision. Split mixed claims into their distinct classes rather
+than letting one class override another.
 
 ## Change propagation
 
 When an authority changes, identify dependent profile fields, checks, and
-evidence. Mark impacted evaluations stale until the required dependency
-rechecks are complete. Do not copy the changed fact into the finding as a new
-source of truth; retain a link to the authoritative revision.
+evidence. Mark the freshness assessment for impacted evaluations stale until
+required dependency rechecks are complete; preserve each historical result.
+Do not copy the changed fact into the finding as a new source of truth;
+retain a link to the authoritative revision.

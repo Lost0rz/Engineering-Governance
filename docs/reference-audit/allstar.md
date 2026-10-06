@@ -112,17 +112,20 @@ and facts beyond GitHub configuration.
 
 ### 14. Which Governance v0.1 contract should adopt or adapt this mechanism?
 
-**ADAPT** explicit profile inheritance and project overrides, with one
-reviewable precedence rule and a versioned local record. Keep evaluation and
-optional enforcement separate. Do not carry Allstar's GitHub-specific live
-mutation into v0.1.
+**ADAPT** explicit project-local overrides with reviewable resolution and a
+versioned local record. Allstar demonstrates inheritance, but one pilot
+project does not establish a repeated need for parent-profile inheritance, so
+that mechanism is deferred from v0.1. Keep evaluation and optional enforcement
+separate. Do not carry Allstar's GitHub-specific live mutation into v0.1.
 
 ## Mechanism dispositions
 
 - **ADOPT:** configuration precedence must be explicit and project scope must
   be inspectable.
-- **ADAPT:** org/base profile and repository override into a small, Git-versioned
-  ProjectProfile with reasoned exceptions.
+- **ADAPT:** repository-level overrides into a small, standalone,
+  Git-versioned ProjectProfile with reasoned exceptions.
+- **DEFER:** inherited org/base parent profiles until repeated project use
+  demonstrates the need over explicit local values.
 - **DEFER:** recurring policy evaluation and provider-specific issue/check
   integrations.
 - **REJECT:** automatic setting repair, an always-on service, and treating a

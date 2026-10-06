@@ -17,11 +17,15 @@ A temporary exception record includes:
 - required compensating controls, if any;
 - version/history and `revocation` state, actor, date, and rationale.
 
-An exception MUST expire or be explicitly renewed by its grantor. On expiry,
-the evaluation becomes `STALE`/requires review; it does not auto-pass and the
-tool does not auto-remediate. Revocation ends the exception prospectively;
-the source fact remains unchanged. A permanent design choice belongs in an
-accepted contract/profile, not an endlessly renewed waiver.
+An exception MUST expire or be explicitly renewed by its grantor. Its current
+status is `ACTIVE`, `EXPIRED`, or `REVOKED` (or `NONE` when no exception
+exists), assessed independently from the evaluation result and evidence
+freshness. On expiry, the exception effect ends and a project decision that
+relied on it may require a new decision. Expiry MUST NOT rewrite a historical
+`PASS` or `FAIL`, nor by itself make the evidence stale. The tool does not
+auto-pass or auto-remediate. Revocation ends the exception prospectively; the
+source fact and prior evaluation remain unchanged. A permanent design choice
+belongs in an accepted contract/profile, not an endlessly renewed waiver.
 
 ## Freshness and drift
 
@@ -41,10 +45,12 @@ candidate distinguishes:
   its source artifact is unavailable/unverifiable.
 
 For each dependency, a check definition says which change signal matters and
-which rechecks are required. A drift signal invalidates only dependent
-evaluations/findings, not every result globally. If impact cannot be bounded,
-mark affected results `STALE` or `UNVERIFIED` and widen review conservatively.
-No background scanner is implied.
+which rechecks are required. A drift signal changes the freshness assessment
+only for dependent evaluations; it does not rewrite their historical result
+or finding history. If impact cannot be bounded, set freshness to `UNKNOWN`
+or `STALE` and widen review conservatively. A new evaluation may then produce
+a new result. Exception expiry alone is not evidence drift. No background
+scanner is implied.
 
 ## Compatibility and migration
 
@@ -55,9 +61,10 @@ window. A project records adoption of a new version and any transition plan.
 
 Before acceptance, `0.1.0-candidate.N` revisions may change incompatibly. On
 acceptance, freeze a stable `0.1.0` or explicitly choose a different initial
-version. A change to authority precedence, result meaning, exception semantics,
-or required evidence is breaking and requires a major version once stability
-is promised. Never infer compatibility solely from matching field names.
+version. A change to same-class authority resolution, result meaning,
+exception semantics, or required evidence is breaking and requires a major
+version once stability is promised. Never infer compatibility solely from
+matching field names.
 
 ## Review and revocation
 

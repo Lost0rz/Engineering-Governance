@@ -63,21 +63,36 @@ it does not replace a project's product, domain, data, or runtime authorities.
   plugin frameworks are not part of v0.1 unless a later task explicitly
   changes scope.
 
-## Control authority order
+## Authority routing by claim class
 
-Resolve governance coordination using this order, without allowing a lower
-item to rewrite facts owned by a higher or canonical project authority:
+Route each claim or action to its authority class. These classes are not one
+global precedence list:
 
-1. Canonical project authority for the specific fact or decision class.
-2. Accepted project contracts and architecture decisions that define its
-   meaning and boundaries.
-3. Verified Git and remote-host state for repository, branch, commit, pull
-   request, and check-run facts.
-4. This repository's `AGENTS.md` for durable local operating rules.
-5. `CURRENT_STATUS.md` for the latest verified project snapshot.
-6. `CURRENT_TASK.md` for one authorized objective and its work boundary.
-7. Findings and evidence produced within that boundary.
+- **Product/domain/architecture semantics:** the project's declared product,
+  domain, and accepted architecture contracts define meaning. They do not
+  authorize work outside the active task scope.
+- **Repository/remote state:** verified Git and GitHub state owns branch,
+  commit, pull request, and check-run claims. Those facts do not decide product
+  semantics.
+- **Shared current-state snapshot:** `CURRENT_STATUS.md` publishes the
+  project's concise verified snapshot. It is a coordination view of its
+  declared fields, not a replacement for the underlying semantic, Git,
+  runtime, or data authority.
+- **Execution authorization and scope:** the user's authorization and active
+  `CURRENT_TASK.md` define the work allowed now, constrained by durable
+  workflow rules in `AGENTS.md`. Task scope cannot rewrite canonical business
+  truth, and business truth cannot expand task scope.
+- **Runtime/data facts:** use the project-declared runtime or data authority
+  for that fact class, verifying its identity, scope, and observation time.
+- **Derived outputs:** evaluations, findings, evidence summaries, projections,
+  and AI analysis support claims but do not become source authorities. AI
+  analysis must cite underlying source evidence and remains advisory.
+
+When sources compete for the same claim or action class, use the owner and
+resolution rule declared for that class. If ownership is undeclared or the
+conflict cannot be resolved from verified evidence, stop the affected
+decision and record the blocker. Split a mixed claim into its distinct classes
+instead of letting one class override another.
 
 Governance defaults and project profiles route evaluation; they do not become
-business authorities. If authoritative sources conflict and the conflict
-cannot be resolved from evidence, stop and record the blocker.
+business authorities.

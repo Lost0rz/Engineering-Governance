@@ -40,5 +40,6 @@ source.
 
 Layer exit means sufficient evidence for the next decision, not permanent
 truth. A material authority, scope, contract, or runtime change can reopen a
-layer and stale dependent evidence. The project gate owner decides whether a
+layer and make dependent freshness assessments stale. It does not rewrite
+historical evaluation results. The project gate owner decides whether a
 finding blocks a transition; v0.1 does not do so automatically.
