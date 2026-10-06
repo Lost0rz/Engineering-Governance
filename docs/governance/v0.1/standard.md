@@ -6,17 +6,17 @@
 |---|---|
 | `standard_id` | `EngineeringGovernanceStandard` |
 | `standard_version` | `0.1.0-candidate.1` |
-| `status` | `CANDIDATE` |
-| `effective_date` | unset until independent acceptance |
+| `status` | `CANDIDATE — INDEPENDENT_WEB_AUDIT_PASSED / READY_FOR_MERGE` |
+| `effective_date` | unset until merge and stable acceptance closeout |
 | `supersedes` | none |
-| `compatibility` | candidate consumers must pin the exact version and may not claim conformance |
+| `compatibility` | candidate consumers must pin the exact version and may not claim stable conformance |
 
 Version format uses `MAJOR.MINOR.PATCH` plus a prerelease label. A candidate
-version is unstable. After acceptance, a major increment may change authority
-routing, required evidence meaning, profile semantics, or decision states;
-a minor increment may add backward-compatible optional fields or checks; a
-patch increment may clarify wording without changing obligations. If a
-purported patch changes meaning, it is a minor or major change instead.
+version is unstable. After stable acceptance, a major increment may change
+authority routing, required evidence meaning, profile semantics, or decision
+states; a minor increment may add backward-compatible optional fields or
+checks; a patch increment may clarify wording without changing obligations.
+If a purported patch changes meaning, it is a minor or major change instead.
 
 ## Core invariants
 
@@ -69,6 +69,8 @@ decides the finding's current disposition and whether it blocks a project
 action. The evaluator MUST NOT repair source state. A status check or CI gate
 is an external decision consumer, not an implicit property of a check.
 
-Candidate state is `WAITING_FOR_INDEPENDENT_WEB_AUDIT`. Only that audit can
-accept, require correction, request more evidence, or declare the task
-blocked. Executor completion does not imply acceptance.
+Independent Web re-review of corrective head
+`a44939856d78cc50e55eac0d812b5b6b7a8645a5` found no unresolved BLOCKER or
+MAJOR finding and accepted this candidate for merge. The prerelease remains
+`CANDIDATE` until PR #1 is merged and stable acceptance/closeout is recorded on
+`main`; executor completion alone never constitutes acceptance.

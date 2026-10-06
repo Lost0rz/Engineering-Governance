@@ -1,74 +1,86 @@
-# CURRENT TASK — EG-V01 Reference Synthesis Corrective
+# CURRENT TASK — EG-V01 Reference Synthesis
 
 Task ID: `EG-V01-REFERENCE-SYNTHESIS-001`
 
-State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
+State: `READY_FOR_MERGE — INDEPENDENT_WEB_AUDIT_PASSED`
 
-Mode: `GOVERNANCE_MODEL_CANDIDATE_CORRECTIVE`
+Mode: `GOVERNANCE_MODEL_CANDIDATE_ACCEPTANCE`
 
 ## Objective and result
 
-Correct only the independent Web audit findings on Draft PR #1, preserve the
-reference-audit work that passed review, synchronize the corrected candidate,
-and return it for independent re-review.
+Complete independent review of Draft PR #1 after the executor corrective,
+record the acceptance result, and hand the branch off for an explicitly
+authorized merge and post-merge closeout.
 
-- Reviewed executor handoff: `ac9b1cf631beccdbd9869077d4673848dfb94bb9`.
-- Corrective base: `4631a7c7535f18d1739c467a977b9bd94b62c811`.
-- Corrected task branch is pushed; PR #1 remains OPEN / DRAFT / unmerged.
-- The candidate remains **NOT accepted and NOT frozen**.
+- First executor handoff reviewed: `ac9b1cf631beccdbd9869077d4673848dfb94bb9`.
+- Web corrective-control base: `4631a7c7535f18d1739c467a977b9bd94b62c811`.
+- Corrective head independently re-reviewed:
+  `a44939856d78cc50e55eac0d812b5b6b7a8645a5`.
+- Independent Web re-review result: **PASS**.
+- No unresolved BLOCKER or MAJOR finding remains.
 
-## Audit findings resolved
+## Accepted corrective resolutions
 
-1. **MAJOR — result/freshness/exception/project disposition:** historical
-   evaluation result is `PASS | FAIL | UNVERIFIED | NOT_APPLICABLE`; a separate
-   time-scoped freshness assessment is `CURRENT | STALE | UNKNOWN`; exception
-   status and project decision are independent. Expiry/revocation never
-   rewrites a historical evaluation result.
-2. **MAJOR — typed authorities:** claims route by semantic, repository,
-   snapshot, execution-scope, runtime/data, or derived-output class.
-   Precedence applies only to competing sources for the same claim/action
-   class. Root `AGENTS.md` uses this routing model.
-3. **MINOR — AI evidence:** AI analysis must cite underlying source evidence,
-   remains derived/advisory, and cannot independently satisfy a factual
-   PASS/FAIL requirement unless a check explicitly evaluates the AI artifact.
-4. **MINOR — parent profile:** removed from the v0.1 profile and moved to
-   DEFERRED. One pilot does not show a repeated need; standalone project-local
-   values are the simpler current model.
+1. **Result / freshness / exception / decision separation — ACCEPTED.**
+   Historical evaluation result is immutable for that evaluation; freshness is
+   a separate time-scoped assessment; exception state and project disposition
+   have independent identities and lifecycles.
+2. **Typed authority routing — ACCEPTED.** Claims/actions route to the authority
+   for their class; precedence is evaluated only among competing same-class
+   sources. No cross-type total authority order remains.
+3. **AI evidence boundary — ACCEPTED.** AI-derived analysis must cite
+   underlying source evidence, remains advisory, cannot independently satisfy
+   factual PASS/FAIL evidence unless the check explicitly evaluates the AI
+   artifact, and cannot independently accept its own prior output.
+4. **Parent profile inheritance — ACCEPTED AS DEFERRED.** v0.1 uses standalone
+   project-local profiles; inheritance requires later repeated evidence and a
+   separately versioned design.
 
-No redesign was made to the eight-reference set, seven lifecycle layers, six
-cross-cutting axes, or read-only InvestDesk boundary. No implementation tools
-or automatic enforcement/remediation were added.
+## Scope preserved
 
-## Changed paths
+The accepted candidate retains:
 
-- `AGENTS.md`
-- `CURRENT_STATUS.md`
-- `CURRENT_TASK.md`
-- `docs/governance/v0.1/adversarial-review.md`
-- `docs/governance/v0.1/authority-model.md`
-- `docs/governance/v0.1/checks-evidence-findings.md`
-- `docs/governance/v0.1/exceptions-freshness-versioning.md`
-- `docs/governance/v0.1/lifecycle.md` (freshness wording only)
-- `docs/governance/v0.1/project-profile.md`
-- `docs/governance/v0.1/standard.md`
-- `docs/reference-audit/allstar.md`
-- `docs/reference-audit/synthesis.md`
+- eight structured reference-audit groups;
+- seven lifecycle layers;
+- six cross-cutting axes;
+- Git-native/project-local authority mapping;
+- versioned checks, evidence, findings, exceptions and freshness contracts;
+- explicit evaluation -> finding -> project decision -> optional future
+  enforcement separation;
+- read-only InvestDesk reality-check evidence.
 
-## Validation
+The following remain outside this task:
 
-- `git diff --check` passed.
-- Local Markdown links passed across 23 Markdown files.
-- Static searches confirmed orthogonal result/freshness/exception semantics,
-  typed authority routing, AI evidence limits, and no v0.1 `parent_profile`
-  field or inheritance rule.
-- The lifecycle layer/axis table was not redesigned; only its stale-evidence
-  sentence was clarified.
-- No test suite or runtime check was run; changes are documentation and
-  governance controls only.
+- Bootstrap implementation;
+- Doctor implementation;
+- executable Audit implementation;
+- CLI;
+- MCP;
+- background/continuous enforcement;
+- automatic remediation;
+- modification of InvestDesk.
 
-## Handoff and stop condition
+## Validation basis
 
-Next action is independent Web re-review of
-[Draft PR #1](https://github.com/Lost0rz/Engineering-Governance/pull/1).
-Remain `WAITING_FOR_INDEPENDENT_WEB_AUDIT`; do not merge, accept/freeze v0.1,
-or begin Bootstrap/Doctor/Audit implementation under this task.
+The independent Web re-review verified the live PR metadata/head, compared
+`4631a7c7535f18d1739c467a977b9bd94b62c811` to
+`a44939856d78cc50e55eac0d812b5b6b7a8645a5`, and inspected the corrected
+normative documents and control-plane semantics. The corrective was one commit
+and limited to the authorized twelve paths. Executor static validation remains
+supporting evidence; no executable or runtime content is part of this PR.
+
+## Next action and stop condition
+
+Next action is **merge PR #1 only after explicit user authorization**, then
+perform post-merge acceptance/closeout on `main`.
+
+Until that merge is authorized:
+
+- do not modify the candidate further;
+- do not begin Bootstrap/Doctor/Audit implementation;
+- do not merge automatically;
+- do not delete the task branch/worktree.
+
+Successful pre-merge state:
+
+`READY_FOR_MERGE — INDEPENDENT_WEB_AUDIT_PASSED`
