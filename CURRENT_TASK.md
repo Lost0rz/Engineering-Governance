@@ -1,76 +1,77 @@
-# CURRENT TASK — Skill Repository Redesign Specification Review
+# CURRENT TASK — Skill Repository Skeleton Reset Plan Review
 
-Task ID: `EG-SKILLS-RESTRUCTURE-DESIGN-007`
+Task ID: `EG-SKILLS-RESTRUCTURE-PLAN-008`
 
-State: `WAITING_FOR_USER_SPEC_REVIEW`
+State: `WAITING_FOR_USER_PLAN_REVIEW`
 
-Mode: `ARCHITECTURAL_DESIGN_REVIEW`
+Mode: `ARCHITECTURAL_PLAN_REVIEW`
 
 ## Objective
 
-Review and either accept or revise the written design that resets Engineering-Governance from the previous governance-runtime/tooling direction into a reusable AI engineering-governance Skill source repository.
+Review and either accept or revise the implementation plan for Phase A of the Engineering-Governance redesign.
+
+Phase A performs only the live-tree skeleton reset and legacy-live-tree retirement. It does not enrich the three Skills beyond minimal valid entrypoints and explicit file contracts.
 
 No local restructure implementation is authorized by this task.
 
 ## Authority
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Design-start remote baseline: `d13e6895f6d4bddb753cabcc87566613eaa9bbec`.
-- Design file: `docs/superpowers/specs/2026-10-07-skills-repository-restructure-design.md`.
-- Root repository rules are being updated in the same control commit to reflect the newly accepted repository purpose.
-- Existing stable tag `v0.1.0` must not move.
+- Accepted design: `docs/superpowers/specs/2026-10-07-skills-repository-restructure-design.md`.
+- Design control commit: `33784c83de1a711f0fe83b99efc59d80fceaff68`.
+- Implementation plan: `docs/superpowers/plans/2026-10-07-skill-repository-skeleton-reset-implementation-plan.md`.
+- Plan commit: `82099ad7033d9bdc0aec6b7d880f157008157392`.
+- Stable tag `v0.1.0` must continue to dereference to commit `738627a0caad330d277f60cfdaff5f153593135e`.
 
-## Fixed design requirements from the user
+## Phase A authorized design scope after plan acceptance
 
-1. The repository is a Skill/template/rule/context source for AI agents; it is not a business project template and not an installer.
-2. Target-project adoption is performed by an AI agent after it reads both this repository and the real target project. Templates are adapted, not blindly copied.
-3. The three project control files have standardized roles: `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
-4. Every target project needs a Domain navigation layer that helps an AI understand capability boundaries, authority, code entry points, dependencies, and relevant tests efficiently.
-5. Normal business/product development remains primary. Incident Doctor work is reactive: enter it after a real problem appears, assess whether existing evidence is sufficient, and add only the minimum missing probe.
-6. Testing/verification is risk-tiered rather than uniformly heavy.
-7. The first implementation step establishes the full Skill-repository skeleton and removes the obsolete live runtime/research structure. Skill content is then enriched one module at a time and independently reviewed between slices.
+The future implementation task may:
 
-## Proposed v1 Skill modules
+1. retire the obsolete live Python governance runtime, runtime tests, legacy governance/reality-check/reference-audit trees, and the explicitly obsolete Doctor/Bootstrap planning artifacts listed by the plan;
+2. replace `README.md` with the Skill-source repository identity and AI-adapted usage model;
+3. create exactly three top-level Skill modules: `project-governance`, `domain-navigation`, and `incident-doctor`;
+4. create all reference/template paths defined in the plan with concise Phase A contracts;
+5. create `references/UPSTREAMS.md`, `references/LICENSE_NOTES.md`, and `examples/README.md`;
+6. run `V0` verification only and hand the remote task branch back for independent Web audit.
 
-- `skills/project-governance/`
-- `skills/domain-navigation/`
-- `skills/incident-doctor/`
+## Explicit non-scope
 
-The target structure and exact responsibilities are defined in the design document.
+The Phase A implementation must not:
 
-## Upstream references to incorporate conceptually
+- add an installer or Bootstrap CLI;
+- add executable Doctor/runtime product code;
+- implement a Repo Map program;
+- add a daemon, service, database, enforcement engine, automatic remediation, or MCP prerequisite;
+- copy upstream source code or long-form upstream text;
+- deeply enrich later-phase Skill guidance beyond the contracts required for the skeleton;
+- move the historical `v0.1.0` tag;
+- merge its own task branch.
 
-- Agent Skills / Anthropic skill-creator anatomy and progressive disclosure.
-- AGENTS.md open format.
-- GitHub `awesome-copilot` `acquire-codebase-knowledge`: evidence-first discovery, source-path evidence, explicit unknowns.
-- Aider Repo Map: dynamic code/symbol relevance selection under limited context.
+## Plan review focus
 
-No dependency on those repositories is required, and no upstream code copy is authorized by this design task.
+Accept the plan only if it correctly enforces:
 
-## Design review questions
-
-Accept the written specification only if it correctly captures:
-
-- the final repository identity;
-- the exact target file tree;
-- the retirement of legacy runtime/product code from the live tree while preserving Git history;
-- the boundaries among Project Governance, Domain Navigation, and Incident Doctor;
-- Domain Map versus Repo Map separation;
-- no installer/Bootstrap CLI;
-- proportional verification;
-- staged enrichment and real-project validation.
+- exact live-tree retirement boundaries;
+- exactly three Skill modules;
+- minimal valid Skill frontmatter with distinct triggers;
+- Domain Map / Repo Map separation;
+- business-first / reactive-Doctor behavior;
+- proportional verification with `V0` for this slice;
+- no new executable product/runtime surface;
+- stable-tag preservation;
+- local executor stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 
 ## Stop conditions
 
 STOP if:
 
-- the remote `main` baseline changes unexpectedly before the control commit is established;
-- the design would require preserving the old Doctor/Bootstrap runtime as an active product;
-- implementation work begins before written-spec acceptance;
-- scope expands into an installer, daemon, background enforcement, automatic remediation, or central governance service.
+- `main` moves unexpectedly before a later implementation task captures its exact start baseline;
+- the plan requires preserving the old Doctor/Bootstrap runtime as an active live product;
+- implementation begins while this task is still `WAITING_FOR_USER_PLAN_REVIEW`;
+- scope expands into later Skill enrichment or runtime automation.
 
 ## Current stop point
 
-`WAITING_FOR_USER_SPEC_REVIEW`
+`WAITING_FOR_USER_PLAN_REVIEW`
 
-After user acceptance, Web should invoke the implementation-planning workflow and issue the first local execution card. Do not start local restructuring before that step.
+After explicit plan acceptance, Web must create a separate implementation task, capture the exact remote `main` baseline, authorize one implementation branch, and issue the local execution card. The local executor must return evidence only after pushing a clean matched task branch; Web performs independent audit before merge.
