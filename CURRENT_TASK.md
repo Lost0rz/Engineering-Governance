@@ -2,174 +2,93 @@
 
 Task ID: `EG-V01-DOCTOR-CLI-005`
 
-State: `ACTIVE — LOCAL_IMPLEMENTATION_AUTHORIZED`
+State: `WAITING_FOR_MERGE_AUTHORIZATION`
 
-Mode: `BOUNDED_FEATURE_TDD`
+Mode: `INDEPENDENT_WEB_AUDIT_ACCEPTED`
 
 ## Objective
 
-Turn the already accepted local/offline/read-only Doctor engine into a directly usable command-line feature with one minimal module entry point:
-
-`python3.11 -m engineering_governance doctor <target>`
-
-The CLI must delegate to the existing Doctor implementation rather than creating a second execution path or report authority.
+The bounded Doctor CLI implementation is complete and has passed independent Web review. The only authorized next action is an explicit user decision on merging Draft PR #5. Do not add product code, expand diagnostics, start Bootstrap/Audit/AI work, or perform lifecycle cleanup before merge authorization.
 
 ## Authority
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Authorization baseline before this task-start control update: `main` at `28c070ceb6d36d1a197cb9e1b25b899507dd8161`.
+- Live `main` / PR base during independent review: `f1fba7f9591047f6e2f40e677f79048227d67d8e`.
 - Authorized task branch: `codex/eg-v01-doctor-cli`.
+- Implementation commit: `40cedb3ab21130ca773ec20519d1b8d669b24422`.
+- Executor handoff head independently reviewed: `26404b234fb720dd5de3ac05ee3889f1b0cc4a06`.
+- PR: #5, OPEN / DRAFT / UNMERGED, targeting `main`.
 - Accepted standard: `EngineeringGovernanceStandard 0.1.0`.
-- Accepted tooling design: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
-- Accepted Doctor foundation: merged and closed under `EG-V01-DOCTOR-FOUNDATION-IMPL-004`.
 - Stable tag `v0.1.0` must remain at `738627a0caad330d277f60cfdaff5f153593135e`.
 
-## Approved bounded design
+## Accepted implementation
 
-Implement only the thin CLI adapter needed to invoke existing `run_doctor()` behavior from a shell.
+Supported path:
 
-Required user path:
+`PYTHONPATH=src python3.11 -m engineering_governance doctor <target>`
 
-```text
-python3.11 -m engineering_governance doctor <target>
-```
+The implementation is intentionally thin:
 
-Required behavior:
+- `src/engineering_governance/__main__.py` uses standard-library `argparse`;
+- the `doctor` command delegates to existing `run_doctor()`;
+- it supplies existing `run_git_readonly`, `Path.read_bytes`, stdout/stderr, and a timezone-aware UTC clock;
+- it does not duplicate Doctor report construction or Git probing;
+- usage errors are rejected before Doctor execution;
+- default operation remains local/offline/read-only.
 
-1. Resolve `<target>` as the explicit target passed to Doctor; do not silently substitute another repository.
-2. Delegate Doctor execution to the existing `run_doctor()` implementation using the existing read-only Git reader, filesystem reader, and a current timezone-aware UTC clock.
-3. Preserve Doctor stdout as the existing single JSON report on successful/reportable execution.
-4. Preserve Doctor command exit semantics: normal truthful report returns `0`; Doctor unsafe/fatal STOP returns `2`; internal fatal returns `3`.
-5. CLI usage errors such as a missing target or unsupported subcommand must return nonzero and must not run Doctor or mutate repository state. Standard library argument parsing is sufficient; do not invent a command framework.
-6. Keep default execution local/offline/read-only. No fetch, pull, ref update, branch/worktree mutation, file write, repair, migration, or remote API operation may be introduced.
-7. Correct the root README statement that Doctor is not implemented and document the minimal invocation. Do not claim Bootstrap or Audit are implemented.
+Product/test/documentation paths in the implementation commit are exactly:
 
-Implementation may add a minimal module entry point and, only if it improves separation without expanding scope, one small CLI adapter module. Reuse the existing model, readers, report builder, and Doctor orchestration.
+- `README.md`
+- `src/engineering_governance/__main__.py`
+- `tests/test_cli.py`
 
-## Explicitly out of scope
+No dependency file, packaging framework, remote-query path, new Doctor check, Bootstrap, deeper Audit, AI runtime, MCP, enforcement, remediation, migration, or unrelated refactor is included.
 
-- new Doctor checks or broader evidence collection;
-- remote branch/PR queries;
-- Bootstrap implementation;
-- deeper Audit implementation;
-- AI contribution/runtime;
-- MCP, daemon/background services, enforcement, auto-remediation, or migration;
-- package publishing, installer work, console-script packaging, dependency/framework additions;
-- report schema redesign or persistent report storage;
-- pilot repository integration;
-- unrelated refactors.
+## Executor evidence
 
-## Execution gates
+- Baseline Python 3.11 suite: 52 tests, 0 failures.
+- Focused RED command: `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_cli.py' -v`.
+- RED result: 4 expected failures because `engineering_governance.__main__` was absent.
+- Focused GREEN: 4/4.
+- Final Python 3.11 suite: 56 tests, 0 failures.
+- Valid target: exit 0 with one existing JSON report.
+- Non-repository target: Doctor STOP exit 2 with no JSON report.
+- Missing target / unsupported command: nonzero usage error without calling Doctor.
+- Dirty-target read-only snapshot: file and Git metadata unchanged before/after CLI execution.
+- Executor worktree was reported clean and local task HEAD matched remote handoff head.
 
-### Gate 0 — control and freshness
+## Independent Web audit — 2026-10-07
 
-From the canonical checkout:
+Result: `PASS` — no Critical or Important findings.
 
-1. `git fetch origin --prune --tags`.
-2. Verify repository identity is exactly `Lost0rz/Engineering-Governance`.
-3. Read `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` from the fetched control head.
-4. Require this task ID/state/branch authorization to be present.
-5. Require canonical `main` has no unknown dirty/untracked work and no unique local commits absent from `origin/main`.
-6. Fast-forward canonical `main` only. STOP on divergence, unknown local work, or control-plane drift.
+Verified against GitHub and independent reconstruction:
 
-### Gate 1 — isolated workspace and baseline
+1. PR #5 is open, draft, unmerged, mergeable, targets `main`, and its reviewed handoff head is `26404b234fb720dd5de3ac05ee3889f1b0cc4a06`.
+2. Live `main` remained exactly `f1fba7f9591047f6e2f40e677f79048227d67d8e`; no base drift occurred during review.
+3. `f1fba7f... -> 40cedb3...` is one implementation commit touching only README, `__main__.py`, and `test_cli.py`; `40cedb3... -> 26404b2...` is the executor control/evidence handoff.
+4. The CLI implementation delegates to the existing Doctor path and pre-existing local Git allowlist. The allowlist contains only `rev-parse --show-toplevel`, `rev-parse --git-common-dir`, `rev-parse --verify HEAD`, and `symbolic-ref --quiet --short HEAD`; no fetch/pull/ref mutation or network operation is introduced.
+5. The new tests directly exercise the required valid-target, STOP, usage-rejection, and dirty-target mutation behaviors.
+6. Web independently reconstructed the changed CLI slice from the reviewed remote sources. With `__main__.py` removed, the four focused CLI tests failed as expected; restoring the PR implementation produced 4/4 PASS. The reconstruction used Linux/Python 3.13, so it verifies the changed behavior and RED/GREEN semantics but is not represented as an independent Python 3.11 full-suite rerun.
+7. The executor's exact Python 3.11 full-suite evidence remains 56/56. GitHub exposes no CI status checks for the PR head; absence of CI is not counted as PASS.
+8. The annotated `v0.1.0` tag independently dereferences to `738627a0caad330d277f60cfdaff5f153593135e`.
+9. README accurately states that the first local Doctor CLI slice exists while Bootstrap and Audit remain unimplemented.
 
-Use an isolated worktree for `codex/eg-v01-doctor-cli`. Detect existing isolation first; do not create a nested worktree. No force/reset/clean/stash may be used to hide state.
+## Merge authorization gate
 
-Before any product change run exactly:
+Do not merge without explicit user authorization.
 
-`PYTHONPATH=src python3.11 -m unittest discover -s tests -v`
+After authorization, Web must freshly verify:
 
-Expected accepted baseline: 52 tests, 0 failures. If the live baseline differs, report the exact result and STOP rather than normalizing it silently.
+1. live `main` is still the expected base or reconcile any legitimate advance;
+2. PR #5 remains OPEN and unmerged;
+3. the exact PR head is the expected audited lineage (implementation commit `40cedb3...`, executor handoff `26404b2...`, plus only this Web audit control update);
+4. no new product/test paths or review blockers appeared;
+5. `v0.1.0` remains unchanged.
 
-### Gate 2 — RED first
+If those checks pass, merge PR #5 with exact-head protection. After merge, authorize a separate local closeout gate to fast-forward canonical `main`, rerun the full Python 3.11 suite on merged `main`, prove the retained task worktree/branch has no unique work, and clean it up without force.
 
-Follow test-driven development. Production CLI code is not permitted before a failing CLI test is observed.
+## Current stop point
 
-Add focused CLI tests for the minimum public behavior, including at least:
+`WAITING_FOR_MERGE_AUTHORIZATION`
 
-- `doctor <target>` invokes the existing Doctor path and emits a report with exit `0` for a valid fixture;
-- Doctor STOP propagates as exit `2` with no JSON report for an invalid/non-repository target;
-- missing target or unsupported command is rejected without invoking Doctor;
-- invoking through the CLI does not mutate dirty repository contents or Git metadata.
-
-Run only the new focused CLI test set and capture the expected RED result. RED must be caused by the absent CLI behavior, not by a broken fixture, import typo, or unrelated regression. If tests unexpectedly pass before implementation, STOP and explain what behavior already exists.
-
-### Gate 3 — minimal GREEN implementation
-
-Implement only enough CLI/module-entry code to make the approved focused tests pass. Reuse `run_doctor()`, `run_git_readonly`, `Path.read_bytes`, and a timezone-aware UTC clock. Do not duplicate Doctor report construction or Git probing logic.
-
-Run the focused CLI tests until GREEN.
-
-### Gate 4 — full regression and read-only proof
-
-Run exactly:
-
-`PYTHONPATH=src python3.11 -m unittest discover -s tests -v`
-
-Require all tests to pass. Report the exact total test count and failures.
-
-Also verify:
-
-- no dependency files or packaging framework were added;
-- no network/remote Git operations were introduced by the CLI path;
-- Doctor/read-only mutation invariants remain covered and passing;
-- `v0.1.0^{commit}` is still `738627a0caad330d277f60cfdaff5f153593135e`.
-
-### Gate 5 — documentation and scope audit
-
-Update README only enough to state that Doctor's first local CLI slice exists, show the supported invocation, and keep Bootstrap/Audit described as not yet implemented.
-
-Inspect the final diff. Every changed path must be attributable to CLI implementation/tests, README correction, or required task-control updates. STOP on unrelated changes.
-
-### Gate 6 — handoff, no merge
-
-Commit the authorized changes on `codex/eg-v01-doctor-cli`, push the exact branch, and open a Draft PR targeting `main`.
-
-Update `CURRENT_STATUS.md` and `CURRENT_TASK.md` on the task branch to record exact implementation/test evidence and set the task state to `WAITING_FOR_INDEPENDENT_WEB_AUDIT` only after all gates pass.
-
-Before handoff require:
-
-- local task HEAD equals remote task branch HEAD;
-- worktree is clean;
-- Draft PR is open and unmerged;
-- no merge, release, tag movement, Bootstrap/Audit/AI work, or lifecycle cleanup has been performed.
-
-## Required handoff
-
-Return exactly enough evidence for independent Web audit:
-
-```text
-TASK_ID:
-CONTROL_HEAD:
-BASELINE_MAIN:
-AUTHORIZED_BRANCH:
-WORKTREE:
-
-BASELINE_SUITE:
-RED_TEST_COMMAND:
-RED_EXPECTED_FAILURES:
-GREEN_FOCUSED_TESTS:
-FULL_SUITE:
-
-CLI_INVOCATION:
-CLI_VALID_TARGET_EXIT:
-CLI_STOP_EXIT:
-CLI_USAGE_ERROR_EXIT:
-READ_ONLY_PROOF:
-README_UPDATED:
-V0_1_TAG_TARGET:
-
-CHANGED_PATHS:
-IMPLEMENTATION_COMMIT:
-TASK_HEAD:
-REMOTE_HEAD:
-LOCAL_REMOTE_MATCH:
-WORKING_TREE:
-PR_NUMBER:
-PR_STATE:
-FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT | STOP
-STOP_REASON:
-```
-
-Do not merge the PR. Independent Web review is the next authority after executor evidence.
+No merge, release, lifecycle cleanup, Bootstrap, deeper Audit, AI runtime, or next feature is authorized yet.

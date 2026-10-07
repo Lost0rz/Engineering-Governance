@@ -4,7 +4,13 @@ A lightweight, Git-native governance system for AI-assisted software development
 
 The accepted `EngineeringGovernanceStandard` v0.1.0 defines typed authority routing, seven lifecycle layers, six cross-cutting axes, evidence-backed checks, freshness/exception semantics, and independent review boundaries.
 
-Bootstrap, Doctor, and Audit are the next planned tooling layer; they are not implemented yet.
+The first local, offline, read-only Doctor CLI slice is available:
+
+```sh
+PYTHONPATH=src python3.11 -m engineering_governance doctor <target>
+```
+
+Bootstrap and Audit remain planned and are not implemented yet.
 
 ## Design goals
 
