@@ -2,13 +2,13 @@
 
 Task ID: `EG-V01-DOCTOR-FOUNDATION-IMPL-004`
 
-State: `MERGED — LOCAL_CLOSEOUT_PENDING`
+State: `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`
 
-Mode: `POST_MERGE_LOCAL_VERIFICATION`
+Mode: `CLOSED`
 
 ## Objective
 
-Finish lifecycle closeout after the user-authorized stacked merge. Product/spec/plan/implementation changes are complete and merged. The only remaining work is a fresh local proof on the Mac, followed by safe cleanup of merged task branches/worktree and final control-plane closure.
+Complete the post-merge local closeout after the user-authorized stacked merge. Product/spec/plan/implementation changes were already merged; local validation and safe lifecycle cleanup have now passed, and this task is closed.
 
 ## Authority
 
@@ -32,7 +32,7 @@ Finish lifecycle closeout after the user-authorized stacked merge. Product/spec/
 5. Final PR #4 merge commit tree exactly equals the audited implementation head tree (`2eefce79982fc35a98e0bc559ea36a064159fc9e`), so stacked integration introduced no content drift.
 6. PR #2/#3/#4 are all terminal `closed + merged`.
 
-## Authorized local closeout gate
+## Authorized local closeout gate — completed
 
 Run only on the Mac. Do not make product/source/test/spec/plan changes.
 
@@ -98,37 +98,22 @@ Only after Gate 3 PASS:
 
 STOP if ordinary deletion refuses because Git does not consider a branch merged; do not force-delete. Return the ancestry evidence instead.
 
-## Final handoff
+## Closure evidence
 
-After all gates PASS, return:
+- Closeout began from live `origin/main` `db0c4789186ef7dc5f744aad2b9d2ff0b21b33a1`; canonical `main` was fast-forwarded to that exact commit and was clean.
+- `PYTHONPATH=src python3.11 -m unittest discover -s tests -v` passed 52/52 on merged `main`.
+- Accepted spec and plan, `doctor.py`, `git_reader.py`, and `tests/test_doctor.py` were present. `v0.1.0^{commit}` remained `738627a0caad330d277f60cfdaff5f153593135e`.
+- Before cleanup there were two worktrees. The implementation worktree was clean and removed without force; after cleanup there is one canonical `main` worktree.
+- No local task branch had unique commits absent from its remote. The three task branch tips and all three PR merge commits were ancestors of `main`.
+- The local design, plan, and implementation branches were deleted with `git branch -d`; the matching remote branches were deleted and confirmed absent after fetch/prune.
+- No product, test, spec, or plan file was changed during closeout. No follow-on task was started.
 
-```text
-TASK_ID:
-REMOTE_MAIN:
-LOCAL_MAIN:
-LOCAL_MAIN_REMOTE_MATCH:
-MAIN_WORKING_TREE:
-FULL_SUITE_ON_MERGED_MAIN:
-V0_1_TAG_TARGET:
+## Closeout result
 
-WORKTREE_COUNT_BEFORE:
-IMPLEMENTATION_WORKTREE_CLEAN:
-IMPLEMENTATION_WORKTREE_REMOVED:
-WORKTREE_COUNT_AFTER:
-
-DESIGN_LOCAL_UNIQUE_WORK_FOUND:
-PLAN_LOCAL_UNIQUE_WORK_FOUND:
-IMPL_LOCAL_UNIQUE_WORK_FOUND:
-DESIGN_LOCAL_BRANCH_REMOVED:
-PLAN_LOCAL_BRANCH_REMOVED:
-IMPL_LOCAL_BRANCH_REMOVED:
-DESIGN_REMOTE_BRANCH_REMOVED:
-PLAN_REMOTE_BRANCH_REMOVED:
-IMPL_REMOTE_BRANCH_REMOVED:
-
-UNEXPECTED_LIFECYCLE_RESIDUE:
-FINAL_STATE: CLOSED_ACCEPTED_MAIN_ONLY_CLEAN | STOP
-STOP_REASON:
-```
+- Verification baseline: local `main` and live `origin/main` both matched `db0c4789186ef7dc5f744aad2b9d2ff0b21b33a1`; clean working tree.
+- Full suite on merged main: PASS, 52/52. Stable tag target: `738627a0caad330d277f60cfdaff5f153593135e`.
+- Worktrees: 2 before cleanup; implementation worktree clean and removed; 1 canonical main worktree after cleanup.
+- Unique local task commits found: none. Local and remote design/plan/implementation task branches: removed.
+- Unexpected lifecycle residue: none. Final state: `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
 
 Do not start Bootstrap, deeper Audit, AI runtime, CLI, or another business task during this closeout.

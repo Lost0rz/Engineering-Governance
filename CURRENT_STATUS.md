@@ -22,10 +22,11 @@ Last verified: 2026-10-07
 
 ## Lifecycle closeout status
 
-- Remote design/plan/implementation task branches are retained temporarily because Web cannot prove the Mac's local branches/worktree contain no newer local-only work after the final remote control changes.
-- The executor previously reported the implementation worktree at `/Users/ox_miles/.codex/worktrees/doctor-foundation-impl/Engineering-Governance`; this path must be reverified locally before cleanup.
-- No task branch/worktree should be force-deleted. Cleanup is authorized only after a fresh local proof that each retained branch/worktree is clean and has no commits absent from its corresponding remote/merged history.
+- Task `EG-V01-DOCTOR-FOUNDATION-IMPL-004` local closeout completed. At the closeout gate, live `origin/main` and local `main` matched `db0c4789186ef7dc5f744aad2b9d2ff0b21b33a1`; the working tree was clean.
+- The exact merged-main verification command passed all 52 tests. Required spec, plan, Doctor source/test files were present, and `v0.1.0` remained at `738627a0caad330d277f60cfdaff5f153593135e`.
+- The implementation worktree was clean and removed with ordinary `git worktree remove`. All three merged task branches were absent from local and remote refs after cleanup. One canonical `main` worktree remains.
+- No product, test, spec, or plan files were changed during closeout.
 
 ## Next milestone
 
-Perform one local post-merge closeout gate: ff-only sync canonical `main`, run the exact Python 3.11 full suite on merged `main`, prove no unique local-only work in retained task branches/worktrees, then remove the implementation worktree and merged local/remote task branches safely. After that evidence is returned, close this task to a single clean `main` baseline before any follow-on Bootstrap/Audit/AI/CLI work.
+Wait for a separately authorized follow-on task. Bootstrap, deeper Audit, AI runtime, CLI, or other implementation work has not started.
