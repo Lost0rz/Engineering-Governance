@@ -90,8 +90,9 @@ Do not plan or implement:
 - Self-review completed for spec coverage, step granularity, type/interface consistency, Review Focus coverage, and proportion.
 - The plan has five TDD implementation tasks and thirteen Review Focus cases.
 - Current-task changes are limited to this plan and the two control-plane files; no source, test, fixture, manifest, schema, CLI, or implementation was created.
-- The task branch must be committed/pushed, then a Draft stacked PR must target `codex/eg-v01-tooling-design` so the plan diff stays separate from PR #2.
-- Verify local/remote HEAD equality and a clean worktree, then stop. Do not execute the plan.
+- The plan and control-plane update are committed/pushed on `codex/eg-v01-doctor-foundation-plan`; the live remote head must match the final local head.
+- Draft PR #3 is OPEN / DRAFT / UNMERGED at `https://github.com/Lost0rz/Engineering-Governance/pull/3`, with base `codex/eg-v01-tooling-design` and head `codex/eg-v01-doctor-foundation-plan`.
+- Verify local/remote HEAD equality and a clean worktree, then stop in this review-waiting state. Do not execute the plan.
 
 ## Required receipt
 

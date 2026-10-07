@@ -22,7 +22,7 @@ Last verified: 2026-10-07
 
 `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is waiting for implementation-plan review on `codex/eg-v01-doctor-foundation-plan`.
 
-The plan is at `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md` and covers only the smallest coherent first implementation slice:
+The plan is at `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md` and covers only the smallest coherent first implementation slice. Draft PR #3 is OPEN / DRAFT / UNMERGED, based on `codex/eg-v01-tooling-design`: https://github.com/Lost0rz/Engineering-Governance/pull/3.
 
 - shared local repository reader/model needed by Doctor;
 - local read-only Doctor checks for repository identity and control-plane presence/consistency;
