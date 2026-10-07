@@ -1,85 +1,95 @@
-# CURRENT TASK — Phase E RemoteOrbit Real-Project Pilot Design
+# CURRENT TASK — Phase E RemoteOrbit Read-Only Skill Validation
 
-Task ID: `EG-REMOTEORBIT-PILOT-DESIGN-017`
+Task ID: `EG-REMOTEORBIT-PILOT-READONLY-018`
 
-State: `WAITING_FOR_USER_DESIGN_REVIEW`
+State: `ACTIVE_READ_ONLY_VALIDATION`
 
-Mode: `BOUNDED_INTEGRATION_DESIGN`
+Mode: `BOUNDED_INTEGRATION_VALIDATION`
 
 ## Objective
 
-Design the first real-project validation of the merged Engineering-Governance Skills against `Lost0rz/RemoteOrbit`, using current repository evidence to test whether Project Governance, Domain Navigation, and Incident Doctor are practical, lightweight, and internally coherent in a complex live project.
-
-This task is design-only. No RemoteOrbit mutation is authorized until the user approves the bounded pilot design and the target repository's own active control plane permits a safe transition.
+Validate the accepted `project-governance`, `domain-navigation`, and `incident-doctor` Skills against the live RemoteOrbit repository without mutating RemoteOrbit. Determine whether the Skills improve real task routing, evidence discipline, and governance clarity without creating duplicate authority or excessive process.
 
 ## Authority and baselines
 
 - Engineering-Governance accepted Phase D merge head: `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
-- Stable historical tag: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
-- Candidate target: `Lost0rz/RemoteOrbit`.
-- RemoteOrbit read-only observed `main`: `5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
-- RemoteOrbit currently owns an active runtime-evidence maintenance task for incident `RO-INCIDENT-20261004-01`; its controls prohibit unrelated mutation.
-- No `DOMAIN_MAP` result was found on the RemoteOrbit default branch in the read-only search used for this design.
+- Engineering-Governance control baseline entering Phase E design: `ec9f32ca437d324b9fba90086f8814a450343ce4`.
+- Target repository: `Lost0rz/RemoteOrbit`.
+- Target RemoteOrbit `main` at authorization: `5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
+- RemoteOrbit current controls and active incident/recovery task remain authoritative for that repository.
 
-## Proposed pilot
+## In scope — read-only validation only
 
-The pilot should be evidence-first and two-stage.
+1. Read the three accepted Engineering-Governance Skills and relevant templates/references.
+2. Read RemoteOrbit `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, README/setup material, and only task-relevant source/tests/docs needed to validate routing.
+3. Evaluate project-governance fit:
+   - fact ownership and duplication across the three controls;
+   - task authorization clarity;
+   - business/product-first flow versus governance overhead;
+   - freshness and handoff behavior;
+   - any project-specific rules that appropriately remain local rather than moving to the reusable Skill.
+4. Evaluate domain-navigation fit:
+   - infer the smallest semantic Domain set needed for the current RemoteOrbit task from direct evidence;
+   - identify candidate authorities, entry points, important symbols, relevant tests, runtime/diagnostic boundaries, and unresolved gaps;
+   - do not perform a whole-repository survey unless the evidence proves it necessary.
+5. Evaluate incident-doctor fit against the active incident/recovery context:
+   - blocked question;
+   - evidence sufficiency;
+   - user report versus direct observations versus interpretations;
+   - hypotheses and falsification status;
+   - fresh incident/runtime identity requirements;
+   - root-cause status;
+   - minimum safe next decision.
+6. Identify concrete friction, ambiguity, redundancy, or missing guidance in the accepted Skills.
+7. Recommend the smallest later RemoteOrbit adoption, but do not implement it.
 
-### Stage 1 — read-only validation
+## Hard boundaries
 
-Against the exact target revision selected at execution time:
+- RemoteOrbit mutation: FORBIDDEN.
+- Do not edit RemoteOrbit controls, source, tests, docs, diagnostics, settings, evidence, worktrees, refs, branches, PRs, runtime, app installation, journal, input source, driver, CoreAudio, TCC, LaunchAgents, or hardware state.
+- Do not run or authorize RemoteOrbit's journal-recovery procedure from this pilot.
+- Do not reinterpret the active RemoteOrbit task or advance its control plane.
+- Do not modify the reusable Engineering-Governance Skill contents during validation.
+- No new Skill, script, index, database, daemon, Repo Map program, or diagnostic platform.
+- Findings are evidence for a later design decision only.
 
-- read RemoteOrbit `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, relevant source/manifests/tests, and incident/runtime evidence needed for the active domains;
-- compare the existing controls against the merged `project-governance` contract without blindly replacing useful project-specific rules;
-- identify the smallest useful semantic Domains and their authority/entry-point/test/evidence routes using `domain-navigation`;
-- evaluate the current incident representation against the merged `incident-doctor` evidence taxonomy, sufficiency gate, falsification, runtime identity, fix boundary, and probe lifecycle rules;
-- keep unsupported facts explicit as unknown;
-- record concrete friction found in the reusable Skills, if any.
+## Validation method
 
-Stage 1 must not modify RemoteOrbit.
+Use direct repository evidence. Important conclusions should cite concrete paths, symbols, tests, or accepted project controls. Keep direct observations distinct from interpretations. Unknown, stale, or unresolved facts remain explicit.
 
-### Stage 2 — adoption package after safe target transition
+For Domain Navigation, follow:
 
-Only when RemoteOrbit's own control plane explicitly permits governance-file mutation:
+`RemoteOrbit CURRENT_TASK -> affected semantic Domain(s) -> candidate authority/entry point/symbol/test -> focused source reading -> confirmed route + unresolved gaps`
 
-- adapt, do not blindly copy, the three control files;
-- add a minimal `DOMAIN_MAP.md` and only justified detailed `DOMAIN.md` files;
-- add or adapt an Incident record only if it improves the live evidence chain without creating duplicate authority;
-- preserve RemoteOrbit-specific runtime/evidence rules that remain valid;
-- remove duplicated or historical material only when current target evidence proves it is safe;
-- verify the target delta proportionally and independently before merge.
+For Incident Doctor, first ask whether existing evidence is already sufficient for the blocked decision. Do not invent a probe merely to exercise the Skill.
 
-The later adoption change is a separate authorization. This design does not authorize it yet.
+## Acceptance criteria
 
-## Validation success criteria
+The validation report must answer:
 
-The pilot succeeds only if a fresh AI can use the adapted model to answer, with less broad reading and without inventing facts:
+- Can a fresh AI identify what RemoteOrbit currently authorizes without relying on chat history?
+- Can it find the relevant Domain/authority/source/test set for the active task with bounded reading?
+- Can it classify the incident evidence without promoting correlation or user report to fact/root cause?
+- Does the reusable Skill guidance materially help, duplicate existing RemoteOrbit rules, or create friction?
+- Which parts should remain RemoteOrbit-specific?
+- What is the minimum later adoption set, if any?
+- Is any reusable Skill corrective justified by this real-project evidence, or should the Skills remain unchanged?
 
-- what work is authorized now;
-- which Domain owns the relevant state/behavior;
-- which sources/symbols/tests should be read next and why;
-- whether Incident Doctor should trigger;
-- what evidence is sufficient versus missing;
-- what remains unknown;
-- what the smallest safe next action is.
+## Verification level
 
-The pilot must also identify whether any reusable Skill guidance is too heavy, ambiguous, duplicative, or missing. Reusable changes are made only if the real pilot demonstrates a concrete gap.
+`V0 — read-only integration validation`.
 
-## Boundaries
+Required evidence:
 
-Do not:
-
-- mutate RemoteOrbit during this design task;
-- interrupt or reinterpret its active incident task;
-- copy Engineering-Governance templates verbatim over target-specific truth;
-- create a fourth Skill;
-- add runtime code, CLI, daemon, database, index, telemetry platform, or installer;
-- treat a generated map/example as product/runtime authority;
-- add an `examples/RemoteOrbit` example before the real target validation is complete;
-- make reusable Skill changes merely for stylistic preference.
+- exact RemoteOrbit remote `main` identity used for the review;
+- exact Engineering-Governance accepted Skill revision used for the review;
+- cited RemoteOrbit controls and focused source/test evidence;
+- no RemoteOrbit mutations;
+- no reusable Skill mutations during the review;
+- explicit unknowns and limits.
 
 ## Current stop point
 
-`WAITING_FOR_USER_DESIGN_REVIEW`
+`ACTIVE_READ_ONLY_VALIDATION`
 
-After explicit approval, Web should authorize a bounded Stage-1 read-only pilot. RemoteOrbit mutation remains separately gated by its own control plane.
+After the read-only review, return findings and a proposed next step. Do not start RemoteOrbit adoption without a new explicit authorization.
