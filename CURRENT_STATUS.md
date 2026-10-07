@@ -5,22 +5,22 @@ Last verified: 2026-10-07
 ## Project
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
-- Accepted standard: `EngineeringGovernanceStandard 0.1.0`, stable and unchanged by the tooling-design task.
-- Live `origin/main` baseline: `ab0457c378563d33c6b67f8f81a83f9d10241008`.
+- Accepted standard: `EngineeringGovernanceStandard 0.1.0`, stable.
 - Stable closeout tag `v0.1.0` targets `738627a0caad330d277f60cfdaff5f153593135e`.
+- Tooling design spec is accepted; design control head is `012f2a8ff314b7800c15a8a538cc8f7f877bf4fa`.
+- PR #2 remains OPEN / DRAFT / UNMERGED and design-only; no merge is authorized by this task.
 
-## Tooling design
+## Doctor foundation implementation plan
 
-- PR #2 is `OPEN / DRAFT / UNMERGED` on `codex/eg-v01-tooling-design`.
-- Independent Web re-review of corrective head `8a93015c6995a20ea14f2a9af575adb1ccc434fd` is **PASS** with no unresolved BLOCKER or MAJOR finding.
-- The accepted design recommends Hybrid: one small on-demand deterministic core plus optional thin AI workflow guidance.
-- Bootstrap is the sole controlled writer; Doctor and Audit are read-only.
-- Bootstrap preview/apply is bound to an immutable conceptual plan and named human-authorized actor; exact matches are `NO_CHANGE`, mismatches are `CONFLICT / STOP`.
-- Reportable evidence gaps remain evaluation-level `UNVERIFIED` / `STALE` / `UNKNOWN`; fatal/unsafe command failures are separate.
-- AI/HYBRID uses an immutable base report plus validated linked derived contributions; AI does not become authority, mutate machine results, or self-accept.
-- Seven lifecycle layers, six axes, typed authority routing, standalone profiles, and v0.1.0 semantics are unchanged.
-- No executable implementation, implementation plan, dependency, CLI, schema implementation, MCP, daemon, enforcement, remediation, or pilot-repository change has started on PR #2.
+- Task `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is accepted and closed after independent Web re-review.
+- Accepted plan content head: `1aa9f4b0e42e73d7e0433fe4c0297b1b0e5eea61`.
+- Plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
+- Independent review found no unresolved BLOCKER or MAJOR after the final corrective.
+- The accepted plan contains four genuine TDD implementation tasks plus one verification-only acceptance gate.
+- The first slice remains local/offline/read-only Doctor only: Python 3.11+, standard library only, immutable report, exit `0` / `2` / `3`, no remote queries, no persistent store, no Bootstrap/Audit/AI runtime.
+- PR #3 remains OPEN / DRAFT / UNMERGED, stacked on `codex/eg-v01-tooling-design`; plan acceptance does not merge it.
+- Implementation has not started on this plan branch.
 
 ## Next milestone
 
-The written tooling design is accepted for planning. The next authorized stage is a separate implementation-plan-only task for the smallest coherent first slice: shared local reader/model plus read-only Doctor checks for repository identity and control-plane presence/consistency. Bootstrap writes, deeper Audit evaluation, and AI contribution execution remain deferred to later reviewed increments.
+Start a separate implementation task/branch from the accepted plan control state. Execute Tasks 1–4 exactly under TDD, then run the verification-only gate and independent whole-branch review. Do not implement under the closed plan task ID.

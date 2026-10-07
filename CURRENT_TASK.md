@@ -1,34 +1,34 @@
-# CURRENT TASK — EG-V01 Tooling Design
+# CURRENT TASK — Doctor Foundation Implementation Plan
 
-Task ID: `EG-V01-TOOLING-DESIGN-002`
+Task ID: `EG-V01-DOCTOR-FOUNDATION-PLAN-003`
 
-State: `CLOSED — SPEC_ACCEPTED`
+State: `CLOSED — PLAN_ACCEPTED`
 
-Mode: `TOOLING_FOUNDATION_DESIGN`
+Mode: `IMPLEMENTATION_PLAN_ACCEPTED`
 
 ## Result
 
-The tooling foundation architecture spec is accepted after independent Web corrective re-review.
+The first-slice Doctor implementation plan is accepted after independent Web re-review.
 
-- Accepted spec head: `8a93015c6995a20ea14f2a9af575adb1ccc434fd`.
-- Draft PR #2 remains `OPEN / DRAFT / UNMERGED` and design-only.
-- Hybrid recommendation accepted for planning.
-- `EngineeringGovernanceStandard 0.1.0` unchanged.
-- No unresolved BLOCKER or MAJOR design finding remains.
+- Accepted plan content head: `1aa9f4b0e42e73d7e0433fe4c0297b1b0e5eea61`.
+- Plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
+- PR #3 remains OPEN / DRAFT / UNMERGED and stacked on `codex/eg-v01-tooling-design`.
+- No unresolved BLOCKER or MAJOR remains in the plan.
 
-## Accepted design boundaries
+## Accepted execution contract
 
-- One small on-demand deterministic core, with optional thin AI workflow guidance.
-- Bootstrap is the sole controlled writer and requires an immutable preview plan plus named human-authorized apply confirmation.
-- Doctor and Audit are read-only.
-- Evaluation unresolved states remain separate from command-level fatal/unsafe STOP.
-- AI/HYBRID contributions are linked derived data over an immutable deterministic base report; they do not create a second authority or acceptance path.
-- No central database/service, daemon, MCP, enforcement, automatic remediation, or automatic migration is included.
+- Four implementation tasks use genuine RED → GREEN TDD in order.
+- Task 5 is verification-only and creates no implementation commit.
+- Task 2 owns local Git identity and the exact read-only subprocess contract, including allowlist, `shell=False`, bounded timeout, environment flags, and timeout-to-`DoctorStop` behavior.
+- Task 3 owns root control-file observation and deterministic Task ID boundary semantics.
+- Task 4 owns Doctor orchestration, exit `0` / `2` / `3`, no-mutation snapshots, and timeout-to-exit-2 proof.
+- First slice is macOS Apple silicon, Python 3.11+, standard-library-only, local/offline, read-only.
+- No CLI packaging, Bootstrap, deep Audit, AI contribution runtime, remote query, MCP, daemon, enforcement, migration, remediation, or pilot changes are included.
 
 ## Closeout
 
-This design task is closed. Do not continue work under this task ID.
+This plan task is closed. Do not create source/tests/fixtures or execute implementation under this task ID.
 
-The next authorized stage is a separate implementation-plan-only task for the smallest coherent first implementation slice: shared reader/model plus local read-only Doctor checks for repository identity and control-plane presence/consistency. It must use the accepted spec and produce a reviewable implementation plan before any executable code is written.
+The next authorized stage must use a separate implementation task and branch based on this accepted plan. The implementation task must load the accepted spec and plan, use `superpowers:test-driven-development`, and execute the plan task-by-task without scope expansion.
 
-PR #2 must not be merged without explicit user authorization.
+PR #3 must remain Draft / unmerged unless the user separately authorizes merge.
