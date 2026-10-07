@@ -1,39 +1,34 @@
-# CURRENT TASK — EG-V01 Tooling Design Corrective
+# CURRENT TASK — EG-V01 Tooling Design
 
 Task ID: `EG-V01-TOOLING-DESIGN-002`
 
-State: `WAITING_FOR_USER_SPEC_REVIEW`
+State: `CLOSED — SPEC_ACCEPTED`
 
-Mode: `SPEC_CORRECTIVE_ONLY`
+Mode: `TOOLING_FOUNDATION_DESIGN`
 
-## Objective
+## Result
 
-Resolve only the three MAJOR findings from independent Web review in the written tooling design. Preserve the Hybrid recommendation and accepted v0.1 contract. Stop for spec re-review after synchronization.
+The tooling foundation architecture spec is accepted after independent Web corrective re-review.
 
-## Authority
+- Accepted spec head: `8a93015c6995a20ea14f2a9af575adb1ccc434fd`.
+- Draft PR #2 remains `OPEN / DRAFT / UNMERGED` and design-only.
+- Hybrid recommendation accepted for planning.
+- `EngineeringGovernanceStandard 0.1.0` unchanged.
+- No unresolved BLOCKER or MAJOR design finding remains.
 
-- Repository: `Lost0rz/Engineering-Governance`.
-- Branch: `codex/eg-v01-tooling-design`.
-- Corrective start head: `81ce94b0d7ebaac89beb4d6f8be28c9b7e5874a3`.
-- PR #2: `OPEN / DRAFT / UNMERGED`; do not merge.
-- Spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
+## Accepted design boundaries
 
-## Corrective findings and disposition
+- One small on-demand deterministic core, with optional thin AI workflow guidance.
+- Bootstrap is the sole controlled writer and requires an immutable preview plan plus named human-authorized apply confirmation.
+- Doctor and Audit are read-only.
+- Evaluation unresolved states remain separate from command-level fatal/unsafe STOP.
+- AI/HYBRID contributions are linked derived data over an immutable deterministic base report; they do not create a second authority or acceptance path.
+- No central database/service, daemon, MCP, enforcement, automatic remediation, or automatic migration is included.
 
-1. **Bootstrap preview/apply/idempotence:** the conceptual immutable Preview Plan binds target identity and comparison state, template/profile versions, candidate paths/actions, rendered content digests, and the named authorized human actor. Exact expected existing artifacts are `NO_CHANGE`; changed/different artifacts are `CONFLICT / STOP`, never overwritten. Apply recomputes and validates the exact approved plan; any drift stops and requires a new preview/approval. AI skills cannot approve apply.
-2. **Evaluation unresolved vs command STOP:** reportable missing/stale/inaccessible evidence and unresolved same-class authority conflicts yield `UNVERIFIED` where applicable, `STALE`/`UNKNOWN` freshness, limitations, and a truthful report with exit `0`. Fatal/unsafe target, root-input, Bootstrap-write, or internal failures are command-level STOPs with nonzero codes. Evidence incompleteness is not an enforcement gate.
-3. **Hybrid AI contribution flow:** the deterministic core emits an immutable identified base report; the AI skill consumes only its identified inputs and returns a linked `AIContribution`; the core validates links and composes an ephemeral view. The contribution cannot modify machine results, source evidence, the base report, or project decisions; there is no persistent AI store or AI self-acceptance path. HUMAN/HYBRID final judgment remains with the named human/project authority.
+## Closeout
 
-## Invariants and scope
+This design task is closed. Do not continue work under this task ID.
 
-- Preserve Hybrid recommendation, seven lifecycle layers, six axes, typed authority routing, standalone profiles, and `EngineeringGovernanceStandard 0.1.0`.
-- Allowed changes: the design spec, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` only.
-- Do not write an implementation plan or implement Bootstrap/Doctor/Audit, CLI, dependencies, machine-readable schema, MCP, daemon, enforcement, auto-remediation/migration, or pilot-repository changes.
-- Keep PR #2 Draft and unmerged.
+The next authorized stage is a separate implementation-plan-only task for the smallest coherent first implementation slice: shared reader/model plus local read-only Doctor checks for repository identity and control-plane presence/consistency. It must use the accepted spec and produce a reviewable implementation plan before any executable code is written.
 
-## Validation and handoff
-
-- Self-review the exact corrected text for all three findings, hidden writers, authority duplication, and scope expansion.
-- Use static document/diff checks only; no runtime implementation or tests are part of this corrective.
-- Commit and push the same task branch, verify local/remote HEAD equality and a clean worktree, and return to `WAITING_FOR_USER_SPEC_REVIEW`.
-- Wait for re-review. Do not start implementation until the spec is accepted and a separate task authorizes it.
+PR #2 must not be merged without explicit user authorization.
