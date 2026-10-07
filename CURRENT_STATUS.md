@@ -1,69 +1,42 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase C task branch, root handoff controls, `origin/main`, and the stable tag were checked against Git at handoff.
+Last verified: 2026-10-07 — Phase C was independently audited and fast-forward merged to `main`; the existing Incident Doctor module was then read from the merged baseline for the next bounded design review.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Repository purpose remains a reusable AI engineering-governance **Skill source repository**, not a governance runtime/product and not an installer.
-- Stable tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
+- Stable historical tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
 - Root `AGENTS.md` remains the durable repository rule set.
 
-## Phase A — accepted and merged
+## Accepted merged baseline
 
-Phase A Skill-repository restructuring is accepted and merged. Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
+- Phase A Skill-source restructuring: accepted and merged.
+- Phase B `project-governance` enrichment: accepted and merged at `3b10169a475d97ed8b79ab7d5fa30df5fbdd6f04`.
+- Phase C `domain-navigation` enrichment: accepted and merged at `1d28250717e4e72754655ccc3c69bc3664a70eae`.
+- Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Phase B — accepted and merged
+Accepted navigation behavior now treats Domains as evidence-backed semantic capability/ownership/state/authority boundaries; routes tasks to the smallest useful source-reading set; keeps Domain Map distinct from any optional Repo Map; preserves unknown/stale/conflicting claims; refreshes incrementally; and requires no executable navigation helper.
 
-Phase B `project-governance` enrichment passed independent Web audit at `3b10169a475d97ed8b79ab7d5fa30df5fbdd6f04` and was fast-forward merged to `main`.
+## Active milestone — Phase D `incident-doctor` bounded design review
 
-Its accepted behavior establishes the three-file control-plane ownership model, business-first governed development, scope-change re-authorization, on-demand routing to Domain Navigation / Incident Doctor, and risk-proportional `V0`–`V3` verification.
+- Active task: `EG-INCIDENT-DOCTOR-ENRICH-DESIGN-015`.
+- State: `WAITING_FOR_USER_DESIGN_REVIEW`.
+- Mode: `BOUNDED_DESIGN_REVIEW`.
+- The next candidate change is enrichment of the existing `skills/incident-doctor/` module only.
+- No local Phase D implementation is authorized before explicit user approval of the bounded design.
 
-## Active milestone — Phase C `domain-navigation` enrichment handoff
+## Phase D fixed boundaries
 
-- Active task: `EG-DOMAIN-NAVIGATION-ENRICH-IMPL-014`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
-- Mode: `BOUNDED_IMPLEMENTATION`.
-- Authorized branch: `codex/domain-navigation-enrichment`.
-- The nine authorized reusable Skill files are complete on the task branch; Phase C has not been independently accepted or merged.
-- User-approved bounded design baseline before this authorization: `e3af6eb7c95d8cd3ee0b3fd29a9648be17b8d524`.
-- Scope is limited to enriching the nine existing files under `skills/domain-navigation/` plus root control-plane handoff updates.
-- No reusable `project-governance` or `incident-doctor` content change is authorized.
-- No merge is authorized to the local executor; independent Web audit is required first.
-
-## Phase C accepted design direction
-
-The existing `domain-navigation` Skill will be strengthened so a fresh AI can:
-
-- treat a Domain as a semantic capability/ownership/state/authority boundary rather than a folder;
-- route `CURRENT_TASK -> affected Domain(s) -> DOMAIN_MAP -> candidate authorities/entry points/symbols/tests -> optional targeted search or Repo Map -> focused source reading`;
-- ground important navigation claims in concrete repository evidence and keep observation separate from interpretation;
-- preserve unknown, stale, or conflicting ownership/path claims explicitly instead of guessing;
-- refresh only affected Domain entries/fields when task-relevant evidence changes;
-- keep the stable semantic Domain Map separate from any optional dynamic/read-only Repo Map;
-- use `DOMAIN.md` only when additional detail is justified by actual navigation complexity;
-- operate without any required executable helper, indexing service, database, daemon, vector store, or automatic map mutation.
-
-## Phase C boundaries
-
-- Exactly the existing nine `domain-navigation` files may be changed for reusable content.
-- `DOMAIN_MAP.md` is derived navigation evidence, not product/domain/data/runtime authority.
-- Repo Map remains optional, dynamic, read-only, and subordinate to direct source verification.
-- Mapping must be task-relevant and incremental; do not perform whole-repository surveys without a concrete task reason.
-- No executable source, dependency manifest, installer, parser/indexing service, embedding/vector store, daemon, background crawler, automatic map generation, MCP prerequisite, or numerical confidence system is authorized.
-- Real-project adoption/validation remains a later phase.
-
-## Verification policy
-
-Phase C is `V0` documentation/Skill-contract enrichment:
-
-- only the nine authorized `domain-navigation` reusable files plus root handoff controls may change;
-- Skill frontmatter, local/cross-Skill links, and template/reference consistency must remain valid;
-- `project-governance` and `incident-doctor` reusable contents must remain unchanged;
-- exactly three top-level Skills must remain;
-- no executable/runtime/dependency surface may be introduced;
-- final task branch must be clean and local/remote matched.
+- Incident Doctor remains reactive, not part of normal feature development.
+- Existing evidence must be evaluated before any new probe is added.
+- If evidence is already sufficient for the next safe decision, new probe work is bypassed.
+- Diagnosis must preserve the distinction between user report, direct observation, interpretation, hypothesis, finding, and root-cause claim.
+- Any probe must be the minimum evidence needed for the blocked question and must not silently change product behavior.
+- Fresh incident capture must preserve runtime/build/configuration identity and the relevant observation window.
+- Temporary probes are retired by default; durable promotion requires separate evidence, ownership, and authorization.
+- No automated repair, broad observability platform, background monitor, daemon, database, or permanent diagnostic expansion is implied.
 
 ## Next milestone
 
-Independent Web audit of the pushed Phase C task branch. No merge is authorized to the local executor.
+User review of the bounded Phase D Incident Doctor design in chat. After explicit approval, Web will capture the then-current exact `main` baseline, authorize one implementation branch, and issue the local AI execution card.
