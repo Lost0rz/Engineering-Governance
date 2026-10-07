@@ -10,30 +10,33 @@ Last verified: 2026-10-07
 - Tooling design spec is accepted at control head `012f2a8ff314b7800c15a8a538cc8f7f877bf4fa`.
 - Doctor foundation implementation plan is accepted at control head `534fce576ddbf78e4b7fdaeacc39ec9c5ed58c33`.
 
-## Completed Doctor foundation
+## Completed Doctor capabilities
 
-- Task `EG-V01-DOCTOR-FOUNDATION-IMPL-004` is `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
-- PR #2, #3, and #4 are MERGED / CLOSED. The accepted Doctor implementation is on `main`.
-- The merged-main Python 3.11 verification passed 52/52 tests.
-- The implementation worktree and merged task branches were safely removed; one canonical `main` worktree remained at closeout.
-
-## Completed Doctor CLI
-
-- Task `EG-V01-DOCTOR-CLI-005` is `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
+- `EG-V01-DOCTOR-FOUNDATION-IMPL-004` is `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
+- `EG-V01-DOCTOR-CLI-005` is `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
 - PR #5 is MERGED / CLOSED; merge commit `104b6cdd9182d5a0494fafaf3bae814d24db0f0b`.
-- Audited PR head was `e5a5a83af784a20f13ae06b4ec6e24c4cd551b62`; its tree matched the merge-commit tree exactly at `bf8ab10fdfe0fe187742095bb159e779430dcfd4`.
-- Accepted CLI path: `PYTHONPATH=src python3.11 -m engineering_governance doctor <target>`.
-- Post-merge local verification on canonical `main` passed 56 tests with 0 failures.
-- Before final closeout, local `main` and `origin/main` both matched control head `e4e3ed975b46617c29b9bf83346a835bf0be8420`, and the canonical working tree was clean.
-- The task worktree was clean, contained no local-only files, and had zero unique commits. Worktree count reduced from 2 to 1 using ordinary cleanup.
-- Local and remote `codex/eg-v01-doctor-cli` branches were removed without force. Independent Web verification confirms the remote task branch is absent.
-- The annotated `v0.1.0` tag still dereferences to `738627a0caad330d277f60cfdaff5f153593135e`.
-- A Codex-managed attachment entry for the removed path may remain visible because another Codex task owns that host-side record. It is not a registered Git worktree, branch, repository file, uncommitted change, or unique commit. It is classified as non-blocking external tool metadata and does not keep this repository task open.
+- Accepted Doctor CLI: `PYTHONPATH=src python3.11 -m engineering_governance doctor <target>`.
+- Post-merge Python 3.11 suite passed 56 tests with 0 failures.
+- Doctor task worktree and local/remote task branches were removed; one canonical Git worktree remained.
+- The previously reported Codex managed-worktree attachment is non-blocking external tool metadata, not repository lifecycle residue.
+
+## Active milestone — Bootstrap implementation-plan review
+
+- Planning task: `EG-V01-BOOTSTRAP-PLAN-006`.
+- State: `WAITING_FOR_USER_PLAN_REVIEW`.
+- No Bootstrap implementation branch or local product work is authorized yet.
+- Implementation plan: `docs/superpowers/plans/2026-10-07-bootstrap-minimal-control-plane-implementation-plan.md`.
+- Plan commit: `6f648b5e2bb9ab1d5c096bf0069de0dd9bd4cf6d`.
+- The first Bootstrap slice is intentionally usable and narrow: one approved `minimal-control-plane.v1` template, explicit target/project/actor, read-only preview, exact plan-digest confirmation, and create-if-absent apply.
+- The starter artifact set is the three root controls `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`; generic Bootstrap creates an idle `NONE / NO_ACTIVE_TASK / IDLE` task control rather than inventing active work.
+- The first slice requires a clean target at preview and apply. Dirty-target fingerprinting is deferred rather than introducing a broader state-capture subsystem before real use demonstrates the need.
+- Existing exact starter files are `NO_CHANGE`; differing files, symlinks, directories, changed plans, unsupported templates, or unsafe targets STOP without overwrite.
+- Audit, AI runtime, MCP, migration, repair, enforcement, remote queries, package installers, template registries, and profile inheritance remain out of scope.
 
 ## Delivery policy
 
-Governance, diagnostics, and lifecycle controls support delivery; they are not a default milestone by themselves. The current Doctor foundation and CLI are sufficient for this stage. Do not expand diagnostics speculatively. Add or deepen mechanisms only when concrete product work exposes a specific evidence, safety, or repeatability gap, then return to delivery.
+Continue product/tool delivery rather than speculative diagnostic expansion. Bootstrap is the next product capability because the accepted Doctor baseline is already sufficient. Any extra mechanism added during implementation must be required by the Bootstrap write-safety contract, not by general hardening preference.
 
 ## Next milestone
 
-No execution task is currently authorized. The repository is ready for the next bounded product capability. Based on the accepted tooling sequence, Bootstrap is the next candidate when explicitly authorized; deeper Audit or AI work should not start automatically.
+User review of the Bootstrap implementation plan is required before implementation authorization. If accepted, Web will create a fresh Bootstrap implementation task and task branch, require the current 56-test Python 3.11 baseline, and hand the plan to local Codex for TDD execution. Do not start implementation before that approval.
