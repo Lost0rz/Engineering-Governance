@@ -2,7 +2,7 @@
 
 Task ID: `EG-V01-DOCTOR-FOUNDATION-IMPL-004`
 
-State: `ACTIVE — TDD IMPLEMENTATION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `DOCTOR_FOUNDATION_FIRST_SLICE`
 
@@ -93,6 +93,18 @@ After Task 5 PASS:
 - commit/push that handoff control state;
 - keep PR #4 Draft / unmerged;
 - do not merge or start Bootstrap/Audit/AI/CLI follow-on work.
+
+## Verified execution and handoff
+
+- Task 1 RED: the 2 model and 5 report tests failed on absent APIs; GREEN: 7/7; commit `17c5a561d234528f354df8148b33aad976e6acd1`.
+- Task 2 RED: 12 named tests failed on the absent Git reader API; GREEN: 12/12 and full suite 19/19; commit `2859fabcf91b445a21b67156e701ca828f699f55`.
+- Task 3 RED: 19 named tests failed on the absent control reader API; GREEN: 19/19 and full suite 38/38; commit `8d59dca138275660655dd6b74cb2c9ad2d8bead5`.
+- Task 4 RED: 10 named tests failed on the absent `run_doctor` API; GREEN: 10/10 and full suite 48/48; commit `5865dba5e0b0f4c841f1f0bed49d0cb0ba90140e`.
+- Task 5 verification-only gate: PASS; final pre-handoff full suite 48/48. Dirty target and linked-worktree snapshots matched before and after Doctor; exact Git adapter contract and timeout mapping passed.
+- The implementation branch was synchronized with `origin/codex/eg-v01-doctor-foundation-impl` at `5865dba5e0b0f4c841f1f0bed49d0cb0ba90140e` before this control-plane handoff update. The current branch HEAD is the subsequent commit containing this waiting state.
+- Final implementation diff is limited to the accepted first-slice source, tests, and synthetic fixtures. Production subprocess use is restricted to the exact local read-only Git allowlist; no third-party dependency was added.
+- Worktree remains active at `/Users/ox_miles/.codex/worktrees/doctor-foundation-impl/Engineering-Governance`. PR #4 remains OPEN / DRAFT / UNMERGED with base `codex/eg-v01-doctor-foundation-plan`.
+- Next action: independent Web code audit of the pushed PR head. This executor result is not acceptance; do not merge or begin a follow-on task before the audit and separate user authorization.
 
 Required final receipt:
 
