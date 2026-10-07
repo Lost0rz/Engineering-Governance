@@ -1,64 +1,84 @@
-# CURRENT TASK — Final Root and Cross-Skill Corrective
+# CURRENT TASK — Repository Branch Hygiene
 
-Task ID: `EG-FINAL-ROOT-CROSS-SKILL-CORRECTIVE-026`
+Task ID: `EG-REPO-BRANCH-HYGIENE-027`
 
-State: `AUTHORIZED_FOR_BOUNDED_CORRECTIVE`
+State: `AUTHORIZED_FOR_LOCAL_EXECUTION`
 
-Mode: `ROOT_CONSISTENCY_CORRECTIVE`
+Mode: `REMOTE_BRANCH_CLEANUP_ONLY`
 
 ## Objective
 
-Resolve the remaining root/reference consistency findings after all three Skills passed individual re-audit, then perform the final repository-wide audit before adoption.
+Remove only obsolete remote task/control branches that have been independently verified as fully contained in the accepted post-audit `main`, leaving a clean remote baseline before adoption.
 
 ## Authority and baseline
 
-- Accepted Incident Doctor corrective/main head: `03d85ca998913e62cb47bbc160a2ea5c040c108e`.
-- Frozen pre-audit comparison baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
-- Planned branch: `codex/final-root-cross-skill-corrective`.
+- Accepted post-audit reusable/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
+- Control commit that authorizes this cleanup is the live `origin/main` when execution begins; fetch it fresh and use that live SHA as cleanup authority.
+- No open PRs existed at the final Web audit.
 
-## Authorized durable files
+## Exact remote branches authorized for deletion
 
-- `AGENTS.md`
-- `references/UPSTREAMS.md`
-- `references/LICENSE_NOTES.md`
+- `codex/cross-project-corrective`
+- `codex/domain-navigation-audit-corrective`
+- `codex/domain-navigation-enrichment`
+- `codex/final-root-cross-skill-corrective`
+- `codex/incident-doctor-audit-corrective`
+- `codex/incident-doctor-enrichment`
+- `codex/project-governance-audit-corrective`
+- `codex/project-governance-enrichment`
+- `codex/skill-repository-skeleton-reset`
+- `control/root-consistency-freeze-auth`
 
-Root `CURRENT_STATUS.md` and `CURRENT_TASK.md` may change for handoff/closeout.
+## Required pre-delete verification
 
-## Required corrective
+After `git fetch origin --prune`:
 
-1. Update the Aider/Repo Map upstream note to the accepted three-layer distinction: semantic authorities may own meaning; a navigation projection is optional/derived; Repo Map is optional/dynamic/read-only candidate selection and is not a runtime dependency.
-2. Replace Phase-A-only license wording with a time-neutral policy: upstream concepts are attributed in `UPSTREAMS.md`; this note is not an exhaustive legal/provenance determination; copying code or substantial text requires checking the applicable license and required attribution/notices before inclusion.
-3. Align root Incident Doctor guidance with the accepted handoff: Doctor may establish evidence and the minimum fix boundary, but if the active task does not authorize the behavior change/side effects, return to Project Governance before changing behavior.
+1. verify the repository is `Lost0rz/Engineering-Governance`;
+2. read current `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` from `origin/main` and confirm this Task ID/mode;
+3. for each listed remote branch, verify its tip is an ancestor of `origin/main` (`git merge-base --is-ancestor <remote-ref> origin/main` must succeed);
+4. verify there are no open PRs targeting or sourced from a listed branch if local GitHub tooling can establish that; if this cannot be checked, report it but do not substitute guesswork for the already established Web evidence;
+5. do not delete any branch not in the exact list.
 
-## Explicit no-change areas
+If any listed branch is not contained in `origin/main`, STOP before deleting anything and return the branch/ref/SHA evidence.
 
-- Do not rewrite `docs/superpowers/**`; it is maintainer history and may accurately preserve earlier design decisions that were later superseded.
-- Do not change any `skills/**` file under this Task ID.
-- Do not change `README.md` unless final audit finds a direct contradiction that cannot be resolved in the three authorized durable files.
+## Authorized action
 
-## Final audit requirements
+Delete the exact listed remote branches with normal non-force remote deletion. No repository file modification, commit, reset, rebase, merge, tag mutation, force-push, local-work destruction, or target-project action is authorized.
 
-After correction, independently verify:
+Local branches/worktrees are not part of this task. Do not delete them merely because the corresponding remote branch is removed; preserve any unknown local state for a separate evidence-backed cleanup if needed.
 
-- exactly three top-level Skills;
-- all three Skill frontmatter blocks and all relative Skill/reference/template links resolve;
-- cross-Skill routing has one coherent direction: Project Governance default -> Domain Navigation when location/authority is unclear -> Incident Doctor only for a real blocker with insufficient evidence -> Project Governance if diagnosis identifies an unauthorized fix;
-- no Skill creates a competing semantic authority or mandates a literal `DOMAIN_MAP.md`;
-- normal business/product delivery remains default;
-- no executable/runtime/dependency/index/database/daemon/installer/new Skill exists;
-- no open PRs;
-- all retained task/control branches are fully contained in `main` or are explicitly reported as non-contained;
-- root references match the live three-Skill contracts;
-- any remaining issue is classified `BLOCKING`, `IMPORTANT`, `MINOR`, or `NO_CHANGE`.
+## Verification after cleanup
 
-## Verification level
+- `git fetch origin --prune`;
+- list remote branches and confirm only the intended active baseline remains (`origin/main`, excluding symbolic `origin/HEAD` if present);
+- confirm `origin/main` did not move during deletion;
+- confirm historical tags remain unchanged, especially `v0.1.0`;
+- working tree remains unchanged/clean relative to its pre-task state.
 
-`V0 — repository/Skill contract consistency`.
+## Stop conditions
 
-## Adoption gate
+- authority/control mismatch;
+- `origin/main` changes materially during cleanup;
+- any authorized deletion target is not fully contained in `origin/main`;
+- deletion would require force;
+- any unique remote work is discovered;
+- any repository file would need modification.
 
-Adoption is allowed only after the final audit reports zero `BLOCKING` and zero `IMPORTANT` findings. Do not begin adoption under this Task ID.
+## Final receipt
+
+Return only:
+
+- `TASK_ID`
+- `ORIGIN_MAIN_BEFORE`
+- `ORIGIN_MAIN_AFTER`
+- `DELETED_REMOTE_BRANCHES`
+- `REMOTE_BRANCHES_FINAL`
+- `ALL_DELETED_BRANCHES_WERE_ANCESTORS`
+- `OPEN_PR_CHECK`
+- `TAG_CHECK`
+- `WORKTREE_MUTATED`
+- `FINAL_STATE`
 
 ## Current stop point
 
-`AUTHORIZED_FOR_BOUNDED_CORRECTIVE`
+`AUTHORIZED_FOR_LOCAL_EXECUTION`
