@@ -3,13 +3,13 @@
 Use this flow for normal governed product and business work:
 
 1. Read applicable `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`, along with any relevant project authority.
-2. Verify the repository, branch, revision, runtime, or other baseline facts actually needed for the authorized work.
-3. Identify the affected Domain from the project's Domain Map. Use [Domain Navigation](../../domain-navigation/SKILL.md) only when the responsible Domain, authority, or code location is unclear.
+2. Verify only the repository, branch/ref, revision, runtime, or other baseline facts actually needed for the authorized work. In source-controlled projects, also inspect the current workspace state before state-changing work. Preserve unknown staged, unstaged, untracked, or local-only work; do not reset, stash, delete, overwrite, or force-clean it merely to satisfy an execution card. If authoritative baseline/control drift materially affects the task, stop and reconcile before continuing.
+3. Identify the affected Domain/capability from accepted semantic authorities already present in the project and any useful navigation projection. Use [Domain Navigation](../../domain-navigation/SKILL.md) when the responsible Domain/capability, authority, code location, symbol, or test is unclear. Do not require a literal `DOMAIN_MAP.md` just because a template exists.
 4. Confirm the requested work remains within the active objective and scope. Ordinary evidence discovery that supports the accepted objective does not create a new task. A material objective or scope change requires updating `CURRENT_TASK.md` and re-authorization before continuing.
 5. Implement the smallest authorized product or business outcome.
 6. Choose the lightest safe `V0`–`V3` verification level, run its required checks, and record the rationale and observed results.
 7. Update only controls whose owned, verified facts materially changed: durable rules in `AGENTS.md`, the current snapshot in `CURRENT_STATUS.md`, and the active authorization or handoff in `CURRENT_TASK.md`.
-8. Leave a clean handoff or closeout with the baseline, changed paths, checks, unresolved evidence, and next authorized milestone stated accurately.
+8. Leave a clean handoff or closeout with the baseline, changed paths, checks, unresolved evidence, and next authorized milestone stated accurately. If the project uses task branches/worktrees, close or retain them according to the repository's verified lifecycle rules; never destroy unknown work merely for cleanup.
 
 ## Incident Doctor is on demand
 

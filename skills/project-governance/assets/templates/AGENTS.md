@@ -10,13 +10,13 @@ Derive this durable guidance from verified target-repository evidence and accept
 
 [Point to verified sources for product, domain, data, runtime, and repository facts. Preserve one owner per fact class; link to authorities instead of copying their detailed content.]
 
-## Domain Map
+## Domain and navigation authorities
 
-[Link to the verified semantic Domain Map, or state `not established`. Do not infer ownership from directory names alone.]
+[Link to accepted business/product/domain/capability authorities already present in the project and, only when it adds durable routing value, any derived navigation projection. A literal `DOMAIN_MAP.md` is not required. Keep unclear ownership `unknown` rather than inferring it from directory names.]
 
 ## Normal development flow
 
-[Describe durable repository-specific workflow rules supported by current evidence. Do not copy the active task or current progress from `CURRENT_TASK.md` or `CURRENT_STATUS.md`.]
+[Describe durable repository-specific workflow rules supported by current evidence. Do not copy the active task or current progress from `CURRENT_TASK.md` or `CURRENT_STATUS.md`. If the project uses Git, branches, or worktrees, record only the verified lifecycle/freshness rules it actually needs, including non-destructive handling of unknown local work and what baseline/control drift requires a stop.]
 
 ## Doctor on demand
 
@@ -32,4 +32,4 @@ Derive this durable guidance from verified target-repository evidence and accept
 
 ## Stop conditions
 
-[List evidence, authority, or safety conditions that require stopping and identify what verified input is needed to continue.]
+[List evidence, authority, baseline, workspace, or safety conditions that require stopping and identify what verified input is needed to continue. In source-controlled projects, unknown unique work and task-relevant authority/baseline drift are stop conditions unless the repository's accepted workflow explicitly resolves them without data loss.]

@@ -12,11 +12,11 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Affected domains
 
-[Use the project's semantic Domain Map; state `unknown` or `not established` when ownership cannot be verified.]
+[Use accepted business/product/domain/capability authorities and any useful derived navigation projection. State `unknown` or `not established` when ownership cannot be verified. Do not require a literal `DOMAIN_MAP.md`.]
 
 ## Start baseline
 
-[Actual verified repository identity, branch, revision, and relevant remote or runtime identity. Do not use an assumed baseline.]
+[Actual verified repository identity, branch/ref, revision, and relevant remote or runtime identity. For source-controlled work, include the task-relevant workspace/unique-work state when it affects safe execution. Do not use an assumed baseline.]
 
 ## In scope
 
@@ -44,7 +44,7 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Stop conditions
 
-- [Baseline, evidence, authority, scope, or safety conditions that halt this task.]
+- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include task-relevant baseline/control drift and unknown unique work when they cannot be resolved without destructive assumptions.]
 
 ## Handoff / current stop point
 
