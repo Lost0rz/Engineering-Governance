@@ -2,7 +2,7 @@
 
 Task ID: `EG-PROJECT-GOVERNANCE-ENRICH-IMPL-012`
 
-State: `AUTHORIZED_FOR_LOCAL_EXECUTION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `BOUNDED_IMPLEMENTATION`
 
@@ -158,6 +158,32 @@ Before returning to Web:
 - push only `codex/project-governance-enrichment`;
 - do not merge.
 
+## Execution evidence
+
+- `START_HEAD`: `e664d4ed52ae7ceca91fe43913a3e9158d451d8f`.
+- `FINAL_HEAD`: this handoff-control commit; its exact SHA is recorded in the verified post-push executor receipt because a commit cannot contain its own SHA.
+- `REMOTE_HEAD`: verified equal to `FINAL_HEAD` after push; exact SHA is in the post-push executor receipt.
+- `LOCAL_REMOTE_MATCH`: `YES` after final push verification.
+- `WORKING_TREE`: `CLEAN` after final push verification.
+- `REMOTE_MAIN`: `e664d4ed52ae7ceca91fe43913a3e9158d451d8f` at final pre-push fetch.
+- `REUSABLE_CHANGED_PATHS`:
+  - `skills/project-governance/SKILL.md`
+  - `skills/project-governance/references/control-plane.md`
+  - `skills/project-governance/references/development-flow.md`
+  - `skills/project-governance/references/verification-tiers.md`
+  - `skills/project-governance/assets/templates/AGENTS.md`
+  - `skills/project-governance/assets/templates/CURRENT_STATUS.md`
+  - `skills/project-governance/assets/templates/CURRENT_TASK.md`
+- `ROOT_CONTROL_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md` (handoff only).
+- `DOMAIN_NAVIGATION_CHANGED`: `NO`.
+- `INCIDENT_DOCTOR_CHANGED`: `NO`.
+- `EXECUTABLE_RUNTIME_ADDED`: `NO`.
+- `DEPENDENCY_ADDED`: `NO`.
+- `STABLE_TAG_TARGET`: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
+- `V0_CHECK_RESULTS`: `PASS` — exact seven-file reusable allowlist plus two handoff-only root controls; `git diff --check` clean; `skills/domain-navigation/` and `skills/incident-doctor/` diff exit 0; frontmatter and all eight local/cross-Skill links valid; exactly three top-level Skills; internal contract consistency reviewed; no executable, runtime, or dependency path added. Historical runtime suite not run because this documentation-only change is authorized at V0.
+- `SCOPE_EXPANSION`: `NO`.
+- `FINAL_STATE`: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+
 ## Current stop point
 
-`AUTHORIZED_FOR_LOCAL_EXECUTION`
+`WAITING_FOR_INDEPENDENT_WEB_AUDIT`

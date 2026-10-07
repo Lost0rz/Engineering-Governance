@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07
+Last verified: 2026-10-07 — root controls and the Phase B task branch were checked against Git at handoff.
 
 ## Repository identity
 
@@ -15,12 +15,13 @@ Phase A Skill-repository restructuring passed independent Web audit and control 
 
 The live repository contains exactly three top-level Skills: `project-governance`, `domain-navigation`, and `incident-doctor`. The retired Python runtime/tests and obsolete governance/research live trees are no longer active repository content. No installer, executable governance runtime, daemon, service, database, enforcement engine, automatic remediation, or Repo Map program is part of the accepted Phase A baseline.
 
-## Active milestone — Phase B `project-governance` enrichment implementation
+## Active milestone — Phase B `project-governance` enrichment handoff
 
 - Active task: `EG-PROJECT-GOVERNANCE-ENRICH-IMPL-012`.
-- State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 - Mode: `BOUNDED_IMPLEMENTATION`.
 - Authorized branch: `codex/project-governance-enrichment`.
+- Implementation of the seven authorized reusable Skill files is complete on the task branch; it has not been independently accepted or merged.
 - User-approved bounded design baseline: `88c070596b52f465194c37903921efef76c63350`.
 - Scope is limited to enriching the seven existing files under `skills/project-governance/` plus root control-plane handoff updates.
 - Independent Web audit is required before merge.
@@ -61,4 +62,4 @@ Phase B is `V0` documentation/Skill-contract enrichment:
 
 ## Next milestone
 
-Local execution on the authorized Phase B branch, then independent Web audit of the pushed task branch. No merge is authorized to the local executor.
+Independent Web audit of the pushed Phase B task branch. No merge is authorized to the local executor.
