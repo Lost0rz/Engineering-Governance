@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — the post-freeze quality audit found no blocking defect. The first bounded corrective, Project Governance, was re-audited and accepted on `main` at `94c8d89f762f8343045b5c3e7acf01756cd474c9`. The frozen `v0.2.0` comparison baseline remains `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
+Last verified: 2026-10-07 — the post-freeze quality audit found no blocking defect. Project Governance and Domain Navigation bounded correctives have both been re-audited and accepted on `main`; current accepted content head is `123f8382a1c61b84f0af63fe25c3a035a4f1cada`. The frozen `v0.2.0` comparison baseline remains `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
 
 ## Repository identity
 
@@ -12,29 +12,20 @@ Last verified: 2026-10-07 — the post-freeze quality audit found no blocking de
 
 ### Project Governance — re-audit PASS
 
-Accepted corrections:
+No open finding after correction. Normal routing now coexists with existing semantic authorities and optional navigation projections, and source-controlled work has a lightweight non-destructive baseline/workspace safety rule.
 
-- normal routing no longer assumes a mandatory separate Domain Map;
-- existing semantic authorities and optional navigation projections are handled explicitly;
-- source-controlled work now has a lightweight non-destructive baseline/workspace rule;
-- unknown local work is preserved rather than reset/stashed/deleted merely to satisfy a card;
-- task-relevant baseline/control drift requires stop/reconciliation;
-- templates prompt these rules only where the target project actually uses the relevant mechanisms.
+### Domain Navigation — re-audit PASS
 
-No further Project Governance finding is currently open.
+No open finding after correction. Semantic authorities, optional derived navigation projections, and Repo Map are now distinct; no persistent `DOMAIN_MAP.md` is required; refresh/detail/helper guidance no longer recreates a competing semantic authority.
 
-### Domain Navigation — corrective authorized
+### Incident Doctor — corrective authorized
 
-Remaining important findings are older mandatory/stable-`Domain Map` wording in reusable payload, inconsistent semantic-authority/navigation-projection/Repo-Map terminology, and minor duplicate/stale phase headings. These can cause an agent to create a competing navigation authority despite Phase G.
+Remaining important findings are explicit cross-Skill handoff/routing and stale navigation terminology. Doctor must make clear that evidence/fix-boundary work does not itself authorize a behavior change, and Domain Navigation may only locate evidence when source/authority location is unclear. Minor duplicate headings can be removed in the same bounded edit.
 
-- Task: `EG-DOMAIN-NAVIGATION-AUDIT-CORRECTIVE-024`.
+- Task: `EG-INCIDENT-DOCTOR-AUDIT-CORRECTIVE-025`.
 - State: `AUTHORIZED_FOR_BOUNDED_CORRECTIVE`.
-- Planned branch: `codex/domain-navigation-audit-corrective`.
+- Planned branch: `codex/incident-doctor-audit-corrective`.
 
-### Incident Doctor — findings retained, not yet authorized for edit
+## Repository-level follow-up after three Skills
 
-Doctor handoff/navigation wording and minor heading cleanup remain for the next bounded task.
-
-## Adoption boundary
-
-Do not begin target-project adoption until Domain Navigation and Incident Doctor corrections pass re-audit and the final cross-Skill audit is clean.
+After Incident Doctor passes re-audit, perform one final cross-Skill/root pass covering `references/UPSTREAMS.md`, `references/LICENSE_NOTES.md`, stale remote branches, link/frontmatter integrity, and interaction consistency. Do not start adoption before that pass is clean.
