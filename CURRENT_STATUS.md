@@ -2,41 +2,53 @@
 
 Last verified: 2026-10-07
 
-## Project
+## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
-- Accepted standard: `EngineeringGovernanceStandard 0.1.0`, stable.
-- Stable tag `v0.1.0` remains anchored to `738627a0caad330d277f60cfdaff5f153593135e`.
-- Tooling design spec is accepted at control head `012f2a8ff314b7800c15a8a538cc8f7f877bf4fa`.
-- Doctor foundation implementation plan is accepted at control head `534fce576ddbf78e4b7fdaeacc39ec9c5ed58c33`.
+- Current remote baseline before this redesign control update: `d13e6895f6d4bddb753cabcc87566613eaa9bbec`.
+- Repository purpose has been redefined: this repository will be a reusable AI engineering-governance **Skill source repository**, not a governance runtime/product and not an installer.
+- The stable historical tag `v0.1.0` remains part of Git history and is not to be moved.
+- No open pull requests were found at the redesign start.
 
-## Completed Doctor capabilities
+## Accepted v1 direction
 
-- `EG-V01-DOCTOR-FOUNDATION-IMPL-004` is `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
-- `EG-V01-DOCTOR-CLI-005` is `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`.
-- PR #5 is MERGED / CLOSED; merge commit `104b6cdd9182d5a0494fafaf3bae814d24db0f0b`.
-- Accepted Doctor CLI: `PYTHONPATH=src python3.11 -m engineering_governance doctor <target>`.
-- Post-merge Python 3.11 suite passed 56 tests with 0 failures.
-- Doctor task worktree and local/remote task branches were removed; one canonical Git worktree remained.
-- The previously reported Codex managed-worktree attachment is non-blocking external tool metadata, not repository lifecycle residue.
+The v1 repository is organized around three reusable Skills:
 
-## Active milestone — Bootstrap implementation-plan review
+1. `project-governance` — three-file control-plane standards, normal delivery flow, and proportional verification.
+2. `domain-navigation` — semantic Domain Map, evidence-first repository understanding, code navigation, and optional read-only Repo Map assistance.
+3. `incident-doctor` — evidence sufficiency, minimum probes, fresh-incident analysis, hypothesis/falsification, and probe lifecycle.
 
-- Planning task: `EG-V01-BOOTSTRAP-PLAN-006`.
-- State: `WAITING_FOR_USER_PLAN_REVIEW`.
-- No Bootstrap implementation branch or local product work is authorized yet.
-- Implementation plan: `docs/superpowers/plans/2026-10-07-bootstrap-minimal-control-plane-implementation-plan.md`.
-- Plan commit: `6f648b5e2bb9ab1d5c096bf0069de0dd9bd4cf6d`.
-- The first Bootstrap slice is intentionally usable and narrow: one approved `minimal-control-plane.v1` template, explicit target/project/actor, read-only preview, exact plan-digest confirmation, and create-if-absent apply.
-- The starter artifact set is the three root controls `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`; generic Bootstrap creates an idle `NONE / NO_ACTIVE_TASK / IDLE` task control rather than inventing active work.
-- The first slice requires a clean target at preview and apply. Dirty-target fingerprinting is deferred rather than introducing a broader state-capture subsystem before real use demonstrates the need.
-- Existing exact starter files are `NO_CHANGE`; differing files, symlinks, directories, changed plans, unsupported templates, or unsafe targets STOP without overwrite.
-- Audit, AI runtime, MCP, migration, repair, enforcement, remote queries, package installers, template registries, and profile inheritance remain out of scope.
+Four repository-wide principles are fixed for this redesign:
 
-## Delivery policy
+- standardize `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` roles;
+- require a project-level Domain navigation layer;
+- keep normal business/product development primary and enter Doctor only after a real evidence gap appears;
+- scale verification effort by task risk instead of defaulting every task to the heaviest suite.
 
-Continue product/tool delivery rather than speculative diagnostic expansion. Bootstrap is the next product capability because the accepted Doctor baseline is already sufficient. Any extra mechanism added during implementation must be required by the Bootstrap write-safety contract, not by general hardening preference.
+## Legacy live tree
+
+The current `main` still contains the previous governance-runtime implementation and research structure, including `src/engineering_governance/`, `tests/`, legacy governance/reference documents, and Doctor/Bootstrap planning artifacts. Those remain present until a separately authorized restructure implementation task removes or replaces them.
+
+Git history and the existing stable tag are sufficient archival mechanisms; the redesign does not require carrying obsolete runtime code into a new `archive/` directory.
+
+## Current milestone — Skill repository redesign specification
+
+- Active task: `EG-SKILLS-RESTRUCTURE-DESIGN-007`.
+- State: `WAITING_FOR_USER_SPEC_REVIEW`.
+- Design document: `docs/superpowers/specs/2026-10-07-skills-repository-restructure-design.md`.
+- No local restructure implementation, deletion of legacy trees, new Skill skeleton, or implementation branch is authorized until the written design is reviewed and accepted.
+
+## Upstream reference direction
+
+The redesign uses external projects as design evidence, not as runtime dependencies:
+
+- Agent Skills / Anthropic skill-creator structure for `SKILL.md`, `references/`, `assets/`, optional `scripts/`, and progressive disclosure.
+- `AGENTS.md` open format for predictable agent-facing repository instructions.
+- GitHub `awesome-copilot` `acquire-codebase-knowledge` for evidence-first repository understanding and explicit unknowns.
+- Aider Repo Map for dynamic symbol/dependency ranking under a context/token budget.
+
+No upstream code is authorized to be copied during the skeleton task.
 
 ## Next milestone
 
-User review of the Bootstrap implementation plan is required before implementation authorization. If accepted, Web will create a fresh Bootstrap implementation task and task branch, require the current 56-test Python 3.11 baseline, and hand the plan to local Codex for TDD execution. Do not start implementation before that approval.
+User review of the written redesign specification. If accepted, Web will produce a concrete implementation plan whose first local execution slice performs only the repository skeleton reset and legacy-live-tree retirement. After independent review of that slice, the three Skills will be enriched one module at a time rather than in one large implementation.
