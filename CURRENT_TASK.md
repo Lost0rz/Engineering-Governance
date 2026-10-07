@@ -8,7 +8,7 @@ Mode: `TOOLING_FOUNDATION_DESIGN`
 
 ## Objective
 
-Establish a clean post-v0.1 baseline, retire merged lifecycle residue safely, verify the reconciled entry-point documentation, and produce the first written architecture/design spec for a minimal reusable Bootstrap / Doctor / Audit tooling layer.
+Establish a clean post-v0.1 baseline, retire merged or superseded lifecycle residue safely, verify the reconciled entry-point documentation, and produce the first written architecture/design spec for a minimal reusable Bootstrap / Doctor / Audit tooling layer.
 
 This is an **architectural design task**, not an implementation task.
 
@@ -18,6 +18,7 @@ This is an **architectural design task**, not an implementation task.
 - Stable closeout commit and required `v0.1.0` tag target: `738627a0caad330d277f60cfdaff5f153593135e`.
 - PR #1: merged/closed.
 - Merged task branch: `codex/eg-v01-reference-synthesis` at `96a3e2212bfa2ffcfcd31a64557f86380fa8d642`; lifecycle-complete but delete only after local safety proof.
+- Legacy branch: `governance/v0.1` at `660bfd0c5ea5ee4f341e1a642f3fd89980408832`; formally classified **SUPERSEDED** by the accepted seven-layer v0.1 path on `main`, with no PR history. Its commit is retained by SHA as historical provenance and is not to be merged/rebased/wholesale cherry-picked.
 - Accepted model: seven lifecycle layers, six cross-cutting axes, typed authorities, standalone profiles, orthogonal result/freshness/exception/decision semantics.
 - Root `README.md` has already been reconciled on `main` to the accepted seven-layer model and correctly states the tooling is planned, not implemented.
 
@@ -25,15 +26,19 @@ This is an **architectural design task**, not an implementation task.
 
 On the Mac mini canonical checkout:
 
-1. fetch/prune and verify repository identity, branch, HEAD, working-tree state, worktrees, local branches, remote branches, and unique local-only commits;
+1. fetch/prune/tags and verify repository identity, branch, HEAD, working-tree state, worktrees, local branches, remote branches, open PRs, tags, and unique local-only commits;
 2. fast-forward canonical `main` to the live remote control baseline;
-3. prove the merged old task branch/worktree contains no unique unpushed work;
-4. only then remove the old task worktree/local branch and delete remote `codex/eg-v01-reference-synthesis`;
-5. verify no unexpected PR/worktree/branch lifecycle residue remains;
-6. verify remote tag `v0.1.0` is absent, then create and push `v0.1.0` **only** at `738627a0caad330d277f60cfdaff5f153593135e`; STOP if the name exists at another target;
-7. finish with one canonical clean checkout on `main` before creating the new design branch.
+3. inspect `codex/eg-v01-reference-synthesis` and prove its local checkout/worktree/branch contains no unique unpushed work beyond the known merged remote head;
+4. inspect `governance/v0.1` and prove there is no additional machine-local work beyond known remote head `660bfd0c5ea5ee4f341e1a642f3fd89980408832`;
+5. after those safety proofs, remove associated stale worktrees if any, delete the local branches, and delete both remote lifecycle branches:
+   - `codex/eg-v01-reference-synthesis` — `MERGED / CLOSED`;
+   - `governance/v0.1` — `SUPERSEDED`;
+6. do **not** merge, rebase, or wholesale cherry-pick `governance/v0.1`; its six-layer controls and early manifest/authority-map design are historical non-authoritative material. Specific ideas may be reconsidered later only as design input against accepted v0.1;
+7. verify no other unexpected PR/worktree/branch lifecycle residue remains;
+8. verify remote tag `v0.1.0` is absent, then create and push `v0.1.0` **only** at `738627a0caad330d277f60cfdaff5f153593135e`; STOP if the name exists at another target;
+9. finish with one canonical clean checkout on current `main` before creating the new design branch.
 
-Never reset, force-delete, clean, stash, overwrite, or rebase unknown work to make cleanup pass.
+Never reset, force-delete, clean, stash, overwrite, or rebase unknown work to make cleanup pass. Known remote commits do not become disposable until any machine-local branch/worktree state has been checked independently.
 
 ## Gate 1 — create bounded design branch
 
@@ -78,6 +83,8 @@ Evaluate each against:
 - future extensibility without committing to MCP/enforcement now.
 
 Recommend one approach with explicit trade-offs and YAGNI rationale. Do not choose a language/framework merely from preference; inspect the local environment and justify the smallest dependable implementation path.
+
+The superseded `governance/v0.1` branch may be consulted only as historical design evidence. Do not treat its six-layer model, `.governance/project.json`, `PROJECT_AUTHORITY_MAP.md`, or old Doctor/skills claims as accepted requirements. Re-adopt any idea only if it fits the stable seven-layer standard and current design evidence.
 
 ## Gate 4 — required tooling semantics in the written design
 
@@ -182,11 +189,18 @@ LOCAL_MAIN_AFTER_SYNC:
 LOCAL_MAIN_REMOTE_MATCH:
 MAIN_WORKING_TREE:
 
-OLD_TASK_REMOTE_BRANCH_BEFORE:
-OLD_TASK_UNIQUE_WORK_FOUND:
-OLD_TASK_WORKTREE_REMOVED:
-OLD_TASK_LOCAL_BRANCH_REMOVED:
-OLD_TASK_REMOTE_BRANCH_REMOVED:
+MERGED_BRANCH_REMOTE_HEAD_BEFORE:
+MERGED_BRANCH_UNIQUE_LOCAL_WORK_FOUND:
+MERGED_BRANCH_WORKTREE_REMOVED:
+MERGED_BRANCH_LOCAL_REMOVED:
+MERGED_BRANCH_REMOTE_REMOVED:
+
+SUPERSEDED_BRANCH_REMOTE_HEAD_BEFORE:
+SUPERSEDED_BRANCH_DISPOSITION: SUPERSEDED
+SUPERSEDED_BRANCH_EXTRA_LOCAL_WORK_FOUND:
+SUPERSEDED_BRANCH_WORKTREE_REMOVED:
+SUPERSEDED_BRANCH_LOCAL_REMOVED:
+SUPERSEDED_BRANCH_REMOTE_REMOVED:
 
 V0_1_TAG_CREATED:
 V0_1_TAG_TARGET:
@@ -215,4 +229,4 @@ FINAL_STATE: WAITING_FOR_USER_SPEC_REVIEW | STOP
 STOP_REASON:
 ```
 
-STOP on unexplained drift, unknown local work, tag collision, branch provenance ambiguity, or any need to cross into executable implementation.
+STOP on unexplained drift, unknown local work, tag collision, branch provenance ambiguity beyond the classifications above, or any need to cross into executable implementation.
