@@ -1,59 +1,63 @@
-# CURRENT TASK — Incident Doctor Audit Corrective
+# CURRENT TASK — Final Root and Cross-Skill Corrective
 
-Task ID: `EG-INCIDENT-DOCTOR-AUDIT-CORRECTIVE-025`
+Task ID: `EG-FINAL-ROOT-CROSS-SKILL-CORRECTIVE-026`
 
 State: `AUTHORIZED_FOR_BOUNDED_CORRECTIVE`
 
-Mode: `BOUNDED_DOCUMENTATION_CORRECTIVE`
+Mode: `ROOT_CONSISTENCY_CORRECTIVE`
 
 ## Objective
 
-Correct only the Incident Doctor interaction/terminology issues established by `EG-FULL-SKILL-AUDIT-022`, preserving the accepted evidence-gated reactive model.
+Resolve the remaining root/reference consistency findings after all three Skills passed individual re-audit, then perform the final repository-wide audit before adoption.
 
 ## Authority and baseline
 
-- Accepted Domain Navigation corrective/main head: `123f8382a1c61b84f0af63fe25c3a035a4f1cada`.
-- Frozen reusable comparison baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
-- Planned branch: `codex/incident-doctor-audit-corrective`.
+- Accepted Incident Doctor corrective/main head: `03d85ca998913e62cb47bbc160a2ea5c040c108e`.
+- Frozen pre-audit comparison baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
+- Planned branch: `codex/final-root-cross-skill-corrective`.
 
-## Authorized reusable files
+## Authorized durable files
 
-- `skills/incident-doctor/SKILL.md`
-- `skills/incident-doctor/references/evidence-gate.md`
-- `skills/incident-doctor/references/fresh-incident.md`
-- `skills/incident-doctor/references/probe-lifecycle.md`
-- `skills/incident-doctor/assets/templates/INCIDENT.md`
+- `AGENTS.md`
+- `references/UPSTREAMS.md`
+- `references/LICENSE_NOTES.md`
 
-Root `CURRENT_STATUS.md` and `CURRENT_TASK.md` may change only for handoff/closeout.
+Root `CURRENT_STATUS.md` and `CURRENT_TASK.md` may change for handoff/closeout.
 
 ## Required corrective
 
-1. Replace stale `Domain Map`-as-authority wording with generic semantic-authority/navigation evidence terminology.
-2. Make the cross-Skill exit explicit: Incident Doctor may establish evidence, falsify hypotheses, and define a minimum fix boundary, but it never grants authorization for a behavior change. If the current task does not authorize the fix or required side effects, return to Project Governance for reconciliation/re-authorization before changing behavior.
-3. Make the navigation helper boundary explicit: when source/authority/code/test location is unclear during an incident, Domain Navigation may be used only to locate and verify evidence; it does not diagnose the incident or decide root cause.
-4. Remove duplicate headings in touched reusable references.
-5. Keep the incident record concise; non-applicable fields may be marked/omitted according to the template rather than expanded into a diary.
+1. Update the Aider/Repo Map upstream note to the accepted three-layer distinction: semantic authorities may own meaning; a navigation projection is optional/derived; Repo Map is optional/dynamic/read-only candidate selection and is not a runtime dependency.
+2. Replace Phase-A-only license wording with a time-neutral policy: upstream concepts are attributed in `UPSTREAMS.md`; this note is not an exhaustive legal/provenance determination; copying code or substantial text requires checking the applicable license and required attribution/notices before inclusion.
+3. Align root Incident Doctor guidance with the accepted handoff: Doctor may establish evidence and the minimum fix boundary, but if the active task does not authorize the behavior change/side effects, return to Project Governance before changing behavior.
 
-## Out of scope
+## Explicit no-change areas
 
-- changes to `project-governance` or `domain-navigation`;
-- changing the evidence sufficiency model, root-cause status model, or one-active-gap-per-probe design;
-- new probes, runtime diagnostics, telemetry, scripts, dependencies, services, or automatic remediation;
-- target-project adoption.
+- Do not rewrite `docs/superpowers/**`; it is maintainer history and may accurately preserve earlier design decisions that were later superseded.
+- Do not change any `skills/**` file under this Task ID.
+- Do not change `README.md` unless final audit finds a direct contradiction that cannot be resolved in the three authorized durable files.
 
-## Verification
+## Final audit requirements
 
-`V0` only:
+After correction, independently verify:
 
-- changed reusable paths exactly the five authorized files;
-- frontmatter and relative cross-Skill links resolve;
-- Doctor does not authorize task scope or behavior change;
-- Project Governance is the route for missing authorization;
-- Domain Navigation is only a source/authority-location aid inside incident work;
-- evidence taxonomy/root-cause/probe lifecycle semantics remain intact;
-- sibling Skills unchanged;
-- no executable/runtime/dependency addition;
-- final branch independently re-audited before merge.
+- exactly three top-level Skills;
+- all three Skill frontmatter blocks and all relative Skill/reference/template links resolve;
+- cross-Skill routing has one coherent direction: Project Governance default -> Domain Navigation when location/authority is unclear -> Incident Doctor only for a real blocker with insufficient evidence -> Project Governance if diagnosis identifies an unauthorized fix;
+- no Skill creates a competing semantic authority or mandates a literal `DOMAIN_MAP.md`;
+- normal business/product delivery remains default;
+- no executable/runtime/dependency/index/database/daemon/installer/new Skill exists;
+- no open PRs;
+- all retained task/control branches are fully contained in `main` or are explicitly reported as non-contained;
+- root references match the live three-Skill contracts;
+- any remaining issue is classified `BLOCKING`, `IMPORTANT`, `MINOR`, or `NO_CHANGE`.
+
+## Verification level
+
+`V0 — repository/Skill contract consistency`.
+
+## Adoption gate
+
+Adoption is allowed only after the final audit reports zero `BLOCKING` and zero `IMPORTANT` findings. Do not begin adoption under this Task ID.
 
 ## Current stop point
 

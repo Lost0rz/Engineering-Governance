@@ -1,31 +1,34 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — the post-freeze quality audit found no blocking defect. Project Governance and Domain Navigation bounded correctives have both been re-audited and accepted on `main`; current accepted content head is `123f8382a1c61b84f0af63fe25c3a035a4f1cada`. The frozen `v0.2.0` comparison baseline remains `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
+Last verified: 2026-10-07 — all three reusable Skills completed their post-freeze bounded corrective and independent re-audit. Project Governance is accepted at `94c8d89f762f8343045b5c3e7acf01756cd474c9`; Domain Navigation at `123f8382a1c61b84f0af63fe25c3a035a4f1cada`; Incident Doctor at `03d85ca998913e62cb47bbc160a2ea5c040c108e`. No blocking or important finding remains inside the three Skill modules themselves.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
+- Frozen pre-audit comparison baseline `v0.2.0`: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
 - Historical `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
 
-## Audit/corrective progress
+## Three-Skill re-audit state
 
-### Project Governance — re-audit PASS
+- **Project Governance:** PASS — optional semantic-navigation coexistence and non-destructive source-control baseline/workspace behavior are explicit.
+- **Domain Navigation:** PASS — semantic authorities, optional derived navigation projections, and Repo Map are distinct and non-competing; no mandatory `DOMAIN_MAP.md` remains.
+- **Incident Doctor:** PASS — Domain Navigation is evidence-location only; Doctor does not grant behavior-change authorization; missing authorization returns to Project Governance.
 
-No open finding after correction. Normal routing now coexists with existing semantic authorities and optional navigation projections, and source-controlled work has a lightweight non-destructive baseline/workspace safety rule.
+## Final root/cross-Skill findings
 
-### Domain Navigation — re-audit PASS
+The final interaction audit found the three Skill contracts consistent. Remaining changes are root/reference consistency only:
 
-No open finding after correction. Semantic authorities, optional derived navigation projections, and Repo Map are now distinct; no persistent `DOMAIN_MAP.md` is required; refresh/detail/helper guidance no longer recreates a competing semantic authority.
+1. `references/UPSTREAMS.md` still describes a project's Domain Map as the semantic authority in the Aider note; update it to the accepted three-layer model.
+2. `references/LICENSE_NOTES.md` is framed only around Phase A and should become a current, time-neutral license/provenance policy without claiming an exhaustive legal audit.
+3. Root `AGENTS.md` Incident Doctor sequence says “make the minimum fix” without the newly explicit authorization handoff; align it so Doctor defines the evidence-supported minimum fix boundary and behavior changes occur only when the active task authorizes them.
 
-### Incident Doctor — corrective authorized
+Historical `docs/superpowers/**` retains old design wording by design and remains maintainer history, not live reusable contract; it should not be rewritten to hide project history.
 
-Remaining important findings are explicit cross-Skill handoff/routing and stale navigation terminology. Doctor must make clear that evidence/fix-boundary work does not itself authorize a behavior change, and Domain Navigation may only locate evidence when source/authority location is unclear. Minor duplicate headings can be removed in the same bounded edit.
+## Active task
 
-- Task: `EG-INCIDENT-DOCTOR-AUDIT-CORRECTIVE-025`.
+- Task: `EG-FINAL-ROOT-CROSS-SKILL-CORRECTIVE-026`.
 - State: `AUTHORIZED_FOR_BOUNDED_CORRECTIVE`.
-- Planned branch: `codex/incident-doctor-audit-corrective`.
+- Mode: `ROOT_CONSISTENCY_CORRECTIVE`.
 
-## Repository-level follow-up after three Skills
-
-After Incident Doctor passes re-audit, perform one final cross-Skill/root pass covering `references/UPSTREAMS.md`, `references/LICENSE_NOTES.md`, stale remote branches, link/frontmatter integrity, and interaction consistency. Do not start adoption before that pass is clean.
+After this bounded corrective, perform a final repository-wide V0 audit including frontmatter/link integrity, exact Skill count, open PRs, and stale branch containment. Adoption remains blocked until that final audit is clean.
