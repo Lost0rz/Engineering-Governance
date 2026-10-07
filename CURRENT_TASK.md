@@ -1,52 +1,42 @@
-# CURRENT TASK — Root Consistency and Freeze Handoff
+# CURRENT TASK — Root Consistency and Freeze Closeout
 
 Task ID: `EG-ROOT-CONSISTENCY-FREEZE-021`
 
-State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
+State: `CLOSED_ACCEPTED_MAIN_PENDING_FREEZE_RECORD`
 
-Mode: `BOUNDED_ROOT_DOCS_FREEZE_AUDIT_HANDOFF`
+Mode: `MERGED_CLOSEOUT`
 
 ## Objective
 
-Hand off the completed root-document consistency correction for independent Web audit before merge and freeze. No reusable Skill-content change or target-project adoption is authorized.
+Record accepted merge of the root consistency correction and establish the closeout commit as the immutable frozen baseline for stable version label `v0.2.0`.
 
-## Authority and exact heads
+## Authority and accepted heads
 
 - Pre-task main: `7ec0ffd574a0ec7e43c2990ebaf79633a6719e22`.
 - Authorization/main head: `349adbe6011b77b6c5b921dc1f995ec881e2d36a`.
-- Task branch: `control/root-consistency-freeze-auth`.
 - Root-content implementation commit: `0062481f4bc7101fd3774472edf56be395763e69`.
+- Audited task-branch / merge head: `be63f646bee1b99c184e363db31f1883d455714f`.
 - Historical `v0.1.0^{}` target: `738627a0caad330d277f60cfdaff5f153593135e`.
-- Intended new stable version label after accepted closeout: `v0.2.0`.
 
-## Changed durable files
+## Audit and merge result
 
-- `README.md`
-- `AGENTS.md`
+- Authorization -> branch final was `ahead_by=2`, `behind_by=0`, merge base exactly the authorization head.
+- Durable-content changes were exactly `README.md` and `AGENTS.md`; the only other changes were root task controls.
+- `skills/**` tree identities were byte-unchanged between authorization and audited branch.
+- Exactly three top-level Skills remain.
+- Root wording now agrees with the merged `domain-navigation` contract.
+- No executable/runtime/dependency/workflow/tooling/new Skill was added.
+- Historical `v0.1.0` remained unchanged.
+- The audited branch was fast-forwarded to `main` with `force=false`.
 
-The correction removes the obsolete universal requirement for a separate/literal Domain Map and aligns root guidance with the accepted Phase G Domain Navigation contract: discover existing semantic authorities first, reference rather than duplicate them, and add a separate derived navigation projection only when durable source/symbol/test/entry-point routing adds value.
+## Freeze rule
 
-## Audit contract
+The closeout commit created from this record is the immutable `v0.2.0` frozen baseline. After its SHA is known, record that exact SHA in the control plane. A Git tag named `v0.2.0`, if/when written, must point to that exact SHA and must never move.
 
-Verify:
+## Closed scope
 
-1. branch is a clean linear descendant of authorization head;
-2. durable-content changes are exactly `README.md` and `AGENTS.md`;
-3. root wording matches the merged `domain-navigation` Skill contract;
-4. `skills/**` is byte-unchanged from authorization;
-5. exactly three top-level Skills remain;
-6. no executable/runtime/dependency/workflow/tooling/new Skill was added;
-7. historical `v0.1.0` is unchanged.
-
-If all pass, merge to `main`, then close the task and freeze the resulting baseline by exact immutable commit SHA. If a `v0.2.0` Git tag can be written, it must point to that exact frozen SHA and never move.
-
-## Forbidden actions
-
-- any reusable Skill edit;
-- any target-project mutation or adoption;
-- any new architecture/tooling/runtime surface;
-- moving/replacing historical `v0.1.0`.
+This task does not authorize any more Skill changes or target-project adoption. Future changes require a new Task ID.
 
 ## Current stop point
 
-`WAITING_FOR_INDEPENDENT_WEB_AUDIT`
+`PENDING_EXACT_FREEZE_SHA_RECORD`
