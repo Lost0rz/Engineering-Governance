@@ -1,6 +1,6 @@
 # Upstream concepts
 
-This repository records public work that informed its design. It borrows concepts, not vendored implementations.
+This repository records public work that informed its design. These references describe conceptual influence; they are not hidden runtime dependencies or automatic authorities for target projects.
 
 ## Agent Skills and Anthropic's skill creator
 
@@ -16,4 +16,4 @@ The [GitHub `awesome-copilot` skill](https://github.com/github/awesome-copilot/t
 
 ## Aider Repo Map
 
-[Aider's Repo Map](https://aider.chat/docs/repomap.html) informs optional dynamic context selection and ranking of useful files or symbols under limited context. It is a navigation aid, not the semantic authority represented by a project's Domain Map, and it is not a runtime dependency here.
+[Aider's Repo Map](https://aider.chat/docs/repomap.html) informs optional dynamic context selection and ranking of useful files or symbols under limited context. In this repository's model, accepted semantic authorities may own product/domain meaning, an optional navigation projection may preserve durable routing, and a Repo Map is only a dynamic read-only candidate-selection aid. It does not decide ownership or authority, replace direct source verification, or become a runtime dependency here.

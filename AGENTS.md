@@ -62,7 +62,7 @@ The active task must state the chosen level and why. Do not run a full historica
 
 ## Incident Doctor boundary
 
-Incident Doctor is not a parallel product track. Enter it only when a real failure or unexplained behavior blocks safe progress and current evidence cannot answer the needed question. The sequence is: classify the problem, assess evidence sufficiency, analyze existing evidence, add the minimum probe if needed, capture a fresh incident, test/falsify hypotheses, make the minimum fix, verify regression, then retire or explicitly promote the probe.
+Incident Doctor is not a parallel product track. Enter it only when a real failure or unexplained behavior blocks safe progress and current evidence cannot answer the needed question. The sequence is: classify the problem, assess evidence sufficiency, analyze existing evidence, add the minimum probe if needed, capture a fresh incident, test/falsify hypotheses, and define the minimum evidence-supported fix boundary. That diagnosis does not itself authorize a behavior change: if the active task does not authorize the fix and required side effects, return to Project Governance for reconciliation/re-authorization before changing behavior. After an authorized fix, verify regression, then retire or explicitly promote the probe.
 
 ## Legacy preservation
 
