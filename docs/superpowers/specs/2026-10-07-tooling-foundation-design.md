@@ -157,12 +157,26 @@ machine-readable schema.
    values instead of filling them by inference.
 4. Doctor runs lightweight deterministic health checks. Audit applies the
    selected versioned checks and records which evidence supports each result.
-5. The core emits a report to stdout. AI analysis, when requested, is attached
-   as a separate derived contribution with its model/template identity,
-   cited inputs, uncertainty, and limitations.
-6. A project decision owner records any decision or exception through the
-   project’s existing decision/task authority. The tools only link to it.
-7. Bootstrap follows a separate preview/approval path and creates only
+5. The deterministic core emits an immutable base report with a report
+   identity/digest, target and revision, evaluation/check identities, result,
+   and evidence identities. That base report is the canonical output of the
+   command and is never edited in place.
+6. For `AI_JUDGMENT` or `HYBRID`, the AI skill consumes that identified base
+   report and only the evidence references it names. The skill returns a
+   derived `AIContribution` that links to the target, evaluation/check,
+   evidence identities, base report identity/digest, model/provider,
+   instruction/template identity, limitations, uncertainty, and contribution
+   identity. The contribution cannot replace a result or source evidence.
+7. A deterministic core composer validates those links and presents an
+   ephemeral composed view: the immutable base report plus the linked derived
+   contribution. A mismatch is left unlinked and reported; it never changes
+   the base report. No persistent AI report store is created.
+8. A HUMAN/HYBRID final judgment remains with the named human/project
+   authority. The skill cannot record a project decision, approve its own
+   contribution, or act as an independent reviewer of its prior output. Any
+   decision/exception is recorded through the project’s existing authority;
+   the tools only link to it.
+9. Bootstrap follows a separate preview/approval path and creates only
    explicitly approved missing starter files.
 
 ## 8. Proposed repository layout
@@ -196,23 +210,48 @@ It MUST:
 - inspect the target before proposing any write;
 - show a complete preview/diff and require a separate explicit apply
   confirmation;
-- create missing governance artifacts only; it must not overwrite an
-  existing file, even if that file appears incomplete or outdated;
+- create only candidate paths absent at preview and authorized as `CREATE`;
+  never overwrite or replace an existing file. An exact expected existing
+  artifact is the `NO_CHANGE` case below; a differing artifact is a conflict;
 - use only approved templates and preserve clear placeholders such as
   `UNKNOWN` where project-owned facts are not supplied;
 - never create an active task from a generic template; a task contract must
   come from an explicitly supplied project objective and owner;
-- be idempotent: a repeat against an already-created, unchanged setup makes
-  no changes;
-- recheck target identity and candidate paths at apply time, stopping if they
-  changed since preview; and
+- create an immutable conceptual **Preview Plan** before any apply. Its plan
+  identity/digest binds at least: target repository identity and canonical
+  root; target revision/state needed for safe comparison (including `HEAD`,
+  index/worktree state, and candidate-path/parent identities and contents);
+  template and profile versions; the full candidate path set and each planned
+  action; rendered content digests; and the named human/project-authorized
+  apply actor. The plan is a transient preview value, not persisted state;
+  show its identity/digest to the operator so apply confirmation refers to
+  that exact plan;
+- classify an existing candidate artifact whose path/type and content exactly
+  match the candidate rendered from the selected approved template/profile as
+  `NO_CHANGE`. A repeated run over the same expected artifacts is therefore
+  idempotent and performs no write;
+- classify any existing candidate path that differs from the preview’s
+  expected path/type/content as `CONFLICT / STOP`; never overwrite it;
+- on apply, require a separate human-originated confirmation from the named
+  authorized actor that identifies the preview plan. An AI-generated flag or
+  AI-skill invocation is not human authorization. Then re-read the target,
+  re-render, and recompute the plan from the same template/profile versions
+  and inputs. Apply proceeds only
+  if the recomputed plan identity/digest exactly matches the approved plan,
+  every planned `CREATE` path remains absent, and every `NO_CHANGE` artifact
+  remains an exact match. Any target, version, path, content, or state change
+  is `STOP`; a new preview and approval are required; and
 - stop on conflicts, symlink/path ambiguity, unsupported profile versions, or
   any attempt to write outside the explicit target’s approved governance
   paths.
 
 It MUST NOT invent domain/product authorities, choose project policy, infer an
 active task, migrate existing controls, repair drift, or modify application
-files. An existing path is a conflict to report, not a reason to overwrite.
+files. AI skills may present the preview but MUST NOT approve or invoke apply
+as the authorized actor. The core validates the actor and plan before any
+write and uses create-if-absent behavior for `CREATE` paths; a concurrent
+appearance or mutation of a candidate path stops the operation without
+overwriting it.
 
 ## 10. Doctor contract
 
@@ -250,6 +289,17 @@ review mode, evidence references, evaluation time, and limitations.
 - `HYBRID` shows machine evidence and AI/human contributions separately and
   names the human owner of any final judgment.
 
+For AI-enabled checks, Audit follows Section 7’s ownership flow: the core
+emits the immutable deterministic base report; the skill returns a linked
+`AIContribution`; and the core validates and composes a view without
+rewriting the base report. The contribution references its target,
+evaluation/check, evidence, base report identity, model/provider,
+instruction/template, limitations, and uncertainty. The skill cannot modify
+machine results, source evidence, the original report, or project decisions.
+The contribution is ephemeral and derived; it creates no second authority or
+persistent AI report store. A HUMAN/HYBRID final judgment belongs only to the
+named human/project authority.
+
 Audit keeps historical result separate from current freshness, exception
 state, and project decision. It emits findings and evidence references, not
 replacement source facts. It does not write an audit history, profile,
@@ -275,22 +325,49 @@ redirection is outside the tool’s behavior and permissions.
 
 ## 13. STOP and failure semantics
 
-The tool stops the affected operation and reports the exact target, observed
-condition, evidence, and needed owner/action when:
+Keep evaluation-level unresolved states separate from command-level fatal or
+unsafe stops.
 
-- repository identity or target path is ambiguous;
-- two sources compete for the same fact class and the declared owner cannot
-  resolve the conflict;
-- required evidence is missing, stale, inaccessible, or has no verifiable
-  source identity;
-- a required control is malformed or its version is unsupported;
-- Bootstrap would encounter an existing path, changed preview, unsafe path,
-  or unapproved write; or
-- a remote read is unavailable and the requested claim depends on it.
+### Evaluation-level unresolved evidence
 
-Unknown evidence remains `UNVERIFIED` or freshness `UNKNOWN`; it is not
-converted into pass or a guessed project fact. A stop is a report, not a
-repair request and not a hidden branch/process mutation.
+Missing, stale, or inaccessible optional/required evidence is not by itself a
+command failure when the target and remaining inputs are trustworthy enough
+to describe the gap. For each affected check:
+
+- emit `UNVERIFIED` where evidence incompleteness prevents a supported result;
+- assess freshness as `STALE` or `UNKNOWN` as the evidence supports;
+- preserve any historical result unchanged;
+- record which evidence was missing, stale, or inaccessible and the resulting
+  limitation;
+- report an unresolved same-class authority/owner conflict as `UNVERIFIED`
+  for the affected check, identifying the conflicting sources and decision
+  blocker; and
+- emit the truthful report with exit code `0`.
+
+An optional missing source may be recorded as a limitation without changing a
+result that does not depend on it. Evidence incompleteness never silently
+becomes a conformance or enforcement gate.
+
+### Command-level fatal / unsafe STOP
+
+Stop the command without a normal evaluation report only when it cannot
+truthfully or safely perform the requested operation, including:
+
+- target identity/path is ambiguous;
+- the minimum trusted repository identity or root input required to scope a
+  truthful report cannot be established;
+- a required root control input is fatally malformed or unreadable, so the
+  command cannot identify what it is evaluating;
+- Bootstrap finds a conflicting existing artifact, changed Preview Plan,
+  unsafe path, unapproved actor, or other write-safety violation; or
+- an internal fatal failure prevents a trustworthy report.
+
+Optional remote access or subordinate evidence being unavailable is
+evaluation-level unresolved state when it can be reported as such; it is not
+a fatal STOP. The command emits a bounded STOP diagnostic identifying the
+observed condition and next owner/action, performs no unsafe write, repair, or
+hidden mutation, and returns a nonzero command-level exit code as defined in
+Section 15.
 
 ## 14. Evidence and provenance
 
@@ -308,26 +385,34 @@ unknown, never inferred from another claim class.
 
 ## 15. Report and exit semantics
 
-The core produces one versioned report envelope on stdout. Conceptually it
-contains tool/report version, target identity, evaluated revision, standard/
-profile/check versions, observation time, command, review modes, evaluations,
-freshness assessments, findings, exception/decision references, evidence
-references, and limitations. A future implementation may serialize the
-envelope for both human and machine consumers; this document does not define
-or implement a serialization schema or persistent report store.
+The deterministic core produces an immutable versioned base report on
+stdout. Conceptually it identifies the target/revision, report identity/digest,
+standard/profile/check versions, observation time, evaluations, freshness,
+findings, evidence references, and limitations. For AI-enabled checks, the
+composer may emit an ephemeral composed view containing that unchanged base
+report plus a validated, linked `AIContribution`. The contribution does not
+rewrite or supersede the base report. This document does not define or
+implement a serialization schema or persistent report store.
 
-Process exit codes describe whether the command ran and produced a truthful
-report; they do not encode project conformance:
+Exit codes classify command execution, never governance outcome:
 
-- `0`: a report was produced, including reports with `FAIL`, `UNVERIFIED`,
-  `NOT_APPLICABLE`, stale evidence, or findings;
-- `2`: invalid invocation, ambiguous target, or an explicit Bootstrap
-  conflict/approval stop; and
-- `3`: the command could not produce a trustworthy report due to a fatal
-  internal or unreadable-input failure.
+- `0`: the command produced a truthful report. This includes `FAIL`,
+  `UNVERIFIED`, `NOT_APPLICABLE`, stale/unknown freshness, missing or
+  inaccessible evidence and unresolved same-class authority conflicts that
+  can be reported truthfully, findings, and a successful Bootstrap
+  `NO_CHANGE` result. Evidence incompleteness alone MUST NOT produce a
+  nonzero code.
+- `2`: command-level fatal/unsafe STOP: ambiguous target, minimum trusted
+  identity/root input unavailable, fatal malformed/unreadable root control,
+  or Bootstrap conflict, changed plan, unsafe path, or unauthorized actor.
+  No normal evaluation report is emitted; a STOP diagnostic may be emitted.
+- `3`: internal fatal failure prevents a trustworthy report or STOP
+  diagnostic.
 
-No exit code is a CI/enforcement gate. A future named project gate would be a
-separate, explicitly authorized consumer of a current project decision.
+Exit `2`/`3` describe whether the command could safely produce its requested
+output; no code is a conformance or enforcement gate. A future named project
+gate would be a separate, explicitly authorized consumer of a current
+project decision.
 
 ## 16. Small-project and offline operation
 
@@ -424,15 +509,20 @@ this spec.
 |---|---|---|
 | Over-design | One small core and optional thin skill; no framework, service, or required per-layer artifacts. | No blocker identified. |
 | Duplicate authority/state | The model is derived in memory; project files and declared authorities remain canonical; reports use references. | No blocker identified. |
-| Hidden writer | Only Bootstrap writes, only missing approved paths, after preview and explicit apply; Doctor/Audit are stdout-only. | No blocker identified. |
+| Hidden writer | Only Bootstrap writes, only missing approved paths, after plan-bound human approval; Doctor/Audit are stdout-only. | No blocker identified. |
 | AI judgment presented as deterministic | Review mode and evidence contributions stay separate; AI cites inputs and cannot accept factual results. | No blocker identified. |
 | Doctor/Audit accidentally writable | No report/file writes, repair, ref update, branch switch, or remote mutation. | No blocker identified. |
-| Bootstrap too powerful | Explicit target, approved template, no overwrite, no migration, no business facts, revalidation at apply. | No blocker identified. |
+| Bootstrap preview/apply and idempotence | Exact expected existing artifact is `NO_CHANGE`; differing artifact or changed plan is `CONFLICT / STOP`. A transient immutable plan binds target state, versions, paths, rendered digests, and authorized human actor; apply recomputes and compares it before writes, and AI cannot approve. | MAJOR resolved. |
+| Evaluation unresolved vs command STOP | Reportable evidence gaps yield `UNVERIFIED`/`STALE`/`UNKNOWN`, limitations, and exit `0`; only fatal identity/root-input or unsafe/internal failures stop with nonzero exit. | MAJOR resolved. |
+| Hybrid AI contribution ownership | The core keeps an immutable base report; it validates and links an ephemeral `AIContribution` without mutating the report, evidence, or project decision. | MAJOR resolved. |
+| Bootstrap too powerful | Explicit target, approved template, no overwrite, no migration, no business facts, and apply-time plan revalidation. | No blocker identified. |
 | Small project too heavy | Optional adoption, short standalone profile, selected checks only, local/offline operation. | No blocker identified. |
 | Central service creep | No server, database, hidden process, or mandatory network; remote reads are opt-in. | No blocker identified. |
 | MCP/enforcement creep | Explicitly deferred; report exit status is not a conformance gate. | No blocker identified. |
 | Language selected by convenience alone | Runtime recommendation is tied to observed host and zero-dependency local use; portability/floor remains open before implementation. | Open implementation choice; no design blocker. |
 
-Self-review found no BLOCKER or MAJOR contradiction with accepted v0.1. The
-runtime floor and distribution method remain open implementation questions,
-not permission to expand this task.
+Self-review against the three Web findings confirms each is explicitly
+resolved above without changing the Hybrid recommendation or accepted
+`EngineeringGovernanceStandard` `0.1.0`. No BLOCKER or MAJOR contradiction
+with accepted v0.1 was introduced. The runtime floor and distribution method
+remain open implementation questions, not permission to expand this task.
