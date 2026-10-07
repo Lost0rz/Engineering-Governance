@@ -2,7 +2,7 @@
 
 Task ID: `EG-V01-DOCTOR-CLI-005`
 
-State: `ACTIVE — LOCAL_IMPLEMENTATION_AUTHORIZED`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `BOUNDED_FEATURE_TDD`
 
@@ -58,6 +58,22 @@ Implementation may add a minimal module entry point and, only if it improves sep
 - report schema redesign or persistent report storage;
 - pilot repository integration;
 - unrelated refactors.
+
+## Executor evidence — 2026-10-07
+
+- Control head: `f1fba7f9591047f6e2f40e677f79048227d67d8e`; live `origin/main` matched this exact SHA before task work. Baseline main was clean at the same SHA.
+- Isolated worktree: `/Users/ox_miles/.codex/worktrees/eg-v01-doctor-cli/Engineering-Governance`, on `codex/eg-v01-doctor-cli`.
+- Baseline command `PYTHONPATH=src python3.11 -m unittest discover -s tests -v`: 52 tests, 0 failures.
+- RED command `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_cli.py' -v`: 4 expected failures; the package had no `engineering_governance.__main__` entry point.
+- GREEN focused command `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_cli.py' -v`: 4 tests passed.
+- Final full command `PYTHONPATH=src python3.11 -m unittest discover -s tests -v`: 56 tests, 0 failures.
+- CLI behavior: valid fixture target exits 0 and emits one JSON report; non-repository STOP exits 2 with no JSON; missing target and unsupported `audit` command each exit 2, and the usage tests confirm `run_doctor()` is not called.
+- Read-only invariant: the CLI test's before/after snapshot of dirty target files and Git metadata is identical. Existing Doctor and Git-reader mutation/command-allowlist tests also pass.
+- Scope audit: no dependency, packaging, or framework files added; the CLI delegates to existing `run_doctor()`, `run_git_readonly`, and `Path.read_bytes`; no remote Git/network operation or Doctor check was added.
+- README now documents the supported invocation and leaves Bootstrap/Audit unimplemented. `v0.1.0^{commit}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
+- Implementation commit: `40cedb3ab21130ca773ec20519d1b8d669b24422`. Draft PR #5 targets `main` and is open/unmerged.
+- Product changed paths: `README.md`, `src/engineering_governance/__main__.py`, `tests/test_cli.py`. `CURRENT_STATUS.md` and `CURRENT_TASK.md` contain this synchronized handoff state.
+- The task worktree and branch remain active for independent Web audit; no merge, release, tag movement, or cleanup occurred.
 
 ## Execution gates
 
