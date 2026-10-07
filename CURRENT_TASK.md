@@ -2,7 +2,7 @@
 
 Task ID: `EG-INCIDENT-DOCTOR-ENRICH-IMPL-016`
 
-State: `AUTHORIZED_FOR_LOCAL_EXECUTION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `BOUNDED_IMPLEMENTATION`
 
@@ -224,6 +224,34 @@ Before returning to Web:
 - push only `codex/incident-doctor-enrichment`;
 - do not merge.
 
+## Execution evidence
+
+- `START_HEAD`: `ae56617dbb3dca6815ccdaaee8b3b7dd0213e4ee`.
+- `FINAL_HEAD`: this handoff-control commit; its exact SHA is recorded in the verified post-push executor receipt because a commit cannot contain its own SHA.
+- `REMOTE_HEAD`: verified equal to `FINAL_HEAD` after push; exact SHA is in the post-push executor receipt.
+- `LOCAL_REMOTE_MATCH`: `YES` after final push verification.
+- `WORKING_TREE`: `CLEAN` after final push verification.
+- `REMOTE_MAIN`: `ae56617dbb3dca6815ccdaaee8b3b7dd0213e4ee` at final pre-push fetch.
+- `REUSABLE_CHANGED_PATHS`:
+  - `skills/incident-doctor/SKILL.md`
+  - `skills/incident-doctor/references/evidence-gate.md`
+  - `skills/incident-doctor/references/probe-design.md`
+  - `skills/incident-doctor/references/fresh-incident.md`
+  - `skills/incident-doctor/references/probe-lifecycle.md`
+  - `skills/incident-doctor/assets/templates/INCIDENT.md`
+- `ROOT_CONTROL_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md` (handoff only).
+- `PROJECT_GOVERNANCE_CHANGED`: `NO`.
+- `DOMAIN_NAVIGATION_CHANGED`: `NO`.
+- `TOP_LEVEL_SKILL_COUNT`: `3`.
+- `EXECUTABLE_RUNTIME_ADDED`: `NO`.
+- `DEPENDENCY_ADDED`: `NO`.
+- `DIAGNOSTIC_PLATFORM_ADDED`: `NO`.
+- `AUTOMATIC_REMEDIATION_ADDED`: `NO`.
+- `STABLE_TAG_TARGET`: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
+- `V0_CHECK_RESULTS`: `PASS` — exact six-file reusable allowlist plus two handoff-only root controls; no added/deleted/renamed paths; `git diff --check` clean; sibling Skills diff exit 0; frontmatter and all five required `SKILL.md` links valid; all six module links resolve; evidence taxonomy and required INCIDENT fields/context identities checked; exactly three top-level Skills; no executable, dependency, diagnostic platform, database, daemon, or generated-binary path added. Historical runtime suite and real-project incident adoption not run because this documentation-only task is authorized at V0.
+- `SCOPE_EXPANSION`: `NO`.
+- `FINAL_STATE`: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+
 ## Current stop point
 
-`AUTHORIZED_FOR_LOCAL_EXECUTION`
+`WAITING_FOR_INDEPENDENT_WEB_AUDIT`

@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase D bounded design was explicitly approved by the user against live `main`; Web re-verified `main` and the stable historical tag before implementation authorization.
+Last verified: 2026-10-07 — Phase D task branch, root handoff controls, `origin/main`, and the stable tag were checked against Git at handoff.
 
 ## Repository identity
 
@@ -16,12 +16,13 @@ Last verified: 2026-10-07 — Phase D bounded design was explicitly approved by 
 - Phase C `domain-navigation` enrichment: accepted and merged at `1d28250717e4e72754655ccc3c69bc3664a70eae`.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Active milestone — Phase D `incident-doctor` bounded implementation
+## Active milestone — Phase D `incident-doctor` handoff
 
 - Active task: `EG-INCIDENT-DOCTOR-ENRICH-IMPL-016`.
-- State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 - Mode: `BOUNDED_IMPLEMENTATION`.
 - Authorized branch: `codex/incident-doctor-enrichment`.
+- The six authorized reusable Skill files are complete on the task branch; Phase D has not been independently accepted or merged.
 - User-approved Phase D design baseline before authorization: `7511ec8ac29a58adc3cea5b587f664c8a2faf4ae`.
 - Scope is limited to enriching the six existing files under `skills/incident-doctor/` plus root control-plane handoff updates.
 - `project-governance` and `domain-navigation` reusable contents are outside Phase D.
@@ -64,4 +65,4 @@ Phase D is `V0` Skill/documentation contract enrichment:
 
 ## Next milestone
 
-Local bounded implementation on `codex/incident-doctor-enrichment`, then independent Web audit of the pushed task branch. No merge is authorized to the local executor.
+Independent Web audit of the pushed Phase D task branch. No merge is authorized to the local executor.
