@@ -10,27 +10,21 @@ Last verified: 2026-10-07
 - Tooling design spec was accepted by independent Web re-review at corrective content head `8a93015c6995a20ea14f2a9af575adb1ccc434fd`; design closeout control head is `012f2a8ff314b7800c15a8a538cc8f7f877bf4fa`.
 - PR #2 remains OPEN / DRAFT / UNMERGED and design-only; it must not be merged without explicit user authorization.
 
-## Accepted tooling direction
+## Doctor foundation plan review
 
-- Hybrid: one small on-demand deterministic core plus optional thin AI workflow guidance.
-- Bootstrap is the sole controlled writer; Doctor and Audit are read-only.
-- Bootstrap uses an immutable preview plan and named human-authorized apply confirmation; exact matches are `NO_CHANGE`, mismatches are `CONFLICT / STOP`.
-- Reportable evidence gaps remain evaluation-level `UNVERIFIED` / `STALE` / `UNKNOWN`; fatal/unsafe command failures are separate.
-- AI/HYBRID uses an immutable deterministic base report plus validated linked derived contributions; AI does not become authority, mutate machine results, or self-accept.
+- Task `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is under independent Web plan review on `codex/eg-v01-doctor-foundation-plan`.
+- Executor handoff reviewed: `781428ccaea258cbe3f4723ab1aeb82a208eda1e`.
+- PR #3 is OPEN / DRAFT / UNMERGED, stacked on `codex/eg-v01-tooling-design`.
+- Scope remains the first local/offline/read-only Doctor slice only; no executable implementation has started.
 
-## Active next task
+Independent Web review found the plan direction acceptable but requires corrective work before implementation authorization:
 
-`EG-V01-DOCTOR-FOUNDATION-PLAN-003` is waiting for implementation-plan review on `codex/eg-v01-doctor-foundation-plan`.
+1. **TDD sequencing:** Task 2 already requires implementing the Git command allowlist, while Task 5 later requires newly added prohibited-command tests to be RED. Those tests should already pass after Task 2, so the planned RED→GREEN evidence is internally impossible. Reorder/merge the tests or convert the final no-mutation phase into a non-implementation acceptance gate so every implementation task has a genuine RED.
+2. **Test-step precision:** the plan names behaviors but does not provide the exact test names and key assertions required by the `superpowers:writing-plans` contract and this task's own planning requirements. A fresh implementer still has to invent the test surface.
+3. **Task/status token semantics:** `CURRENT_STATUS.md` task-ID matching is described only as a "whole token" match. The exact deterministic boundary/matching rule and false-positive cases are not frozen, so multiple incompatible implementations remain possible.
 
-The plan is at `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md` and covers only the smallest coherent first implementation slice. Draft PR #3 is OPEN / DRAFT / UNMERGED, based on `codex/eg-v01-tooling-design`: https://github.com/Lost0rz/Engineering-Governance/pull/3.
-
-- shared local repository reader/model needed by Doctor;
-- local read-only Doctor checks for repository identity and control-plane presence/consistency;
-- one deterministic versioned report output;
-- tests proving no filesystem/Git-ref/worktree mutation.
-
-Bootstrap writes, deeper Audit evaluation, AI contribution execution, remote-state querying, MCP, daemon/background services, enforcement, remediation, migration, and pilot-repository changes remain outside this plan.
+No change to the accepted tooling spec or `EngineeringGovernanceStandard 0.1.0` is required by these findings.
 
 ## Next milestone
 
-Review the five-task TDD plan before any executable source, dependency manifest, package metadata, schema implementation, or test code is created. The stacked Draft PR targets `codex/eg-v01-tooling-design`; PR #2 remains design-only and unmerged.
+Correct only the implementation plan and control handoff, then return PR #3 to `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`. Do not create source, tests, fixtures, manifests, schemas, CLI code, or any executable implementation until independent plan re-review passes and a separate implementation task is authorized.
