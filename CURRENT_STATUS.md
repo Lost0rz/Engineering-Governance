@@ -1,13 +1,13 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase E completed the first real-project read-only validation against RemoteOrbit. RemoteOrbit was not mutated by this pilot. The three accepted Skills remain unchanged.
+Last verified: 2026-10-07 — Phase E RemoteOrbit read-only validation is complete, and Phase F InvestDesk read-only validation is authorized against the live InvestDesk business-planning baseline.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Repository purpose remains a reusable AI engineering-governance Skill source repository, not a governance runtime/product and not an installer.
 - Stable historical tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
-- Accepted reusable Skill revision used for this pilot: Phase D merge head `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
+- Accepted reusable Skill revision for real-project pilots remains Phase D merge head `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
 ## Accepted merged baseline
@@ -17,45 +17,45 @@ Last verified: 2026-10-07 — Phase E completed the first real-project read-only
 - Phase C `domain-navigation`: accepted and merged at `1d28250717e4e72754655ccc3c69bc3664a70eae`.
 - Phase D `incident-doctor`: accepted and merged at `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 
-## Phase E RemoteOrbit pilot result
+## Phase E RemoteOrbit pilot
 
-- Task: `EG-REMOTEORBIT-PILOT-READONLY-018`.
-- State: `WAITING_FOR_USER_NEXT_PHASE_DECISION`.
-- Mode: `READ_ONLY_VALIDATION_HANDOFF`.
-- Target repository: `Lost0rz/RemoteOrbit`.
-- Target `main` at pilot start: `5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
-- Target `main` at final freshness check: `e6f13c057e6e4d5b3d7cd3e8585e4775f7004b43`.
-- Target candidate branch remained `codex/disabled-short-classifier-regression-fix` at `172427957fd18a2b5827edd1cb1c4bddb6a5b7db`.
-- The target `main` advance during the pilot was reconciled read-only; the observed advance changed only RemoteOrbit control files, not product/test source.
+- Completed read-only with `PROJECT_GOVERNANCE_FIT=PASS`, `DOMAIN_NAVIGATION_FIT=PASS`, and `INCIDENT_DOCTOR_FIT=PASS`.
+- RemoteOrbit was not mutated by the pilot.
+- No immediate reusable Skill corrective was justified from the single incident-heavy sample.
+- Candidate reusable lesson retained for cross-check: an updated status fact must not silently override active task prerequisites, acceptance, STOP conditions, or allowed side effects.
 
-Validation result:
+## Active milestone — Phase F InvestDesk normal-business read-only validation
 
-- `PROJECT_GOVERNANCE_FIT`: PASS.
-- `DOMAIN_NAVIGATION_FIT`: PASS.
-- `INCIDENT_DOCTOR_FIT`: PASS.
-- `REMOTEORBIT_MUTATED_BY_PILOT`: NO.
-- `REUSABLE_SKILL_CONTENT_MUTATED_DURING_PILOT`: NO.
-- `IMMEDIATE_REUSABLE_SKILL_CORRECTIVE_JUSTIFIED`: NO.
+- Active task: `EG-INVESTDESK-PILOT-READONLY-019`.
+- State: `ACTIVE_READ_ONLY_VALIDATION`.
+- Mode: `BOUNDED_INTEGRATION_VALIDATION`.
+- Target repository: `Lost0rz/InvestDesk`.
+- Target `main` at authorization: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
+- InvestDesk current mode is an MVP-D Decision ↔ Transaction Traceability planning/contract gate; production construction is not authorized by the target repository.
+- This pilot is strictly read-only against InvestDesk and must not edit its controls, contracts, source, tests, branches, PRs, worktrees, runtime, databases, or acceptance environment.
 
-## Key real-project findings
+## Validation objective
 
-- RemoteOrbit's existing `AGENTS.md` already strongly implements the reusable governance principles and also contains necessary RemoteOrbit-specific runtime, permission, forensic, and side-effect rules. It should not be replaced wholesale by a generic template.
-- At the initial RemoteOrbit baseline, a real control-plane drift existed: `CURRENT_STATUS.md` had relaxed the input-source prerequisite for journal recovery while `CURRENT_TASK.md` still retained the old prerequisite. This demonstrates why mutable task preconditions and STOP/acceptance conditions need one clear owner and coordinated reconciliation.
-- During this pilot RemoteOrbit later advanced to coherent controls for User A acceptance; the pilot refreshed against the new live controls instead of continuing from the stale snapshot.
-- A useful Domain route was found without a whole-repository survey. The current task can be reasoned about using a small set centered on voice gesture classification/trigger gating, the diagnostic evidence plane, and installed-runtime acceptance context.
-- Incident Doctor fit was strong: the journal-recovery question and the current User A acceptance both already use decision-linked evidence gates. No new probe or diagnostic platform is justified merely to exercise the Skill.
-- End-to-end incident root cause remains bounded by RemoteOrbit's own evidence and acceptance flow; the pilot did not perform User A/B and did not advance RemoteOrbit's incident authority.
+Use the accepted Skills without changing them to determine whether the governance model stays lightweight and useful in normal business/product planning rather than only in incident work.
 
-## Deferred adoption recommendation
+The pilot should assess:
 
-Do not modify RemoteOrbit while its current incident/acceptance sequence is active. After a safe RemoteOrbit control transition, the smallest likely adoption is:
+- whether InvestDesk's three-file control plane cleanly separates durable rules, current snapshot, and the single active business task;
+- whether the MVP-D task routes to a small semantic Domain/authority/source/test set without a whole-repository survey;
+- whether Domain Navigation helps distinguish business truth, persistence authority, read models, API/UI surfaces, and derived Position behavior;
+- whether Incident Doctor correctly stays out of the normal planning flow when no evidence-deficient failure blocks progress;
+- whether the Phase E candidate lesson about `CURRENT_STATUS` versus `CURRENT_TASK` repeats in a normal business task;
+- whether any reusable Skill wording is now justified for corrective change by evidence from two materially different real projects.
 
-1. add one concise root `DOMAIN_MAP.md`, initially covering only verified task-relevant/stable Domains;
-2. retain RemoteOrbit's existing `AGENTS.md`, with only evidence-driven pruning later if useful;
-3. tighten `CURRENT_STATUS.md` versus `CURRENT_TASK.md` fact ownership so mutable task prerequisites/acceptance/STOP conditions do not drift across both files;
-4. do not add a separate `INCIDENT.md` unless it demonstrably reduces duplication rather than creating a second incident authority;
-5. add no script, index, daemon, database, Repo Map program, or diagnostic platform.
+## Hard boundaries
+
+- InvestDesk mutation: FORBIDDEN.
+- Do not implement or authorize MVP-D production work from this pilot.
+- Do not alter InvestDesk contracts, ADRs, controls, branches, PRs, worktrees, runtime, DB, migrations, API/UI, or LAN acceptance environment.
+- Do not modify the three reusable Engineering-Governance Skills during the validation itself.
+- Do not create a new Skill, script, index, database, daemon, Repo Map program, or diagnostics platform.
+- Findings are validation evidence only; later adoption or Skill corrective requires a separate authorization.
 
 ## Next milestone
 
-User decision on the next validation phase. Recommended next step is a second read-only pilot on a normal business-development project before changing reusable Skill contracts, so the first pilot's findings are not overfit to an incident-heavy repository.
+Complete the InvestDesk read-only validation and report: governance fit, task-to-Domain routing fit, Doctor non-trigger fit, repeated versus project-specific friction, and whether two-project evidence now justifies a minimal reusable Skill corrective. Do not implement adoption or corrective work in this task.
