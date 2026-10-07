@@ -12,6 +12,25 @@ controls define a project's scope, operating rules, and current task. The
 governance standard may evaluate whether those controls are clear and current;
 it does not replace a project's product, domain, data, or runtime authorities.
 
+## Delivery priority and proportionality
+
+- Governance, diagnostics, and audit mechanisms exist to support reliable
+  product/business delivery; expanding those mechanisms is not a default
+  milestone by itself.
+- Once current controls and evidence are sufficient to execute a bounded task
+  safely, prefer the next useful product/tool capability over speculative
+  governance hardening.
+- Add or deepen a diagnostic/governance mechanism when an actual task exposes
+  a concrete evidence gap, repeated failure mode, unsafe ambiguity, or blocker.
+  Keep that corrective proportional to the demonstrated need, then return to
+  the interrupted delivery path.
+- Distinguish required delivery gates from optional hardening. Optional checks,
+  probes, or framework expansion must not silently become prerequisites for
+  unrelated feature work.
+- A follow-on Doctor, Audit, Bootstrap, AI, CLI, or enforcement capability must
+  be separately authorized by the active task; completing one does not imply
+  permission to expand the others.
+
 ## Authority and evidence
 
 - Each canonical fact or decision class has one declared owner. A project may
