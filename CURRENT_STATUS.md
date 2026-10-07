@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase C was independently audited and fast-forward merged to `main`; the existing Incident Doctor module was then read from the merged baseline for the next bounded design review.
+Last verified: 2026-10-07 — Phase D bounded design was explicitly approved by the user against live `main`; Web re-verified `main` and the stable historical tag before implementation authorization.
 
 ## Repository identity
 
@@ -16,27 +16,52 @@ Last verified: 2026-10-07 — Phase C was independently audited and fast-forward
 - Phase C `domain-navigation` enrichment: accepted and merged at `1d28250717e4e72754655ccc3c69bc3664a70eae`.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-Accepted navigation behavior now treats Domains as evidence-backed semantic capability/ownership/state/authority boundaries; routes tasks to the smallest useful source-reading set; keeps Domain Map distinct from any optional Repo Map; preserves unknown/stale/conflicting claims; refreshes incrementally; and requires no executable navigation helper.
+## Active milestone — Phase D `incident-doctor` bounded implementation
 
-## Active milestone — Phase D `incident-doctor` bounded design review
+- Active task: `EG-INCIDENT-DOCTOR-ENRICH-IMPL-016`.
+- State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
+- Mode: `BOUNDED_IMPLEMENTATION`.
+- Authorized branch: `codex/incident-doctor-enrichment`.
+- User-approved Phase D design baseline before authorization: `7511ec8ac29a58adc3cea5b587f664c8a2faf4ae`.
+- Scope is limited to enriching the six existing files under `skills/incident-doctor/` plus root control-plane handoff updates.
+- `project-governance` and `domain-navigation` reusable contents are outside Phase D.
+- Independent Web audit is required before merge.
 
-- Active task: `EG-INCIDENT-DOCTOR-ENRICH-DESIGN-015`.
-- State: `WAITING_FOR_USER_DESIGN_REVIEW`.
-- Mode: `BOUNDED_DESIGN_REVIEW`.
-- The next candidate change is enrichment of the existing `skills/incident-doctor/` module only.
-- No local Phase D implementation is authorized before explicit user approval of the bounded design.
+## Phase D accepted design direction
 
-## Phase D fixed boundaries
+Incident Doctor remains reactive and evidence-gated:
 
-- Incident Doctor remains reactive, not part of normal feature development.
-- Existing evidence must be evaluated before any new probe is added.
-- If evidence is already sufficient for the next safe decision, new probe work is bypassed.
-- Diagnosis must preserve the distinction between user report, direct observation, interpretation, hypothesis, finding, and root-cause claim.
-- Any probe must be the minimum evidence needed for the blocked question and must not silently change product behavior.
-- Fresh incident capture must preserve runtime/build/configuration identity and the relevant observation window.
-- Temporary probes are retired by default; durable promotion requires separate evidence, ownership, and authorization.
-- No automated repair, broad observability platform, background monitor, daemon, database, or permanent diagnostic expansion is implied.
+- trigger only for a real failure, unexplained behavior, or unsafe ambiguity that blocks safe progress and cannot be answered from current evidence;
+- first state the blocked question and evaluate existing task/source/test/runtime/log evidence;
+- bypass probe work when current evidence is sufficient for the next safe decision;
+- keep user-reported symptom, direct observation, interpretation, hypothesis, finding, and root-cause claim distinct;
+- keep root cause `UNKNOWN` until evidence supports a stronger claim;
+- add only the minimum decision-linked probe needed to close one named evidence gap or distinguish current plausible explanations;
+- use fresh-incident capture with explicit runtime/build/configuration/revision identity and the smallest relevant observation window;
+- define hypotheses by falsifiable observations rather than plausibility narratives;
+- permit only the smallest evidence-supported behavior fix, followed by risk-proportional regression verification;
+- retire temporary probes by default; durable promotion requires repeated evidence plus explicit owner, scope, and authorization.
+
+## Phase D boundaries
+
+- No fourth Skill.
+- No changes to reusable `project-governance` or `domain-navigation` content.
+- No executable diagnostic framework, required runtime, dependency manifest, daemon, database, telemetry platform, background monitoring service, automatic remediation, or broad speculative observability expansion.
+- No real-project incident adoption/validation in this task.
+- No architecture spec or implementation-plan document is required for this bounded enrichment.
+
+## Verification policy
+
+Phase D is `V0` Skill/documentation contract enrichment:
+
+- only the six authorized Incident Doctor files plus root handoff controls may change;
+- frontmatter and relative links must remain valid;
+- evidence-gate, probe-design, fresh-incident, probe-lifecycle, and template semantics must remain internally consistent;
+- sibling reusable Skills must remain unchanged;
+- exactly three top-level Skills must remain;
+- no executable/runtime/dependency/diagnostic-platform surface may be introduced;
+- final task branch must be clean and local/remote matched.
 
 ## Next milestone
 
-User review of the bounded Phase D Incident Doctor design in chat. After explicit approval, Web will capture the then-current exact `main` baseline, authorize one implementation branch, and issue the local AI execution card.
+Local bounded implementation on `codex/incident-doctor-enrichment`, then independent Web audit of the pushed task branch. No merge is authorized to the local executor.
