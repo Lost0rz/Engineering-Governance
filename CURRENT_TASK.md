@@ -1,42 +1,89 @@
-# CURRENT TASK — Root Consistency and Freeze Closeout
+# CURRENT TASK — Full Three-Skill Quality Audit
 
-Task ID: `EG-ROOT-CONSISTENCY-FREEZE-021`
+Task ID: `EG-FULL-SKILL-AUDIT-022`
 
-State: `CLOSED_ACCEPTED_MAIN`
+State: `AUTHORIZED_FOR_READONLY_AUDIT`
 
-Mode: `FROZEN_CLOSEOUT`
+Mode: `MULTI_PASS_READONLY_AUDIT`
 
 ## Objective
 
-Record completion of the final root consistency task and freeze the validated Engineering-Governance baseline.
+Perform a complete post-freeze audit of the Engineering-Governance repository and all three reusable Skills before any project adoption. The audit must identify structural, content, design, authority, template, progressive-disclosure, routing, redundancy, ambiguity, and cross-Skill interaction problems. Re-audit each Skill from more than one angle before deciding it is clean.
 
-## Accepted heads
+## Authority and baseline
 
-- Pre-task main: `7ec0ffd574a0ec7e43c2990ebaf79633a6719e22`.
-- Authorization/main head: `349adbe6011b77b6c5b921dc1f995ec881e2d36a`.
-- Root-content implementation commit: `0062481f4bc7101fd3774472edf56be395763e69`.
-- Audited task-branch / merge head: `be63f646bee1b99c184e363db31f1883d455714f`.
-- Frozen stable baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
-- Stable version label: `v0.2.0`.
-- Historical `v0.1.0^{}` target: `738627a0caad330d277f60cfdaff5f153593135e`.
+- User authorization: full project audit, each Skill repeatedly audited; fix justified problems before adoption.
+- Control start head before this task: `d1f354a4452b35e0ec9701c8adcf57b5eb1a4171`.
+- Frozen reusable comparison baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18` (`v0.2.0` version label).
+- Historical `v0.1.0^{}`: `738627a0caad330d277f60cfdaff5f153593135e`.
 
-## Freeze contract
+## Read-only audit scope
 
-`4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18` is the authoritative immutable frozen baseline for version label `v0.2.0`.
+Audit:
 
-No Git tag alias was created by this task. If a Git tag `v0.2.0` is created later, it must resolve exactly to the frozen SHA above and must never move. The control-only commit that records this freeze is outside the frozen reusable baseline.
+- repository root structure and root guidance;
+- `skills/project-governance/**`;
+- `skills/domain-navigation/**`;
+- `skills/incident-doctor/**`;
+- references/templates/scripts README boundaries;
+- links/frontmatter/progressive disclosure;
+- ownership/authority semantics;
+- Skill trigger overlap and routing;
+- duplication, contradictions, missing decision rules, over-prescription, and YAGNI violations;
+- consistency with the two real-project validation findings already accepted.
 
-## Accepted scope
+## Required audit passes
 
-- Root `README.md` and `AGENTS.md` are consistent with Phase G.
-- `skills/**` is unchanged by this task.
-- Exactly three Skills remain.
-- No runtime/tooling/dependency/workflow or target-project changes were introduced.
+### Pass A — repository structure
 
-## Closed scope
+Check repository purpose, root controls, root README/AGENTS, Skill tree, references, examples, maintainer-only docs, and whether the active tree contains stale or misleading material.
 
-Do not modify reusable Skills, create new governance infrastructure, or adopt into target projects under this Task ID. Any future change requires a new Task ID and explicit authorization.
+### Pass B — project-governance
+
+Inspect trigger/boundary clarity, three-file ownership, normal development flow, scope-change/re-authorization semantics, business-first behavior, V0–V3 selection, STOP/handoff/acceptance boundaries, template/reference consistency, and risk of bureaucracy or duplicate authority.
+
+### Pass C — domain-navigation
+
+Inspect Domain semantics, semantic-authority coexistence, task-to-source routing, evidence/freshness, Domain Map versus existing maps versus Repo Map, optional projection behavior, template usability, whole-repository-scan avoidance, and scripts boundary.
+
+### Pass D — incident-doctor
+
+Inspect trigger/non-trigger boundary, evidence sufficiency, evidence taxonomy, minimum decision-linked probe, fresh incident/runtime identity, falsification, root-cause thresholds, minimum fix/regression verification, probe lifecycle, template usability, and risk of over-diagnosis.
+
+### Pass E — cross-Skill audit
+
+Check routing and handoffs, ownership overlap, terminology consistency, circular dependencies, duplicated contracts, missing transitions, and whether normal product delivery remains the default.
+
+## Finding classification
+
+- `BLOCKING` — unsafe or contradictory contract that should be fixed before adoption.
+- `IMPORTANT` — likely to cause repeated agent error, ambiguity, needless work, or authority drift.
+- `MINOR` — cheap clarity/format/usability improvement with no scope expansion.
+- `NO_CHANGE` — observed concern is already handled adequately.
+
+For each real finding record exact files, exact problem, agent-behavior impact, evidence/cross-file contradiction, smallest corrective, and whether it changes design or only clarifies accepted design.
+
+## Modification boundary
+
+This Task ID authorizes read-only audit only. It does not authorize reusable Skill edits. If findings justify changes, create a new bounded corrective Task ID for one Skill or one tightly coupled cross-Skill issue at a time. Re-audit after each corrective. Do not batch speculative cleanup.
+
+## Verification level
+
+`V0 — documentation / Skill contract audit`.
+
+## Stop conditions
+
+Stop and report if `main` drifts in a way that affects audited files; frozen baseline identity cannot be verified; a referenced source cannot be read; a proposed correction requires new tooling/runtime/dependency/Skill architecture; or target-project mutation would be needed to establish the finding.
+
+## Forbidden actions
+
+- modify reusable Skill content under this Task ID;
+- modify target projects;
+- create a fourth Skill;
+- add executable helpers, runtime infrastructure, databases, indexes, daemons, background services, installers, or automatic remediation;
+- treat stylistic preference alone as a design defect;
+- start adoption before audit/corrective completion.
 
 ## Current stop point
 
-`FROZEN_STABLE_BASELINE`
+`READONLY_AUDIT_AUTHORIZED`
