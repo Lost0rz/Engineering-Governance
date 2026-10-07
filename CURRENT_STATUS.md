@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — root controls and the Phase B task branch were checked against Git at handoff.
+Last verified: 2026-10-07 — Phase B was independently audited and fast-forward merged to `main`; the live Domain Navigation skeleton was then re-read from the merged baseline before opening Phase C design review.
 
 ## Repository identity
 
@@ -11,55 +11,50 @@ Last verified: 2026-10-07 — root controls and the Phase B task branch were che
 
 ## Phase A — accepted and merged
 
-Phase A Skill-repository restructuring passed independent Web audit and control re-audit and was fast-forwarded into `main` at accepted head `02dd645d06e8fa554e241887c1457f7b15e297b5`.
+Phase A Skill-repository restructuring is accepted and merged. Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`. The retired Python runtime/tests and obsolete governance/research live trees are not active repository content.
 
-The live repository contains exactly three top-level Skills: `project-governance`, `domain-navigation`, and `incident-doctor`. The retired Python runtime/tests and obsolete governance/research live trees are no longer active repository content. No installer, executable governance runtime, daemon, service, database, enforcement engine, automatic remediation, or Repo Map program is part of the accepted Phase A baseline.
+## Phase B — accepted and merged
 
-## Active milestone — Phase B `project-governance` enrichment handoff
+Phase B `project-governance` enrichment passed independent Web audit at `3b10169a475d97ed8b79ab7d5fa30df5fbdd6f04` and was fast-forward merged to `main`.
 
-- Active task: `EG-PROJECT-GOVERNANCE-ENRICH-IMPL-012`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
-- Mode: `BOUNDED_IMPLEMENTATION`.
-- Authorized branch: `codex/project-governance-enrichment`.
-- Implementation of the seven authorized reusable Skill files is complete on the task branch; it has not been independently accepted or merged.
-- User-approved bounded design baseline: `88c070596b52f465194c37903921efef76c63350`.
-- Scope is limited to enriching the seven existing files under `skills/project-governance/` plus root control-plane handoff updates.
-- Independent Web audit is required before merge.
+Accepted Phase B behavior now establishes:
 
-## Phase B accepted design direction
+- `AGENTS.md` as durable operating rules/boundaries;
+- `CURRENT_STATUS.md` as the concise verified current-state snapshot;
+- `CURRENT_TASK.md` as the single active authorization;
+- business/product-first normal development;
+- material objective/scope change requiring task re-authorization;
+- ordinary evidence discovery remaining within the current task;
+- Domain Navigation only when Domain/authority/code location is unclear;
+- Incident Doctor only for a real evidence-insufficient blocked problem;
+- risk-proportional `V0`–`V3` verification without numerical scoring or automatic full-suite burden.
 
-The existing `project-governance` Skill will be strengthened so a fresh AI can:
+The merged Phase B branch/worktree are lifecycle-closeout artifacts, not active development authority.
 
-- distinguish durable rules, verified current state, and the one active task across `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`;
-- know when each control changes and avoid duplicating fact ownership across controls;
-- run normal development as business/product-first work rather than a parallel governance program;
-- treat material objective/scope changes as re-authorization while ordinary evidence discovery remains part of the same task;
-- route code/authority discovery to `domain-navigation` only when needed;
-- route real evidence-insufficient failures to `incident-doctor` only when needed;
-- choose `V0`–`V3` proportionally to change radius and risk, without a numeric scoring bureaucracy;
-- adapt templates from verified target-project evidence and leave unsupported facts unknown.
+## Active milestone — Phase C `domain-navigation` enrichment design
 
-## Phase B boundaries
+- Active task: `EG-DOMAIN-NAVIGATION-ENRICH-DESIGN-013`.
+- State: `WAITING_FOR_USER_DESIGN_REVIEW`.
+- Mode: `BOUNDED_DESIGN_REVIEW`.
+- Phase C will enrich only the existing `skills/domain-navigation/` module after explicit design approval.
+- Goal: make Domain Navigation operational enough for an AI to build/refresh a semantic Domain Map from evidence and route a current task to the smallest useful set of authorities, source paths, symbols, tests, and unresolved gaps without turning navigation into a runtime/indexing product.
+- No local Phase C implementation is authorized while the design remains under review.
 
-- No fourth Skill or new module.
-- No changes to reusable `domain-navigation` or `incident-doctor` content.
-- No executable script/runtime/dependency.
-- No installer, Bootstrap CLI, daemon, service, database, automatic enforcement/remediation, or MCP requirement.
-- No complex risk score and no mandatory full-suite test burden for every task.
-- No fictional project facts in reusable templates.
-- No real-project adoption example yet; validation remains a later phase.
+## Phase C fixed boundaries
 
-## Verification policy
+- Domain boundaries follow capability/ownership/state/authority, not folder structure alone.
+- `DOMAIN_MAP.md` remains the stable semantic navigation layer; any Repo Map remains optional, dynamic, read-only, and subordinate.
+- Navigation outputs are derived evidence and never replace product/domain/data/runtime authorities.
+- Mapping and refresh must be task-relevant and incremental; do not survey/remap the entire repository without a concrete need.
+- Missing, stale, or conflicting evidence remains explicit as unknown/unresolved.
+- No executable navigation helper, parser/index service, embedding/vector store, daemon, database, automatic map mutation, installer, enforcement, or MCP prerequisite is authorized in Phase C.
+- `project-governance` and `incident-doctor` reusable contents are outside Phase C.
+- Real-project adoption/validation remains a later phase.
 
-Phase B is `V0` documentation/Skill-contract enrichment:
+## Expected verification
 
-- only the seven planned `project-governance` reusable files plus root handoff controls may change;
-- Skill frontmatter and relative links must remain valid;
-- templates/references must be internally consistent;
-- `domain-navigation` and `incident-doctor` reusable content must remain unchanged;
-- no executable source or dependency manifest may be introduced;
-- final task branch must be clean and local/remote matched.
+Phase C is expected to remain `V0` documentation/Skill-contract enrichment: allowlisted path changes, frontmatter/link/path consistency, internal semantic consistency, unchanged sibling Skills, no executable/dependency surface, and clean matched handoff.
 
 ## Next milestone
 
-Independent Web audit of the pushed Phase B task branch. No merge is authorized to the local executor.
+User review of the bounded Phase C Domain Navigation design. After explicit approval, Web will capture the exact then-current `main` baseline, authorize one task branch, and issue the local AI execution card. Independent Web audit remains required before merge.
