@@ -1,13 +1,13 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase E RemoteOrbit read-only validation is complete, and Phase F InvestDesk read-only validation is authorized against the live InvestDesk business-planning baseline.
+Last verified: 2026-10-07 — Phase F completed the second real-project read-only validation against InvestDesk at an unchanged target `main`. InvestDesk was not mutated, and the three accepted reusable Skills remain unchanged.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Repository purpose remains a reusable AI engineering-governance Skill source repository, not a governance runtime/product and not an installer.
 - Stable historical tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
-- Accepted reusable Skill revision for real-project pilots remains Phase D merge head `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
+- Accepted reusable Skill revision used for both real-project pilots remains Phase D merge head `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
 ## Accepted merged baseline
@@ -17,45 +17,53 @@ Last verified: 2026-10-07 — Phase E RemoteOrbit read-only validation is comple
 - Phase C `domain-navigation`: accepted and merged at `1d28250717e4e72754655ccc3c69bc3664a70eae`.
 - Phase D `incident-doctor`: accepted and merged at `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 
-## Phase E RemoteOrbit pilot
+## Real-project validation baseline
 
-- Completed read-only with `PROJECT_GOVERNANCE_FIT=PASS`, `DOMAIN_NAVIGATION_FIT=PASS`, and `INCIDENT_DOCTOR_FIT=PASS`.
-- RemoteOrbit was not mutated by the pilot.
-- No immediate reusable Skill corrective was justified from the single incident-heavy sample.
-- Candidate reusable lesson retained for cross-check: an updated status fact must not silently override active task prerequisites, acceptance, STOP conditions, or allowed side effects.
+### Phase E — RemoteOrbit
 
-## Active milestone — Phase F InvestDesk normal-business read-only validation
+- Incident-heavy runtime project.
+- `PROJECT_GOVERNANCE_FIT`: PASS.
+- `DOMAIN_NAVIGATION_FIT`: PASS.
+- `INCIDENT_DOCTOR_FIT`: PASS.
+- A real status/task drift was observed where a status change affected a task prerequisite without corresponding task reconciliation.
 
-- Active task: `EG-INVESTDESK-PILOT-READONLY-019`.
-- State: `ACTIVE_READ_ONLY_VALIDATION`.
-- Mode: `BOUNDED_INTEGRATION_VALIDATION`.
+### Phase F — InvestDesk
+
+- Normal business/product planning project.
+- Task: `EG-INVESTDESK-PILOT-READONLY-019`.
 - Target repository: `Lost0rz/InvestDesk`.
-- Target `main` at authorization: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- InvestDesk current mode is an MVP-D Decision ↔ Transaction Traceability planning/contract gate; production construction is not authorized by the target repository.
-- This pilot is strictly read-only against InvestDesk and must not edit its controls, contracts, source, tests, branches, PRs, worktrees, runtime, databases, or acceptance environment.
+- Target `main` at authorization and final freshness check: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
+- Target active business task: MVP-D Decision ↔ Transaction Traceability planning/contract gate.
+- `PROJECT_GOVERNANCE_FIT`: PASS.
+- `DOMAIN_NAVIGATION_FIT`: PASS.
+- `INCIDENT_DOCTOR_NON_TRIGGER_FIT`: PASS.
+- `INVESTDESK_MUTATED_BY_PILOT`: NO.
+- `REUSABLE_SKILL_CONTENT_MUTATED_DURING_PILOT`: NO.
+- `WHOLE_REPOSITORY_SURVEY_REQUIRED`: NO.
 
-## Validation objective
+## Cross-project findings
 
-Use the accepted Skills without changing them to determine whether the governance model stays lightweight and useful in normal business/product planning rather than only in incident work.
+Two materially different projects now support two bounded reusable clarifications for review:
 
-The pilot should assess:
+1. **Task contract must not be silently overridden by status.** `CURRENT_STATUS.md` may summarize verified current facts, but when a newly verified fact changes a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, `CURRENT_TASK.md` must be reconciled before state-changing work continues. RemoteOrbit exposed the failure mode; InvestDesk shows the healthy pattern in its existing change-control rules and coherent planning gate.
+2. **Domain navigation must coexist with existing semantic maps.** A target repository may already have authoritative business/domain maps under another name. InvestDesk has `docs/product/DOMAIN_MODEL_MAP.md` and `BUSINESS_CAPABILITY_MAP.md`. A navigation projection must discover and reference such authorities rather than assuming a new file named `DOMAIN_MAP.md` is required or duplicating product truth.
 
-- whether InvestDesk's three-file control plane cleanly separates durable rules, current snapshot, and the single active business task;
-- whether the MVP-D task routes to a small semantic Domain/authority/source/test set without a whole-repository survey;
-- whether Domain Navigation helps distinguish business truth, persistence authority, read models, API/UI surfaces, and derived Position behavior;
-- whether Incident Doctor correctly stays out of the normal planning flow when no evidence-deficient failure blocks progress;
-- whether the Phase E candidate lesson about `CURRENT_STATUS` versus `CURRENT_TASK` repeats in a normal business task;
-- whether any reusable Skill wording is now justified for corrective change by evidence from two materially different real projects.
+No evidence supports changing the Incident Doctor contract: it correctly remained inactive in InvestDesk because no real evidence-deficient failure blocked the business planning task.
 
-## Hard boundaries
+## InvestDesk routing result
 
-- InvestDesk mutation: FORBIDDEN.
-- Do not implement or authorize MVP-D production work from this pilot.
-- Do not alter InvestDesk contracts, ADRs, controls, branches, PRs, worktrees, runtime, DB, migrations, API/UI, or LAN acceptance environment.
-- Do not modify the three reusable Engineering-Governance Skills during the validation itself.
-- Do not create a new Skill, script, index, database, daemon, Repo Map program, or diagnostics platform.
-- Findings are validation evidence only; later adoption or Skill corrective requires a separate authorization.
+The MVP-D task was routable with bounded evidence through these semantic areas:
 
-## Next milestone
+- Human Decision Intent;
+- Transaction Ledger Fact;
+- Position Reconstruction;
+- Asset Workspace / Timeline Composition;
+- a not-yet-frozen Decision↔Transaction Traceability Edge, which is the current contract target rather than an existing authority.
 
-Complete the InvestDesk read-only validation and report: governance fit, task-to-Domain routing fit, Doctor non-trigger fit, repeated versus project-specific friction, and whether two-project evidence now justifies a minimal reusable Skill corrective. Do not implement adoption or corrective work in this task.
+The existing business authorities preserve `Decision != Transaction`, immutable endpoints, Position derivation from financial facts, and Workspace as a read-only composition layer. Exact relation ownership/cardinality/correction rules remain intentionally unresolved for the target MVP-D planning gate and were not invented by this pilot.
+
+## Current milestone
+
+State: `WAITING_FOR_USER_NEXT_PHASE_DECISION`.
+
+Recommended next phase is one bounded cross-project corrective design for the two evidence-backed clarifications above. Do not change reusable Skill contents or adopt them into target projects without explicit authorization.
