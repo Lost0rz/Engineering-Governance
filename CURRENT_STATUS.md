@@ -34,7 +34,7 @@ This is a control-plane closeout issue only. It does not reopen Phase A Skill co
 ## Active milestone — control closeout corrective
 
 - Active task: `EG-SKILLS-RESTRUCTURE-CLOSEOUT-010`.
-- State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`.
 - Authorized branch: `codex/skill-repository-skeleton-reset`.
 - Scope: reconcile `CURRENT_STATUS.md` and `CURRENT_TASK.md` with the already-audited Phase A facts, run minimal `V0` control checks, push the same task branch, and stop for Web re-audit.
 - No Skill/reference/template/README content change is authorized.

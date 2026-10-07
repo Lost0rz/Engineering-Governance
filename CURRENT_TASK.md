@@ -2,7 +2,7 @@
 
 Task ID: `EG-SKILLS-RESTRUCTURE-CLOSEOUT-010`
 
-State: `AUTHORIZED_FOR_LOCAL_EXECUTION`
+State: `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`
 
 Mode: `CONTROL_CLOSEOUT_CORRECTIVE`
 
@@ -102,6 +102,37 @@ Then set:
 
 Commit, push, and stop. Do not merge.
 
+## Corrective handoff evidence
+
+This was a control-only corrective after the Phase A implementation content and structure passed independent Web audit. No Phase A content was reopened.
+
+- `START_HEAD`: `be38ea3482aedd16de2d75434ef764cc3c33314e`.
+- `AUDITED_PHASE_A_HEAD`: `d867327de08410056a225fa4c0111d1a53eeb304`.
+- `FINAL_HEAD / REMOTE_HEAD`: this control-only handoff commit; resolve the exact SHA from local HEAD and the remote task branch after push.
+- `REMOTE_MAIN`: `954593b82a666bebf677636ce4f3cf08c07ceddd`.
+- `STABLE_TAG_TARGET`: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
+- `WEB_CONTROL_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
+- `LOCAL_CORRECTIVE_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
+- `NON_CONTROL_CONTENT_CHANGED`: `NO`.
+- `SKILL_CONTENT_CHANGED`: `NO`.
+- `PHASE_A_CONTENT_AUDIT`: `PASS`.
+- `CONTROL_CLOSEOUT`: `PASS`.
+
+### V0_CONTROL_CHECKS
+
+- Gate 0 fetched `origin` and matched task branch `be38ea3482aedd16de2d75434ef764cc3c33314e`, `origin/main` `954593b82a666bebf677636ce4f3cf08c07ceddd`, and peeled `v0.1.0` target `738627a0caad330d277f60cfdaff5f153593135e`: `PASS`.
+- Gate 1 confirmed the existing task worktree was on the authorized branch, clean, and fast-forwarded from audited head `d867327de08410056a225fa4c0111d1a53eeb304` to exact start head `be38ea3482aedd16de2d75434ef764cc3c33314e`: `PASS`.
+- Gate 2 confirmed Task ID `EG-SKILLS-RESTRUCTURE-CLOSEOUT-010`, state `AUTHORIZED_FOR_LOCAL_EXECUTION`, and mode `CONTROL_CLOSEOUT_CORRECTIVE`: `PASS`.
+- Gate 3 diff from audited head to start head contained only `CURRENT_STATUS.md` and `CURRENT_TASK.md`; `skills/`, `references/`, `examples/`, `docs/`, `README.md`, and `AGENTS.md` were unchanged: `PASS`.
+- `CURRENT_STATUS.md` Phase A audit, exactly-three-Skills, retired-tree, no-runtime, stable-tag, and control-only-corrective facts matched the checked repository state: `PASS`; only its active task state needed the authorized transition.
+- Current Phase A tree still contains exactly `skills/domain-navigation`, `skills/incident-doctor`, and `skills/project-governance`; `src`, `tests`, and retired research roots are absent: `PASS`.
+- Before commit, `git diff --name-only START_HEAD` contains only `CURRENT_STATUS.md` and `CURRENT_TASK.md`: `PASS`.
+- `git diff --exit-code START_HEAD -- skills references examples docs README.md AGENTS.md`: `PASS`.
+- The retired Python runtime suite was not run; this corrective is V0 control-only.
+- Final clean worktree and exact local/remote branch-head match are verified after push in the executor receipt.
+
+`FINAL_STATE`: `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`.
+
 ## Current stop point
 
-`AUTHORIZED_FOR_LOCAL_EXECUTION`
+`WAITING_FOR_INDEPENDENT_WEB_REAUDIT`
