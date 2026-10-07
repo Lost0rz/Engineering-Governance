@@ -18,6 +18,8 @@ Use this Skill to establish or repair a project's governance controls and to sta
 
 Read the relevant project controls, establish only the baseline needed for the authorized work, identify affected domains, and implement the smallest authorized product or business outcome. Choose the lightest safe `V0`–`V3` verification level and update only controls whose owned, verified facts materially changed. Ordinary evidence discovery within the accepted objective does not create a new task. A material objective or scope change requires updated task authorization before work continues.
 
+`CURRENT_STATUS.md` is a verified current-state snapshot, not an authorization override. If a newly verified status fact changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, stop state-changing work, reconcile `CURRENT_TASK.md`, and obtain re-authorization before continuing. A status refresh that does not affect the task contract does not require task churn.
+
 Load the relevant contracts as needed:
 
 - [Control plane roles and updates](references/control-plane.md)

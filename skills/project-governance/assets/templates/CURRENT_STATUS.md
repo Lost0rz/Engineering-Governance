@@ -20,7 +20,7 @@ Last verified: [date/time, inspected sources or revisions, and freshness basis]
 
 ## Active development state
 
-[Concise current task or delivery state, if verified; refer to the task contract instead of copying it.]
+[Concise current task or delivery state, if verified; refer to the task contract instead of copying it. If this snapshot reveals a fact that changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, stop state-changing work and reconcile `CURRENT_TASK.md`; this status file does not override the task.]
 
 ## Next intended milestone
 
