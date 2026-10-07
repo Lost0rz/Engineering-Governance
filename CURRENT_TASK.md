@@ -1,63 +1,76 @@
-# CURRENT TASK — Doctor CLI Productization
+# CURRENT TASK — Bootstrap Minimal Control Plane Plan Review
 
-Task ID: `EG-V01-DOCTOR-CLI-005`
+Task ID: `EG-V01-BOOTSTRAP-PLAN-006`
 
-State: `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN`
+State: `WAITING_FOR_USER_PLAN_REVIEW`
 
-Mode: `CLOSED`
+Mode: `ARCHITECTURAL_PLAN_REVIEW`
 
-## Closure
+## Objective
 
-The Doctor CLI slice is complete, independently audited, merged, verified on merged `main`, and lifecycle-cleaned.
+Review and either accept or revise the implementation plan for the first usable Bootstrap slice. No Bootstrap product implementation is authorized by this planning task.
 
-## Authority and accepted result
+## Authority
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- PR #5: MERGED / CLOSED.
-- Merge commit: `104b6cdd9182d5a0494fafaf3bae814d24db0f0b`.
-- Audited PR head: `e5a5a83af784a20f13ae06b4ec6e24c4cd551b62`.
-- Merge tree = audited PR-head tree: `bf8ab10fdfe0fe187742095bb159e779430dcfd4`.
-- Product implementation commit: `40cedb3ab21130ca773ec20519d1b8d669b24422`.
-- Stable tag `v0.1.0` remains at `738627a0caad330d277f60cfdaff5f153593135e`.
+- Planning baseline before the new plan file: clean accepted `main` at `e9cb360c252b0f402edc9da7801fbec0462029e3`.
+- Plan file: `docs/superpowers/plans/2026-10-07-bootstrap-minimal-control-plane-implementation-plan.md`.
+- Plan commit: `6f648b5e2bb9ab1d5c096bf0069de0dd9bd4cf6d`.
+- Accepted design contract: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
+- Accepted standard: `EngineeringGovernanceStandard 0.1.0`.
+- Stable tag `v0.1.0` must remain at `738627a0caad330d277f60cfdaff5f153593135e`.
 
-Accepted invocation:
+## Proposed first Bootstrap slice
 
-`PYTHONPATH=src python3.11 -m engineering_governance doctor <target>`
+Public surface proposed by the plan:
 
-The CLI remains a thin local/offline/read-only adapter over the existing Doctor path. No new Doctor check set, remote query, Bootstrap, deeper Audit, AI runtime, dependency framework, report authority, enforcement, remediation, or migration was introduced.
+```text
+PYTHONPATH=src python3.11 -m engineering_governance bootstrap preview <target> \
+  --template minimal-control-plane.v1 \
+  --project-name <explicit-project-name> \
+  --actor <explicit-human-actor>
 
-## Verification evidence
+PYTHONPATH=src python3.11 -m engineering_governance bootstrap apply <target> \
+  --template minimal-control-plane.v1 \
+  --project-name <same-project-name> \
+  --actor <same-human-actor> \
+  --confirm-plan sha256:<exact-preview-plan-digest>
+```
 
-- Pre-change baseline: 52 Python 3.11 tests, 0 failures.
-- Focused TDD RED: 4 expected failures with the module entry point absent.
-- Focused GREEN: 4/4.
-- Pre-merge full Python 3.11 suite: 56/56.
-- Independent Web audit: PASS, no Critical or Important findings.
-- Independent Web reconstruction reproduced the focused RED/GREEN behavior.
-- Post-merge canonical-main Python 3.11 suite: 56 tests, 0 failures.
-- Before final closeout, canonical local `main` matched `origin/main` at `e4e3ed975b46617c29b9bf83346a835bf0be8420` and was clean.
+Key scope decisions for user review:
 
-## Lifecycle closeout evidence
+1. One approved template only: `minimal-control-plane.v1`.
+2. It renders exactly three root controls: `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
+3. Generic Bootstrap does not invent active work. `CURRENT_TASK.md` starts as `Task ID: NONE`, `State: NO_ACTIVE_TASK`, `Mode: IDLE`.
+4. Project name and apply actor must be explicitly supplied; they are not inferred from directory, account, Git author, or repository metadata.
+5. Preview is read-only and emits an immutable JSON plan with a `sha256:` identity.
+6. Apply is a separate command and requires the exact preview identity plus the same actor/project/template inputs.
+7. Existing exact starter files are `NO_CHANGE`; any differing candidate path or ambiguous path type is `CONFLICT / STOP` and is never overwritten.
+8. Apply uses create-if-absent writes only. Concurrent appearance cannot be overwritten.
+9. First slice requires a clean target at preview and apply. Dirty-target support is deferred to avoid building a broad state-fingerprint subsystem before it is needed.
+10. Exit semantics remain `0` truthful success/NO_CHANGE, `2` unsafe/fatal STOP, `3` internal fatal.
 
-- Worktree count before cleanup: 2.
-- Retained task worktree: clean.
-- Local-only tracked/untracked task work: none.
-- Task-branch unique commits: 0.
-- Remote task head `e5a5a83af784a20f13ae06b4ec6e24c4cd551b62` was contained in merged `main`.
-- Task worktree removed using ordinary cleanup.
-- Worktree count after cleanup: 1.
-- Local task branch removed using ordinary `git branch -d`.
-- Remote task branch removed; independent Web verification confirms it is absent.
-- PR #5 remains merged/closed.
+## Implementation-plan structure
 
-## Non-blocking external metadata note
+The plan contains four independently reviewable TDD tasks:
 
-Codex still reported a managed-worktree attachment for the removed filesystem path, and archiving that attachment was rejected because another Codex task owns it. This record is outside Git and outside this repository's lifecycle authority: no registered Git worktree remains, no task branch remains, no repository file or uncommitted work is attached to it, and no unique commit depends on it.
+1. Bootstrap model/template plus one clean-state Git probe.
+2. Read-only preview and stable plan identity.
+3. Exact-plan apply with exclusive create safety and idempotence.
+4. CLI integration, README, full regression, and Draft-PR handoff.
 
-This host-side attachment is therefore classified as `NON_BLOCKING_EXTERNAL_TOOL_METADATA`. It does not prevent `CLOSED_ACCEPTED_MAIN_ONLY_CLEAN` and should only be handled by its owning Codex task if cleanup is later useful.
+The implementation plan deliberately does not add a template registry, profile inheritance, migration, repair, Audit, AI runtime, MCP, remote queries, installer/package framework, enforcement, daemon, database, or new diagnostic program.
+
+## Review gate
+
+No local implementation, worktree, task branch, product commit, or PR is authorized while this task is `WAITING_FOR_USER_PLAN_REVIEW`.
+
+User approval should answer whether this plan captures the intended first Bootstrap capability. If approved, Web will create a separate implementation task, authorize one implementation branch, and hand the accepted plan to local Codex under the normal TDD + independent-Web-review workflow.
+
+If the user requests a scope change, revise the plan and keep implementation unauthorized until the revised plan is approved.
 
 ## Current stop point
 
-This task is closed. No further action under `EG-V01-DOCTOR-CLI-005` is authorized.
+`WAITING_FOR_USER_PLAN_REVIEW`
 
-Do not reopen this task solely to remove non-Git Codex attachment metadata. Any next product capability requires a new explicitly authorized task and fresh control update.
+Do not begin Bootstrap implementation yet.
