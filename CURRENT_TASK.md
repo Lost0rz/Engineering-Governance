@@ -2,93 +2,138 @@
 
 Task ID: `EG-V01-DOCTOR-CLI-005`
 
-State: `WAITING_FOR_MERGE_AUTHORIZATION`
+State: `MERGED — LOCAL_CLOSEOUT_PENDING`
 
-Mode: `INDEPENDENT_WEB_AUDIT_ACCEPTED`
+Mode: `POST_MERGE_LOCAL_VERIFICATION`
 
 ## Objective
 
-The bounded Doctor CLI implementation is complete and has passed independent Web review. The only authorized next action is an explicit user decision on merging Draft PR #5. Do not add product code, expand diagnostics, start Bootstrap/Audit/AI work, or perform lifecycle cleanup before merge authorization.
+Finish lifecycle closeout for the merged Doctor CLI slice. Product implementation and independent Web audit are complete. The only authorized work now is local verification on merged `main` plus safe cleanup of the retained task worktree/branch after proving no unique local-only work exists.
 
 ## Authority
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Live `main` / PR base during independent review: `f1fba7f9591047f6e2f40e677f79048227d67d8e`.
-- Authorized task branch: `codex/eg-v01-doctor-cli`.
-- Implementation commit: `40cedb3ab21130ca773ec20519d1b8d669b24422`.
-- Executor handoff head independently reviewed: `26404b234fb720dd5de3ac05ee3889f1b0cc4a06`.
-- PR: #5, OPEN / DRAFT / UNMERGED, targeting `main`.
+- PR: #5, MERGED / CLOSED.
+- Merge commit: `104b6cdd9182d5a0494fafaf3bae814d24db0f0b`.
+- Audited PR head: `e5a5a83af784a20f13ae06b4ec6e24c4cd551b62`.
+- Merge tree = audited PR-head tree: `bf8ab10fdfe0fe187742095bb159e779430dcfd4`.
+- Authorized task branch retained for closeout only: `codex/eg-v01-doctor-cli`.
+- Product implementation commit: `40cedb3ab21130ca773ec20519d1b8d669b24422`.
 - Accepted standard: `EngineeringGovernanceStandard 0.1.0`.
 - Stable tag `v0.1.0` must remain at `738627a0caad330d277f60cfdaff5f153593135e`.
 
 ## Accepted implementation
 
-Supported path:
+The merged feature exposes:
 
 `PYTHONPATH=src python3.11 -m engineering_governance doctor <target>`
 
-The implementation is intentionally thin:
+It is a thin CLI adapter over the existing read-only Doctor path. No new Doctor checks, remote queries, Bootstrap, Audit, AI runtime, dependency framework, report authority, enforcement, remediation, or migration were added.
 
-- `src/engineering_governance/__main__.py` uses standard-library `argparse`;
-- the `doctor` command delegates to existing `run_doctor()`;
-- it supplies existing `run_git_readonly`, `Path.read_bytes`, stdout/stderr, and a timezone-aware UTC clock;
-- it does not duplicate Doctor report construction or Git probing;
-- usage errors are rejected before Doctor execution;
-- default operation remains local/offline/read-only.
+## Pre-merge evidence
 
-Product/test/documentation paths in the implementation commit are exactly:
+- Baseline Python 3.11 suite: 52/52.
+- Focused TDD RED: 4 expected failures with `engineering_governance.__main__` absent.
+- Focused GREEN: 4/4.
+- Final executor Python 3.11 suite: 56/56.
+- Independent Web audit: PASS, no Critical or Important findings.
+- Independent Web reconstruction reproduced focused RED and GREEN behavior.
+- `v0.1.0` remained unchanged.
+- Fresh merge gate verified exact audited head and unchanged base before merging.
+- GitHub merge commit tree exactly equals audited PR-head tree, so merge integration introduced no product/control content drift.
+
+## Authorized local closeout gate
+
+Do not make product/source/test/spec/plan changes. Do not start another feature.
+
+### Gate 0 — refresh canonical main
+
+From the canonical checkout:
+
+1. `git fetch origin --prune --tags`.
+2. Read the latest remote `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`.
+3. Require this task to be `MERGED — LOCAL_CLOSEOUT_PENDING` / `POST_MERGE_LOCAL_VERIFICATION`.
+4. Require canonical `main` to have no unknown dirty/untracked work and no unique local commits absent from `origin/main`.
+5. Fast-forward `main` only to the exact live `origin/main`. STOP on divergence, unknown local work, or control-plane drift.
+6. Confirm `v0.1.0^{commit}` is still `738627a0caad330d277f60cfdaff5f153593135e`.
+
+### Gate 1 — verify merged main
+
+Run exactly on canonical merged `main`:
+
+`PYTHONPATH=src python3.11 -m unittest discover -s tests -v`
+
+Expected accepted result: 56 tests, 0 failures.
+
+Also confirm the merged files are present:
 
 - `README.md`
 - `src/engineering_governance/__main__.py`
 - `tests/test_cli.py`
 
-No dependency file, packaging framework, remote-query path, new Doctor check, Bootstrap, deeper Audit, AI runtime, MCP, enforcement, remediation, migration, or unrelated refactor is included.
+STOP if the full suite fails, test count is unexpectedly different, required files are missing, or the tag moved.
 
-## Executor evidence
+### Gate 2 — prove retained task state is disposable
 
-- Baseline Python 3.11 suite: 52 tests, 0 failures.
-- Focused RED command: `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_cli.py' -v`.
-- RED result: 4 expected failures because `engineering_governance.__main__` was absent.
-- Focused GREEN: 4/4.
-- Final Python 3.11 suite: 56 tests, 0 failures.
-- Valid target: exit 0 with one existing JSON report.
-- Non-repository target: Doctor STOP exit 2 with no JSON report.
-- Missing target / unsupported command: nonzero usage error without calling Doctor.
-- Dirty-target read-only snapshot: file and Git metadata unchanged before/after CLI execution.
-- Executor worktree was reported clean and local task HEAD matched remote handoff head.
+Inspect the retained worktree previously reported at:
 
-## Independent Web audit — 2026-10-07
+`/Users/ox_miles/.codex/worktrees/eg-v01-doctor-cli/Engineering-Governance`
 
-Result: `PASS` — no Critical or Important findings.
+and branch:
 
-Verified against GitHub and independent reconstruction:
+`codex/eg-v01-doctor-cli`
 
-1. PR #5 is open, draft, unmerged, mergeable, targets `main`, and its reviewed handoff head is `26404b234fb720dd5de3ac05ee3889f1b0cc4a06`.
-2. Live `main` remained exactly `f1fba7f9591047f6e2f40e677f79048227d67d8e`; no base drift occurred during review.
-3. `f1fba7f... -> 40cedb3...` is one implementation commit touching only README, `__main__.py`, and `test_cli.py`; `40cedb3... -> 26404b2...` is the executor control/evidence handoff.
-4. The CLI implementation delegates to the existing Doctor path and pre-existing local Git allowlist. The allowlist contains only `rev-parse --show-toplevel`, `rev-parse --git-common-dir`, `rev-parse --verify HEAD`, and `symbolic-ref --quiet --short HEAD`; no fetch/pull/ref mutation or network operation is introduced.
-5. The new tests directly exercise the required valid-target, STOP, usage-rejection, and dirty-target mutation behaviors.
-6. Web independently reconstructed the changed CLI slice from the reviewed remote sources. With `__main__.py` removed, the four focused CLI tests failed as expected; restoring the PR implementation produced 4/4 PASS. The reconstruction used Linux/Python 3.13, so it verifies the changed behavior and RED/GREEN semantics but is not represented as an independent Python 3.11 full-suite rerun.
-7. The executor's exact Python 3.11 full-suite evidence remains 56/56. GitHub exposes no CI status checks for the PR head; absence of CI is not counted as PASS.
-8. The annotated `v0.1.0` tag independently dereferences to `738627a0caad330d277f60cfdaff5f153593135e`.
-9. README accurately states that the first local Doctor CLI slice exists while Bootstrap and Audit remain unimplemented.
+Prove before cleanup:
 
-## Merge authorization gate
+1. the worktree is clean;
+2. no tracked or untracked local-only files exist there;
+3. the local task branch has no commits absent from its remote task branch or merged `main`;
+4. the remote task branch head is contained in merged `main`;
+5. the PR is merged/closed.
 
-Do not merge without explicit user authorization.
+If any unique local work exists, STOP and report it. Do not force-delete, reset, clean, or stash it away.
 
-After authorization, Web must freshly verify:
+### Gate 3 — safe lifecycle cleanup
 
-1. live `main` is still the expected base or reconcile any legitimate advance;
-2. PR #5 remains OPEN and unmerged;
-3. the exact PR head is the expected audited lineage (implementation commit `40cedb3...`, executor handoff `26404b2...`, plus only this Web audit control update);
-4. no new product/test paths or review blockers appeared;
-5. `v0.1.0` remains unchanged.
+Only after Gates 0-2 PASS:
 
-If those checks pass, merge PR #5 with exact-head protection. After merge, authorize a separate local closeout gate to fast-forward canonical `main`, rerun the full Python 3.11 suite on merged `main`, prove the retained task worktree/branch has no unique work, and clean it up without force.
+1. remove the task worktree using ordinary `git worktree remove` from outside that worktree;
+2. run `git worktree prune`;
+3. delete the local task branch using ordinary `git branch -d`;
+4. delete the remote task branch `codex/eg-v01-doctor-cli`;
+5. fetch/prune and confirm the task branch is absent locally/remotely;
+6. confirm only the canonical expected worktree remains for this repository and canonical `main` is clean and matches `origin/main`.
 
-## Current stop point
+STOP if ordinary removal/deletion refuses. Do not use `--force` or `-D`.
 
-`WAITING_FOR_MERGE_AUTHORIZATION`
+## Required handoff
 
-No merge, release, lifecycle cleanup, Bootstrap, deeper Audit, AI runtime, or next feature is authorized yet.
+Return:
+
+```text
+TASK_ID:
+CONTROL_HEAD:
+REMOTE_MAIN:
+LOCAL_MAIN:
+LOCAL_MAIN_REMOTE_MATCH:
+MAIN_WORKING_TREE:
+FULL_SUITE_ON_MERGED_MAIN:
+V0_1_TAG_TARGET:
+
+WORKTREE_COUNT_BEFORE:
+TASK_WORKTREE_CLEAN:
+TASK_WORKTREE_UNIQUE_WORK_FOUND:
+TASK_BRANCH_UNIQUE_COMMITS_FOUND:
+TASK_REMOTE_HEAD_CONTAINED_IN_MAIN:
+TASK_WORKTREE_REMOVED:
+WORKTREE_COUNT_AFTER:
+LOCAL_TASK_BRANCH_REMOVED:
+REMOTE_TASK_BRANCH_REMOVED:
+
+PR_STATE:
+UNEXPECTED_LIFECYCLE_RESIDUE:
+FINAL_STATE: CLOSED_ACCEPTED_MAIN_ONLY_CLEAN | STOP
+STOP_REASON:
+```
+
+No product changes and no next feature are authorized during this closeout.
