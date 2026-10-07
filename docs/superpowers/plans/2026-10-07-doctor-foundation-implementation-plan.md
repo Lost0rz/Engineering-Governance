@@ -62,8 +62,9 @@ The slice preserves the Hybrid recommendation and `EngineeringGovernanceStandard
 9. Dirty tracked and untracked target content, file types/modes, Git metadata, and index are unchanged after Doctor.
 10. Refs and `git worktree list --porcelain` are unchanged after Doctor, including when a linked worktree already exists.
 11. Only the exact local Git identity probes below are permitted; prohibited tuples are rejected before subprocess execution.
-12. Equivalent report values serialize to the same canonical bytes and SHA-256 identity.
-13. Evidence includes paths and content digests, not control-file bodies; missing/unknown values remain explicit limitations.
+12. The real Git subprocess adapter passes exact argv/cwd, `shell=False`, a bounded timeout, captured UTF-8 text streams, and a minimally augmented environment; adapter timeout becomes `DoctorStop`, then exit `2` without a report.
+13. Equivalent report values serialize to the same canonical bytes and SHA-256 identity.
+14. Evidence includes paths and content digests, not control-file bodies; missing/unknown values remain explicit limitations.
 
 ## Exact Future File Map
 
@@ -80,7 +81,7 @@ No paths in this section are created by this planning task.
 
 ### Tests
 
-- `tests/support.py` — temporary Git repositories, fixture materialization, and before/after snapshots.
+- `tests/support.py` — staged test support owned by the task that first needs each helper: Task 2 temporary Git repository setup, Task 3 fixture materialization, and Task 4 no-mutation snapshots. Task 2 must not prebuild the fixture or snapshot helpers.
 - `tests/test_model.py` — shared type/result invariants.
 - `tests/test_report.py` — immutable report, canonical bytes, and digest.
 - `tests/test_git_reader.py` — local identity, detached/unborn states, and command allowlist.
@@ -89,7 +90,7 @@ No paths in this section are created by this planning task.
 
 ### Synthetic text fixtures
 
-Fixtures contain control text only. `tests/support.py` copies them into a temporary directory, initializes a local Git repository there, and removes it after the test; no `.git` directory is committed.
+Fixtures contain control text only. Task 3's fixture helper copies them into a temporary directory; the local repository setup helper is owned by Task 2 and reused by later tests. Temporary `.git` data is not committed.
 
 - `tests/fixtures/doctor/pass/AGENTS.md`
 - `tests/fixtures/doctor/pass/CURRENT_STATUS.md`
@@ -104,6 +105,16 @@ Fixtures contain control text only. `tests/support.py` copies them into a tempor
 - `tests/fixtures/doctor/malformed-task/CURRENT_TASK.md` — missing or duplicate required fields.
 
 Inject a `FileReader` that raises `PermissionError` for unreadable-file tests; permission-bit behavior varies under privileged macOS test users.
+
+### Test-support ownership and interfaces
+
+`tests/support.py` is shared test infrastructure, but each helper is added only by the first task that needs it:
+
+- Task 2 adds `initialize_temporary_git_repository(root: Path, *, initial_commit: bool) -> Path`, used by Git-reader tests to create committed, unborn, and detached local repositories. It does not materialize control fixtures or snapshot mutation state.
+- Task 3 adds `materialize_doctor_fixture(name: str, destination: Path) -> Path`, used to copy one named synthetic control fixture into a temporary target before creating its local Git repository.
+- Task 4 adds the frozen test-only `DoctorMutationSnapshot` record and `snapshot_doctor_mutation_state(root: Path, git_common_dir: Path) -> DoctorMutationSnapshot`. Its value covers target paths/types/modes/content digests, checkout Git metadata and index/config digests, the common-directory tree's paths/types/modes/content digests and refs, and `git worktree list --porcelain`. It is added alongside Task 4 tests before their RED run; it is not production code and is not prebuilt in Task 2.
+
+Each later task may extend `tests/support.py` only for its own listed helper. Its Files and commit command must include the file whenever that task changes it.
 
 ## Shared Types and Exact Interfaces
 
@@ -225,7 +236,7 @@ def run_doctor(
 ) -> int: ...
 ```
 
-`run_doctor` is a direct library invocation, not a CLI entry point. The implementation task supplies standard-library adapters from `subprocess.run`, `Path.read_bytes`, and an aware UTC clock; tests inject recording/failing adapters and fixed time. `run_git_readonly` accepts exactly these tuples and no others: `("rev-parse", "--show-toplevel")`, `("rev-parse", "--git-common-dir")`, `("rev-parse", "--verify", "HEAD")`, and `("symbolic-ref", "--quiet", "--short", "HEAD")`. Reject every unlisted tuple before starting a process. Use `shell=False`, a bounded timeout, `GIT_OPTIONAL_LOCKS=0`, and `GIT_TERMINAL_PROMPT=0`; never read configured remotes.
+`run_doctor` is a direct library invocation, not a CLI entry point. The implementation task supplies standard-library adapters from `subprocess.run`, `Path.read_bytes`, and an aware UTC clock; tests inject recording/failing adapters and fixed time. `run_git_readonly` accepts exactly these tuples and no others: `("rev-parse", "--show-toplevel")`, `("rev-parse", "--git-common-dir")`, `("rev-parse", "--verify", "HEAD")`, and `("symbolic-ref", "--quiet", "--short", "HEAD")`. Reject every unlisted tuple before starting a process. Invoke `subprocess.run(["git", *args], cwd=cwd, shell=False, timeout=timeout_seconds, check=False, capture_output=True, text=True, encoding="utf-8", errors="replace", env=...)`; use a fixed default timeout of `5.0` seconds and an environment copied from `os.environ` with only `GIT_OPTIONAL_LOCKS=0` and `GIT_TERMINAL_PROMPT=0` overlaid. Return `CommandResult(returncode, stdout, stderr)`. Convert `subprocess.TimeoutExpired` to `DoctorStop("GIT_PROBE_TIMEOUT", safe_summary)` without retry. This adapter timeout while establishing root/common-dir identity is command-level STOP (`2`), never `EvaluationResult.FAIL` or an `UNVERIFIED` report; Task 2 pins the adapter exception and Task 4 pins the final `run_doctor` exit/output mapping. No remote URL/name or network-capable argument is passed; never read configured remotes.
 
 ## Frozen First-Slice Semantics
 
@@ -310,7 +321,7 @@ There are four implementation commits followed by one verification-only acceptan
 
 ### Task 2 — Local repository identity and Git command allowlist
 
-**Files:** `tests/support.py`, `tests/test_git_reader.py`, then `src/engineering_governance/git_reader.py`.
+**Files:** `tests/support.py` (add only `initialize_temporary_git_repository`), `tests/test_git_reader.py`, then `src/engineering_governance/git_reader.py`.
 
 | Exact test name | Setup | Key assertions |
 |---|---|---|
@@ -324,18 +335,20 @@ There are four implementation commits followed by one verification-only acceptan
 | `test_remote_tuple_is_rejected_before_subprocess` | Patch subprocess; call with `("remote", "-v")`. | `DoctorStop` is raised and mocked subprocess was not called. |
 | `test_ls_remote_tuple_is_rejected_before_subprocess` | Patch subprocess; call with `("ls-remote", "origin")`. | `DoctorStop` is raised and mocked subprocess was not called. |
 | `test_any_unlisted_git_tuple_is_rejected_before_subprocess` | Patch subprocess; call with `("push", "origin")` and `("status", "--short")`. | Each raises `DoctorStop`; subprocess remains uncalled. |
+| `test_run_git_readonly_invokes_git_with_readonly_process_contract` | Patch `git_reader.subprocess.run` to return fixed stdout/stderr for `("rev-parse", "--show-toplevel")`; call `run_git_readonly` with a supplied `Path` and default timeout. | One call has argv exactly `["git", "rev-parse", "--show-toplevel"]` (no remote verb, remote name/URL, or network-capable argument), exact supplied `cwd`, `shell=False`, `timeout=5.0`, `check=False`, `capture_output=True`, `text=True`, `encoding="utf-8"`, `errors="replace"`; env equals a copy of `os.environ` with only `GIT_OPTIONAL_LOCKS=0` and `GIT_TERMINAL_PROMPT=0` overlaid; returned value equals `CommandResult(0, fixed_stdout, fixed_stderr)`. |
+| `test_run_git_readonly_timeout_becomes_doctor_stop` | Patch `subprocess.run` to raise `subprocess.TimeoutExpired` for `("rev-parse", "--show-toplevel")`. | `run_git_readonly` raises `DoctorStop` with code `GIT_PROBE_TIMEOUT`; `subprocess.run` is called exactly once; there is no retry/backoff or fallback. |
 
-**RED:** `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_git_reader.py' -v`. At this point Task 1 exists but `git_reader.py` and its API do not; the named tests fail importing/calling that absent API.
+**RED:** `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_git_reader.py' -v`. Task 2 first adds the Git-only temporary repository helper and all named tests. At this point Task 1 exists but `git_reader.py`, `run_git_readonly`, and the reader API do not; tests fail on those absent production APIs, not on test setup.
 
-**Minimal implementation:** Implement the four-tuple allowlist and `read_repository` together. The negative tests are present before this implementation; Task 5 adds no new allowlist tests. Resolve Git-returned relative common-directory paths against the Git root. Do not read remotes.
+**Minimal implementation:** Implement `run_git_readonly` with the exact subprocess contract above, timeout-to-`DoctorStop` conversion, the four-tuple allowlist, and `read_repository`. All adapter and allowlist tests exist before this implementation; Task 5 adds no new Git behavior tests. Resolve Git-returned relative common-directory paths against the Git root. Do not read remotes.
 
 **GREEN:** rerun the same focused command. Confirm prohibited tuples fail before subprocess and permitted probes remain local read-only commands.
 
-**Commit:** `git add src/engineering_governance/git_reader.py tests/support.py tests/test_git_reader.py && git commit -m "feat(doctor): observe local repository identity"`.
+**Commit:** `git add tests/support.py tests/test_git_reader.py src/engineering_governance/git_reader.py && git commit -m "feat(doctor): observe local repository identity"`.
 
 ### Task 3 — Control observations and exact Task ID matching
 
-**Files:** `tests/fixtures/doctor/{pass,unverified-missing-status,inconsistent-task-id,malformed-task}/*`, `tests/test_control_reader.py`, then `src/engineering_governance/control_reader.py`.
+**Files:** `tests/support.py` (add only `materialize_doctor_fixture`), `tests/fixtures/doctor/{pass,unverified-missing-status,inconsistent-task-id,malformed-task}/*`, `tests/test_control_reader.py`, then `src/engineering_governance/control_reader.py`.
 
 | Exact test name | Setup | Key assertions |
 |---|---|---|
@@ -359,17 +372,17 @@ There are four implementation commits followed by one verification-only acceptan
 | `test_task_id_slash_and_dot_boundaries_are_identifier_characters` | Task ID `AREA/TASK.1`; status contains only `AREA/TASK.10` and `AREA/TASK.1/child`. | Neither collision matches; consistency is `FAIL` / `CURRENT`. |
 | `test_missing_task_id_reference_is_consistency_fail` | Both files are readable; status omits the exact bounded ID. | Consistency is `FAIL` / `CURRENT`, not an exception or STOP. |
 
-**RED:** `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_control_reader.py' -v`. `control_reader.py` and `read_controls` do not exist yet, so the named tests fail on the absent API.
+**RED:** `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_control_reader.py' -v`. Task 3 adds its fixture materializer and named tests before this run; Task 1 exists but `control_reader.py` and `read_controls` do not, so RED is caused by the absent production API rather than missing test support.
 
 **Minimal implementation:** Implement the three-file read, fixed observation order, UTF-8/nonblank checks, task field parsing, and the exact ASCII boundary rule above. Do not add a Markdown parser or schema.
 
 **GREEN:** rerun the same focused command. Verify `TASK-10`, `XTASK-1`, `TASK-1-extra`, `TASK-1_extra`, and `TASK-1/child` never match `TASK-1`.
 
-**Commit:** `git add src/engineering_governance/control_reader.py tests/fixtures/doctor tests/test_control_reader.py && git commit -m "feat(doctor): read control files deterministically"`.
+**Commit:** `git add tests/support.py tests/fixtures/doctor tests/test_control_reader.py src/engineering_governance/control_reader.py && git commit -m "feat(doctor): read control files deterministically"`.
 
 ### Task 4 — Doctor orchestration and read-only acceptance tests
 
-**Files:** `tests/test_doctor.py`, then `src/engineering_governance/doctor.py`.
+**Files:** `tests/support.py` (add only `DoctorMutationSnapshot` and `snapshot_doctor_mutation_state`), `tests/test_doctor.py`, then `src/engineering_governance/doctor.py`.
 
 | Exact test name | Setup | Key assertions |
 |---|---|---|
@@ -380,16 +393,17 @@ There are four implementation commits followed by one verification-only acceptan
 | `test_non_repository_returns_two_without_report` | Ordinary directory target. | Exit `2`; stdout empty; stderr starts `STOP:` and is at most 256 characters. |
 | `test_malformed_root_returns_two_without_report` | Malformed task fixture. | Exit `2`; stdout empty; bounded `STOP:` diagnostic; no evaluation report. |
 | `test_internal_failure_returns_three_without_report` | Inject an unexpected reader exception. | Exit `3`; stdout empty; stderr is bounded `ERROR: INTERNAL_FATAL` with no traceback. |
+| `test_git_probe_timeout_returns_two_without_report` | Use Task 2's `run_git_readonly` as the injected Git runner and patch its `subprocess.run` to raise `TimeoutExpired` on the first root-identity probe. | `run_doctor` returns `2`; stdout is empty; stderr is one bounded `STOP:` diagnostic; no `DoctorReport` or `UNVERIFIED` evaluation is emitted; the adapter is called once. |
 | `test_dirty_repository_content_and_git_metadata_are_unchanged` | Temporary repo with modified tracked file and untracked file; snapshot before run. | After `run_doctor`, paths/types/modes/content digests and `.git`/index/config bytes equal the before snapshot. |
 | `test_linked_worktree_refs_and_index_are_unchanged` | Repo has a pre-existing linked worktree; snapshot refs and `git worktree list --porcelain`. | After `run_doctor`, refs, worktree listing, HEAD/index/config, and common-dir contents equal the before snapshot. |
 
-**RED:** `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_doctor.py' -v`. Tasks 1–3 exist but `doctor.py` / `run_doctor` do not; the named invocation and no-mutation tests fail on that absent behavior before orchestration is implemented.
+**RED:** Add Task 4's snapshot helper and named tests before running `PYTHONPATH=src python3.11 -m unittest discover -s tests -p 'test_doctor.py' -v`. Tasks 1–3 and the support helper are available, but `doctor.py` / `run_doctor` do not exist; tests lazily import the API inside each test and RED is caused by absent `run_doctor`, including the timeout-mapping test, never by a missing support helper.
 
-**Minimal implementation:** Implement `run_doctor`, inject Git/file/clock readers, build and serialize one report on success, map `DoctorStop` to exit `2`, and map unexpected internal failures to exit `3`. No normal report is emitted on either stop path.
+**Minimal implementation:** Implement `run_doctor`, inject Git/file/clock readers, build and serialize one report on success, map `DoctorStop` (including `GIT_PROBE_TIMEOUT` while establishing repository/root identity) to exit `2`, and map unexpected internal failures to exit `3`. No normal report is emitted on either stop path.
 
 **GREEN:** rerun the same focused command, then run `PYTHONPATH=src python3.11 -m unittest discover -s tests -v`. The dirty-target and linked-worktree snapshot assertions are written before `run_doctor` and must pass with its minimal read-only implementation.
 
-**Commit:** `git add src/engineering_governance/doctor.py tests/test_doctor.py && git commit -m "feat(doctor): emit read-only report with exit semantics"`.
+**Commit:** `git add tests/support.py tests/test_doctor.py src/engineering_governance/doctor.py && git commit -m "feat(doctor): emit read-only report with exit semantics"`.
 
 ### Task 5 — Verification-only acceptance gate
 
@@ -397,7 +411,7 @@ This is not an implementation task and creates no tests, source, or commit. It e
 
 1. Run `PYTHONPATH=src python3.11 -m unittest discover -s tests -v` and require all tests to pass.
 2. Confirm the Task 4 before/after dirty-target and linked-worktree snapshots pass, including refs, worktree list, content, modes, Git metadata, and index.
-3. Review the recorded Task 2 Git runner calls and confirm only the four allowlisted local probes were invoked; no network path was touched.
+3. Require the Task 2 adapter tests to prove the exact allowed argv, cwd, `shell=False`, timeout, environment flags/preserved `PATH` and `HOME`, captured deterministic text, `CommandResult`, and one-call timeout conversion; confirm no network path is present.
 4. Inspect `git status --short` and the final diff. This gate cannot add or modify implementation files; any finding returns to a separately authorized corrective task.
 
 **Acceptance result:** PASS only if all prior tasks are GREEN, the full suite passes, the read-only snapshots match, and the scoped diff contains only the planned first-slice files. Otherwise STOP and report the failing evidence. No artificial RED and no commit are assigned to this gate.
@@ -419,17 +433,20 @@ Tasks 1–4 run their exact focused command first for RED, then the same command
 
 ## Commit Boundaries
 
-The four future implementation commits are exactly the Task 1–4 commits above, in order. Each includes tests written before implementation, genuine RED evidence, minimal implementation, GREEN evidence, and the listed verification. Task 5 is verification-only and has no commit. Do not combine unrelated cleanup, skip a failing test, or push implementation without a separate implementation authorization. This plan corrective may change only this plan and `CURRENT_STATUS.md` / `CURRENT_TASK.md`.
+The four future implementation commits are exactly the Task 1–4 commits above, in order. Each includes its named tests before production implementation, genuine RED evidence, minimal implementation, GREEN evidence, and the listed verification. Test-only helpers needed to make a task's tests executable are added with that task's test setup before its RED run; the expected RED must identify the absent production API. In particular, Task 4's snapshots are not built in Task 2, and Task 4's RED is absent `run_doctor`. Task 5 is verification-only and has no commit. Do not combine unrelated cleanup, skip a failing test, or push implementation without a separate implementation authorization. This plan corrective may change only this plan and `CURRENT_STATUS.md` / `CURRENT_TASK.md`.
 
 ## Corrective Self-Review
 
-1. **TDD order:** All Git allowlist positive and negative tests are in Task 2 before `git_reader.py` is implemented. Dirty-target and linked-worktree end-to-end tests are in Task 4 before `run_doctor` exists. Task 5 adds no behavior tests or implementation, so there is no false RED.
-2. **No impossible later RED:** No task adds tests for behavior that an earlier task already implements. Task 1 owns model/report behavior; Task 2 owns all Git probe allow/reject behavior; Task 3 owns control parsing and ID matching; Task 4 owns invocation and no-mutation behavior.
-3. **Named test surface:** Tasks 1–4 enumerate each exact `test_*` name, setup, key assertions, expected RED reason, and focused GREEN command.
-4. **Interface/type consistency:** Shared frozen records, reader/report functions, injected adapters, and `DoctorStop` are defined once and match the four task boundaries.
-5. **Task ID rule:** ID grammar, case sensitivity, exact literal matching, identifier characters, and boundary behavior are specified once; exact, backtick, prose, prefix, suffix, embedded, and missing-reference tests pin it.
-6. **No-mutation acceptance:** Task 4 snapshots a dirty repository and a repository with an existing linked worktree, including content, modes, metadata, index, refs, and worktree listings.
-7. **First-slice scope:** Only the local shared reader/model and read-only Doctor checks/report are planned. Runtime, dependencies, output, and exit contracts remain unchanged.
-8. **Proportion:** Four TDD implementation commits plus one verification-only gate; no CLI, packaging, schema, general Markdown parser, persistent state, or future-command implementation.
+1. **Exact file map:** Every source, test, and fixture path in the Future File Map appears in its owning Task Files block. `tests/support.py` is staged across Tasks 2–4 for only the helper first needed by that task.
+2. **Commit coverage:** Each Task 1–4 commit command includes every path in its Files block, including `tests/support.py` in Tasks 2, 3, and 4. No task commits a helper it did not introduce or change.
+3. **Support ownership:** Task 2 adds only its temporary Git repository initializer; Task 3 adds fixture materialization; Task 4 adds the snapshot record/helper. Task 2 does not prebuild Task 4 snapshot behavior.
+4. **Genuine RED:** Each task's support setup is ready before its focused RED run, and each run fails on that task's absent production API. Task 4 specifically REDs on absent `run_doctor`, not missing snapshot support. No test is added after the behavior it asserts is implemented.
+5. **Adapter test surface:** Task 2 has named tests for the real `run_git_readonly` subprocess call and timeout exception, in addition to the exact allowlist tests.
+6. **Adapter assertions:** The subprocess test pins exact argv, no remote/network arguments, supplied cwd, `shell=False`, timeout `5.0`, `check=False`, captured UTF-8 text, exact environment copy plus the two Git flags, and `CommandResult` contents.
+7. **Timeout classification:** The root identity probe timeout raises `DoctorStop("GIT_PROBE_TIMEOUT", ...)` once in Task 2. Task 4 verifies `run_doctor` returns `2` with no report or `UNVERIFIED` result; no retry/backoff/network fallback exists.
+8. **Tasks and scope:** Four TDD implementation tasks and the verification-only Task 5 remain. The planned slice stays local/offline/read-only, Python 3.11+/stdlib-only, with the existing report and exit `0` / `2` / `3` contract.
+9. **Interface/type consistency:** Shared frozen records, reader/report functions, injected adapters, `DoctorStop`, and staged support helper interfaces are defined once and match the owning task boundaries.
+10. **Previously accepted Task ID rule:** Grammar, case sensitivity, exact literal matching, identifier characters, and boundary behavior remain pinned by exact, backtick, prose, prefix, suffix, embedded, and missing-reference tests.
+11. **Proportion and spec coverage:** The plan covers the first slice described by spec Sections 6, 10, 12, 13, 15, 16, 17, 18, and 19. It adds no CLI, packaging, schema, general Markdown parser, persistent state, or future-command implementation.
 
 **Implementation status:** Not started. This plan requires independent implementation-plan review and a separate implementation authorization before any future source, test, or fixture path is created.
