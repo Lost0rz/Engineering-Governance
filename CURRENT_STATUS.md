@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase G implementation completed on the bounded task branch and is ready for independent Web audit. The corrective changed only the approved `project-governance` and `domain-navigation` documentation/template scope plus root handoff controls. `incident-doctor` and target projects remain unchanged.
+Last verified: 2026-10-07 — Phase G cross-project corrective passed independent Web audit and was accepted by the user for merge. `main` was fast-forwarded from the Phase G authorization head to the audited task-branch head; this control update closes the phase without opening a new implementation task.
 
 ## Repository identity
 
@@ -17,38 +17,40 @@ Last verified: 2026-10-07 — Phase G implementation completed on the bounded ta
 - Phase D `incident-doctor`: accepted and merged at `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 - Phase E RemoteOrbit read-only validation: complete / PASS.
 - Phase F InvestDesk read-only validation: complete / PASS.
+- Phase G cross-project corrective: accepted and merged at `5b59767652f0d2017ca3b3a1df6f29d5366eaa8b`; reusable-content commit `f2c5f2f86dc892a1b9241f0286d6485fdf253073`.
 
-## Phase G bounded corrective
+## Stable reusable clarifications after Phase G
 
-- Task: `EG-CROSS-PROJECT-CORRECTIVE-020`.
-- Authorization/main head: `94255158a43d6cca727cdf64681a3bdefbb2bf40`.
-- Task branch: `codex/cross-project-corrective`.
-- Reusable-content implementation commit: `f2c5f2f86dc892a1b9241f0286d6485fdf253073`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
-- Mode: `BOUNDED_CORRECTIVE_AUDIT_HANDOFF`.
+### Project Governance
 
-Implemented clarification A — Project Governance:
-
-- `CURRENT_STATUS.md` is now explicitly a verified snapshot and not an authorization override.
-- If a newly verified status fact changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, state-changing work must stop until `CURRENT_TASK.md` is reconciled and re-authorized.
+- `CURRENT_STATUS.md` is a verified current-state snapshot, not an authorization override.
+- If a newly verified status fact changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, state-changing work stops until `CURRENT_TASK.md` is reconciled and re-authorized.
 - Status refreshes that do not affect task-owned conditions do not require task churn.
 
-Implemented clarification B — Domain Navigation:
+### Domain Navigation
 
-- Agents must first discover accepted business/product/domain/capability maps already present in a target repository, regardless of filename, and determine what semantic truth they own.
+- Discover accepted business/product/domain/capability maps already present in a target repository, regardless of filename, before assuming a navigation map is missing.
 - Existing semantic authorities are referenced rather than duplicated.
-- A literal `DOMAIN_MAP.md` file is not required merely to satisfy the generic template; a separate navigation projection is added or refreshed only when durable source/symbol/test routing adds value.
+- A literal `DOMAIN_MAP.md` file is optional; create or refresh a separate navigation projection only when durable source/symbol/test/entry-point routing adds value.
 - Navigation remains derived and cannot replace product/domain authority.
 
-## Verification evidence before handoff
+### Incident Doctor
 
-- Authorization head -> reusable implementation commit is exactly one commit ahead and changes exactly seven approved reusable files.
-- `skills/incident-doctor` tree SHA remains `f35fc22faa78ff4b7854a45c08b2167425f0c440`, identical to the authorization baseline.
-- `skills/` contains exactly three directories: `project-governance`, `domain-navigation`, `incident-doctor`.
-- All three `SKILL.md` frontmatter blocks remain present; referenced project-governance and domain-navigation reference/template paths resolve on the task branch.
-- No executable helper, dependency, runtime, index, daemon, database, installer, Repo Map program, or new Skill was added; the reusable diff contains only seven modified Markdown files.
-- Stable annotated tag object remains `a794ee0e9d039bad0f8fa418ad422316c5315fb3` and still dereferences to commit `738627a0caad330d277f60cfdaff5f153593135e`.
+- No Phase G change. The accepted evidence-gated reactive contract remains unchanged.
 
-## Next milestone
+## Merge verification
 
-Independently audit the exact remote task-branch diff against authorization head `94255158a43d6cca727cdf64681a3bdefbb2bf40`. Do not merge until that audit passes and merge is separately accepted.
+- Pre-merge `main`: `94255158a43d6cca727cdf64681a3bdefbb2bf40`.
+- Audited task-branch head and Phase G merge head: `5b59767652f0d2017ca3b3a1df6f29d5366eaa8b`.
+- The branch was a clean linear descendant: `ahead_by=2`, `behind_by=0`, merge base exactly the authorization head.
+- `main` was advanced with an expected-SHA guarded fast-forward; no force update was used.
+- Phase G reusable diff was limited to seven approved Markdown files plus root handoff controls.
+- `skills/incident-doctor` remained unchanged; exactly three top-level Skills remain.
+- No executable helper, dependency, runtime, index, daemon, database, installer, Repo Map program, or fourth Skill was added.
+- The stable historical tag remains unchanged.
+
+## Current milestone
+
+State: `WAITING_FOR_USER_NEXT_PHASE_DECISION`.
+
+No target-project adoption, new reusable corrective, version-tag update, or new implementation task is authorized by this closeout. The next phase should be selected explicitly from current project needs rather than extending governance infrastructure by default.
