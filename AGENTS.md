@@ -9,7 +9,7 @@ A target project is adapted by an AI agent after inspecting that project's real 
 ## Core v1 principles
 
 1. **Three-file control plane.** Every governed project should have clear project-local `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` roles. `AGENTS.md` holds durable operating rules, `CURRENT_STATUS.md` is the concise verified current-state snapshot, and `CURRENT_TASK.md` is the single active execution contract.
-2. **Domain navigation.** Every project needs an explicit semantic Domain Map so an agent can route from a task to the responsible domain, authority, entry points, dependencies, relevant tests, and evidence before reading broad areas of the repository.
+2. **Domain navigation.** Every project needs an evidence-backed semantic route from the active task to the responsible domain/capability, authority, entry points, dependencies, relevant tests, and evidence before broad source reading. Discover and reuse accepted business/product/domain/capability maps already present regardless of filename. A separate navigation projection is optional and should exist only when it adds durable routing value; it must not duplicate or replace semantic truth.
 3. **Business-first, Doctor-on-demand.** Normal product/business delivery is the default. Incident Doctor work is entered only after a real problem appears and existing evidence is insufficient. Add the minimum probe needed to answer the blocked question, then return to delivery.
 4. **Proportional verification.** Verification depth follows change risk and scope. Documentation/control changes do not inherit the same test burden as cross-domain, persistence, concurrency, security, or release-critical changes.
 
@@ -35,8 +35,9 @@ A target project is adapted by an AI agent after inspecting that project's real 
 - Inspect the target repository before generating or updating its governance files.
 - Separate verified facts from intent. Unsupported facts remain unknown; do not fill template sections with guesses.
 - Prefer concrete source paths, symbols, manifests, tests, runtime entry points, and Git evidence.
-- A Domain Map is a semantic navigation layer, not a directory listing. Domain boundaries should follow capability/ownership/authority, not folder names alone.
-- A Repo Map is a dynamic code-navigation aid and does not replace the stable Domain Map.
+- Discover accepted semantic maps before creating navigation artifacts. Existing business/product/domain/capability maps may own project meaning and must be referenced rather than duplicated.
+- Any separate navigation projection follows capability/ownership/authority rather than folder names alone; it is derived routing evidence, not product/domain truth, and a literal `DOMAIN_MAP.md` filename is not required.
+- A Repo Map is an optional dynamic code-navigation aid; it does not replace semantic authorities, direct source verification, or a durable navigation projection when one is justified.
 - External projects are references, not hidden dependencies. Record what is borrowed conceptually and check licensing before copying code or text.
 
 ## Delivery workflow
