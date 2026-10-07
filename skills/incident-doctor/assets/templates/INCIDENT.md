@@ -1,6 +1,6 @@
 # Incident Record
 
-Keep this as a concise evidence chain, not a chronological diary. Cite evidence paths, source/runtime identities, revisions, and time windows; do not paste large log bodies. `UNKNOWN` and unresolved findings are valid outcomes.
+Keep this as a concise evidence chain, not a chronological diary. Cite evidence paths, source/runtime identities, revisions, and time windows; do not paste large log bodies. `UNKNOWN` and unresolved findings are valid outcomes. Use `not applicable` for optional sections that truly do not apply rather than adding boilerplate.
 
 ## Incident ID
 
@@ -28,7 +28,7 @@ Record applicable identities and mark missing values `unknown`: `REPOSITORY_REVI
 
 ## Existing Evidence
 
-[Evidence reviewed as applicable: `CURRENT_TASK`, source, tests, runtime/build/configuration, canonical state, logs, prior captures, Domain Map/authority evidence. Cite paths/identities, revision or observation time, and freshness.]
+[Evidence reviewed as applicable: `CURRENT_TASK.md`, source, tests, runtime/build/configuration, canonical state, logs, prior captures, accepted semantic-authority sources, and existing navigation evidence. Cite paths/identities, revision or observation time, and freshness. If code/authority location was unclear, Domain Navigation may be cited only as the route used to locate evidence; it does not decide diagnosis.]
 
 ## Evidence Sufficiency Decision
 
@@ -98,11 +98,15 @@ Explain why existing evidence cannot answer the question. Prefer read-only canon
 
 ## Minimum Fix Boundary
 
-[Smallest authorized behavior change supported by the evidence, or `none / unresolved`. Correlation alone does not establish a root-cause repair boundary.]
+[Smallest behavior change supported by the evidence, or `none / unresolved`. This is an evidence boundary, not task authorization. Correlation alone does not establish a root-cause repair boundary.]
+
+## Authorization / Next Owner
+
+[State whether the active `CURRENT_TASK.md` already authorizes the minimum fix and required side effects. If not, record `RETURN_TO_PROJECT_GOVERNANCE_FOR_REAUTHORIZATION` before any behavior change. Incident Doctor does not grant authorization itself.]
 
 ## Regression Verification
 
-[Fix verification evidence separate from diagnostic evidence: record the selected project-governance `V1`/`V2`/`V3` level and rationale, then targeted regression, affected-Domain checks, and integration/runtime acceptance as required by change risk. Record results and known limits. If no behavior fix was made, state that.]
+[If an authorized behavior fix was made, keep fix-verification evidence separate from diagnostic evidence: record the selected Project Governance `V1`/`V2`/`V3` level and rationale, then targeted regression, affected-Domain checks, and integration/runtime acceptance as required by change risk. Record results and known limits. If no behavior fix was made, state that.]
 
 ## Probe Lifecycle Decision
 

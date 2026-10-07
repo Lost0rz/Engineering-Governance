@@ -1,5 +1,3 @@
-# Fresh incident capture
-
 # Fresh, attributable incident capture
 
 When a new probe is introduced, base key conclusions on a fresh incident or reproduction captured after that probe is active. Capture the smallest reproduction and observation window sufficient to answer the blocked question.
