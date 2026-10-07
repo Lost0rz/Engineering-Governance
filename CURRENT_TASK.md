@@ -1,118 +1,89 @@
-# CURRENT TASK — Phase G Cross-Project Corrective
+# CURRENT TASK — Phase G Cross-Project Corrective Handoff
 
 Task ID: `EG-CROSS-PROJECT-CORRECTIVE-020`
 
-State: `AUTHORIZED_FOR_IMPLEMENTATION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
-Mode: `BOUNDED_CORRECTIVE_IMPLEMENTATION`
+Mode: `BOUNDED_CORRECTIVE_AUDIT_HANDOFF`
 
 ## Objective
 
-Apply exactly two reusable Skill clarifications justified by the Phase E RemoteOrbit and Phase F InvestDesk validations, without expanding the governance architecture:
+Hand off the completed bounded implementation of the two Phase G reusable Skill clarifications for independent Web audit. No merge is authorized by this handoff.
 
-1. make task-owned authorization conditions immune to silent override by `CURRENT_STATUS.md`;
-2. make Domain Navigation explicitly coexist with pre-existing authoritative semantic maps rather than assuming a new literal `DOMAIN_MAP.md` is always required.
+## Authority and exact heads
 
-This is corrective documentation/Skill-contract work only. It does not authorize adoption in RemoteOrbit, InvestDesk, or any other target repository.
+- User-approved design baseline: `9346997c75d3b5dce8a558203b3adb1a40eb5fc3`.
+- Phase G authorization/main head: `94255158a43d6cca727cdf64681a3bdefbb2bf40`.
+- Task branch: `codex/cross-project-corrective`.
+- Reusable-content implementation commit before this handoff-control commit: `f2c5f2f86dc892a1b9241f0286d6485fdf253073`.
+- Stable historical tag `v0.1.0^{}`: `738627a0caad330d277f60cfdaff5f153593135e`.
 
-## Authority and baseline
+## Implemented corrective A — Project Governance
 
-- Design/handoff baseline: `9346997c75d3b5dce8a558203b3adb1a40eb5fc3`.
-- User approval: Phase G design approved for the two cross-project correctives.
-- Phase E evidence: RemoteOrbit exposed a real status/task drift affecting an active prerequisite.
-- Phase F evidence: InvestDesk showed coherent status/task separation and existing authoritative semantic maps (`DOMAIN_MODEL_MAP.md`, `BUSINESS_CAPABILITY_MAP.md`) that must not be shadowed by a generic navigation artifact.
-- Accepted reusable Skill revision before this corrective remains `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
-- Implementation branch: `codex/cross-project-corrective`, created from the Phase G authorization commit.
+The reusable contract now states that:
 
-## Corrective A — Project Governance
+- `CURRENT_STATUS.md` is a verified current-state snapshot, not an authorization override;
+- a status update alone cannot change a `CURRENT_TASK.md` prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary;
+- if a newly verified status fact changes or invalidates one of those task-owned conditions, state-changing work stops until `CURRENT_TASK.md` is reconciled and re-authorized;
+- if task-owned conditions are unaffected, a normal status refresh does not require a task rewrite.
 
-Clarify the ownership rule as follows:
-
-- `CURRENT_STATUS.md` may summarize verified current-state facts; it does not own task authorization.
-- A status update alone must never change a `CURRENT_TASK.md` prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary.
-- If a newly verified status fact changes or invalidates one of those task-owned conditions, state-changing work must stop until `CURRENT_TASK.md` is reconciled and the changed task is re-authorized.
-- Ordinary status refreshes that do not affect the task contract do not require task churn.
-
-Allowed reusable files for Corrective A:
+Changed reusable files:
 
 - `skills/project-governance/SKILL.md`
 - `skills/project-governance/references/control-plane.md`
 - `skills/project-governance/assets/templates/CURRENT_STATUS.md`
 
-Do not add a second authority or duplicate the full task contract into the status template.
+## Implemented corrective B — Domain Navigation
 
-## Corrective B — Domain Navigation
+The reusable contract now states that:
 
-Clarify coexistence with target-repository semantic authorities as follows:
+- agents first discover accepted business/product/domain/capability maps already present in the target repository, regardless of filename, and determine what semantic truth they own;
+- those maps are referenced as authorities rather than copied into a competing navigation artifact;
+- a literal `DOMAIN_MAP.md` filename is not a target-repository requirement;
+- a separate navigation projection is created or refreshed only when durable source/symbol/test/entry-point routing adds value beyond the existing semantic authorities;
+- navigation remains derived and cannot authorize work or redefine product/domain truth.
 
-- Before assuming a navigation map is missing, discover existing accepted business/product/domain/capability maps and determine their authority.
-- An existing semantic map may be the authoritative source for product/domain meaning even when its filename is not `DOMAIN_MAP.md`.
-- Reuse those maps as evidence and pointers. Do not copy or restate their business truth into a competing navigation artifact.
-- A separate navigation projection is created or refreshed only when source/symbol/test/entry-point routing adds value beyond those existing authorities.
-- The generic `DOMAIN_MAP.md` template is optional as a navigation projection; the filename is not a target-repository requirement.
-- Navigation output remains derived and cannot authorize work or redefine product/domain truth.
-
-Allowed reusable files for Corrective B:
+Changed reusable files:
 
 - `skills/domain-navigation/SKILL.md`
 - `skills/domain-navigation/references/domain-model.md`
 - `skills/domain-navigation/references/mapping-workflow.md`
 - `skills/domain-navigation/assets/templates/DOMAIN_MAP.md`
 
-## Root control scope
+## Verification evidence
 
-`CURRENT_STATUS.md` and `CURRENT_TASK.md` may be changed only for Phase G authorization/handoff state.
+Fresh pre-handoff checks established:
 
-## Forbidden scope
+- compare `94255158a43d6cca727cdf64681a3bdefbb2bf40` -> `f2c5f2f86dc892a1b9241f0286d6485fdf253073`: `ahead_by=1`, `behind_by=0`, exactly seven modified reusable Markdown paths, all on the approved allowlist;
+- `skills/incident-doctor` tree SHA is `f35fc22faa78ff4b7854a45c08b2167425f0c440` both before and after the reusable implementation;
+- `skills/` contains exactly three Skill directories;
+- `project-governance`, `domain-navigation`, and `incident-doctor` each retain valid `SKILL.md` frontmatter;
+- all referenced project-governance and domain-navigation reference/template paths inspected for this task exist on the implementation commit;
+- no executable, dependency, runtime, index, daemon, database, installer, Repo Map program, or new Skill appears in the reusable diff;
+- annotated tag object `a794ee0e9d039bad0f8fa418ad422316c5315fb3` still points to commit `738627a0caad330d277f60cfdaff5f153593135e`.
 
-- any change to `skills/incident-doctor/**`;
-- any fourth Skill;
-- any target-project mutation or adoption;
-- new executable helper, parser, crawler, index, vector/embedding store, semantic database, daemon, background service, installer, or Repo Map program;
-- dependency or runtime changes;
-- broad wording changes unrelated to the two approved corrections;
-- redesign of the three-file control plane, Domain semantics, verification tiers, or Incident Doctor trigger model.
+## Independent audit contract
 
-## Implementation requirements
+Audit the final remote task branch against authorization head `94255158a43d6cca727cdf64681a3bdefbb2bf40` and confirm:
 
-Keep the corrective small and explicit. Preserve existing progressive-disclosure structure: `SKILL.md` states the operational rule; references carry the detailed contract; templates demonstrate the rule without becoming a second authority.
+1. the only reusable changes are the seven approved files above;
+2. root differences are limited to `CURRENT_STATUS.md` and `CURRENT_TASK.md` handoff state;
+3. both clarifications match the approved Phase G design without broadening architecture;
+4. `incident-doctor` is unchanged;
+5. no new Skill/tool/runtime/dependency exists;
+6. stable tag remains unchanged;
+7. branch is a clean linear descendant of the authorization head.
 
-Do not turn the new status/task clarification into a requirement to rewrite `CURRENT_TASK.md` on every status refresh. Reconciliation is required only when the newly verified fact materially changes a task-owned condition.
+If any condition fails, do not merge; return a bounded corrective finding. If all pass, report audit PASS and wait for separate merge acceptance.
 
-Do not turn map coexistence into a requirement for a new alias file or automatic discovery system. The agent may discover existing semantic authorities by bounded repository reading and targeted search.
+## Forbidden actions
 
-## Verification level
-
-`V0 — documentation / Skill contract corrective`.
-
-Before handoff verify:
-
-- changed reusable paths are exactly the seven allowed files above;
-- root changes are only `CURRENT_STATUS.md` and `CURRENT_TASK.md` for handoff;
-- `skills/incident-doctor/**` is byte-unchanged from the authorization baseline;
-- exactly three reusable Skill directories remain;
-- all three `SKILL.md` frontmatter blocks remain valid and their relative links resolve;
-- revised templates are consistent with their references and do not create duplicate authorities;
-- no executable helper, dependency, runtime, index, daemon, database, installer, or new Skill was added;
-- stable historical tag `v0.1.0^{}` still dereferences to `738627a0caad330d277f60cfdaff5f153593135e`;
-- task branch is clean and its local/remote heads match where local execution is involved.
-
-## Successful handoff state
-
-`WAITING_FOR_INDEPENDENT_WEB_AUDIT`
-
-At handoff, report exact authorization/start SHA, final task-branch SHA, changed paths, verification results, and stable-tag target. Do not merge before independent audit.
-
-## STOP conditions
-
-Stop without broadening scope if:
-
-- `main` or the implementation start SHA drifts unexpectedly before branch creation/work begins;
-- unique unpreserved work is found;
-- either corrective appears to require `incident-doctor`, a new Skill, executable tooling, dependencies, runtime infrastructure, or target-project changes;
-- the requested wording would create a second authority rather than clarify ownership;
-- verification reveals an unresolved contradiction with the accepted Skill contracts.
+- merge to `main` without separate acceptance;
+- modify RemoteOrbit, InvestDesk, or any other target project;
+- add new reusable scope beyond the seven approved files;
+- alter `incident-doctor`;
+- add tooling, dependencies, runtime infrastructure, or a fourth Skill.
 
 ## Current stop point
 
-`AUTHORIZED_FOR_IMPLEMENTATION`
+`WAITING_FOR_INDEPENDENT_WEB_AUDIT`

@@ -1,13 +1,12 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase F completed the second real-project read-only validation. The user approved Phase G as one bounded cross-project corrective covering exactly two evidence-backed clarifications; reusable Skill implementation is now authorized under a separate task.
+Last verified: 2026-10-07 — Phase G implementation completed on the bounded task branch and is ready for independent Web audit. The corrective changed only the approved `project-governance` and `domain-navigation` documentation/template scope plus root handoff controls. `incident-doctor` and target projects remain unchanged.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Repository purpose remains a reusable AI engineering-governance Skill source repository, not a governance runtime/product and not an installer.
 - Stable historical tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
-- Accepted reusable Skill revision validated by Phase E and Phase F remains Phase D merge head `ed9cab436f482648288d8fd50553e629f7a1c5a2` until Phase G is independently audited and accepted.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
 ## Accepted merged baseline
@@ -19,29 +18,37 @@ Last verified: 2026-10-07 — Phase F completed the second real-project read-onl
 - Phase E RemoteOrbit read-only validation: complete / PASS.
 - Phase F InvestDesk read-only validation: complete / PASS.
 
-## Cross-project evidence now accepted for corrective work
+## Phase G bounded corrective
 
-Two materially different projects support exactly two bounded reusable clarifications:
+- Task: `EG-CROSS-PROJECT-CORRECTIVE-020`.
+- Authorization/main head: `94255158a43d6cca727cdf64681a3bdefbb2bf40`.
+- Task branch: `codex/cross-project-corrective`.
+- Reusable-content implementation commit: `f2c5f2f86dc892a1b9241f0286d6485fdf253073`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+- Mode: `BOUNDED_CORRECTIVE_AUDIT_HANDOFF`.
 
-1. **Task contract versus current status.** `CURRENT_STATUS.md` may summarize verified current facts, but a status change must not silently change a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary. When a newly verified fact changes one of those task-owned conditions, `CURRENT_TASK.md` must be reconciled and re-authorized before state-changing work continues.
-2. **Navigation projection versus existing semantic maps.** A target repository may already have authoritative business, product, domain, or capability maps under another name. Domain Navigation must discover and reference those authorities first; it must not assume that a new file literally named `DOMAIN_MAP.md` is required or duplicate accepted semantic truth.
+Implemented clarification A — Project Governance:
 
-No Phase G corrective is justified for `incident-doctor`; its positive trigger in RemoteOrbit and non-trigger in InvestDesk both behaved as intended.
+- `CURRENT_STATUS.md` is now explicitly a verified snapshot and not an authorization override.
+- If a newly verified status fact changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, state-changing work must stop until `CURRENT_TASK.md` is reconciled and re-authorized.
+- Status refreshes that do not affect task-owned conditions do not require task churn.
 
-## Active milestone — Phase G bounded cross-project corrective
+Implemented clarification B — Domain Navigation:
 
-- Active task: `EG-CROSS-PROJECT-CORRECTIVE-020`.
-- State: `AUTHORIZED_FOR_IMPLEMENTATION`.
-- Mode: `BOUNDED_CORRECTIVE_IMPLEMENTATION`.
-- Design baseline: `9346997c75d3b5dce8a558203b3adb1a40eb5fc3`.
-- Planned implementation branch: `codex/cross-project-corrective` from the Phase G authorization commit.
-- Reusable scope is limited to three `project-governance` files and four `domain-navigation` files named in `CURRENT_TASK.md`, plus root control handoff files.
-- `incident-doctor`, target projects, executable helpers, dependencies, runtime systems, indexes, databases, daemons, Repo Map programs, and new Skills are out of scope.
+- Agents must first discover accepted business/product/domain/capability maps already present in a target repository, regardless of filename, and determine what semantic truth they own.
+- Existing semantic authorities are referenced rather than duplicated.
+- A literal `DOMAIN_MAP.md` file is not required merely to satisfy the generic template; a separate navigation projection is added or refreshed only when durable source/symbol/test routing adds value.
+- Navigation remains derived and cannot replace product/domain authority.
 
-## Verification expectation
+## Verification evidence before handoff
 
-Phase G is documentation/Skill-contract corrective work and uses `V0` verification: exact changed-path allowlist, frontmatter/link consistency, template/reference consistency, exactly three Skills, sibling Skill unchanged, no executable/dependency additions, stable tag unchanged, clean branch state, and local/remote branch head match where applicable.
+- Authorization head -> reusable implementation commit is exactly one commit ahead and changes exactly seven approved reusable files.
+- `skills/incident-doctor` tree SHA remains `f35fc22faa78ff4b7854a45c08b2167425f0c440`, identical to the authorization baseline.
+- `skills/` contains exactly three directories: `project-governance`, `domain-navigation`, `incident-doctor`.
+- All three `SKILL.md` frontmatter blocks remain present; referenced project-governance and domain-navigation reference/template paths resolve on the task branch.
+- No executable helper, dependency, runtime, index, daemon, database, installer, Repo Map program, or new Skill was added; the reusable diff contains only seven modified Markdown files.
+- Stable annotated tag object remains `a794ee0e9d039bad0f8fa418ad422316c5315fb3` and still dereferences to commit `738627a0caad330d277f60cfdaff5f153593135e`.
 
 ## Next milestone
 
-Implement the two approved clarifications on the bounded task branch, stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`, and independently audit the exact branch diff before any merge to `main`.
+Independently audit the exact remote task-branch diff against authorization head `94255158a43d6cca727cdf64681a3bdefbb2bf40`. Do not merge until that audit passes and merge is separately accepted.
