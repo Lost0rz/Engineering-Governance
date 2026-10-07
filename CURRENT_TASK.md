@@ -2,81 +2,85 @@
 
 Task ID: `EG-V01-REFERENCE-SYNTHESIS-001`
 
-State: `ACTIVE`
+State: `READY_FOR_MERGE — INDEPENDENT_WEB_AUDIT_PASSED`
 
-Mode: `GOVERNANCE_MODEL_CANDIDATE`
+Mode: `GOVERNANCE_MODEL_CANDIDATE_ACCEPTANCE`
 
-## Objective
+## Objective and result
 
-Audit the named upstream references, synthesize an evidence-backed Governance
-Model v0.1 candidate, test its explanatory fit against InvestDesk without
-changing that repository, perform an adversarial review, and synchronize the
-result for independent Web audit.
+Complete independent review of Draft PR #1 after the executor corrective,
+record the acceptance result, and hand the branch off for an explicitly
+authorized merge and post-merge closeout.
 
-## Allowed scope
+- First executor handoff reviewed: `ac9b1cf631beccdbd9869077d4673848dfb94bb9`.
+- Web corrective-control base: `4631a7c7535f18d1739c467a977b9bd94b62c811`.
+- Corrective head independently re-reviewed:
+  `a44939856d78cc50e55eac0d812b5b6b7a8645a5`.
+- Independent Web re-review result: **PASS**.
+- No unresolved BLOCKER or MAJOR finding remains.
 
-- Create and maintain this repository's `AGENTS.md`, `CURRENT_STATUS.md`, and
-  `CURRENT_TASK.md` control plane.
-- Add reference audit records under `docs/reference-audit/` for Backstage,
-  OpenSSF Allstar, OpenSSF Scorecard, OpenTelemetry Specification, OPA +
-  Conftest, arc42, MADR, and DDD Crew Context Mapping + Context Mapper.
-- Record upstream source URLs plus verified versions, revisions, or access
-  dates; answer the shared 14-question audit for each reference and classify
-  important mechanisms as ADOPT, ADAPT, DEFER, or REJECT.
-- Add synthesis and Governance Model v0.1 candidate documents under
-  `docs/`, including authority, lifecycle, cross-cutting axes, checks,
-  evidence, findings, exceptions, freshness, versioning, and
-  decision/enforcement contracts.
-- Read InvestDesk controls and relevant code/contracts as a read-only reality
-  check. Record only verified observations in this repository.
-- Perform and record an adversarial review of the candidate.
-- Commit and push authorized Engineering-Governance work; create a Draft PR
-  when suitable; stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+## Accepted corrective resolutions
 
-## Explicit non-goals
+1. **Result / freshness / exception / decision separation — ACCEPTED.**
+   Historical evaluation result is immutable for that evaluation; freshness is
+   a separate time-scoped assessment; exception state and project disposition
+   have independent identities and lifecycles.
+2. **Typed authority routing — ACCEPTED.** Claims/actions route to the authority
+   for their class; precedence is evaluated only among competing same-class
+   sources. No cross-type total authority order remains.
+3. **AI evidence boundary — ACCEPTED.** AI-derived analysis must cite
+   underlying source evidence, remains advisory, cannot independently satisfy
+   factual PASS/FAIL evidence unless the check explicitly evaluates the AI
+   artifact, and cannot independently accept its own prior output.
+4. **Parent profile inheritance — ACCEPTED AS DEFERRED.** v0.1 uses standalone
+   project-local profiles; inheritance requires later repeated evidence and a
+   separately versioned design.
 
-- Do not modify InvestDesk files, controls, branches, pull requests, or
-  worktrees after the authorized fast-forward synchronization.
-- Do not implement Bootstrap, Doctor, executable Audit skill, CLI, MCP,
-  background daemon, continuous compliance service, automatic enforcement,
-  or automatic remediation.
-- Do not merge the task PR, publish a release, or change protected `main`
-  after creating the candidate task branch.
-- Do not sync unrelated repositories or perform unrelated cleanup/refactoring.
+## Scope preserved
 
-## Required gates
+The accepted candidate retains:
 
-1. **Reference audit:** verify all eight named reference groups using primary
-   upstream sources; stop if a necessary reference cannot be verified.
-2. **Synthesis:** separate ADOPTED, ADAPTED, DEFERRED, REJECTED, and OPEN
-   QUESTIONS; retain only contracts supported by the audit.
-3. **Candidate:** specify `GovernanceStandard`, `ProjectProfile`, authority
-   map, lifecycle layers, cross-cutting axes, check registry, evidence,
-   findings, exceptions/waivers, freshness/drift, versioning, and the
-   decision/enforcement boundary. The candidate may change the proposed
-   seven-layer/six-axis counts with explicit rationale.
-4. **Reality check:** evaluate Business/Product intent, domain boundaries,
-   architecture, implementation/integration, verification/release,
-   runtime/operability, incident/feedback, authority map, task lifecycle,
-   PR/worktree lifecycle, evidence, exceptions, and freshness against the
-   current InvestDesk authorities. Classify each as SUPPORTED,
-   PARTIALLY_SUPPORTED, MISSING, or OVERMODELED.
-5. **Adversarial review:** address over-design, authority duplication,
-   precedence, waiver expiry/revocation, evidence duplication, AI judgment,
-   freshness scope, layer/axis stability, small-project fit, InvestDesk fit,
-   future Bootstrap/Doctor/Audit reuse, and duplicate state ownership. Fix
-   BLOCKER or MAJOR findings before handoff; record MINOR findings.
-6. **Handoff:** update controls with verified final state; commit and push the
-   task branch, verify remote HEAD and clean worktree, and create a Draft PR
-   if suitable. End at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`; do not merge.
+- eight structured reference-audit groups;
+- seven lifecycle layers;
+- six cross-cutting axes;
+- Git-native/project-local authority mapping;
+- versioned checks, evidence, findings, exceptions and freshness contracts;
+- explicit evaluation -> finding -> project decision -> optional future
+  enforcement separation;
+- read-only InvestDesk reality-check evidence.
 
-## Stop conditions
+The following remain outside this task:
 
-- Stop if a required upstream source cannot be verified, source authority is
-  ambiguous, a repository baseline drifts unexpectedly, or InvestDesk cannot
-  be inspected read-only at its verified canonical revision.
-- Stop if a BLOCKER or MAJOR adversarial finding remains unresolved.
-- Stop if task work cannot be synchronized to the authoritative remote; report
-  `REMOTE_SYNC_PENDING` with local head, expected remote branch, blocker, and
-  what is needed.
-- Do not mark candidate acceptance. Independent Web audit owns that decision.
+- Bootstrap implementation;
+- Doctor implementation;
+- executable Audit implementation;
+- CLI;
+- MCP;
+- background/continuous enforcement;
+- automatic remediation;
+- modification of InvestDesk.
+
+## Validation basis
+
+The independent Web re-review verified the live PR metadata/head, compared
+`4631a7c7535f18d1739c467a977b9bd94b62c811` to
+`a44939856d78cc50e55eac0d812b5b6b7a8645a5`, and inspected the corrected
+normative documents and control-plane semantics. The corrective was one commit
+and limited to the authorized twelve paths. Executor static validation remains
+supporting evidence; no executable or runtime content is part of this PR.
+
+## Next action and stop condition
+
+Next action is **merge PR #1 only after explicit user authorization**, then
+perform post-merge acceptance/closeout on `main`.
+
+Until that merge is authorized:
+
+- do not modify the candidate further;
+- do not begin Bootstrap/Doctor/Audit implementation;
+- do not merge automatically;
+- do not delete the task branch/worktree.
+
+Successful pre-merge state:
+
+`READY_FOR_MERGE — INDEPENDENT_WEB_AUDIT_PASSED`

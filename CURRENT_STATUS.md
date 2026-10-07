@@ -1,42 +1,61 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-06
+Last verified: 2026-10-07
 
 ## Project
 
-- Repository: `Lost0rz/Engineering-Governance`.
-- Default branch: `main`.
-- Control baseline before this update: `a61163383bc55652443c6f20ecdc4595d4d2fb25`.
-- Current stage: **Phase 1 — Reference Audit / Governance Model synthesis**.
-- Governance model: **candidate, NOT frozen**.
-- Automation skills: **NOT implemented**.
-- MCP: **NOT authorized**.
-- First pilot: **InvestDesk**, for read-only reality checking.
+- Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
+- Live `origin/main` baseline for PR #1 remains
+  `8c94168beee6c93d3a86fae3bcac83c70cba0ec4`.
+- Active task branch: `codex/eg-v01-reference-synthesis`.
+- Task PR: [PR #1](https://github.com/Lost0rz/Engineering-Governance/pull/1),
+  still open and unmerged at independent re-review.
+- Corrective head independently reviewed by Web:
+  `a44939856d78cc50e55eac0d812b5b6b7a8645a5`.
+- Independent Web re-review result: `PASS — READY_FOR_MERGE`.
+- Governance Model v0.1 remains versioned as `0.1.0-candidate.1` until merge
+  and acceptance closeout; it is not yet a published/frozen stable standard.
 
-## Candidate direction under review
+## Independent re-review result
 
-- Seven lifecycle layers and six cross-cutting axes are hypotheses, not frozen
-  classifications; the reference audit may revise either count.
-- Keep canonical authorities Git-native and map project-specific ownership
-  locally.
-- Reuse one candidate model for future Bootstrap, Doctor, and Audit tools.
-- Separate check/evaluation decisions from enforcement actions.
-- Require executor evidence followed by independent Web audit before candidate
-  acceptance.
+The corrective resolved all findings from the first independent Web audit:
 
-## Active work
+- Historical evaluation result, evidence/dependency freshness, exception
+  status, and project decision disposition are orthogonal; drift or exception
+  expiry does not rewrite historical results.
+- Authority is routed by claim/action class. Product/domain semantics,
+  Git/GitHub state, shared snapshots, execution authorization, runtime/data
+  facts, and derived outputs do not form one cross-type precedence chain.
+- AI-derived analysis is advisory, cites underlying source evidence, and cannot
+  independently satisfy factual PASS/FAIL evidence unless the check explicitly
+  evaluates the AI artifact itself.
+- Parent-profile inheritance is absent from v0.1 and deferred until repeated
+  project evidence justifies it.
 
-- Task: `EG-V01-REFERENCE-SYNTHESIS-001`.
-- Current task contract: `CURRENT_TASK.md`.
-- Scope includes reference research, candidate synthesis, read-only InvestDesk
-  reality check, adversarial review, and an independent-audit handoff.
-- No InvestDesk files are authorized to change.
+No new BLOCKER or MAJOR finding was identified in the second Web review. The
+seven lifecycle layers and six cross-cutting axes remain accepted as the v0.1
+candidate shape; their longer-term stability remains an implementation-backed
+future question rather than a merge blocker.
 
-## Verified recovery baseline
+## Evidence and scope
 
-- Engineering-Governance live `origin/main` at recovery: `a61163383bc55652443c6f20ecdc4595d4d2fb25`.
-- InvestDesk live `origin/main` and canonical local `main` after ff-only sync:
-  `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- InvestDesk worktree was clean; only its canonical `main` worktree was listed.
-- InvestDesk active task is `MVP-D Decision ↔ Transaction Traceability
-  Planning Gate`, `ACTIVE — CONTRACT / AUTHORITY AUDIT ONLY`.
+- The corrective was one commit ahead of Web corrective base
+  `4631a7c7535f18d1739c467a977b9bd94b62c811` and changed only the twelve
+  authorized governance/control paths.
+- PR #1 live head matched the executor receipt at
+  `a44939856d78cc50e55eac0d812b5b6b7a8645a5` before this acceptance-control
+  update.
+- The second Web review read the corrected standard, checks/evidence/findings,
+  exception/freshness/versioning, typed authority model, standalone project
+  profile, lifecycle wording, synthesis, Allstar disposition, adversarial
+  review, and control plane.
+- InvestDesk was not modified by this governance task.
+- Bootstrap, Doctor, executable Audit, CLI, MCP, daemon, automatic enforcement,
+  and automatic remediation remain outside this task.
+
+## Next action
+
+**READY FOR USER-AUTHORIZED MERGE.**
+
+Do not begin tooling implementation before PR #1 is merged and the governance
+standard acceptance/closeout is recorded on `main`.
