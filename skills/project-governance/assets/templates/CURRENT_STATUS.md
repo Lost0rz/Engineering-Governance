@@ -1,31 +1,31 @@
 # Current Project Status
 
-Last verified: [timestamp, sources, and freshness basis]
+Last verified: [date/time, inspected sources or revisions, and freshness basis]
 
 ## Accepted baseline
 
-[Verified branch/revision or accepted project baseline.]
+[Verified repository, branch/revision, or accepted project baseline. Mark unavailable or stale values explicitly.]
 
 ## Current business or product milestone
 
-[Current outcome, based on project authority.]
+[Current milestone supported by the owning product or project authority; otherwise state `unknown` or `not established`.]
 
 ## Accepted capabilities
 
-[Capabilities with evidence or acceptance references.]
+[Current accepted capabilities with concise evidence references. Keep detailed facts in their source authority.]
 
 ## Active problems and blockers
 
-[Verified active problems, or explicitly state none are known at this observation.]
+[Verified active problems/blockers, or state that none are known as of the observation. Keep unresolved reports labeled unresolved.]
 
 ## Active development state
 
-[Current task or delivery state, if one is active.]
+[Concise current task or delivery state, if verified; refer to the task contract instead of copying it.]
 
 ## Next intended milestone
 
-[Next authorized or accepted outcome; do not imply execution authorization.]
+[Next accepted or intended outcome. A next milestone is not execution authorization.]
 
 ## Freshness and verification basis
 
-[What was inspected, when, and which claims remain unresolved.]
+[For material facts, state what was inspected, when, and what remains stale, unknown, or unresolved. This is a current snapshot, not a history log; update it in place rather than appending past states.]

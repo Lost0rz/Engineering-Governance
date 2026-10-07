@@ -1,49 +1,53 @@
 # Current Task
 
-Task ID: [derive from the active authorization]
+Task ID: [from the active authorization]
 
-State / Mode: [current authorized state and execution mode]
+State: [current authorized, execution, or handoff state]
+
+Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Objective
 
-[One concrete outcome.]
+[One concrete outcome with an observable boundary. Do not combine unrelated objectives.]
 
 ## Affected domains
 
-[Use the project's Domain Map; state unknowns explicitly.]
+[Use the project's semantic Domain Map; state `unknown` or `not established` when ownership cannot be verified.]
 
 ## Start baseline
 
-[Verified repository, branch, revision, and relevant remote or runtime identity.]
+[Actual verified repository identity, branch, revision, and relevant remote or runtime identity. Do not use an assumed baseline.]
 
 ## In scope
 
-- [Authorized work]
+- [Explicitly authorized work]
 
 ## Out of scope
 
-- [Adjacent work not authorized]
+- [Adjacent work not authorized by this task]
 
 ## Known evidence
 
-[Sources, revisions, observations, and freshness basis.]
+[Relevant sources, identities/revisions, observations, and freshness basis. Keep inference separate from verified facts.]
 
 ## Risk and rationale
 
-[Risk/radius and why that classification fits.]
+[Concise change radius, material risks, and why the chosen verification depth is suitable. Do not calculate a numerical risk score.]
 
 ## Verification level and rationale
 
-[V0-V3, required checks, and why this depth is adequate.]
+[Chosen `V0`–`V3` level, short rationale, required checks, and material checks intentionally omitted. Choose the lightest level that can safely establish the result.]
 
 ## Acceptance criteria
 
-- [Observable completion conditions]
+- [Observable evidence that establishes completion; do not claim independent reviewer or user acceptance on their behalf.]
 
 ## Stop conditions
 
-- [Evidence, authority, scope, or safety conditions that stop execution]
+- [Baseline, evidence, authority, scope, or safety conditions that halt this task.]
 
 ## Handoff / current stop point
 
-[Required evidence, recipient or review state, and next authorized action.]
+[Required evidence, recipient or review state, and next authorized milestone. A handoff does not itself mean independent review accepted the work.]
+
+Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues.

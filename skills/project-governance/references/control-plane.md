@@ -1,9 +1,17 @@
 # Three-file control plane
 
-Keep the three root controls distinct and project-local:
+The project-local `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` have distinct owners. Keep one authoritative owner for each fact or decision class. A control may link to its source or another control, but must not copy detail in a way that creates a second authority.
 
-- `AGENTS.md` contains durable operating rules, boundaries, and pointers to authoritative project sources. It is not a task log.
-- `CURRENT_STATUS.md` is a concise snapshot of verified current state, accepted capabilities, active blockers, and the next milestone. It is not a chronological history.
-- `CURRENT_TASK.md` is the single active work authorization: objective, scope, acceptance, verification, and stop conditions. It is not a substitute for durable rules or current-state evidence.
+| Control | Owns | Update it when | It is not |
+| --- | --- | --- | --- |
+| `AGENTS.md` | Durable operating rules, stable project/repository boundaries, durable workflow rules, and verified pointers to authoritative sources. | An accepted durable rule, boundary, workflow, or authoritative-source pointer changes. | A current-task log, temporary execution state, or progress history. |
+| `CURRENT_STATUS.md` | A concise verified snapshot: accepted baseline and capabilities, active problems/blockers, current development state, next milestone, and freshness/verification basis. | Owned current-state facts materially change or their verification basis becomes stale. Update the snapshot in place. | Chronological history, the active task contract, or a second copy of detailed business/source authority. |
+| `CURRENT_TASK.md` | The single active authorization: objective, affected domains, start baseline, scope, evidence, risk, verification, acceptance, stop conditions, and handoff/current stop point. | Before authorized work begins and whenever its objective, scope, authorization, verification contract, or handoff state materially changes. | Durable rules, business/domain truth, or a project history log. |
 
-Use the target project's existing authority for each fact class. Update only the control whose responsibility changed, and keep cross-references clear without duplicating ownership.
+## Ownership and evidence
+
+- Keep each fact or decision in the source that owns that class. Other controls may reference it and `CURRENT_STATUS.md` may summarize verified current state, but neither becomes a competing authority.
+- Tie material claims to their source and revision or observation time, with a freshness basis where relevant. A claim that is stale, unavailable, or not verified stays explicitly `stale`, `unknown`, or `unresolved`; do not infer a replacement value.
+- Keep `CURRENT_STATUS.md` as a current snapshot. Replace stale values when verified; do not append a timeline of past states.
+- Keep the active authorization in `CURRENT_TASK.md`. If the objective or scope materially changes, stop the affected work, update the task contract, and obtain re-authorization before continuing. Ordinary evidence discovery inside the accepted objective does not by itself change the task.
+- Update only the control whose owned information changed. A handoff may update task state and the status snapshot when their respective facts change; it does not grant the executor independent acceptance authority.
