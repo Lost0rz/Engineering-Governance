@@ -2,42 +2,117 @@
 
 Task ID: `EG-V01-TOOLING-DESIGN-002`
 
-State: `WAITING_FOR_USER_SPEC_REVIEW`
+State: `ACTIVE — SPEC CORRECTIVE AFTER WEB REVIEW`
 
 Mode: `TOOLING_FOUNDATION_DESIGN`
 
 ## Objective
 
-Produce a reviewable architecture spec for a minimal reusable Bootstrap / Doctor / Audit tooling layer around accepted `EngineeringGovernanceStandard` `0.1.0`, then stop for user review. This is design work only.
+Correct the written tooling architecture spec after independent Web review. Preserve the accepted Hybrid direction and v0.1 authority boundaries. This remains design work only.
 
-## Authority and baseline
+## Authority and reviewed head
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Live `origin/main` baseline and design-branch base: `ab0457c378563d33c6b67f8f81a83f9d10241008`.
-- Canonical checkout: `/Users/ox_miles/Documents/Code/Engineering-Governance` on `codex/eg-v01-tooling-design`.
-- The merged `codex/eg-v01-reference-synthesis` and superseded `governance/v0.1` branches were safely removed after the required local-work checks; the latter's historical SHA remains recorded in `CURRENT_STATUS.md`.
-- Annotated `v0.1.0` exists locally/remotely and peels to `738627a0caad330d277f60cfdaff5f153593135e`.
-- Accepted model: seven lifecycle layers, six cross-cutting axes, typed authority routing, standalone profiles, and separate result/freshness/exception/project-decision semantics.
+- Base `main`: `ab0457c378563d33c6b67f8f81a83f9d10241008`.
+- Design branch: `codex/eg-v01-tooling-design`.
+- Executor spec handoff reviewed by Web: `db5d41fc7a7a9b301e67404067a5efd5501aeb95`.
+- Draft PR #2 remains `OPEN / DRAFT / UNMERGED`.
+- Accepted standard remains `EngineeringGovernanceStandard 0.1.0`; do not change it in this corrective.
 
-## Design artifact and result
+## Required corrective
 
-- Spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
-- Compares Skill-only, Executable-core-first, and Hybrid; recommends Hybrid with explicit trade-offs.
-- Defines the shared in-process model, data flow, proposed layout, Bootstrap/Doctor/Audit contracts, read/write boundaries, STOP behavior, provenance, reports/exit semantics, validation strategy, versioning, smallest first slice, deferred scope, open questions, and adversarial self-review.
-- Root `README.md` was verified and left unchanged: it describes seven layers, says the tools are planned/not implemented, and remains navigational.
-- Draft PR #2 is `OPEN / DRAFT` against `main`: https://github.com/Lost0rz/Engineering-Governance/pull/2. It is not merged.
+### MAJOR 1 — Bootstrap preview/apply + idempotence contract
 
-## Scope and non-goals
+Resolve the current contradiction between:
 
-This task authorizes the written design and its control-plane handoff only. It does not authorize executable Bootstrap/Doctor/Audit, CLI/source code, dependency manifests, machine-readable schema implementation, MCP, daemon/background service, enforcement, automatic remediation/migration, pilot-repository changes, or an implementation plan. Do not merge the Draft PR.
+- repeat against an already-created unchanged setup = no-op; and
+- any existing path = conflict.
 
-## Validation
+Define at design level:
 
-- Static review confirmed the required design sections, no TODO/TBD/FIXME placeholders, clean diff whitespace, and consistency with accepted v0.1 authority/evidence boundaries.
-- No tests or runtime implementation were run; neither is part of this design-only task.
+- an exact-match existing approved starter artifact may be treated as idempotent `NO_CHANGE`;
+- any existing target path whose content/identity differs from the approved preview is a conflict/STOP and is never overwritten;
+- preview approval is bound to one immutable conceptual plan identity/digest covering at least target repository identity, observed target revision/state needed for safe comparison, template/profile versions, candidate paths, and rendered content digests;
+- apply must revalidate/recompute that plan and STOP if it no longer matches the approved preview;
+- the actor authorized to confirm apply must be explicit; an AI skill cannot self-authorize a write.
 
-## Handoff
+Do not implement a schema or code; define the contract only.
 
-- The design branch and control-plane updates are pushed; verify local/remote HEAD equality and a clean worktree at handoff.
-- Wait at `WAITING_FOR_USER_SPEC_REVIEW`. If the user requests spec changes, make only the requested design/control updates and resynchronize. Do not proceed to implementation until the spec has been reviewed and a separate implementation task authorizes it.
-- Keep Draft PR #2 open and draft; do not merge it in this task.
+### MAJOR 2 — Evaluation state versus command STOP
+
+Make Sections 13 and 15 consistent.
+
+Separate:
+
+1. **evaluation-level unresolved state** — missing/stale/inaccessible evidence that can still be represented truthfully should produce `UNVERIFIED` and/or freshness `STALE`/`UNKNOWN`, with limitations, while still allowing a truthful report; and
+2. **command-level fatal/unsafe STOP** — conditions where the tool cannot safely identify the target, cannot establish enough trusted input to produce a truthful report at all, hits a Bootstrap write-safety conflict, or encounters an internal fatal failure.
+
+Define exit-code semantics consistently with that split. Do not turn evidence incompleteness into a hidden conformance gate.
+
+### MAJOR 3 — Hybrid AI contribution data flow
+
+Clarify the conceptual architecture for `AI_JUDGMENT` / `HYBRID` without adding persistence or implementation detail.
+
+The corrected design must identify:
+
+- what immutable deterministic/core output or evidence bundle the AI skill consumes;
+- what an AI contribution references (target/evaluation/check/evidence identity plus model/instruction provenance and limitations);
+- who validates/links the contribution into a composed view/report;
+- that the skill cannot mutate machine results, source evidence, project decisions, or the original deterministic report;
+- how HUMAN/HYBRID contributions remain explicit and how final project judgment remains owned by the named human/project authority;
+- that no second report authority, hidden state store, or AI-owned acceptance path is created.
+
+The design may choose immutable base report + linked derived contribution, or another equally explicit model, but must remove the current ambiguity.
+
+## Scope preserved
+
+Do not redesign the seven lifecycle layers/six axes, typed authority routing, standalone profile model, or accepted v0.1 semantics unless a direct contradiction is discovered and reported as STOP.
+
+The following remain forbidden:
+
+- executable Bootstrap/Doctor/Audit implementation;
+- CLI/source code or dependency manifests;
+- machine-readable schema implementation;
+- implementation plan;
+- MCP;
+- daemon/background service;
+- enforcement or automatic remediation/migration;
+- pilot-repository changes;
+- merging PR #2.
+
+## Validation and handoff
+
+After correcting the spec:
+
+1. self-review the three findings against the exact corrected text;
+2. verify no new scope or hidden writer was introduced;
+3. update `CURRENT_STATUS.md` and this task back to `WAITING_FOR_USER_SPEC_REVIEW`;
+4. commit/push the same design branch;
+5. verify local/remote HEAD equality and clean worktree;
+6. keep PR #2 Draft/unmerged and return the receipt below.
+
+Required receipt:
+
+```text
+TASK_ID:
+CONTROL_START_HEAD:
+FINAL_HEAD:
+REMOTE_HEAD:
+LOCAL_REMOTE_MATCH:
+WORKING_TREE:
+
+MAJOR_1_BOOTSTRAP_PREVIEW_IDEMPOTENCE_RESOLVED:
+MAJOR_2_STOP_EVALUATION_SEPARATION_RESOLVED:
+MAJOR_3_AI_CONTRIBUTION_FLOW_RESOLVED:
+HYBRID_RECOMMENDATION_PRESERVED:
+V0_1_STANDARD_CHANGED: NO
+IMPLEMENTATION_PLAN_WRITTEN: NO
+IMPLEMENTATION_STARTED: NO
+
+CHANGED_PATHS:
+PR_STATE:
+FINAL_STATE: WAITING_FOR_USER_SPEC_REVIEW | STOP
+STOP_REASON:
+```
+
+STOP on unexpected remote-head drift, unknown local work, scope expansion into implementation, or any newly discovered contradiction that requires changing accepted v0.1.

@@ -6,37 +6,30 @@ Last verified: 2026-10-07
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Live `origin/main` and design-branch base: `ab0457c378563d33c6b67f8f81a83f9d10241008`.
-- Stable closeout commit and `v0.1.0` tag target: `738627a0caad330d277f60cfdaff5f153593135e`; the annotated remote tag peels to this commit.
-- PR #1 is merged and closed. The baseline had no open PRs before the tooling-design draft.
-- Governance Model v0.1 is **ACCEPTED — STABLE** as `EngineeringGovernanceStandard` version `0.1.0`, effective `2026-10-07`.
+- Stable closeout commit and annotated `v0.1.0` tag target: `738627a0caad330d277f60cfdaff5f153593135e`.
+- PR #1 is merged/closed; Governance Model v0.1 is `ACCEPTED — STABLE` as `EngineeringGovernanceStandard 0.1.0`.
+- Merged branch `codex/eg-v01-reference-synthesis` and superseded branch `governance/v0.1` have been safely removed; the superseded commit `660bfd0c5ea5ee4f341e1a642f3fd89980408832` remains provenance only.
 
-## Accepted v0.1 shape
+## Tooling design PR
 
-- Eight structured reference-audit groups.
-- Seven lifecycle layers and six cross-cutting axes.
-- Typed authority routing by claim/action class.
-- Project-local standalone profiles; parent-profile inheritance deferred.
-- Historical evaluation result, time-scoped freshness, exception lifecycle, and project decision disposition remain orthogonal.
-- AI-derived analysis is advisory and cannot replace required factual source evidence.
-- Evaluation -> finding -> project decision -> optional future enforcement remains the accepted boundary.
+- Draft PR #2 is `OPEN / DRAFT`, base `main`, design branch `codex/eg-v01-tooling-design`.
+- Executor handoff head reviewed by Web: `db5d41fc7a7a9b301e67404067a5efd5501aeb95`.
+- Changed paths are limited to `CURRENT_STATUS.md`, `CURRENT_TASK.md`, and `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
+- The Hybrid direction remains acceptable: one small deterministic local core plus optional thin AI workflow guidance, with Bootstrap as the only writer and Doctor/Audit read-only.
+- No executable implementation, dependencies, machine-readable schema, CLI, MCP, daemon, enforcement, remediation, or pilot-repository modification has started.
 
-## Lifecycle baseline
+## Independent Web spec review
 
-- Merged branch `codex/eg-v01-reference-synthesis` was deleted locally/remotely after proving its commit was merged, its local branch had no unique commits, and no separate worktree existed.
-- Superseded branch `governance/v0.1` was deleted remotely after confirming no local branch, extra worktree, or additional machine-local commits; its historical commit `660bfd0c5ea5ee4f341e1a642f3fd89980408832` remains documented as provenance.
-- The `v0.1.0` annotated tag exists locally/remotely and targets the stable closeout commit above.
-- The canonical checkout is the sole worktree and is on task branch `codex/eg-v01-tooling-design`, based on the clean synchronized `main` baseline.
+Result: `CHANGES_REQUIRED` before implementation planning. Three contract-level design findings remain:
 
-## Active task
+1. **Bootstrap preview/apply and idempotence.** The spec says a repeat over an already-created unchanged setup is a no-op, but also says any existing path is a conflict. It also does not bind apply authorization to an immutable preview identity/content digest. The corrective must define exact-match/no-op versus nonmatching-existing-path conflict, and bind approval/apply to the exact target/template/profile/rendered-content plan observed at preview time.
+2. **Evaluation state versus command STOP.** Missing/stale evidence is currently both a command STOP condition and a reportable `UNVERIFIED`/`STALE` condition with exit `0`. The corrective must separate per-check unresolved/freshness outcomes from command-level fatal/unsafe stops and make exit semantics unambiguous.
+3. **Hybrid AI contribution flow.** The spec says the deterministic core emits one report while AI analysis is attached separately, but it does not define who creates/validates/links that contribution or how the skill is prevented from mutating/bypassing deterministic results. The corrective must define the conceptual contribution/data-flow boundary without introducing persistence or a second authority/store.
 
-`EG-V01-TOOLING-DESIGN-002` is at `WAITING_FOR_USER_SPEC_REVIEW`.
+These findings do not require changing accepted `EngineeringGovernanceStandard 0.1.0` or replacing the Hybrid recommendation.
 
-- Design spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
-- Recommendation: Hybrid, with one small local deterministic core and optional thin AI workflow guidance.
-- The design preserves project authorities and separates machine, AI, and human contributions.
-- Draft PR #2 is `OPEN / DRAFT`, targets `main`, and is waiting for spec review: https://github.com/Lost0rz/Engineering-Governance/pull/2.
-- No executable tooling, dependency, machine-readable schema, CLI, MCP, daemon, enforcement, remediation, or pilot-repository change has started.
+## Current task
 
-## Next milestone
+`EG-V01-TOOLING-DESIGN-002` is active in **spec corrective only** mode. Keep PR #2 Draft and unmerged. Correct only the design/control documents needed to resolve the three findings, then return to `WAITING_FOR_USER_SPEC_REVIEW` for re-review.
 
-Wait for user review of the written spec in Draft PR #2. Any implementation requires separately reviewed design and an authorized implementation task.
+Do not write an implementation plan or start implementation until the written spec passes review.
