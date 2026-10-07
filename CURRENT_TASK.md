@@ -2,41 +2,41 @@
 
 Task ID: `EG-ROOT-CONSISTENCY-FREEZE-021`
 
-State: `CLOSED_ACCEPTED_MAIN_PENDING_FREEZE_RECORD`
+State: `CLOSED_ACCEPTED_MAIN`
 
-Mode: `MERGED_CLOSEOUT`
+Mode: `FROZEN_CLOSEOUT`
 
 ## Objective
 
-Record accepted merge of the root consistency correction and establish the closeout commit as the immutable frozen baseline for stable version label `v0.2.0`.
+Record completion of the final root consistency task and freeze the validated Engineering-Governance baseline.
 
-## Authority and accepted heads
+## Accepted heads
 
 - Pre-task main: `7ec0ffd574a0ec7e43c2990ebaf79633a6719e22`.
 - Authorization/main head: `349adbe6011b77b6c5b921dc1f995ec881e2d36a`.
 - Root-content implementation commit: `0062481f4bc7101fd3774472edf56be395763e69`.
 - Audited task-branch / merge head: `be63f646bee1b99c184e363db31f1883d455714f`.
+- Frozen stable baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
+- Stable version label: `v0.2.0`.
 - Historical `v0.1.0^{}` target: `738627a0caad330d277f60cfdaff5f153593135e`.
 
-## Audit and merge result
+## Freeze contract
 
-- Authorization -> branch final was `ahead_by=2`, `behind_by=0`, merge base exactly the authorization head.
-- Durable-content changes were exactly `README.md` and `AGENTS.md`; the only other changes were root task controls.
-- `skills/**` tree identities were byte-unchanged between authorization and audited branch.
-- Exactly three top-level Skills remain.
-- Root wording now agrees with the merged `domain-navigation` contract.
-- No executable/runtime/dependency/workflow/tooling/new Skill was added.
-- Historical `v0.1.0` remained unchanged.
-- The audited branch was fast-forwarded to `main` with `force=false`.
+`4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18` is the authoritative immutable frozen baseline for version label `v0.2.0`.
 
-## Freeze rule
+No Git tag alias was created by this task. If a Git tag `v0.2.0` is created later, it must resolve exactly to the frozen SHA above and must never move. The control-only commit that records this freeze is outside the frozen reusable baseline.
 
-The closeout commit created from this record is the immutable `v0.2.0` frozen baseline. After its SHA is known, record that exact SHA in the control plane. A Git tag named `v0.2.0`, if/when written, must point to that exact SHA and must never move.
+## Accepted scope
+
+- Root `README.md` and `AGENTS.md` are consistent with Phase G.
+- `skills/**` is unchanged by this task.
+- Exactly three Skills remain.
+- No runtime/tooling/dependency/workflow or target-project changes were introduced.
 
 ## Closed scope
 
-This task does not authorize any more Skill changes or target-project adoption. Future changes require a new Task ID.
+Do not modify reusable Skills, create new governance infrastructure, or adopt into target projects under this Task ID. Any future change requires a new Task ID and explicit authorization.
 
 ## Current stop point
 
-`PENDING_EXACT_FREEZE_SHA_RECORD`
+`FROZEN_STABLE_BASELINE`
