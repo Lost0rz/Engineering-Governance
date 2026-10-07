@@ -5,57 +5,54 @@ Last verified: 2026-10-07
 ## Project
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
-- Live `origin/main` baseline for PR #1 remains
-  `8c94168beee6c93d3a86fae3bcac83c70cba0ec4`.
-- Active task branch: `codex/eg-v01-reference-synthesis`.
-- Task PR: [PR #1](https://github.com/Lost0rz/Engineering-Governance/pull/1),
-  still open and unmerged at independent re-review.
-- Corrective head independently reviewed by Web:
-  `a44939856d78cc50e55eac0d812b5b6b7a8645a5`.
-- Independent Web re-review result: `PASS — READY_FOR_MERGE`.
-- Governance Model v0.1 remains versioned as `0.1.0-candidate.1` until merge
-  and acceptance closeout; it is not yet a published/frozen stable standard.
+- Live `origin/main` verified immediately before this closeout:
+  `8e734bcf55805e54b40ff203d73fca97d9fa29fd`.
+- PR #1 is merged.
+- Governance Model v0.1 is **ACCEPTED — STABLE** as
+  `EngineeringGovernanceStandard` version `0.1.0`, effective `2026-10-07`.
+- The independent corrective review found no unresolved BLOCKER or MAJOR
+  finding.
+- This status file's commit is the post-merge acceptance/closeout revision;
+  live `origin/main` must always be re-read from Git before new work.
 
-## Independent re-review result
+## Accepted v0.1 shape
 
-The corrective resolved all findings from the first independent Web audit:
+- Eight structured reference-audit groups.
+- Seven lifecycle layers and six cross-cutting axes.
+- Typed authority routing by claim/action class; no cross-type total
+  precedence chain.
+- Project-local standalone profiles; parent-profile inheritance deferred.
+- Historical evaluation result, time-scoped freshness, exception lifecycle,
+  and project decision disposition are separate records.
+- AI-derived analysis is advisory and cannot substitute for required factual
+  source evidence.
+- Explicit evaluation -> finding -> project decision -> optional future
+  enforcement separation.
+- InvestDesk reality-check evidence remains read-only and does not change
+  InvestDesk authorities or its active business task.
 
-- Historical evaluation result, evidence/dependency freshness, exception
-  status, and project decision disposition are orthogonal; drift or exception
-  expiry does not rewrite historical results.
-- Authority is routed by claim/action class. Product/domain semantics,
-  Git/GitHub state, shared snapshots, execution authorization, runtime/data
-  facts, and derived outputs do not form one cross-type precedence chain.
-- AI-derived analysis is advisory, cites underlying source evidence, and cannot
-  independently satisfy factual PASS/FAIL evidence unless the check explicitly
-  evaluates the AI artifact itself.
-- Parent-profile inheritance is absent from v0.1 and deferred until repeated
-  project evidence justifies it.
+## Closed task
 
-No new BLOCKER or MAJOR finding was identified in the second Web review. The
-seven lifecycle layers and six cross-cutting axes remain accepted as the v0.1
-candidate shape; their longer-term stability remains an implementation-backed
-future question rather than a merge blocker.
+`EG-V01-REFERENCE-SYNTHESIS-001` is closed on accepted `main` after PR #1
+merge and stable v0.1.0 closeout.
 
-## Evidence and scope
+No Bootstrap, Doctor, executable Audit, CLI, MCP, daemon, automatic
+enforcement, or automatic remediation implementation is authorized by this
+closed task.
 
-- The corrective was one commit ahead of Web corrective base
-  `4631a7c7535f18d1739c467a977b9bd94b62c811` and changed only the twelve
-  authorized governance/control paths.
-- PR #1 live head matched the executor receipt at
-  `a44939856d78cc50e55eac0d812b5b6b7a8645a5` before this acceptance-control
-  update.
-- The second Web review read the corrected standard, checks/evidence/findings,
-  exception/freshness/versioning, typed authority model, standalone project
-  profile, lifecycle wording, synthesis, Allstar disposition, adversarial
-  review, and control plane.
-- InvestDesk was not modified by this governance task.
-- Bootstrap, Doctor, executable Audit, CLI, MCP, daemon, automatic enforcement,
-  and automatic remediation remain outside this task.
+## Deferred questions
 
-## Next action
+- Validate whether seven layers / six axes remain minimal after more than one
+  project adopts the standard.
+- Define semantic dependency invalidation only when implementation evidence
+  exists.
+- Reconsider profile inheritance only after repeated cross-project need.
+- Formal schemas, evaluators, and enforcement adapters require separate
+  tasks and independent review.
 
-**READY FOR USER-AUTHORIZED MERGE.**
+## Next state
 
-Do not begin tooling implementation before PR #1 is merged and the governance
-standard acceptance/closeout is recorded on `main`.
+There is **no active construction task**. Before any follow-on implementation,
+local checkouts must synchronize to accepted `main` and complete safe
+branch/worktree lifecycle cleanup. A new `CURRENT_TASK.md` scope must then be
+authorized before construction begins.
