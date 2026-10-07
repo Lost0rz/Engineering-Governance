@@ -1,3 +1,0 @@
-# Synthetic task
-
-State: `ACTIVE`

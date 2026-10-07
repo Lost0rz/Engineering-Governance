@@ -1,34 +1,35 @@
-# Engineering Governance
+# Engineering-Governance Skills
 
-A lightweight, Git-native governance system for AI-assisted software development across multiple repositories.
+Engineering-Governance is a source repository for reusable AI engineering-governance Skills, templates, operating rules, and reference material. An AI agent reads the relevant material, inspects a target project, and adapts what is useful to that project's verified facts.
 
-The accepted `EngineeringGovernanceStandard` v0.1.0 defines typed authority routing, seven lifecycle layers, six cross-cutting axes, evidence-backed checks, freshness/exception semantics, and independent review boundaries.
+## What this repository is
 
-The first local, offline, read-only Doctor CLI slice is available:
+This repository provides three focused capabilities:
 
-```sh
-PYTHONPATH=src python3.11 -m engineering_governance doctor <target>
-```
+- **Project Governance** — the three-file control plane, normal task flow, and risk-proportional verification.
+- **Domain Navigation** — a semantic Domain Map and evidence-backed routes from a task to relevant code and authority.
+- **Incident Doctor** — a reactive process for real problems when existing evidence is insufficient.
 
-Bootstrap and Audit remain planned and are not implemented yet.
+The Skills are source material. A target project keeps ownership of its product, domain, data, and runtime truth. Templates describe structure and required semantics; they are adapted rather than copied blindly.
 
-## Design goals
+## What this repository is not
 
-- Keep governance evidence in version control and close to the code it governs.
-- Separate global reusable standards from project-specific facts and authorities.
-- Prefer evidence-backed checks over narrative claims.
-- Detect and explain drift before attempting enforcement or auto-remediation.
-- Keep adoption lightweight enough for small projects and AI-agent workflows.
-- Preserve independent verification between local execution and remote/web audit.
+It is not a business product, governance runtime, package, background service, central database, or automatic enforcement system. It does not require an executable navigation helper or automatically change a target project.
 
-## Accepted lifecycle layers
+## AI-adapted use
 
-1. Intent and outcomes
-2. Domain and authority
-3. Architecture and quality
-4. Implementation and integration
-5. Verification and release
-6. Runtime and operability
-7. Incident and feedback
+1. Read the Skill whose trigger matches the current need.
+2. Inspect the target repository's own controls, source, and runtime evidence.
+3. Select and adapt only the relevant guidance and templates.
+4. Keep unsupported project facts explicit as unknown, then verify the result at a level proportional to the change.
 
-MCP services, background enforcement daemons, and automatic remediation remain out of scope unless explicitly authorized by a later task.
+## Fixed principles
+
+- **Three control files:** `AGENTS.md` holds durable rules, `CURRENT_STATUS.md` records verified current state, and `CURRENT_TASK.md` defines the one active authorization.
+- **Domain navigation:** use a stable semantic Domain Map to identify ownership, authority, entry points, dependencies, tests, and evidence before broad source reading.
+- **Doctor on demand:** normal product work is the default. Investigate a real failure only when current evidence cannot answer the blocked question safely; add the minimum useful probe.
+- **Proportional verification:** choose verification depth from the change's risk and scope. Documentation and layout work do not inherit unrelated historical test burdens.
+
+## Maintainer notes
+
+`docs/superpowers/` holds maintainer-only design and implementation planning history for this repository. It is not part of the reusable Skill material for target projects.
