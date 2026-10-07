@@ -13,7 +13,6 @@ Validate the accepted `project-governance`, `domain-navigation`, and `incident-d
 ## Authority and baselines
 
 - Engineering-Governance accepted Phase D merge head: `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
-- Engineering-Governance control baseline entering Phase E design: `ec9f32ca437d324b9fba90086f8814a450343ce4`.
 - Target repository: `Lost0rz/RemoteOrbit`.
 - Target RemoteOrbit `main` at authorization: `5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
 - RemoteOrbit current controls and active incident/recovery task remain authoritative for that repository.
@@ -22,24 +21,9 @@ Validate the accepted `project-governance`, `domain-navigation`, and `incident-d
 
 1. Read the three accepted Engineering-Governance Skills and relevant templates/references.
 2. Read RemoteOrbit `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, README/setup material, and only task-relevant source/tests/docs needed to validate routing.
-3. Evaluate project-governance fit:
-   - fact ownership and duplication across the three controls;
-   - task authorization clarity;
-   - business/product-first flow versus governance overhead;
-   - freshness and handoff behavior;
-   - any project-specific rules that appropriately remain local rather than moving to the reusable Skill.
-4. Evaluate domain-navigation fit:
-   - infer the smallest semantic Domain set needed for the current RemoteOrbit task from direct evidence;
-   - identify candidate authorities, entry points, important symbols, relevant tests, runtime/diagnostic boundaries, and unresolved gaps;
-   - do not perform a whole-repository survey unless the evidence proves it necessary.
-5. Evaluate incident-doctor fit against the active incident/recovery context:
-   - blocked question;
-   - evidence sufficiency;
-   - user report versus direct observations versus interpretations;
-   - hypotheses and falsification status;
-   - fresh incident/runtime identity requirements;
-   - root-cause status;
-   - minimum safe next decision.
+3. Evaluate project-governance fit: fact ownership, task authorization clarity, business/product-first flow versus overhead, freshness/handoff behavior, and project-specific rules that should remain local.
+4. Evaluate domain-navigation fit: infer the smallest semantic Domain set needed for the current task; identify candidate authorities, entry points, symbols, tests, runtime/diagnostic boundaries, and unresolved gaps; do not perform a whole-repository survey by default.
+5. Evaluate incident-doctor fit against the active incident/recovery context: blocked question, evidence sufficiency, evidence taxonomy, hypotheses/falsification, runtime identity, root-cause status, and minimum safe next decision.
 6. Identify concrete friction, ambiguity, redundancy, or missing guidance in the accepted Skills.
 7. Recommend the smallest later RemoteOrbit adoption, but do not implement it.
 
@@ -57,7 +41,7 @@ Validate the accepted `project-governance`, `domain-navigation`, and `incident-d
 
 Use direct repository evidence. Important conclusions should cite concrete paths, symbols, tests, or accepted project controls. Keep direct observations distinct from interpretations. Unknown, stale, or unresolved facts remain explicit.
 
-For Domain Navigation, follow:
+For Domain Navigation:
 
 `RemoteOrbit CURRENT_TASK -> affected semantic Domain(s) -> candidate authority/entry point/symbol/test -> focused source reading -> confirmed route + unresolved gaps`
 
@@ -65,15 +49,7 @@ For Incident Doctor, first ask whether existing evidence is already sufficient f
 
 ## Acceptance criteria
 
-The validation report must answer:
-
-- Can a fresh AI identify what RemoteOrbit currently authorizes without relying on chat history?
-- Can it find the relevant Domain/authority/source/test set for the active task with bounded reading?
-- Can it classify the incident evidence without promoting correlation or user report to fact/root cause?
-- Does the reusable Skill guidance materially help, duplicate existing RemoteOrbit rules, or create friction?
-- Which parts should remain RemoteOrbit-specific?
-- What is the minimum later adoption set, if any?
-- Is any reusable Skill corrective justified by this real-project evidence, or should the Skills remain unchanged?
+The validation report must answer whether a fresh AI can identify authorization, route to the relevant Domain/authority/source/test set with bounded reading, classify incident evidence without inventing causality, identify Skill friction or duplication, separate RemoteOrbit-specific rules from reusable guidance, and recommend the minimum later adoption set. It must also state whether any reusable Skill corrective is justified by real-project evidence.
 
 ## Verification level
 
