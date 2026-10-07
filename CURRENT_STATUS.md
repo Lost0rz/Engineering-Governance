@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase D `incident-doctor` enrichment passed independent Web audit and was fast-forward merged to `main`. Phase E has entered a bounded, read-only real-project validation pilot against RemoteOrbit.
+Last verified: 2026-10-07 — Phase D `incident-doctor` enrichment is merged, and Phase E RemoteOrbit validation is authorized as a read-only pilot. The active status/task transition is recorded together in the current control commit.
 
 ## Repository identity
 
