@@ -12,13 +12,15 @@ Last verified: 2026-10-07
 
 ## Doctor foundation plan review
 
-- Task `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is waiting for independent implementation-plan re-review on `codex/eg-v01-doctor-foundation-plan`.
-- Corrected plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
-- The plan has four TDD implementation tasks plus a verification-only acceptance gate. Each implementation task names its tests, setup, key assertions, expected RED reason, and focused GREEN command.
-- Task ID matching freezes the ASCII ID grammar and case-sensitive literal boundary rule, with exact, backtick, prose, collision, embedded, and missing-reference tests.
+- Task `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is in `ACTIVE — FINAL PLAN CORRECTIVE AFTER WEB REVIEW` on `codex/eg-v01-doctor-foundation-plan`.
+- Web re-reviewed corrective handoff head `da080d32b8c167a0f2687f7e3fdbdb037f7f5a49`.
+- The prior three plan MAJORs are accepted as resolved: genuine TDD ordering, exact named-test surface, and deterministic Task ID boundary semantics.
+- Two remaining implementation-plan blockers must be corrected before implementation authorization:
+  1. Task 4's no-mutation snapshot ownership must align with the declared `tests/support.py` file responsibility and Task 4 commit boundary.
+  2. The real `run_git_readonly` subprocess adapter must have named tests pinning `shell=False`, bounded timeout, read-only/prompt environment flags, cwd/argv, and trusted-identity timeout classification.
 - PR #3 remains OPEN / DRAFT / UNMERGED, stacked on `codex/eg-v01-tooling-design`.
 - Scope remains the first local/offline/read-only Doctor slice; implementation has not started. Accepted spec and `EngineeringGovernanceStandard 0.1.0` are unchanged.
 
 ## Next milestone
 
-Complete independent plan re-review. Do not create source, tests, fixtures, manifests, schemas, CLI code, or executable implementation until review passes and a separate implementation task is authorized.
+Complete the final plan corrective and return to `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`. Do not create source, tests, fixtures, manifests, schemas, CLI code, or executable implementation until Web re-review passes and a separate implementation task is authorized.
