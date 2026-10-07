@@ -1,22 +1,27 @@
 # Domain Map
 
-Project: [derive from the target repository]
+Derive entries from verified target-repository evidence. A Domain is a semantic capability/ownership boundary, not a folder. Keep unknown, stale, or conflicting claims explicit. Link to authorities and evidence; do not copy large source contents or present this map as project truth.
 
-Last verified: [timestamp, revision, and evidence inspected]
+Project: [verified repository/project identity]
+
+Last verified: [date/time and scope actually checked]
+
+Revision / evidence basis: [revision plus concise source paths or references inspected]
 
 ## Domain index
 
-For each verified Domain, record:
+Create one concise entry for each verified Domain relevant to the map's purpose. Leave unsupported fields `unknown` or `not established`.
 
-- **Domain:** [capability name]
-- **Responsibility and boundaries:** [owns / does not own]
-- **Owner or authority:** [source and scope]
-- **Primary entry points and symbols:** [paths and names]
-- **Dependencies and consumers:** [verified relationships]
-- **Relevant tests:** [paths]
-- **Evidence paths:** [sources supporting this entry]
-- **Detailed map:** [link to `DOMAIN.md` only when justified]
+### Domain: [verified capability name]
 
-## Known unknowns
-
-[Record missing or conflicting ownership, paths, or evidence.]
+- **Responsibility:** [evidence-backed responsibility]
+- **Does Not Own / Boundaries:** [verified exclusions or adjacent owner links]
+- **Authority / State Owner:** [canonical source and scope by fact class]
+- **Primary Entry Points:** [source paths]
+- **Important Symbols:** [names and paths]
+- **Dependencies / Consumers:** [verified upstream/downstream relationships]
+- **Relevant Tests:** [test paths and what they establish]
+- **Evidence Paths:** [paths or accepted source references supporting this entry]
+- **Freshness:** [revision or observation basis for fields checked]
+- **Detailed `DOMAIN.md`:** [link only when complexity or navigation need justifies one]
+- **Known Unknowns:** [unknown, stale, or conflicting fields]

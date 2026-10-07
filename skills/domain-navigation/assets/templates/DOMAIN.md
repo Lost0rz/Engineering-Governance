@@ -1,53 +1,63 @@
 # Domain: [verified capability name]
 
+Create a detailed `DOMAIN.md` only when the Domain's complexity or actual navigation needs justify more than the concise `DOMAIN_MAP.md` entry. Derive claims from verified target-repository evidence. Keep unknown, stale, and conflicting details explicit, link to canonical sources, and do not copy large source contents or infer ownership from folders.
+
 ## Responsibility
 
-[Describe the capability using project evidence.]
+[Evidence-backed capability responsibility.]
 
 ## Owns
 
-[Verified responsibilities and state.]
+[Verified responsibilities, state, or decisions by fact class; cite their canonical owners.]
 
 ## Does Not Own
 
-[Relevant adjacent responsibilities and their verified owners.]
+[Relevant boundaries and adjacent responsibilities, with verified owners or `unknown`.]
 
 ## State and Authority Owner
 
-[Identify canonical state and decision owners by fact class.]
+[Canonical state and decision owners by fact class, with paths/references.]
 
-## Primary Entry Points and Important Symbols
+## Primary Entry Points
 
-[Verified source paths and symbols.]
+[Verified source paths and purpose.]
+
+## Important Symbols
+
+[Relevant symbols, paths, and their routing role.]
 
 ## Upstream Dependencies
 
-[Verified dependencies and evidence paths.]
+[Verified dependencies and supporting evidence paths.]
 
 ## Downstream Consumers
 
-[Verified consumers and evidence paths.]
+[Verified consumers and supporting evidence paths.]
 
-## Main Data and Control Flow
+## Main Data / Control Flow
 
-[Concise, evidence-backed flow.]
+[Concise flow supported by source evidence; omit when not useful or established.]
 
 ## Relevant Tests
 
-[Test paths and what they cover.]
+[Test paths and the behavior or boundary each test establishes.]
 
-## Runtime and Operational Entry Points
+## Runtime / Operational Entry Points
 
-[Verified runtime or operational paths, when applicable.]
+[Verified runtime or operational paths when applicable; otherwise mark `not applicable` only when verified.]
 
 ## Invariants
 
-[Accepted constraints and their sources.]
+[Accepted constraints and their canonical sources.]
 
-## Evidence and Source Paths
+## Evidence / Source Paths
 
-[Paths supporting this map and their freshness basis.]
+[Paths/references and inspected revision or observation time supporting the claims above.]
 
-## Known Unknowns
+## Freshness Basis
 
-[Unverified, stale, or conflicting details.]
+[For each material claim or field, state the revision/observation basis and whether it is current, stale, or unchecked. Do not imply uninspected areas were refreshed.]
+
+## Known Unknowns / Conflicts
+
+[Unverified, stale, or conflicting claims and what evidence or authority could resolve them.]
