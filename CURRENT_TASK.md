@@ -2,7 +2,7 @@
 
 Task ID: `EG-SKILLS-RESTRUCTURE-IMPL-009`
 
-State: `AUTHORIZED_FOR_LOCAL_EXECUTION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `IMPLEMENTATION`
 
@@ -112,6 +112,105 @@ Before returning to Web:
 - commit and push that handoff update;
 - do not merge.
 
-## Current stop point
+## Executor handoff — Phase A V0
 
-`AUTHORIZED_FOR_LOCAL_EXECUTION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`. Implementation is complete; do not treat this executor report as acceptance or merge authorization.
+
+### Branch and synchronization evidence
+
+- `START_HEAD`: `954593b82a666bebf677636ce4f3cf08c07ceddd`.
+- `PRE_HANDOFF_CONTENT_HEAD`: `68be12d41afc721311a06b973cc3fc3bb107a1bb`.
+- `FINAL_HEAD`: this handoff-control commit; resolve its exact SHA from the authorized task branch HEAD and executor receipt.
+- `REMOTE_HEAD`: verified after push to equal this handoff-control commit; exact SHA is in the executor receipt.
+- `LOCAL_REMOTE_MATCH`: `PASS` after the handoff update was pushed and compared.
+- `WORKING_TREE`: clean after the handoff commit/push; exact `git status --porcelain` result is in the executor receipt.
+- Live `origin/main` remained `954593b82a666bebf677636ce4f3cf08c07ceddd` before handoff; no main change was made.
+
+### Retirement manifest
+
+`RETIREMENT_MANIFEST`: the exact `git ls-files` manifest contained 47 tracked paths, all under the authorized retirement roots or the three explicitly named legacy artifacts. Every listed path was retired; no adjacent or unexpected path was deleted.
+
+```text
+docs/governance/v0.1/README.md
+docs/governance/v0.1/adversarial-review.md
+docs/governance/v0.1/authority-model.md
+docs/governance/v0.1/checks-evidence-findings.md
+docs/governance/v0.1/exceptions-freshness-versioning.md
+docs/governance/v0.1/lifecycle.md
+docs/governance/v0.1/project-profile.md
+docs/governance/v0.1/standard.md
+docs/reality-checks/investdesk.md
+docs/reference-audit/README.md
+docs/reference-audit/allstar.md
+docs/reference-audit/arc42.md
+docs/reference-audit/backstage.md
+docs/reference-audit/ddd-context-mapping.md
+docs/reference-audit/madr.md
+docs/reference-audit/opa-conftest.md
+docs/reference-audit/opentelemetry.md
+docs/reference-audit/scorecard.md
+docs/reference-audit/synthesis.md
+docs/superpowers/plans/2026-10-07-bootstrap-minimal-control-plane-implementation-plan.md
+docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md
+docs/superpowers/specs/2026-10-07-tooling-foundation-design.md
+src/engineering_governance/__init__.py
+src/engineering_governance/__main__.py
+src/engineering_governance/control_reader.py
+src/engineering_governance/doctor.py
+src/engineering_governance/git_reader.py
+src/engineering_governance/model.py
+src/engineering_governance/report.py
+tests/fixtures/doctor/inconsistent-task-id/AGENTS.md
+tests/fixtures/doctor/inconsistent-task-id/CURRENT_STATUS.md
+tests/fixtures/doctor/inconsistent-task-id/CURRENT_TASK.md
+tests/fixtures/doctor/malformed-task/AGENTS.md
+tests/fixtures/doctor/malformed-task/CURRENT_STATUS.md
+tests/fixtures/doctor/malformed-task/CURRENT_TASK.md
+tests/fixtures/doctor/pass/AGENTS.md
+tests/fixtures/doctor/pass/CURRENT_STATUS.md
+tests/fixtures/doctor/pass/CURRENT_TASK.md
+tests/fixtures/doctor/unverified-missing-status/AGENTS.md
+tests/fixtures/doctor/unverified-missing-status/CURRENT_TASK.md
+tests/support.py
+tests/test_cli.py
+tests/test_control_reader.py
+tests/test_doctor.py
+tests/test_git_reader.py
+tests/test_model.py
+tests/test_report.py
+```
+
+`CREATED_SKILL_MODULES`:
+
+- `skills/project-governance/`
+- `skills/domain-navigation/`
+- `skills/incident-doctor/`
+
+Exactly these three top-level Skill directories exist. All planned reference, template, and `scripts/README.md` paths exist; local Markdown links in the Skill entrypoints resolve.
+
+`V0_CHECK_RESULTS`:
+
+- Task 1 retirement manifest and pre-change identity checks: `PASS`; 47 authorized tracked paths, no unexpected paths.
+- Tasks 1–4 per-task path/frontmatter/content-boundary verifications: `PASS` after each task commit. Task 4's first check exposed a missing literal `retire` in its lifecycle wording; that wording was corrected within scope and the exact check then passed.
+- Task 5 `find skills -mindepth 1 -maxdepth 1 -type d -print | sort`: `PASS`; exactly the three Skill directories above.
+- Task 5 Python frontmatter verification: `PASS`; all three entrypoints have frontmatter, non-empty descriptions, and distinct expected names.
+- Task 5 skeleton and retired-root checks: `PASS`; every locked path exists and `src`, `tests`, `docs/governance`, `docs/reality-checks`, and `docs/reference-audit` are absent.
+- Task 5 executable-source scan: `PASS`; no `.py`, `.js`, `.ts`, `.sh`, `.rb`, `.go`, or `.rs` files under `skills/`, `references/`, or `examples/`.
+- Task 5 dependency-manifest scan: `PASS`; no `pyproject.toml`, requirements file, `package.json`, `Cargo.toml`, or `go.mod` is tracked.
+- Task 5 upstream/license checks: `PASS`; all four named upstream references exist and `LICENSE_NOTES.md` states no upstream code or long-form text was copied.
+- Skill trigger and local path check: `PASS`; all three descriptions match the accepted plan and every relative Markdown link in each Skill entrypoint resolves.
+- Task 1 README rejection-pattern and stable-tag checks: `PASS`; `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
+- Live remote authority check before handoff: `PASS`; `origin/main` remained at the expected SHA, the task branch matched local HEAD, and the peeled stable tag matched its target.
+- Historical Python runtime suite: not run, as required for V0 after retiring that runtime.
+
+### Scope and provenance
+
+- `STABLE_TAG_TARGET`: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
+- `UNEXPECTED_PATHS_FOUND`: none.
+- `SCOPE_EXPANSION`: no.
+- `UPSTREAM_CODE_COPIED`: no.
+- `EXECUTABLE_RUNTIME_ADDED`: no.
+
+### Current stop point
+
+`WAITING_FOR_INDEPENDENT_WEB_AUDIT`
