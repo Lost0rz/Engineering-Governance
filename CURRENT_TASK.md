@@ -25,6 +25,7 @@ Produce a reviewable architecture spec for a minimal reusable Bootstrap / Doctor
 - Compares Skill-only, Executable-core-first, and Hybrid; recommends Hybrid with explicit trade-offs.
 - Defines the shared in-process model, data flow, proposed layout, Bootstrap/Doctor/Audit contracts, read/write boundaries, STOP behavior, provenance, reports/exit semantics, validation strategy, versioning, smallest first slice, deferred scope, open questions, and adversarial self-review.
 - Root `README.md` was verified and left unchanged: it describes seven layers, says the tools are planned/not implemented, and remains navigational.
+- Draft PR #2 is `OPEN / DRAFT` against `main`: https://github.com/Lost0rz/Engineering-Governance/pull/2. It is not merged.
 
 ## Scope and non-goals
 
@@ -37,5 +38,6 @@ This task authorizes the written design and its control-plane handoff only. It d
 
 ## Handoff
 
-- Finish commit/push and Draft PR creation for `codex/eg-v01-tooling-design`; record the PR and verify the remote branch head equals local HEAD and the worktree is clean.
-- Then wait at `WAITING_FOR_USER_SPEC_REVIEW`. If the user requests spec changes, make only the requested design/control updates and resynchronize. Do not proceed to implementation until the spec has been reviewed and a separate implementation task authorizes it.
+- The design branch and control-plane updates are pushed; verify local/remote HEAD equality and a clean worktree at handoff.
+- Wait at `WAITING_FOR_USER_SPEC_REVIEW`. If the user requests spec changes, make only the requested design/control updates and resynchronize. Do not proceed to implementation until the spec has been reviewed and a separate implementation task authorizes it.
+- Keep Draft PR #2 open and draft; do not merge it in this task.

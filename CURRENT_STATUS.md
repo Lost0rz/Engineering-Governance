@@ -34,8 +34,9 @@ Last verified: 2026-10-07
 - Design spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
 - Recommendation: Hybrid, with one small local deterministic core and optional thin AI workflow guidance.
 - The design preserves project authorities and separates machine, AI, and human contributions.
+- Draft PR #2 is `OPEN / DRAFT`, targets `main`, and is waiting for spec review: https://github.com/Lost0rz/Engineering-Governance/pull/2.
 - No executable tooling, dependency, machine-readable schema, CLI, MCP, daemon, enforcement, remediation, or pilot-repository change has started.
 
 ## Next milestone
 
-Publish the design branch as a Draft PR, synchronize its final control-plane state, and wait for user review of the written spec. Any implementation requires separately reviewed design and an authorized implementation task.
+Wait for user review of the written spec in Draft PR #2. Any implementation requires separately reviewed design and an authorized implementation task.
