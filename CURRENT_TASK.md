@@ -1,138 +1,135 @@
-# CURRENT TASK — Phase A Control Closeout Corrective
+# CURRENT TASK — Phase B Project Governance Enrichment Design
 
-Task ID: `EG-SKILLS-RESTRUCTURE-CLOSEOUT-010`
+Task ID: `EG-PROJECT-GOVERNANCE-ENRICH-DESIGN-011`
 
-State: `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`
+State: `WAITING_FOR_USER_DESIGN_REVIEW`
 
-Mode: `CONTROL_CLOSEOUT_CORRECTIVE`
+Mode: `BOUNDED_DESIGN_REVIEW`
 
 ## Objective
 
-Reconcile the task-branch control plane with the already accepted independent Web audit result for Phase A. This task is control-only: update the stale current-state/task records, verify them, push the same branch, and stop for Web re-audit.
+Define the bounded Phase B enrichment of the existing `skills/project-governance/` module so it is operationally useful for normal AI-assisted development without turning governance into a parallel product or heavyweight process.
 
-## Authority
+This task is design-only. No local implementation is authorized until the user explicitly approves the bounded design.
+
+## Authority and baseline
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Authorized branch: `codex/skill-repository-skeleton-reset`.
-- Phase A implementation handoff head audited by Web: `d867327de08410056a225fa4c0111d1a53eeb304`.
-- Web audit result: Phase A content/structure/scope/tag integrity passed; merge was blocked only because `CURRENT_STATUS.md` still described the pre-execution state.
-- `main` audit baseline: `954593b82a666bebf677636ce4f3cf08c07ceddd`.
-- Stable tag target: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
-- Web has already updated `CURRENT_STATUS.md` on this task branch to record the accepted audit result and this corrective authorization.
-- The exact start head for local execution is the live remote task-branch head after this authorization commit; the execution card supplies it and mismatch is a STOP.
+- Phase A accepted merge head: `02dd645d06e8fa554e241887c1457f7b15e297b5`.
+- Phase A result: accepted, merged to `main`, exactly three Skill modules live.
+- Stable historical tag: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
+- Exact Phase B implementation baseline will be captured only after design approval and before a local execution card is issued.
 
-## In scope
+## Proposed Phase B file scope
 
-Only:
+Only the existing `project-governance` module:
 
-1. read the current remote branch controls and verify the Web authorization;
-2. confirm the Phase A Skill/content tree has not changed since the audited implementation content except for Web control commits;
-3. update `CURRENT_STATUS.md` only if a factual correction is still required by the current remote state;
-4. update this `CURRENT_TASK.md` with closeout verification evidence;
-5. set this task to `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`;
-6. commit and push only the authorized task branch.
+- `skills/project-governance/SKILL.md`
+- `skills/project-governance/references/control-plane.md`
+- `skills/project-governance/references/development-flow.md`
+- `skills/project-governance/references/verification-tiers.md`
+- `skills/project-governance/assets/templates/AGENTS.md`
+- `skills/project-governance/assets/templates/CURRENT_STATUS.md`
+- `skills/project-governance/assets/templates/CURRENT_TASK.md`
+
+Root controls may be updated only for task authorization/handoff. No other reusable module is part of Phase B.
+
+## Proposed design
+
+### 1. Three-file control plane becomes operational, not merely descriptive
+
+`control-plane.md` will define:
+
+- one owner per fact/decision class;
+- what belongs in `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`;
+- what explicitly does **not** belong in each file;
+- when each file changes;
+- how to avoid duplicating the same fact across files;
+- how to preserve current verified state without turning status into a history log.
+
+The templates will mirror those boundaries with concise prompts rather than generic boilerplate.
+
+### 2. Normal development flow remains business-first
+
+`development-flow.md` will define the minimum repeatable flow:
+
+1. read applicable repository guidance and the current task;
+2. establish/verify the current baseline needed for the work;
+3. identify the affected Domain and route to `domain-navigation` only when code/authority location is unclear;
+4. implement the smallest authorized product/business outcome;
+5. verify at the chosen risk-proportional level;
+6. update only controls whose facts materially changed;
+7. hand off or close cleanly.
+
+A material objective/scope change requires updating the active task before implementation continues, but ordinary evidence discovery does not create a new task by itself.
+
+Incident Doctor remains reactive: use it only for a real blocked failure/ambiguity when existing evidence is insufficient.
+
+### 3. Verification tiers gain lightweight selection guidance
+
+`verification-tiers.md` will retain `V0`–`V3` and add simple decision guidance based on change radius and risk, not a numeric scoring bureaucracy.
+
+- `V0`: control/docs/layout only.
+- `V1`: localized behavior, narrow blast radius.
+- `V2`: domain behavior, persistence/state/external integration within one domain, or meaningful integration boundary.
+- `V3`: cross-domain, concurrency/security/system-runtime/release-critical or broad user-critical path.
+
+`CURRENT_TASK.md` must state the chosen level and short rationale. The rule remains: choose the lightest level that can safely establish the task; do not default to the full historical suite.
+
+### 4. Templates become adaptation contracts
+
+The three templates will tell an adopting AI to derive project-specific values from repository evidence and leave unsupported items unknown.
+
+They will stay concise and will not include fictional sample project facts, installer instructions, fixed branch names, or mandatory commands that may not apply to the target repository.
+
+### 5. Routing between Skills stays explicit
+
+`project-governance/SKILL.md` will be strengthened as the normal-development entrypoint:
+
+- use for establishing/repairing the control plane and running normal governed delivery;
+- route semantic repository understanding to `domain-navigation`;
+- route evidence-insufficient real incidents to `incident-doctor`;
+- do not make Project Governance itself a codebase mapper, diagnostics platform, installer, or enforcement engine.
 
 ## Out of scope
 
-Do not:
+Phase B must not:
 
-- modify any file under `skills/`, `references/`, `examples/`, or `docs/`;
-- modify `README.md` or root `AGENTS.md`;
-- change Phase A Skill content or structure;
-- restore any retired runtime/research path;
-- add an installer, CLI, script, runtime, dependency, daemon, service, database, enforcement, remediation, or Repo Map implementation;
-- begin Phase B enrichment;
-- modify or merge `main`;
-- move `v0.1.0`;
-- create a new task branch unless the authorized branch cannot be used safely.
+- modify `skills/domain-navigation/` or `skills/incident-doctor/` content;
+- add new Skill modules;
+- add executable scripts/runtime/dependencies;
+- add an installer, Bootstrap CLI, daemon, service, database, automatic enforcement/remediation, or MCP requirement;
+- create a complex risk score or mandatory full-suite gate for every task;
+- create project-specific facts in reusable templates;
+- perform real-project adoption/validation yet; that remains a later validation phase.
 
-## Verification level
+## Expected verification
 
-`V0 — control/documentation only`.
+`V0` only:
 
-Required checks:
+- only the seven planned `project-governance` files plus root control handoff files may change;
+- Skill frontmatter remains valid and trigger boundaries stay distinct;
+- all relative links resolve;
+- templates and references are internally consistent;
+- `domain-navigation` and `incident-doctor` reusable contents are unchanged;
+- no executable source or dependency manifest is introduced;
+- branch is clean and local/remote matched at handoff.
 
-- `origin/main` remains the expected audit baseline unless Web has explicitly changed it before execution; any unexpected change is a STOP;
-- live remote task branch matches the exact execution-card SHA before editing;
-- `v0.1.0^{}` remains the expected target;
-- diff from the audited implementation handoff to the local execution start contains only Web control-plane changes (`CURRENT_STATUS.md` / `CURRENT_TASK.md`);
-- local corrective diff changes only `CURRENT_STATUS.md` and/or `CURRENT_TASK.md`;
-- `skills/`, `references/`, `examples/`, `README.md`, `AGENTS.md`, and `docs/` are unchanged from the local execution start;
-- final working tree is clean and local/remote task heads match.
+## Success criteria
 
-## Acceptance criteria
+After Phase B, a fresh AI reading only the target repository plus `project-governance` should be able to answer, without inventing project facts:
 
-- `CURRENT_STATUS.md` states that Phase A implementation content passed independent Web audit and that this task is a control-only closeout corrective.
-- It no longer claims the task is merely `AUTHORIZED_FOR_LOCAL_EXECUTION` for Phase A implementation or that the task-branch live tree still contains the retired runtime.
-- `CURRENT_TASK.md` records the closeout check results and ends in `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`.
-- No reusable Skill/content file changes occur.
-- `origin/main` and the stable tag remain unchanged.
-- The authorized branch is pushed, clean, and local/remote matched.
+- which of the three control files owns a given rule/state/task fact;
+- when each control file should be updated;
+- how to begin and finish a normal business/product task;
+- when a scope change requires task re-authorization;
+- when to use Domain Navigation versus Incident Doctor;
+- which `V0`–`V3` verification depth is proportionate and why.
 
-## STOP conditions
-
-STOP and report evidence without fixing if:
-
-- remote task branch HEAD differs from the execution card at start;
-- `origin/main` differs unexpectedly from the card;
-- stable tag target differs;
-- the diff since `d867327de08410056a225fa4c0111d1a53eeb304` includes non-control files;
-- the local worktree has unpreserved work;
-- completing the task would require changing anything outside `CURRENT_STATUS.md` or `CURRENT_TASK.md`;
-- any Skill/content discrepancy is discovered;
-- control authority drifts during execution.
-
-## Handoff requirements
-
-Record in this file before the final commit:
-
-- `START_HEAD`;
-- `FINAL_HEAD` / `REMOTE_HEAD` (or identify the final handoff commit for Web to resolve);
-- `REMOTE_MAIN`;
-- `STABLE_TAG_TARGET`;
-- changed paths since audited head;
-- local corrective changed paths;
-- confirmation that no Skill/content file changed;
-- `V0_CONTROL_CHECKS`;
-- working-tree and local/remote match result.
-
-Then set:
-
-`State: WAITING_FOR_INDEPENDENT_WEB_REAUDIT`
-
-Commit, push, and stop. Do not merge.
-
-## Corrective handoff evidence
-
-This was a control-only corrective after the Phase A implementation content and structure passed independent Web audit. No Phase A content was reopened.
-
-- `START_HEAD`: `be38ea3482aedd16de2d75434ef764cc3c33314e`.
-- `AUDITED_PHASE_A_HEAD`: `d867327de08410056a225fa4c0111d1a53eeb304`.
-- `FINAL_HEAD / REMOTE_HEAD`: this control-only handoff commit; resolve the exact SHA from local HEAD and the remote task branch after push.
-- `REMOTE_MAIN`: `954593b82a666bebf677636ce4f3cf08c07ceddd`.
-- `STABLE_TAG_TARGET`: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
-- `WEB_CONTROL_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
-- `LOCAL_CORRECTIVE_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
-- `NON_CONTROL_CONTENT_CHANGED`: `NO`.
-- `SKILL_CONTENT_CHANGED`: `NO`.
-- `PHASE_A_CONTENT_AUDIT`: `PASS`.
-- `CONTROL_CLOSEOUT`: `PASS`.
-
-### V0_CONTROL_CHECKS
-
-- Gate 0 fetched `origin` and matched task branch `be38ea3482aedd16de2d75434ef764cc3c33314e`, `origin/main` `954593b82a666bebf677636ce4f3cf08c07ceddd`, and peeled `v0.1.0` target `738627a0caad330d277f60cfdaff5f153593135e`: `PASS`.
-- Gate 1 confirmed the existing task worktree was on the authorized branch, clean, and fast-forwarded from audited head `d867327de08410056a225fa4c0111d1a53eeb304` to exact start head `be38ea3482aedd16de2d75434ef764cc3c33314e`: `PASS`.
-- Gate 2 confirmed Task ID `EG-SKILLS-RESTRUCTURE-CLOSEOUT-010`, state `AUTHORIZED_FOR_LOCAL_EXECUTION`, and mode `CONTROL_CLOSEOUT_CORRECTIVE`: `PASS`.
-- Gate 3 diff from audited head to start head contained only `CURRENT_STATUS.md` and `CURRENT_TASK.md`; `skills/`, `references/`, `examples/`, `docs/`, `README.md`, and `AGENTS.md` were unchanged: `PASS`.
-- `CURRENT_STATUS.md` Phase A audit, exactly-three-Skills, retired-tree, no-runtime, stable-tag, and control-only-corrective facts matched the checked repository state: `PASS`; only its active task state needed the authorized transition.
-- Current Phase A tree still contains exactly `skills/domain-navigation`, `skills/incident-doctor`, and `skills/project-governance`; `src`, `tests`, and retired research roots are absent: `PASS`.
-- Before commit, `git diff --name-only START_HEAD` contains only `CURRENT_STATUS.md` and `CURRENT_TASK.md`: `PASS`.
-- `git diff --exit-code START_HEAD -- skills references examples docs README.md AGENTS.md`: `PASS`.
-- The retired Python runtime suite was not run; this corrective is V0 control-only.
-- Final clean worktree and exact local/remote branch-head match are verified after push in the executor receipt.
-
-`FINAL_STATE`: `WAITING_FOR_INDEPENDENT_WEB_REAUDIT`.
+The guidance should reduce process ambiguity without making every task heavier.
 
 ## Current stop point
 
-`WAITING_FOR_INDEPENDENT_WEB_REAUDIT`
+`WAITING_FOR_USER_DESIGN_REVIEW`
+
+If the user approves this bounded design, Web will create the implementation authorization from the then-current exact `main` HEAD and issue a local AI execution card. No separate architectural spec or large implementation plan is required for this bounded enrichment.
