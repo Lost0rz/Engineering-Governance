@@ -1,34 +1,136 @@
-# CURRENT TASK — Doctor Foundation Implementation Plan
+# CURRENT TASK — Doctor Foundation First-Slice Implementation
 
-Task ID: `EG-V01-DOCTOR-FOUNDATION-PLAN-003`
+Task ID: `EG-V01-DOCTOR-FOUNDATION-IMPL-004`
 
-State: `CLOSED — PLAN_ACCEPTED`
+State: `ACTIVE — TDD IMPLEMENTATION`
 
-Mode: `IMPLEMENTATION_PLAN_ACCEPTED`
+Mode: `DOCTOR_FOUNDATION_FIRST_SLICE`
 
-## Result
+## Objective
 
-The first-slice Doctor implementation plan is accepted after independent Web re-review.
+Execute the accepted Doctor foundation implementation plan exactly through Tasks 1–4 plus the verification-only Task 5 gate, then stop for independent Web code audit. Do not expand the slice.
 
+## Authority
+
+- Repository: `Lost0rz/Engineering-Governance`.
+- Branch: `codex/eg-v01-doctor-foundation-impl`.
+- Parent accepted-plan control head: `534fce576ddbf78e4b7fdaeacc39ec9c5ed58c33`.
 - Accepted plan content head: `1aa9f4b0e42e73d7e0433fe4c0297b1b0e5eea61`.
-- Plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
-- PR #3 remains OPEN / DRAFT / UNMERGED and stacked on `codex/eg-v01-tooling-design`.
-- No unresolved BLOCKER or MAJOR remains in the plan.
+- Accepted spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
+- Accepted plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
+- PR #2 and PR #3 remain OPEN / DRAFT / UNMERGED; do not merge them in this task.
 
-## Accepted execution contract
+## Execution method
 
-- Four implementation tasks use genuine RED → GREEN TDD in order.
-- Task 5 is verification-only and creates no implementation commit.
-- Task 2 owns local Git identity and the exact read-only subprocess contract, including allowlist, `shell=False`, bounded timeout, environment flags, and timeout-to-`DoctorStop` behavior.
-- Task 3 owns root control-file observation and deterministic Task ID boundary semantics.
-- Task 4 owns Doctor orchestration, exit `0` / `2` / `3`, no-mutation snapshots, and timeout-to-exit-2 proof.
-- First slice is macOS Apple silicon, Python 3.11+, standard-library-only, local/offline, read-only.
-- No CLI packaging, Bootstrap, deep Audit, AI contribution runtime, remote query, MCP, daemon, enforcement, migration, remediation, or pilot changes are included.
+1. Use `superpowers:using-git-worktrees` and work in one isolated task worktree. If the canonical checkout is not already isolated, prefer the platform-native worktree mechanism; if unavailable, use a disposable external worktree rather than changing repository ignore rules. Record the worktree path and remove it only after final merge/closeout, not during implementation.
+2. Use `superpowers:executing-plans` for continuous task-by-task execution and load `superpowers:test-driven-development` before Task 1.
+3. Read the accepted spec and full accepted plan before implementation. The spec is binding; the plan is the reviewed execution contract.
+4. Follow the plan's exact task order, tests, interfaces, file ownership, RED/GREEN commands, and four commit boundaries.
+5. Every production behavior requires a failing named test first. If a named test passes before its production behavior exists, STOP that task and correct the test/plan interpretation before writing production code.
+6. Do not pause for routine confirmation between Tasks 1–4. STOP only for remote/control HEAD drift, unknown local work, destructive/irreversible action, third-party dependency need, scope expansion, or a plan/spec contradiction that cannot be resolved without changing the accepted contract.
 
-## Closeout
+## Authorized implementation scope
 
-This plan task is closed. Do not create source/tests/fixtures or execute implementation under this task ID.
+Implement only the exact paths and behavior defined by the accepted plan:
 
-The next authorized stage must use a separate implementation task and branch based on this accepted plan. The implementation task must load the accepted spec and plan, use `superpowers:test-driven-development`, and execute the plan task-by-task without scope expansion.
+- `src/engineering_governance/__init__.py`
+- `src/engineering_governance/model.py`
+- `src/engineering_governance/report.py`
+- `src/engineering_governance/git_reader.py`
+- `src/engineering_governance/control_reader.py`
+- `src/engineering_governance/doctor.py`
+- `tests/support.py`
+- `tests/test_model.py`
+- `tests/test_report.py`
+- `tests/test_git_reader.py`
+- `tests/test_control_reader.py`
+- `tests/test_doctor.py`
+- the accepted `tests/fixtures/doctor/**` fixture paths
+- `CURRENT_STATUS.md` and `CURRENT_TASK.md` only for implementation progress/handoff state.
 
-PR #3 must remain Draft / unmerged unless the user separately authorizes merge.
+Do not add `pyproject.toml`, requirements files, CLI entry points, schemas, skills, templates, check registries, persistent stores, or other production paths.
+
+## Task gates
+
+### Task 1
+
+Shared immutable model and deterministic report identity. Write the accepted named tests first, prove RED, implement minimally, prove GREEN, commit exactly the Task 1 paths.
+
+### Task 2
+
+Local repository identity plus exact Git read-only subprocess contract and allowlist. Write all positive/negative adapter tests first, prove RED, implement minimally, prove GREEN, commit exactly the Task 2 paths.
+
+### Task 3
+
+Root control observations and deterministic Task ID/status consistency. Write fixture/test surface first, prove RED, implement minimally, prove GREEN, commit exactly the Task 3 paths.
+
+### Task 4
+
+Doctor orchestration, exit `0` / `2` / `3`, timeout mapping, and dirty-repository/linked-worktree no-mutation proof. Add Task-4 snapshot support and tests first, prove RED on absent `run_doctor`, implement minimally, prove GREEN, then run the full suite and commit exactly the Task 4 paths.
+
+### Task 5 — verification-only
+
+No source/test changes and no implementation commit. Run the full suite, verify no-mutation snapshots, inspect the recorded Git adapter calls, inspect final diff/status, and classify PASS/STOP exactly as the plan requires.
+
+## Evidence and push discipline
+
+- Retain the exact RED and GREEN command/result for every Task 1–4.
+- Run the full suite after Task 4 and again at Task 5.
+- Each Task 1–4 must end in its own plan-defined commit. Do not squash during implementation.
+- Push the implementation branch after each completed task commit or, at minimum, before moving to the next task if remote durability would otherwise be lost.
+- After the first implementation commit is pushed, create/maintain one Draft stacked PR with base `codex/eg-v01-doctor-foundation-plan` and head `codex/eg-v01-doctor-foundation-impl`. Do not merge it.
+- Update control files only for meaningful task/progress/handoff state; do not rewrite the accepted spec or plan.
+
+## Final handoff
+
+After Task 5 PASS:
+
+- run the full suite one final time;
+- verify local branch HEAD equals live remote implementation branch HEAD;
+- verify implementation worktree clean;
+- update `CURRENT_STATUS.md` and `CURRENT_TASK.md` to `WAITING_FOR_INDEPENDENT_WEB_AUDIT`;
+- commit/push that handoff control state;
+- keep the implementation PR Draft / unmerged;
+- do not merge or start Bootstrap/Audit/AI/CLI follow-on work.
+
+Required final receipt:
+
+```text
+TASK_ID:
+CONTROL_START_HEAD:
+IMPLEMENTATION_BRANCH:
+WORKTREE_PATH:
+
+TASK1_RED:
+TASK1_GREEN:
+TASK1_COMMIT:
+TASK2_RED:
+TASK2_GREEN:
+TASK2_COMMIT:
+TASK3_RED:
+TASK3_GREEN:
+TASK3_COMMIT:
+TASK4_RED:
+TASK4_GREEN:
+TASK4_COMMIT:
+
+FULL_SUITE_AFTER_TASK4:
+TASK5_VERIFICATION_GATE:
+FINAL_FULL_SUITE:
+NO_MUTATION_DIRTY_REPO:
+NO_MUTATION_LINKED_WORKTREE:
+NETWORK_CAPABLE_GIT_CALLS_OBSERVED: NO
+THIRD_PARTY_DEPENDENCIES_ADDED: NO
+
+FINAL_HEAD:
+REMOTE_HEAD:
+LOCAL_REMOTE_MATCH:
+WORKING_TREE:
+IMPLEMENTATION_PR:
+
+CHANGED_PATHS:
+FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT | STOP
+STOP_REASON:
+```
+
+Do not claim PASS without current test output and final branch/worktree verification.
