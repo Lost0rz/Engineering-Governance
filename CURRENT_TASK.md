@@ -14,6 +14,7 @@ Execute the accepted Doctor foundation implementation plan exactly through Tasks
 
 - Repository: `Lost0rz/Engineering-Governance`.
 - Branch: `codex/eg-v01-doctor-foundation-impl`.
+- Draft PR #4: OPEN / DRAFT / UNMERGED; base `codex/eg-v01-doctor-foundation-plan`, head `codex/eg-v01-doctor-foundation-impl`.
 - Parent accepted-plan control head: `534fce576ddbf78e4b7fdaeacc39ec9c5ed58c33`.
 - Accepted plan content head: `1aa9f4b0e42e73d7e0433fe4c0297b1b0e5eea61`.
 - Accepted spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
@@ -77,8 +78,8 @@ No source/test changes and no implementation commit. Run the full suite, verify 
 - Retain the exact RED and GREEN command/result for every Task 1–4.
 - Run the full suite after Task 4 and again at Task 5.
 - Each Task 1–4 must end in its own plan-defined commit. Do not squash during implementation.
-- Push the implementation branch after each completed task commit or, at minimum, before moving to the next task if remote durability would otherwise be lost.
-- After the first implementation commit is pushed, create/maintain one Draft stacked PR with base `codex/eg-v01-doctor-foundation-plan` and head `codex/eg-v01-doctor-foundation-impl`. Do not merge it.
+- Push PR #4's implementation branch after each completed task commit or, at minimum, before moving to the next task if remote durability would otherwise be lost.
+- Maintain PR #4 as Draft throughout implementation. Do not retarget or merge it.
 - Update control files only for meaningful task/progress/handoff state; do not rewrite the accepted spec or plan.
 
 ## Final handoff
@@ -90,7 +91,7 @@ After Task 5 PASS:
 - verify implementation worktree clean;
 - update `CURRENT_STATUS.md` and `CURRENT_TASK.md` to `WAITING_FOR_INDEPENDENT_WEB_AUDIT`;
 - commit/push that handoff control state;
-- keep the implementation PR Draft / unmerged;
+- keep PR #4 Draft / unmerged;
 - do not merge or start Bootstrap/Audit/AI/CLI follow-on work.
 
 Required final receipt:
@@ -126,7 +127,7 @@ FINAL_HEAD:
 REMOTE_HEAD:
 LOCAL_REMOTE_MATCH:
 WORKING_TREE:
-IMPLEMENTATION_PR:
+IMPLEMENTATION_PR: #4
 
 CHANGED_PATHS:
 FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT | STOP
