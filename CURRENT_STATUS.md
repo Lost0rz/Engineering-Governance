@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase B was independently audited and merged; Phase C bounded design was then approved by the user against the live `main` baseline before implementation authorization.
+Last verified: 2026-10-07 — Phase C task branch, root handoff controls, `origin/main`, and the stable tag were checked against Git at handoff.
 
 ## Repository identity
 
@@ -19,12 +19,13 @@ Phase B `project-governance` enrichment passed independent Web audit at `3b10169
 
 Its accepted behavior establishes the three-file control-plane ownership model, business-first governed development, scope-change re-authorization, on-demand routing to Domain Navigation / Incident Doctor, and risk-proportional `V0`–`V3` verification.
 
-## Active milestone — Phase C `domain-navigation` enrichment implementation
+## Active milestone — Phase C `domain-navigation` enrichment handoff
 
 - Active task: `EG-DOMAIN-NAVIGATION-ENRICH-IMPL-014`.
-- State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 - Mode: `BOUNDED_IMPLEMENTATION`.
 - Authorized branch: `codex/domain-navigation-enrichment`.
+- The nine authorized reusable Skill files are complete on the task branch; Phase C has not been independently accepted or merged.
 - User-approved bounded design baseline before this authorization: `e3af6eb7c95d8cd3ee0b3fd29a9648be17b8d524`.
 - Scope is limited to enriching the nine existing files under `skills/domain-navigation/` plus root control-plane handoff updates.
 - No reusable `project-governance` or `incident-doctor` content change is authorized.
@@ -65,4 +66,4 @@ Phase C is `V0` documentation/Skill-contract enrichment:
 
 ## Next milestone
 
-Local execution on the authorized Phase C branch, then independent Web audit of the pushed task branch. No merge is authorized to the local executor.
+Independent Web audit of the pushed Phase C task branch. No merge is authorized to the local executor.

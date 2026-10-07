@@ -2,7 +2,7 @@
 
 Task ID: `EG-DOMAIN-NAVIGATION-ENRICH-IMPL-014`
 
-State: `AUTHORIZED_FOR_LOCAL_EXECUTION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `BOUNDED_IMPLEMENTATION`
 
@@ -212,6 +212,36 @@ Before returning to Web:
 - push only `codex/domain-navigation-enrichment`;
 - do not merge.
 
+## Execution evidence
+
+- `START_HEAD`: `9627c8d67cca2114dc9a477052f3bd60da06dbdc`.
+- `FINAL_HEAD`: this handoff-control commit; its exact SHA is recorded in the verified post-push executor receipt because a commit cannot contain its own SHA.
+- `REMOTE_HEAD`: verified equal to `FINAL_HEAD` after push; exact SHA is in the post-push executor receipt.
+- `LOCAL_REMOTE_MATCH`: `YES` after final push verification.
+- `WORKING_TREE`: `CLEAN` after final push verification.
+- `REMOTE_MAIN`: `9627c8d67cca2114dc9a477052f3bd60da06dbdc` at final pre-push fetch.
+- `REUSABLE_CHANGED_PATHS`:
+  - `skills/domain-navigation/SKILL.md`
+  - `skills/domain-navigation/references/domain-model.md`
+  - `skills/domain-navigation/references/mapping-workflow.md`
+  - `skills/domain-navigation/references/evidence-rules.md`
+  - `skills/domain-navigation/references/refresh-policy.md`
+  - `skills/domain-navigation/references/repo-map.md`
+  - `skills/domain-navigation/assets/templates/DOMAIN_MAP.md`
+  - `skills/domain-navigation/assets/templates/DOMAIN.md`
+  - `skills/domain-navigation/scripts/README.md`
+- `ROOT_CONTROL_CHANGED_PATHS`: `CURRENT_STATUS.md`, `CURRENT_TASK.md` (handoff only).
+- `PROJECT_GOVERNANCE_CHANGED`: `NO`.
+- `INCIDENT_DOCTOR_CHANGED`: `NO`.
+- `TOP_LEVEL_SKILL_COUNT`: `3`.
+- `EXECUTABLE_RUNTIME_ADDED`: `NO`.
+- `DEPENDENCY_ADDED`: `NO`.
+- `REPO_MAP_PROGRAM_ADDED`: `NO`.
+- `STABLE_TAG_TARGET`: `v0.1.0^{}` = `738627a0caad330d277f60cfdaff5f153593135e`.
+- `V0_CHECK_RESULTS`: `PASS` — exact nine-file reusable allowlist plus two handoff-only root controls; no added/deleted/renamed paths; `git diff --check` clean; sibling Skill diff exit 0; frontmatter and all eight `SKILL.md` links valid; all eight local links across the module resolve; exactly three top-level Skills; contract consistency reviewed; no executable, dependency, index, database, daemon, or generated-binary path added. Historical runtime suite not run because this documentation-only change is authorized at V0.
+- `SCOPE_EXPANSION`: `NO`.
+- `FINAL_STATE`: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+
 ## Current stop point
 
-`AUTHORIZED_FOR_LOCAL_EXECUTION`
+`WAITING_FOR_INDEPENDENT_WEB_AUDIT`
