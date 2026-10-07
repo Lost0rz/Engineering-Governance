@@ -1,100 +1,104 @@
-# CURRENT TASK — Doctor Foundation Implementation Plan
+# CURRENT TASK — Doctor Foundation Implementation Plan Corrective
 
 Task ID: `EG-V01-DOCTOR-FOUNDATION-PLAN-003`
 
-State: `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`
+State: `ACTIVE — PLAN CORRECTIVE AFTER WEB REVIEW`
 
-Mode: `PLAN_REVIEW_HANDOFF`
+Mode: `PLAN_CORRECTIVE_ONLY`
 
 ## Objective
 
-Create a reviewable implementation plan for the smallest coherent first implementation slice from the accepted tooling design: the shared local reader/model plus local read-only Doctor checks for repository identity and control-plane presence/consistency.
+Correct the Doctor foundation implementation plan after independent Web review. Preserve the accepted first-slice scope and tooling design. This task remains planning-only and does not authorize executable implementation.
 
-This task writes a plan only. It does not authorize executable implementation.
-
-## Authority and baseline
+## Authority
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Plan branch: `codex/eg-v01-doctor-foundation-plan`.
-- Parent accepted-design control head: `012f2a8ff314b7800c15a8a538cc8f7f877bf4fa`.
+- Branch: `codex/eg-v01-doctor-foundation-plan`.
+- Stacked PR: #3, OPEN / DRAFT / UNMERGED, base `codex/eg-v01-tooling-design`.
+- Executor plan handoff reviewed by Web: `781428ccaea258cbe3f4723ab1aeb82a208eda1e`.
+- Accepted design control head: `012f2a8ff314b7800c15a8a538cc8f7f877bf4fa`.
 - Accepted design spec: `docs/superpowers/specs/2026-10-07-tooling-foundation-design.md`.
 - Accepted standard: `EngineeringGovernanceStandard 0.1.0`.
-- PR #2 remains the design PR and must remain design-only / unmerged unless separately authorized.
 
-## Planning method
+## Required corrective
 
-Use the `superpowers:writing-plans` method. Before writing the plan, inspect the accepted spec and current repository structure. The plan must be precise enough for a fresh implementer to execute task-by-task using TDD, with exact files, interfaces, test names/assertions, verification commands, and commit boundaries.
+### MAJOR 1 — TDD sequencing must permit genuine RED → GREEN
 
-Save the plan at:
+The current plan makes Task 2 implement the Git command allowlist, then Task 5 asks for new prohibited-command tests (`fetch` / `remote` / `ls-remote`) to fail first. If Task 2 is implemented correctly, those Task 5 tests should already pass.
 
-`docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`
+Correct the task ordering so every implementation task that claims TDD has a behavior that is genuinely absent before its RED step. Acceptable approaches include:
 
-## Scope — first implementation slice only
+- move the prohibited-command negative tests into Task 2 before allowlist implementation, and make the final no-mutation phase a separate acceptance/verification gate rather than a fake implementation RED; or
+- move the end-to-end no-mutation acceptance tests into the Doctor orchestration task before `run_doctor` exists, then keep a final verification-only gate with no implementation commit.
 
-Plan only these capabilities:
+Do not invent an artificial defect merely to manufacture RED. The final structure may have fewer implementation commits if that is the cleaner truthful plan.
 
-1. a small shared local repository reader/model sufficient for Doctor;
-2. deterministic target repository/root identity observation using local filesystem/Git state only;
-3. read-only discovery/readability checks for `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`;
-4. basic deterministic consistency checks that do not require product/domain judgment, remote queries, or deeper Audit semantics;
-5. one immutable/versioned Doctor base report emitted to stdout;
-6. command execution exit semantics consistent with the accepted spec;
-7. tests proving Doctor makes no target file, Git ref, branch, worktree, remote, or hidden-state mutation;
-8. synthetic fixture repositories for PASS, UNVERIFIED/UNKNOWN, malformed-root fatal STOP, and no-mutation cases.
+### MAJOR 2 — Freeze exact test names and key assertions
 
-## Phase-1 implementation assumptions to plan against
+The plan currently says "write tests for ..." but does not identify the exact test functions/methods and the assertions that define success.
 
-- Host/support floor for this first slice: macOS on Apple silicon, Python 3.11+.
-- Prefer Python standard library only; adding a third-party runtime dependency requires STOP and Web/user review.
-- The runtime choice is a Phase-1 tool implementation constraint, not a change to `EngineeringGovernanceStandard 0.1.0` and not a promise of cross-platform support.
-- Default Doctor behavior is offline/local and must not fetch/update refs or make network calls.
-- No persistent database, cache, background process, or report store.
+For each implementation task, add a concise named test matrix or equivalent step detail containing:
 
-## Required plan decisions
+- exact `test_*` names;
+- the key input/setup;
+- the key assertions/result values that pin the contract;
+- the focused RED command and expected reason for failure;
+- the same GREEN command after minimal implementation.
 
-The plan must freeze, for this first slice only:
+Do not transcribe full production code. Keep the plan proportional, but make it executable by a fresh implementer without inventing the test surface.
 
-- exact future source/test/fixture paths;
-- module boundaries and exact public/internal function or class signatures needed between tasks;
-- the minimal report envelope fields and deterministic serialization/output choice needed for tests and future consumers;
-- exact mapping of evaluation-level unresolved conditions versus command-level fatal/unsafe failures;
-- exact exit-code behavior for the first slice;
-- how repository identity/root is observed without mutating the target;
-- how control-file presence/readability/consistency is represented without inventing project facts;
-- how no-mutation is verified before/after Doctor runs;
-- task decomposition into independently reviewable, TDD-sized increments.
+### MAJOR 3 — Define deterministic task-ID reference matching
 
-The plan must remain compatible with future Bootstrap/Audit reuse of the shared model but must not pre-build their functionality.
+Replace the ambiguous phrase "the exact parsed task ID must occur as a whole token in the status text" with one exact matching rule.
 
-## Explicitly forbidden
+The rule must define what counts as a boundary around task IDs containing characters such as letters, digits, hyphens, underscores, dots, or slashes as applicable, and must include tests for at least:
 
-Do not create or modify executable source, tests, fixtures, package/dependency manifests, schemas, CLI entry points, skills, templates, check registries, or pilot repositories in this task.
+- exact intended reference → match;
+- same ID inside backticks or ordinary prose → match if intended by the rule;
+- prefix/suffix collision such as `TASK-1` versus `TASK-10` → no match;
+- embedded alphanumeric/identifier text → no false match;
+- missing exact reference → deterministic consistency `FAIL`, not command STOP.
 
-Do not plan or implement:
+Keep this a narrow deterministic text rule; do not introduce a Markdown parser or machine-readable schema.
 
-- Bootstrap writes;
-- deeper Audit/check-registry execution;
-- AIContribution execution/composition;
-- remote GitHub/PR queries;
-- enforcement/CI gates;
-- MCP;
-- daemon/background monitoring;
-- migration/remediation;
-- cross-platform support beyond the Phase-1 floor;
-- unrelated repository cleanup/refactor.
+## Preserved scope
 
-## Plan review handoff
+Keep unchanged unless directly needed to resolve the three findings:
 
-- Plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
-- Planning method: `superpowers:writing-plans`.
-- Self-review completed for spec coverage, step granularity, type/interface consistency, Review Focus coverage, and proportion.
-- The plan has five TDD implementation tasks and thirteen Review Focus cases.
-- Current-task changes are limited to this plan and the two control-plane files; no source, test, fixture, manifest, schema, CLI, or implementation was created.
-- The plan and control-plane update are committed/pushed on `codex/eg-v01-doctor-foundation-plan`; the live remote head must match the final local head.
-- Draft PR #3 is OPEN / DRAFT / UNMERGED at `https://github.com/Lost0rz/Engineering-Governance/pull/3`, with base `codex/eg-v01-tooling-design` and head `codex/eg-v01-doctor-foundation-plan`.
-- Verify local/remote HEAD equality and a clean worktree, then stop in this review-waiting state. Do not execute the plan.
+- first slice only: shared local reader/model + local read-only Doctor;
+- macOS Apple silicon, Python 3.11+, standard library only;
+- offline/local default;
+- no third-party runtime dependencies;
+- immutable/versioned Doctor base report;
+- exit `0` truthful report / `2` classified fatal STOP / `3` internal fatal failure;
+- no Bootstrap, deeper Audit, AI runtime/composition, remote query, MCP, daemon, enforcement, migration/remediation, pilot changes, packaging, CLI, or schema implementation.
 
-## Required receipt
+Do not change the accepted tooling spec or `EngineeringGovernanceStandard 0.1.0` unless a direct contradiction is discovered; if so, STOP and report it instead.
+
+## Allowed changes
+
+Only:
+
+- `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`
+- `CURRENT_STATUS.md`
+- `CURRENT_TASK.md`
+
+No source, tests, fixtures, manifests, schemas, skills, templates, check registries, or executable implementation may be created in this corrective.
+
+## Validation and handoff
+
+After correcting the plan:
+
+1. re-run the writing-plans self-review for spec coverage, step granularity, interface/type consistency, Review Focus coverage, and proportion;
+2. explicitly verify every implementation task has a truthful RED condition before its implementation step;
+3. verify every planned test has an exact name and key assertion surface;
+4. verify the task-ID matching rule is deterministic and has boundary/false-positive tests;
+5. update `CURRENT_STATUS.md` and set this task back to `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`;
+6. commit/push the same plan branch;
+7. keep PR #3 Draft/unmerged and verify local/remote HEAD equality plus clean worktree;
+8. return the receipt below.
+
+Required receipt:
 
 ```text
 TASK_ID:
@@ -104,28 +108,25 @@ REMOTE_HEAD:
 LOCAL_REMOTE_MATCH:
 WORKING_TREE:
 
-PLAN_PATH:
-PLAN_METHOD: superpowers:writing-plans
-FIRST_SLICE_ONLY: YES
-PHASE1_RUNTIME:
-THIRD_PARTY_DEPENDENCIES_PLANNED: NO
-BOOTSTRAP_PLANNED: NO
-AUDIT_PLANNED: NO
-AI_EXECUTION_PLANNED: NO
-REMOTE_QUERY_PLANNED: NO
-IMPLEMENTATION_STARTED: NO
+MAJOR_1_TDD_SEQUENCE_RESOLVED:
+MAJOR_2_EXACT_TEST_SURFACE_RESOLVED:
+MAJOR_3_TASK_ID_MATCH_RULE_RESOLVED:
+IMPLEMENTATION_TASK_COUNT:
+VERIFICATION_ONLY_GATE_PRESENT:
+ALL_IMPLEMENTATION_TASKS_HAVE_GENUINE_RED:
+TEST_NAMES_AND_KEY_ASSERTIONS_FROZEN:
+TASK_ID_BOUNDARY_TESTS_DEFINED:
 
-PLAN_TASK_COUNT:
-REVIEW_FOCUS_COUNT:
-SPEC_COVERAGE_SELF_REVIEW:
-TYPE_INTERFACE_SELF_REVIEW:
-NO_MUTATION_TESTS_PLANNED:
-EXIT_SEMANTICS_PLANNED:
+FIRST_SLICE_ONLY: YES
+THIRD_PARTY_DEPENDENCIES_PLANNED: NO
+IMPLEMENTATION_STARTED: NO
+ACCEPTED_SPEC_CHANGED: NO
+STANDARD_CHANGED: NO
 
 CHANGED_PATHS:
-DRAFT_STACKED_PR:
+PR_STATE:
 FINAL_STATE: WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW | STOP
 STOP_REASON:
 ```
 
-STOP on unexpected branch/head drift, unknown local work, any need for a third-party dependency, scope expansion beyond the first slice, or any newly discovered contradiction with the accepted spec or standard.
+STOP on unexpected remote-head drift, unknown local work, third-party dependency need, scope expansion, executable implementation, or any newly discovered contradiction with the accepted spec/standard.
