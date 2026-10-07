@@ -1,11 +1,11 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase D task branch, root handoff controls, `origin/main`, and the stable tag were checked against Git at handoff.
+Last verified: 2026-10-07 — Phase D Incident Doctor enrichment passed independent Web audit and was fast-forward merged to `main`. A read-only check of `Lost0rz/RemoteOrbit` was then performed to select the first real-project validation target.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
-- Repository purpose remains a reusable AI engineering-governance **Skill source repository**, not a governance runtime/product and not an installer.
+- Repository purpose remains a reusable AI engineering-governance Skill source repository, not a governance runtime/product and not an installer.
 - Stable historical tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
 - Root `AGENTS.md` remains the durable repository rule set.
 
@@ -14,55 +14,31 @@ Last verified: 2026-10-07 — Phase D task branch, root handoff controls, `origi
 - Phase A Skill-source restructuring: accepted and merged.
 - Phase B `project-governance` enrichment: accepted and merged at `3b10169a475d97ed8b79ab7d5fa30df5fbdd6f04`.
 - Phase C `domain-navigation` enrichment: accepted and merged at `1d28250717e4e72754655ccc3c69bc3664a70eae`.
+- Phase D `incident-doctor` enrichment: accepted and merged at `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Active milestone — Phase D `incident-doctor` handoff
+## Active milestone — Phase E real-project pilot design
 
-- Active task: `EG-INCIDENT-DOCTOR-ENRICH-IMPL-016`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
-- Mode: `BOUNDED_IMPLEMENTATION`.
-- Authorized branch: `codex/incident-doctor-enrichment`.
-- The six authorized reusable Skill files are complete on the task branch; Phase D has not been independently accepted or merged.
-- User-approved Phase D design baseline before authorization: `7511ec8ac29a58adc3cea5b587f664c8a2faf4ae`.
-- Scope is limited to enriching the six existing files under `skills/incident-doctor/` plus root control-plane handoff updates.
-- `project-governance` and `domain-navigation` reusable contents are outside Phase D.
-- Independent Web audit is required before merge.
+- Active task: `EG-REMOTEORBIT-PILOT-DESIGN-017`.
+- State: `WAITING_FOR_USER_DESIGN_REVIEW`.
+- Mode: `BOUNDED_INTEGRATION_DESIGN`.
+- Candidate target repository: `Lost0rz/RemoteOrbit`.
+- Read-only target baseline observed: `main = 5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
+- RemoteOrbit already has substantial `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` controls, but no `DOMAIN_MAP` was found on the default branch.
+- RemoteOrbit currently has an active runtime-evidence recovery task; its control files forbid unrelated source/control mutation until that task reaches a safe transition.
 
-## Phase D accepted design direction
+## Phase E design boundary
 
-Incident Doctor remains reactive and evidence-gated:
+The first pilot should validate the three Skills against a real complex repository without disrupting its live incident work:
 
-- trigger only for a real failure, unexplained behavior, or unsafe ambiguity that blocks safe progress and cannot be answered from current evidence;
-- first state the blocked question and evaluate existing task/source/test/runtime/log evidence;
-- bypass probe work when current evidence is sufficient for the next safe decision;
-- keep user-reported symptom, direct observation, interpretation, hypothesis, finding, and root-cause claim distinct;
-- keep root cause `UNKNOWN` until evidence supports a stronger claim;
-- add only the minimum decision-linked probe needed to close one named evidence gap or distinguish current plausible explanations;
-- use fresh-incident capture with explicit runtime/build/configuration/revision identity and the smallest relevant observation window;
-- define hypotheses by falsifiable observations rather than plausibility narratives;
-- permit only the smallest evidence-supported behavior fix, followed by risk-proportional regression verification;
-- retire temporary probes by default; durable promotion requires repeated evidence plus explicit owner, scope, and authorization.
+1. inspect RemoteOrbit read-only against Project Governance, Domain Navigation, and Incident Doctor;
+2. identify what existing RemoteOrbit governance already satisfies and what is missing or overly heavy;
+3. derive a minimal target-specific Domain Map and Incident-record structure from verified evidence only;
+4. define an exact later adoption delta for RemoteOrbit, but do not mutate RemoteOrbit while its current incident task forbids that transition;
+5. only after validation may a reusable example be added under `examples/`, clearly tied to the checked target revision/context.
 
-## Phase D boundaries
-
-- No fourth Skill.
-- No changes to reusable `project-governance` or `domain-navigation` content.
-- No executable diagnostic framework, required runtime, dependency manifest, daemon, database, telemetry platform, background monitoring service, automatic remediation, or broad speculative observability expansion.
-- No real-project incident adoption/validation in this task.
-- No architecture spec or implementation-plan document is required for this bounded enrichment.
-
-## Verification policy
-
-Phase D is `V0` Skill/documentation contract enrichment:
-
-- only the six authorized Incident Doctor files plus root handoff controls may change;
-- frontmatter and relative links must remain valid;
-- evidence-gate, probe-design, fresh-incident, probe-lifecycle, and template semantics must remain internally consistent;
-- sibling reusable Skills must remain unchanged;
-- exactly three top-level Skills must remain;
-- no executable/runtime/dependency/diagnostic-platform surface may be introduced;
-- final task branch must be clean and local/remote matched.
+No new Skill, runtime, installer, daemon, database, index, or automatic enforcement is implied.
 
 ## Next milestone
 
-Independent Web audit of the pushed Phase D task branch. No merge is authorized to the local executor.
+User review of the bounded Phase E pilot design in chat. No RemoteOrbit mutation is authorized by this design task.
