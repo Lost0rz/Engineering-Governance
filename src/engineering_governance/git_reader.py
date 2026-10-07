@@ -19,6 +19,11 @@ _ALLOWED_GIT_ARGS = frozenset(
 )
 _DEFAULT_TIMEOUT_SECONDS = 5.0
 _FULL_OBJECT_ID = re.compile(r"(?:[0-9a-f]{40}|[0-9a-f]{64})\Z")
+_REPOSITORY_SELECTION_ENV = ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")
+
+
+def _remove_output_terminator(value: str) -> str:
+    return value[:-1] if value.endswith("\n") else value
 
 
 def run_git_readonly(
@@ -87,11 +92,16 @@ def read_repository(
             "TARGET_NOT_DIRECTORY",
             "The requested target is not a directory.",
         )
+    if any(os.environ.get(name) for name in _REPOSITORY_SELECTION_ENV):
+        raise DoctorStop(
+            "GIT_ENVIRONMENT_UNTRUSTED",
+            "Git repository selection environment is set.",
+        )
 
     root_result = git_runner(
         resolved_target, ("rev-parse", "--show-toplevel"), _DEFAULT_TIMEOUT_SECONDS
     )
-    root_text = root_result.stdout.strip()
+    root_text = _remove_output_terminator(root_result.stdout)
     if root_result.returncode != 0 or not root_text:
         raise DoctorStop(
             "REPOSITORY_ROOT_UNAVAILABLE",
@@ -103,11 +113,10 @@ def read_repository(
             "REPOSITORY_ROOT_UNAVAILABLE",
             "Git repository root is not a directory.",
         )
-
     common_result = git_runner(
         root, ("rev-parse", "--git-common-dir"), _DEFAULT_TIMEOUT_SECONDS
     )
-    common_text = common_result.stdout.strip()
+    common_text = _remove_output_terminator(common_result.stdout)
     if common_result.returncode != 0 or not common_text:
         raise DoctorStop(
             "GIT_COMMON_DIR_UNAVAILABLE",

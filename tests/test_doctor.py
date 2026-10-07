@@ -1,5 +1,6 @@
 import io
 import json
+import os
 import subprocess
 import tempfile
 import unittest
@@ -192,6 +193,47 @@ class DoctorTests(unittest.TestCase):
         self.assertLessEqual(len(error), 256)
         self.assertEqual(len(error.splitlines()), 1)
         self.assertNotIn("UNVERIFIED", error)
+
+    def test_repository_selection_environment_override_returns_stop_without_report(self):
+        run_doctor, git_runner = self._api()
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            target = materialize_doctor_fixture("pass", base / "requested-target")
+            foreign_repository = initialize_temporary_git_repository(
+                base / "foreign-repository", initial_commit=True
+            )
+            with patch.dict(
+                os.environ,
+                {
+                    "GIT_DIR": str(foreign_repository / ".git"),
+                    "GIT_WORK_TREE": str(target),
+                },
+            ):
+                exit_code, output, error = self._run(run_doctor, git_runner, target)
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(output, "")
+        self.assertTrue(error.startswith("STOP:"))
+        self.assertLessEqual(len(error), 256)
+
+    def test_trailing_space_repository_path_is_not_trimmed_into_sibling(self):
+        run_doctor, git_runner = self._api()
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            requested = materialize_doctor_fixture(
+                "inconsistent-task-id", base / "repository "
+            )
+            initialize_temporary_git_repository(requested, initial_commit=True)
+            passing_sibling = materialize_doctor_fixture("pass", base / "repository")
+            initialize_temporary_git_repository(passing_sibling, initial_commit=True)
+
+            exit_code, output, error = self._run(run_doctor, git_runner, requested)
+
+        report = json.loads(output)
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(report["target"]["root"], str(requested.resolve()))
+        self.assertEqual(report["overall_result"], "FAIL")
+        self.assertEqual(error, "")
 
     def test_dirty_repository_content_and_git_metadata_are_unchanged(self):
         run_doctor, git_runner = self._api()

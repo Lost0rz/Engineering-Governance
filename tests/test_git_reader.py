@@ -262,3 +262,64 @@ class GitReaderTests(unittest.TestCase):
 
         self.assertEqual(caught.exception.code, "GIT_PROBE_TIMEOUT")
         subprocess_run.assert_called_once()
+
+    def test_repository_selection_environment_overrides_stop_before_git_probe(self):
+        read_repository, _, CommandResult, DoctorStop = self._api()
+
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            target = base / "ordinary-target"
+            target.mkdir()
+            common_dir = base / "foreign-common"
+            common_dir.mkdir()
+            head = "0123456789abcdef0123456789abcdef01234567"
+            calls = []
+
+            def runner(cwd, args, timeout):
+                calls.append(args)
+                outputs = {
+                    ("rev-parse", "--show-toplevel"): f"{target}\n",
+                    ("rev-parse", "--git-common-dir"): f"{common_dir}\n",
+                    ("rev-parse", "--verify", "HEAD"): f"{head}\n",
+                    ("symbolic-ref", "--quiet", "--short", "HEAD"): "main\n",
+                }
+                return CommandResult(0, outputs[args], "")
+
+            overrides = {
+                "GIT_DIR": str(common_dir),
+                "GIT_WORK_TREE": str(target),
+                "GIT_COMMON_DIR": str(common_dir),
+            }
+            for name, value in overrides.items():
+                with self.subTest(name=name):
+                    calls.clear()
+                    with patch.dict(os.environ, {name: value}):
+                        with self.assertRaises(DoctorStop) as caught:
+                            read_repository(target, git_runner=runner)
+                    self.assertEqual(caught.exception.code, "GIT_ENVIRONMENT_UNTRUSTED")
+                    self.assertEqual(calls, [])
+
+    def test_git_common_dir_path_preserves_trailing_space(self):
+        read_repository, _, CommandResult, _ = self._api()
+
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = initialize_temporary_git_repository(
+                base / "repository", initial_commit=True
+            )
+            common_dir = base / "common directory "
+            common_dir.mkdir()
+            head = "0123456789abcdef0123456789abcdef01234567"
+
+            def runner(cwd, args, timeout):
+                outputs = {
+                    ("rev-parse", "--show-toplevel"): f"{root}\n",
+                    ("rev-parse", "--git-common-dir"): f"{common_dir}\n",
+                    ("rev-parse", "--verify", "HEAD"): f"{head}\n",
+                    ("symbolic-ref", "--quiet", "--short", "HEAD"): "main\n",
+                }
+                return CommandResult(0, outputs[args], "")
+
+            identity = read_repository(root, git_runner=runner)
+
+        self.assertEqual(identity.git_common_dir, str(common_dir.resolve()))
