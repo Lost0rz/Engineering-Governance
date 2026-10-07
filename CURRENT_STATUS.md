@@ -12,19 +12,13 @@ Last verified: 2026-10-07
 
 ## Doctor foundation plan review
 
-- Task `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is under independent Web plan review on `codex/eg-v01-doctor-foundation-plan`.
-- Executor handoff reviewed: `781428ccaea258cbe3f4723ab1aeb82a208eda1e`.
-- PR #3 is OPEN / DRAFT / UNMERGED, stacked on `codex/eg-v01-tooling-design`.
-- Scope remains the first local/offline/read-only Doctor slice only; no executable implementation has started.
-
-Independent Web review found the plan direction acceptable but requires corrective work before implementation authorization:
-
-1. **TDD sequencing:** Task 2 already requires implementing the Git command allowlist, while Task 5 later requires newly added prohibited-command tests to be RED. Those tests should already pass after Task 2, so the planned RED→GREEN evidence is internally impossible. Reorder/merge the tests or convert the final no-mutation phase into a non-implementation acceptance gate so every implementation task has a genuine RED.
-2. **Test-step precision:** the plan names behaviors but does not provide the exact test names and key assertions required by the `superpowers:writing-plans` contract and this task's own planning requirements. A fresh implementer still has to invent the test surface.
-3. **Task/status token semantics:** `CURRENT_STATUS.md` task-ID matching is described only as a "whole token" match. The exact deterministic boundary/matching rule and false-positive cases are not frozen, so multiple incompatible implementations remain possible.
-
-No change to the accepted tooling spec or `EngineeringGovernanceStandard 0.1.0` is required by these findings.
+- Task `EG-V01-DOCTOR-FOUNDATION-PLAN-003` is waiting for independent implementation-plan re-review on `codex/eg-v01-doctor-foundation-plan`.
+- Corrected plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
+- The plan has four TDD implementation tasks plus a verification-only acceptance gate. Each implementation task names its tests, setup, key assertions, expected RED reason, and focused GREEN command.
+- Task ID matching freezes the ASCII ID grammar and case-sensitive literal boundary rule, with exact, backtick, prose, collision, embedded, and missing-reference tests.
+- PR #3 remains OPEN / DRAFT / UNMERGED, stacked on `codex/eg-v01-tooling-design`.
+- Scope remains the first local/offline/read-only Doctor slice; implementation has not started. Accepted spec and `EngineeringGovernanceStandard 0.1.0` are unchanged.
 
 ## Next milestone
 
-Correct only the implementation plan and control handoff, then return PR #3 to `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`. Do not create source, tests, fixtures, manifests, schemas, CLI code, or any executable implementation until independent plan re-review passes and a separate implementation task is authorized.
+Complete independent plan re-review. Do not create source, tests, fixtures, manifests, schemas, CLI code, or executable implementation until review passes and a separate implementation task is authorized.
