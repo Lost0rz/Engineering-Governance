@@ -8,7 +8,7 @@ Mode: `TOOLING_FOUNDATION_DESIGN`
 
 ## Objective
 
-Establish a clean post-v0.1 baseline, retire merged lifecycle residue safely, reconcile stale entry-point documentation, and produce the first written architecture/design spec for a minimal reusable Bootstrap / Doctor / Audit tooling layer.
+Establish a clean post-v0.1 baseline, retire merged lifecycle residue safely, verify the reconciled entry-point documentation, and produce the first written architecture/design spec for a minimal reusable Bootstrap / Doctor / Audit tooling layer.
 
 This is an **architectural design task**, not an implementation task.
 
@@ -19,6 +19,7 @@ This is an **architectural design task**, not an implementation task.
 - PR #1: merged/closed.
 - Merged task branch: `codex/eg-v01-reference-synthesis` at `96a3e2212bfa2ffcfcd31a64557f86380fa8d642`; lifecycle-complete but delete only after local safety proof.
 - Accepted model: seven lifecycle layers, six cross-cutting axes, typed authorities, standalone profiles, orthogonal result/freshness/exception/decision semantics.
+- Root `README.md` has already been reconciled on `main` to the accepted seven-layer model and correctly states the tooling is planned, not implemented.
 
 ## Gate 0 — local lifecycle cleanup and baseline
 
@@ -42,14 +43,17 @@ After Gate 0 passes, create a fresh branch from current accepted `main`:
 
 If the branch already exists, inspect it and STOP on unexplained provenance rather than overwrite it.
 
-## Gate 2 — baseline documentation reconcile
+## Gate 2 — verify entry-point baseline
 
-On the task branch only:
+On the task branch, verify root `README.md`:
 
-- correct root `README.md` so it reflects seven lifecycle layers and does not imply Bootstrap/Doctor/Audit already exist;
-- keep README navigational and concise; do not create a second mutable control plane.
+- describes seven lifecycle layers;
+- does not imply Bootstrap/Doctor/Audit already exist;
+- remains navigational rather than becoming a second mutable control plane.
 
-No other cleanup/refactor is authorized.
+No README change is expected. If it differs from the verified remote baseline unexpectedly, STOP and report drift rather than silently rewriting it.
+
+No unrelated cleanup/refactor is authorized.
 
 ## Gate 3 — architecture exploration
 
@@ -196,7 +200,7 @@ REMOTE_DESIGN_HEAD:
 LOCAL_REMOTE_MATCH:
 DESIGN_WORKING_TREE:
 
-README_RECONCILED:
+README_BASELINE_VERIFIED:
 DESIGN_SPEC:
 APPROACH_RECOMMENDED:
 BOOTSTRAP_CONTRACT_DEFINED:
