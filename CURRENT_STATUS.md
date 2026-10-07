@@ -1,34 +1,38 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase G is accepted and merged. The user authorized one final repository-root consistency closeout followed by a stable freeze. No reusable Skill-content change or target-project adoption is authorized.
+Last verified: 2026-10-07 — the bounded root consistency implementation is complete on the task branch and is ready for independent Web audit. The only durable-content changes are root `README.md` and root `AGENTS.md`; reusable Skill contents remain unchanged.
 
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
-- Pre-task `main`: `7ec0ffd574a0ec7e43c2990ebaf79633a6719e22`.
+- Authorization/main head: `349adbe6011b77b6c5b921dc1f995ec881e2d36a`.
+- Task branch: `control/root-consistency-freeze-auth`.
+- Root-content implementation commit: `0062481f4bc7101fd3774472edf56be395763e69`.
 - Historical stable tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e` and must not move.
 - Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Active milestone — root consistency + freeze
+## Task state
 
 - Task: `EG-ROOT-CONSISTENCY-FREEZE-021`.
-- State: `AUTHORIZED_FOR_IMPLEMENTATION`.
-- Mode: `BOUNDED_ROOT_DOCS_FREEZE`.
-- Objective: align root `README.md` and root `AGENTS.md` with the accepted Phase G Domain Navigation contract, then freeze the resulting stable repository baseline.
-- Intended version label: `v0.2.0`.
-- Reusable Skill contents are frozen for this task and must remain byte-unchanged.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+- Mode: `BOUNDED_ROOT_DOCS_FREEZE_AUDIT_HANDOFF`.
+- Intended new stable version label after accepted merge/closeout: `v0.2.0`.
 
-## Exact inconsistency
+## Implemented consistency correction
 
-Root `README.md` and root `AGENTS.md` still use older wording that presents a stable/explicit Domain Map as universally required. Only that wording is authorized to change.
+- Root `README.md` no longer describes a dedicated Domain Map as universally required. It now describes evidence-backed semantic routing, discovery/reuse of existing semantic authorities, and an optional derived navigation projection only when durable routing value exists.
+- Root `AGENTS.md` now matches the same accepted Phase G contract: semantic navigation is required, but a literal/separate `DOMAIN_MAP.md` is not; existing maps are authoritative where accepted, and navigation artifacts must not duplicate product/domain truth.
+- No reusable Skill file changed.
 
-## Boundaries and verification
+## Verification evidence before handoff
 
-- Durable-content allowlist: root `README.md`, root `AGENTS.md`.
-- Root `CURRENT_STATUS.md` / `CURRENT_TASK.md`: control authorization/handoff/closeout only.
-- No changes to `skills/**`, `references/**`, `examples/**`, `docs/**`, target projects, runtime, tooling, dependencies, workflows, or historical `v0.1.0`.
-- `V0`: exact path scope, root/Skill semantic consistency, exactly three Skills, Skill tree unchanged, no runtime/tool additions, historical tag unchanged, exact frozen commit SHA recorded.
+- Durable-content diff from authorization to implementation changes exactly `README.md` and `AGENTS.md`.
+- Root controls are the only additional task-state changes.
+- `skills/**` is unchanged from authorization.
+- Exactly three top-level Skills remain.
+- No executable, dependency, runtime, workflow, index, database, daemon, installer, Repo Map program, or new Skill was added.
+- Historical `v0.1.0` remains unchanged.
 
 ## Next milestone
 
-Implement and independently audit the two root-document corrections, merge only if clean, then close and freeze. No project adoption follows automatically.
+Independently audit the remote branch against authorization head `349adbe6011b77b6c5b921dc1f995ec881e2d36a`. If PASS, merge the branch to `main`, close the task, and record the exact frozen baseline. Do not begin target-project adoption automatically.
