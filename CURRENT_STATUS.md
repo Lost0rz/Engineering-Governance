@@ -14,11 +14,12 @@ Last verified: 2026-10-07
 ## Doctor implementation handoff
 
 - Task `EG-V01-DOCTOR-FOUNDATION-IMPL-004` is `WAITING_FOR_INDEPENDENT_WEB_AUDIT` on `codex/eg-v01-doctor-foundation-impl`.
-- Implementation commits are `17c5a561d234528f354df8148b33aad976e6acd1`, `2859fabcf91b445a21b67156e701ca828f699f55`, `8d59dca138275660655dd6b74cb2c9ad2d8bead5`, and `5865dba5e0b0f4c841f1f0bed49d0cb0ba90140e`. The final waiting-state control update is committed after that implementation checkpoint; use Git for the branch's exact current HEAD.
+- Implementation commits are `17c5a561d234528f354df8148b33aad976e6acd1`, `2859fabcf91b445a21b67156e701ca828f699f55`, `8d59dca138275660655dd6b74cb2c9ad2d8bead5`, and `5865dba5e0b0f4c841f1f0bed49d0cb0ba90140e`. Final review corrections are in `69a3347fa17a36c2b24dfd68341fe5af0f697bbb`. This waiting-state control snapshot is synchronized after the final correction; use Git for the branch's exact current HEAD.
 - Draft PR #4 is OPEN / DRAFT / UNMERGED, base `codex/eg-v01-doctor-foundation-plan`.
 - Active isolated worktree: `/Users/ox_miles/.codex/worktrees/doctor-foundation-impl/Engineering-Governance`.
 - The accepted first slice is complete: immutable model/report, local Git identity, root control observations and exact Task ID consistency, `run_doctor` output/exit semantics, and read-only mutation proof.
-- Verification: Python 3.11 standard-library suite 48/48; dirty repository and linked-worktree snapshots unchanged; adapter tests pin only local read-only Git probes. No third-party dependency or runtime interface was added.
+- Verification: Python 3.11 standard-library suite 52/52 after final review corrections; dirty repository and linked-worktree snapshots unchanged; adapter tests pin only local read-only Git probes. No third-party dependency or runtime interface was added.
+- Fresh local review found two Important target-identity defects; both were corrected and regression-tested in `69a3347fa17a36c2b24dfd68341fe5af0f697bbb`. The branch is still awaiting independent Web audit; the local review is not acceptance.
 - Scope remains local/offline/read-only. Bootstrap, deeper Audit, AI contribution runtime, CLI, remote query, MCP, daemon, enforcement, migration, remediation, and pilot changes are outside this task.
 
 ## Next milestone
