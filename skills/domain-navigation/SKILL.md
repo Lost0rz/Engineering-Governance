@@ -1,11 +1,11 @@
 ---
 name: domain-navigation
-description: Use for evidence-backed Domain Map and repository navigation when a map is missing or stale, or an affected Domain, ownership, authority, code location, symbol, or test is unclear. Route from the authorized task to focused source evidence; do not authorize tasks, diagnose incidents, or modify product code.
+description: Use for evidence-backed domain and repository navigation when semantic routing is missing or stale, or an affected Domain/capability, ownership, authority, code location, symbol, or test is unclear. Route from the authorized task to focused source evidence; do not authorize tasks, diagnose incidents, or modify product code.
 ---
 
 # Domain Navigation
 
-Use this Skill when the navigation layer is missing or stale for an affected Domain; when ownership, authority, or code location is unclear; when a task needs to be routed to relevant sources, symbols, or tests; or during repository onboarding bounded by a current task or a specific mapping goal. Before assuming a map is missing, discover any accepted business, product, domain, or capability maps already present in the target repository, regardless of filename, and determine what semantic truth they own. Treat those authorities as sources to reference, not material to duplicate. Any `DOMAIN_MAP.md` created or refreshed by this Skill is a derived navigation projection, not product truth, domain authority, or task authorization.
+Use this Skill when navigation for an affected Domain/capability is missing or stale; when ownership, authority, or code location is unclear; when a task needs to be routed to relevant sources, symbols, or tests; or during repository onboarding bounded by a current task or a specific mapping goal. Before assuming a navigation artifact is missing, discover any accepted business, product, domain, or capability authorities already present in the target repository, regardless of filename, and determine what semantic truth they own. Treat those authorities as sources to reference, not material to duplicate. Any separate `DOMAIN_MAP.md` created or refreshed by this Skill is only an optional derived navigation projection, not product truth, domain authority, or task authorization.
 
 ## Read the contracts
 
