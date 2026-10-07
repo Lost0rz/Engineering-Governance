@@ -5,20 +5,23 @@ Last verified: 2026-10-07
 ## Repository identity
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
-- Current remote baseline before this redesign control update: `d13e6895f6d4bddb753cabcc87566613eaa9bbec`.
-- Repository purpose has been redefined: this repository will be a reusable AI engineering-governance **Skill source repository**, not a governance runtime/product and not an installer.
-- The stable historical tag `v0.1.0` remains part of Git history and is not to be moved.
-- No open pull requests were found at the redesign start.
+- Repository purpose is now fixed: a reusable AI engineering-governance **Skill source repository**, not a governance runtime/product and not an installer.
+- The stable historical tag `v0.1.0` must remain anchored to commit `738627a0caad330d277f60cfdaff5f153593135e`.
+- No open pull requests were present at redesign start.
 
-## Accepted v1 direction
+## Accepted redesign
 
-The v1 repository is organized around three reusable Skills:
+The user accepted the written redesign specification on 2026-10-07:
+
+`docs/superpowers/specs/2026-10-07-skills-repository-restructure-design.md`
+
+The v1 repository is organized around exactly three reusable Skills:
 
 1. `project-governance` — three-file control-plane standards, normal delivery flow, and proportional verification.
 2. `domain-navigation` — semantic Domain Map, evidence-first repository understanding, code navigation, and optional read-only Repo Map assistance.
 3. `incident-doctor` — evidence sufficiency, minimum probes, fresh-incident analysis, hypothesis/falsification, and probe lifecycle.
 
-Four repository-wide principles are fixed for this redesign:
+Four repository-wide principles are fixed:
 
 - standardize `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` roles;
 - require a project-level Domain navigation layer;
@@ -27,28 +30,31 @@ Four repository-wide principles are fixed for this redesign:
 
 ## Legacy live tree
 
-The current `main` still contains the previous governance-runtime implementation and research structure, including `src/engineering_governance/`, `tests/`, legacy governance/reference documents, and Doctor/Bootstrap planning artifacts. Those remain present until a separately authorized restructure implementation task removes or replaces them.
+The current `main` still contains the previous governance-runtime implementation and research structure, including `src/engineering_governance/`, `tests/`, legacy governance/reference documents, and old Doctor/Bootstrap planning artifacts. They remain present until the separately authorized skeleton-reset implementation task executes.
 
-Git history and the existing stable tag are sufficient archival mechanisms; the redesign does not require carrying obsolete runtime code into a new `archive/` directory.
+Git history and the existing stable tag are the archive; the redesign does not require an `archive/` live-tree copy.
 
-## Current milestone — Skill repository redesign specification
+## Current milestone — Phase A implementation-plan review
 
-- Active task: `EG-SKILLS-RESTRUCTURE-DESIGN-007`.
-- State: `WAITING_FOR_USER_SPEC_REVIEW`.
-- Design document: `docs/superpowers/specs/2026-10-07-skills-repository-restructure-design.md`.
-- No local restructure implementation, deletion of legacy trees, new Skill skeleton, or implementation branch is authorized until the written design is reviewed and accepted.
+- Active task: `EG-SKILLS-RESTRUCTURE-PLAN-008`.
+- State: `WAITING_FOR_USER_PLAN_REVIEW`.
+- Implementation plan: `docs/superpowers/plans/2026-10-07-skill-repository-skeleton-reset-implementation-plan.md`.
+- Plan commit: `82099ad7033d9bdc0aec6b7d880f157008157392`.
+- Phase A only resets the live repository skeleton, retires obsolete live runtime/research files, establishes the three Skill entrypoints plus reference/template contracts, and performs `V0` verification.
+- Deep Skill content remains deferred to separate, independently reviewed phases.
+- No local restructure implementation branch or worktree is authorized while this task remains in plan review.
 
 ## Upstream reference direction
 
-The redesign uses external projects as design evidence, not as runtime dependencies:
+The redesign uses external projects as design evidence, not runtime dependencies:
 
-- Agent Skills / Anthropic skill-creator structure for `SKILL.md`, `references/`, `assets/`, optional `scripts/`, and progressive disclosure.
-- `AGENTS.md` open format for predictable agent-facing repository instructions.
-- GitHub `awesome-copilot` `acquire-codebase-knowledge` for evidence-first repository understanding and explicit unknowns.
-- Aider Repo Map for dynamic symbol/dependency ranking under a context/token budget.
+- Agent Skills / Anthropic skill structure and progressive disclosure;
+- AGENTS.md open format;
+- GitHub `awesome-copilot` `acquire-codebase-knowledge` for evidence-first repository understanding and explicit unknowns;
+- Aider Repo Map for dynamic symbol/dependency relevance under limited context.
 
-No upstream code is authorized to be copied during the skeleton task.
+Phase A copies no upstream source code or long-form text.
 
 ## Next milestone
 
-User review of the written redesign specification. If accepted, Web will produce a concrete implementation plan whose first local execution slice performs only the repository skeleton reset and legacy-live-tree retirement. After independent review of that slice, the three Skills will be enriched one module at a time rather than in one large implementation.
+Review the Phase A implementation plan. If accepted, Web will create a separate implementation task with an exact remote baseline and one authorized task branch, then hand the plan to the local AI executor. The local result must stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`; Web will audit the remote branch before any merge.
