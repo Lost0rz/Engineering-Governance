@@ -6,50 +6,56 @@ Last verified: 2026-10-07
 
 - Repository: `Lost0rz/Engineering-Governance`; default branch: `main`.
 - Repository purpose is fixed: a reusable AI engineering-governance **Skill source repository**, not a governance runtime/product and not an installer.
-- The stable historical tag `v0.1.0` must remain anchored to commit `738627a0caad330d277f60cfdaff5f153593135e`.
-- Root `AGENTS.md` remains the durable repository rule set; no durable-rule change is required for this implementation authorization.
+- Stable tag `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
+- Root `AGENTS.md` remains the durable repository rule set; no durable-rule change is required for the current closeout corrective.
 
-## Accepted redesign and plan
+## Accepted Phase A implementation result
 
-- Accepted design: `docs/superpowers/specs/2026-10-07-skills-repository-restructure-design.md`.
-- Accepted Phase A plan: `docs/superpowers/plans/2026-10-07-skill-repository-skeleton-reset-implementation-plan.md`.
-- Plan creation commit: `82099ad7033d9bdc0aec6b7d880f157008157392`.
-- Plan-review control baseline: `4c91d767a98d34dc851c12532faf4fdf5551a373`.
+Independent Web audit of `codex/skill-repository-skeleton-reset` accepted the Phase A implementation content and structure at implementation handoff head `d867327de08410056a225fa4c0111d1a53eeb304`.
 
-The v1 repository remains organized around exactly three reusable Skills:
+Accepted facts:
 
-1. `project-governance` — three-file control-plane standards, normal delivery flow, and proportional verification.
-2. `domain-navigation` — semantic Domain Map, evidence-first repository understanding, code navigation, and optional read-only Repo Map assistance.
-3. `incident-doctor` — evidence sufficiency, minimum probes, fresh-incident analysis, hypothesis/falsification, and probe lifecycle.
+- exactly three top-level Skills exist: `project-governance`, `domain-navigation`, and `incident-doctor`;
+- the retired Python governance runtime, its tests, legacy governance/reality-check/reference-audit trees, and obsolete Doctor/Bootstrap planning artifacts are absent from the task branch live tree;
+- the repository README now states the Skill-source / AI-adapted / no-installer model;
+- Project Governance contains the three-file control templates and proportional verification contract;
+- Domain Navigation preserves the stable semantic Domain Map versus optional dynamic read-only Repo Map distinction;
+- Incident Doctor is strictly reactive and evidence-gated;
+- no executable product/runtime surface or package/runtime dependency was introduced;
+- upstream concepts are attributed and Phase A copied no upstream source code or long-form text;
+- the stable historical tag was not moved.
 
-## Active milestone — Phase A skeleton reset implementation
+## Remaining closeout issue
 
-- Active task: `EG-SKILLS-RESTRUCTURE-IMPL-009`.
+The implementation content passed independent Web audit, but the task-branch `CURRENT_STATUS.md` still described the pre-execution state (`AUTHORIZED_FOR_LOCAL_EXECUTION`) and the pre-reset live-tree condition. That stale status would be incorrect if merged.
+
+This is a control-plane closeout issue only. It does not reopen Phase A Skill content, retirement scope, or repository structure.
+
+## Active milestone — control closeout corrective
+
+- Active task: `EG-SKILLS-RESTRUCTURE-CLOSEOUT-010`.
 - State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
 - Authorized branch: `codex/skill-repository-skeleton-reset`.
-- Scope: Phase A only — retire the obsolete live runtime/research structure, establish the full three-Skill repository skeleton, create concise reference/template contracts, and perform `V0` verification.
-- The implementation must execute the accepted plan task-by-task and must not deepen Phase B-E Skill content.
-- No merge is authorized. Local execution must stop after pushing a clean matched task branch in `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+- Scope: reconcile `CURRENT_STATUS.md` and `CURRENT_TASK.md` with the already-audited Phase A facts, run minimal `V0` control checks, push the same task branch, and stop for Web re-audit.
+- No Skill/reference/template/README content change is authorized.
+- No merge is authorized to the local executor.
 
-## Current live-tree condition
+## Remote baseline facts
 
-At authorization time, `main` still contains the retired Python governance runtime, its tests, legacy governance/reality-check/reference-audit trees, and obsolete Doctor/Bootstrap planning artifacts. Their removal is authorized only on the Phase A task branch according to the exact retirement manifest and STOP conditions in the accepted plan.
+- `main` remained `954593b82a666bebf677636ce4f3cf08c07ceddd` at the independent audit.
+- Phase A implementation handoff head before this Web closeout authorization was `d867327de08410056a225fa4c0111d1a53eeb304`.
+- The exact closeout-control start head is supplied in the local execution card and must match the live remote task branch before any edit.
 
-Git history and `v0.1.0` are the historical archive; no live `archive/` copy is required.
-
-## Verification policy for this slice
+## Verification policy
 
 `V0` only:
 
-- exact target tree and exactly three top-level Skills;
-- valid/distinct `SKILL.md` frontmatter;
-- all referenced template/reference paths exist;
-- retired runtime/research trees are absent;
-- no executable product/runtime surface is introduced;
-- upstream/license notes are present;
-- `v0.1.0^{}` still resolves to `738627a0caad330d277f60cfdaff5f153593135e`;
-- task worktree is clean and local/remote task heads match at handoff.
+- only `CURRENT_STATUS.md` and `CURRENT_TASK.md` may change after the Web authorization commit;
+- status/task facts must match the accepted audit result;
+- task branch must remain based on the existing Phase A history with no Skill content changes;
+- `origin/main` and `v0.1.0^{}` must remain unchanged;
+- final task branch must be clean and local/remote matched.
 
 ## Next milestone
 
-Independent Web audit of the remote Phase A task branch. Only after that audit passes may Web authorize merge or a corrective. Phase B (`project-governance` enrichment) is not authorized by this task.
+Independent Web re-audit of the control-only corrective. If that passes, Web may authorize/perform the merge of the Phase A branch and then begin the separate Phase B `project-governance` enrichment task.
