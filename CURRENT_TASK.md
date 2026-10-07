@@ -2,9 +2,9 @@
 
 Task ID: `EG-V01-DOCTOR-FOUNDATION-PLAN-003`
 
-State: `ACTIVE — IMPLEMENTATION PLAN ONLY`
+State: `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`
 
-Mode: `WRITING_PLAN`
+Mode: `PLAN_REVIEW_HANDOFF`
 
 ## Objective
 
@@ -83,17 +83,15 @@ Do not plan or implement:
 - cross-platform support beyond the Phase-1 floor;
 - unrelated repository cleanup/refactor.
 
-## Validation and handoff
+## Plan review handoff
 
-After writing the plan:
-
-1. run the `writing-plans` self-review for spec coverage, step granularity, interface/type consistency, Review Focus coverage, and proportion;
-2. verify changed paths are limited to the plan plus `CURRENT_STATUS.md` / `CURRENT_TASK.md`;
-3. update this task to `WAITING_FOR_IMPLEMENTATION_PLAN_REVIEW`;
-4. commit/push the plan branch;
-5. create a Draft stacked PR targeting `codex/eg-v01-tooling-design` so the plan diff stays separate from PR #2;
-6. verify local/remote HEAD equality and clean worktree;
-7. stop. Do not execute the plan.
+- Plan: `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md`.
+- Planning method: `superpowers:writing-plans`.
+- Self-review completed for spec coverage, step granularity, type/interface consistency, Review Focus coverage, and proportion.
+- The plan has five TDD implementation tasks and thirteen Review Focus cases.
+- Current-task changes are limited to this plan and the two control-plane files; no source, test, fixture, manifest, schema, CLI, or implementation was created.
+- The task branch must be committed/pushed, then a Draft stacked PR must target `codex/eg-v01-tooling-design` so the plan diff stays separate from PR #2.
+- Verify local/remote HEAD equality and a clean worktree, then stop. Do not execute the plan.
 
 ## Required receipt
 

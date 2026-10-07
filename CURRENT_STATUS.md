@@ -20,9 +20,9 @@ Last verified: 2026-10-07
 
 ## Active next task
 
-`EG-V01-DOCTOR-FOUNDATION-PLAN-003` is active on `codex/eg-v01-doctor-foundation-plan` in **implementation-plan-only** mode.
+`EG-V01-DOCTOR-FOUNDATION-PLAN-003` is waiting for implementation-plan review on `codex/eg-v01-doctor-foundation-plan`.
 
-The plan covers only the smallest coherent first implementation slice:
+The plan is at `docs/superpowers/plans/2026-10-07-doctor-foundation-implementation-plan.md` and covers only the smallest coherent first implementation slice:
 
 - shared local repository reader/model needed by Doctor;
 - local read-only Doctor checks for repository identity and control-plane presence/consistency;
@@ -33,4 +33,4 @@ Bootstrap writes, deeper Audit evaluation, AI contribution execution, remote-sta
 
 ## Next milestone
 
-Produce and review the implementation plan before any executable source, dependency manifest, package metadata, schema implementation, or test code is created.
+Review the five-task TDD plan before any executable source, dependency manifest, package metadata, schema implementation, or test code is created. The stacked Draft PR targets `codex/eg-v01-tooling-design`; PR #2 remains design-only and unmerged.
