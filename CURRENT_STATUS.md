@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — Phase D Incident Doctor enrichment passed independent Web audit and was fast-forward merged to `main`. A read-only check of `Lost0rz/RemoteOrbit` was then performed to select the first real-project validation target.
+Last verified: 2026-10-07 — Phase D `incident-doctor` enrichment passed independent Web audit and was fast-forward merged to `main`. Phase E has entered a bounded, read-only real-project validation pilot against RemoteOrbit.
 
 ## Repository identity
 
@@ -17,28 +17,36 @@ Last verified: 2026-10-07 — Phase D Incident Doctor enrichment passed independ
 - Phase D `incident-doctor` enrichment: accepted and merged at `ed9cab436f482648288d8fd50553e629f7a1c5a2`.
 - Exactly three reusable Skills remain live: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Active milestone — Phase E real-project pilot design
+## Active milestone — Phase E RemoteOrbit read-only validation
 
-- Active task: `EG-REMOTEORBIT-PILOT-DESIGN-017`.
-- State: `WAITING_FOR_USER_DESIGN_REVIEW`.
-- Mode: `BOUNDED_INTEGRATION_DESIGN`.
-- Candidate target repository: `Lost0rz/RemoteOrbit`.
-- Read-only target baseline observed: `main = 5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
-- RemoteOrbit already has substantial `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` controls, but no `DOMAIN_MAP` was found on the default branch.
-- RemoteOrbit currently has an active runtime-evidence recovery task; its control files forbid unrelated source/control mutation until that task reaches a safe transition.
+- Active task: `EG-REMOTEORBIT-PILOT-READONLY-018`.
+- State: `ACTIVE_READ_ONLY_VALIDATION`.
+- Mode: `BOUNDED_INTEGRATION_VALIDATION`.
+- Target repository: `Lost0rz/RemoteOrbit`.
+- Target remote baseline at authorization: `5b9c48ace92818e15850eaa3f21399b1cc2f4031`.
+- RemoteOrbit is under an active incident/recovery task; this pilot must not mutate RemoteOrbit source, controls, branches, worktrees, runtime, diagnostics, settings, or evidence.
 
-## Phase E design boundary
+## Validation objective
 
-The first pilot should validate the three Skills against a real complex repository without disrupting its live incident work:
+Use the three accepted Skills as they currently exist to determine whether they help a fresh AI reason about a real project without creating duplicate authority or governance overhead.
 
-1. inspect RemoteOrbit read-only against Project Governance, Domain Navigation, and Incident Doctor;
-2. identify what existing RemoteOrbit governance already satisfies and what is missing or overly heavy;
-3. derive a minimal target-specific Domain Map and Incident-record structure from verified evidence only;
-4. define an exact later adoption delta for RemoteOrbit, but do not mutate RemoteOrbit while its current incident task forbids that transition;
-5. only after validation may a reusable example be added under `examples/`, clearly tied to the checked target revision/context.
+The pilot should assess:
 
-No new Skill, runtime, installer, daemon, database, index, or automatic enforcement is implied.
+- whether RemoteOrbit's three-file control plane already satisfies the project-governance contract and where it is heavier or less reusable than necessary;
+- whether the active task can be routed to a small set of semantic Domains, authorities, source entry points, symbols, tests, and evidence without a whole-repository survey;
+- whether the active incident can be represented using the Incident Doctor evidence gate, evidence taxonomy, fresh-incident identity, falsifiable hypotheses, and root-cause status;
+- whether any accepted Skill text is ambiguous, impractical, redundant, or insufficient when applied to a real high-complexity repository;
+- what a minimal future RemoteOrbit adoption would change only after its own control plane reaches a safe transition.
+
+## Hard boundaries
+
+- Read-only against RemoteOrbit.
+- No RemoteOrbit file edits, branch/ref moves, PR mutation, runtime action, journal maintenance, installation, rebuild, diagnostics mutation, input-source change, or hardware gesture.
+- Do not interrupt or reinterpret RemoteOrbit's current task authority.
+- Do not modify the three reusable Skills during the validation itself.
+- Findings are validation evidence, not authorization to adopt them.
+- Any later adoption requires a separate RemoteOrbit control-plane transition and explicit authorization.
 
 ## Next milestone
 
-User review of the bounded Phase E pilot design in chat. No RemoteOrbit mutation is authorized by this design task.
+Complete the read-only validation and report: governance fit, Domain-routing fit, Incident-Doctor fit, concrete friction/gaps, and a minimal adoption recommendation. Do not implement adoption in this task.
