@@ -1,89 +1,63 @@
-# CURRENT TASK — Full Three-Skill Quality Audit
+# CURRENT TASK — Project Governance Audit Corrective
 
-Task ID: `EG-FULL-SKILL-AUDIT-022`
+Task ID: `EG-PROJECT-GOVERNANCE-AUDIT-CORRECTIVE-023`
 
-State: `AUTHORIZED_FOR_READONLY_AUDIT`
+State: `AUTHORIZED_FOR_BOUNDED_CORRECTIVE`
 
-Mode: `MULTI_PASS_READONLY_AUDIT`
+Mode: `BOUNDED_DOCUMENTATION_CORRECTIVE`
 
 ## Objective
 
-Perform a complete post-freeze audit of the Engineering-Governance repository and all three reusable Skills before any project adoption. The audit must identify structural, content, design, authority, template, progressive-disclosure, routing, redundancy, ambiguity, and cross-Skill interaction problems. Re-audit each Skill from more than one angle before deciding it is clean.
+Correct only the Project Governance issues established by `EG-FULL-SKILL-AUDIT-022`, without expanding the three-Skill architecture or adding new governance infrastructure.
 
 ## Authority and baseline
 
-- User authorization: full project audit, each Skill repeatedly audited; fix justified problems before adoption.
-- Control start head before this task: `d1f354a4452b35e0ec9701c8adcf57b5eb1a4171`.
-- Frozen reusable comparison baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18` (`v0.2.0` version label).
-- Historical `v0.1.0^{}`: `738627a0caad330d277f60cfdaff5f153593135e`.
+- Audit control head before this authorization: `67062a389ea6b26c86e91435612169f60240346a`.
+- Frozen reusable comparison baseline: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
+- Planned branch: `codex/project-governance-audit-corrective`.
 
-## Read-only audit scope
+## Authorized reusable files
 
-Audit:
+- `skills/project-governance/SKILL.md`
+- `skills/project-governance/references/development-flow.md`
+- `skills/project-governance/assets/templates/AGENTS.md`
+- `skills/project-governance/assets/templates/CURRENT_TASK.md`
 
-- repository root structure and root guidance;
-- `skills/project-governance/**`;
-- `skills/domain-navigation/**`;
-- `skills/incident-doctor/**`;
-- references/templates/scripts README boundaries;
-- links/frontmatter/progressive disclosure;
-- ownership/authority semantics;
-- Skill trigger overlap and routing;
-- duplication, contradictions, missing decision rules, over-prescription, and YAGNI violations;
-- consistency with the two real-project validation findings already accepted.
+Root `CURRENT_STATUS.md` and `CURRENT_TASK.md` may change only for handoff/closeout.
 
-## Required audit passes
+## Required corrective A — optional semantic-navigation integration
 
-### Pass A — repository structure
+Remove assumptions that every target repository already has or must create a separate Domain Map. Project Governance should route through existing accepted business/product/domain/capability authorities and/or an optional derived navigation projection. When Domain/authority/code location is unclear, call Domain Navigation.
 
-Check repository purpose, root controls, root README/AGENTS, Skill tree, references, examples, maintainer-only docs, and whether the active tree contains stale or misleading material.
+Do not duplicate the Domain Navigation contract or create a new map requirement.
 
-### Pass B — project-governance
+## Required corrective B — non-destructive execution baseline
 
-Inspect trigger/boundary clarity, three-file ownership, normal development flow, scope-change/re-authorization semantics, business-first behavior, V0–V3 selection, STOP/handoff/acceptance boundaries, template/reference consistency, and risk of bureaucracy or duplicate authority.
+For source-controlled projects, make the normal workflow state clearly that an executor verifies the task-relevant repository/ref/revision and current workspace state before state-changing work; unknown staged/unstaged/untracked work or local-only commits must not be reset, stashed, deleted, overwritten, or force-cleaned merely to match an execution card. If authoritative baseline/control drift materially affects the task, stop and reconcile rather than improvising.
 
-### Pass C — domain-navigation
+Keep this conditional and lightweight; do not prescribe Git/worktrees to projects that do not use them.
 
-Inspect Domain semantics, semantic-authority coexistence, task-to-source routing, evidence/freshness, Domain Map versus existing maps versus Repo Map, optional projection behavior, template usability, whole-repository-scan avoidance, and scripts boundary.
+## Out of scope
 
-### Pass D — incident-doctor
+- changes to `domain-navigation` or `incident-doctor`;
+- new files or new Skill;
+- scripts/runtime/dependencies;
+- target-project adoption;
+- broad branch-management framework;
+- changing verification tiers or the three-file ownership model.
 
-Inspect trigger/non-trigger boundary, evidence sufficiency, evidence taxonomy, minimum decision-linked probe, fresh incident/runtime identity, falsification, root-cause thresholds, minimum fix/regression verification, probe lifecycle, template usability, and risk of over-diagnosis.
+## Verification
 
-### Pass E — cross-Skill audit
+`V0` only:
 
-Check routing and handoffs, ownership overlap, terminology consistency, circular dependencies, duplicated contracts, missing transitions, and whether normal product delivery remains the default.
-
-## Finding classification
-
-- `BLOCKING` — unsafe or contradictory contract that should be fixed before adoption.
-- `IMPORTANT` — likely to cause repeated agent error, ambiguity, needless work, or authority drift.
-- `MINOR` — cheap clarity/format/usability improvement with no scope expansion.
-- `NO_CHANGE` — observed concern is already handled adequately.
-
-For each real finding record exact files, exact problem, agent-behavior impact, evidence/cross-file contradiction, smallest corrective, and whether it changes design or only clarifies accepted design.
-
-## Modification boundary
-
-This Task ID authorizes read-only audit only. It does not authorize reusable Skill edits. If findings justify changes, create a new bounded corrective Task ID for one Skill or one tightly coupled cross-Skill issue at a time. Re-audit after each corrective. Do not batch speculative cleanup.
-
-## Verification level
-
-`V0 — documentation / Skill contract audit`.
-
-## Stop conditions
-
-Stop and report if `main` drifts in a way that affects audited files; frozen baseline identity cannot be verified; a referenced source cannot be read; a proposed correction requires new tooling/runtime/dependency/Skill architecture; or target-project mutation would be needed to establish the finding.
-
-## Forbidden actions
-
-- modify reusable Skill content under this Task ID;
-- modify target projects;
-- create a fourth Skill;
-- add executable helpers, runtime infrastructure, databases, indexes, daemons, background services, installers, or automatic remediation;
-- treat stylistic preference alone as a design defect;
-- start adoption before audit/corrective completion.
+- changed reusable paths exactly the four files above;
+- frontmatter and relative links remain valid;
+- no new mandatory Domain Map wording remains in those files;
+- non-destructive workspace/baseline rule is conditional on the target's source-control workflow and does not create a new tool dependency;
+- sibling Skills unchanged;
+- `git diff --check` equivalent content hygiene;
+- final branch ready for independent re-audit before merge.
 
 ## Current stop point
 
-`READONLY_AUDIT_AUTHORIZED`
+`AUTHORIZED_FOR_BOUNDED_CORRECTIVE`
