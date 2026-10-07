@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -40,3 +41,9 @@ def initialize_temporary_git_repository(
             text=True,
         )
     return root.resolve()
+
+
+def materialize_doctor_fixture(name: str, destination: Path) -> Path:
+    source = Path(__file__).parent / "fixtures" / "doctor" / name
+    shutil.copytree(source, destination, dirs_exist_ok=True)
+    return destination.resolve()

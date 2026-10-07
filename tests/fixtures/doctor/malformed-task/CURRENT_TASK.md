@@ -1,0 +1,3 @@
+# Synthetic task
+
+State: `ACTIVE`
