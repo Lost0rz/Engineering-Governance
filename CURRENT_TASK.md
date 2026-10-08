@@ -2,7 +2,7 @@
 
 Task ID: `EG-CODEX-PLUGIN-PACKAGING-033`
 
-State: `AUTHORIZED_FOR_LOCAL_PACKAGING_AND_INSTALL_TEST`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `CODEX_PLUGIN_PACKAGING`
 
@@ -76,6 +76,19 @@ The RemoteOrbit validation is read-only. No RemoteOrbit source, control, branch,
 `V0 + local plugin discovery/install acceptance`.
 
 Reason: repository changes are packaging metadata only, but successful local discovery/install cannot be established by file inspection alone.
+
+## Executor evidence and current stop point
+
+- Freshness reconciliation fetched canonical `origin` and fast-forwarded local `main` from `e4e3ed975b46617c29b9bf83346a835bf0be8420` to remote control HEAD `b4fac9370cc54724d4083f9f1e94d884261ad4e4` before creating the task branch.
+- Packaging commit: `c53dc19f1ac8bf968b331b659f00e01d8003ca5b`, pushed to `codex/engineering-governance-plugin-packaging-v1` and verified equal to its remote ref before this handoff update.
+- Manifest: root `plugin.json`; `engineering-governance` version `0.1.0`, display name `Engineering Governance`. The version is the plugin package version, not a claim about a Git tag.
+- Manifest JSON and required fields parsed successfully; `git diff --check` passed. No `mcp.json` or hooks were added.
+- All 22 tracked Skill files matched byte-for-byte against baseline `2d3274735449c4164dff5859d7a4dd74ddef8f39` (combined tree digest `e97667e2608accc83bacca528c9ceae30c206db505de48de5c6817c00fe861fe`).
+- Personal marketplace: `/Users/ox_miles/.agents/plugins/marketplace.json`; plugin source copy: `/Users/ox_miles/.codex/plugins/engineering-governance`; installed cache: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.1.0`.
+- The marketplace file did not exist before this task. Codex CLI `0.160.0` listed the plugin as available, then installed and enabled it without an MCP server or authentication prompt. Existing marketplace definitions and all pre-existing plugin entries in `~/.codex/config.toml` remained present.
+- Fresh ephemeral Codex CLI sessions directly loaded all three Skills from the installed cache. A RemoteOrbit control/routing/incident trigger pass used GitHub-read-only contents pinned to `Lost0rz/RemoteOrbit` branch HEAD `c90edbf73ad9b0642fa344734571c0e806c0eb73`; it reported task `RO-DUAL-RECEIVER-MOMENTARY-ROUTING-019` waiting for user early hardware acceptance, routed to focused source/test files, created no Domain Map, and found no new qualifying incident.
+- No RemoteOrbit files, controls, branches, PRs, worktrees, runtime, settings, diagnostic behavior, or installed app were changed. No local RemoteOrbit checkout/runtime was available; runtime identity was not independently verified.
+- Stop here for independent Web audit. Do not merge or publish.
 
 Required repository verification:
 
