@@ -1,112 +1,78 @@
-# CURRENT TASK — InvestDesk Adoption Gap Audit
+# CURRENT TASK — InvestDesk Minimal Bounded Adoption
 
-Task ID: `EG-INVESTDESK-ADOPTION-GAP-AUDIT-029`
+Task ID: `EG-INVESTDESK-BOUNDED-ADOPTION-030`
 
-State: `WAITING_FOR_USER_ADOPTION_DESIGN_REVIEW`
+State: `ACTIVE_BOUNDED_ADOPTION`
 
-Mode: `READ_ONLY_TARGET_ADOPTION_AUDIT`
+Mode: `TARGET_GOVERNANCE_ADOPTION_ONLY`
 
 ## Objective
 
-Complete the first full adoption-gap audit of the accepted Engineering-Governance three-Skill baseline against `Lost0rz/InvestDesk`, without modifying InvestDesk, and hand off the smallest evidence-backed bounded-adoption design for user review.
+Apply the user-approved minimal Engineering-Governance adoption to `Lost0rz/InvestDesk` without changing product/business behavior. Preserve existing InvestDesk authorities and make only the bounded Project Governance alignment proven necessary by the read-only gap audit.
 
-## Verified target baseline
+## Authority and verified start baselines
 
+- Engineering-Governance accepted Skill/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
+- Engineering-Governance task start head: `1bbef2a9988b6b200f464c8460ad80228bda4687`.
 - Target repository: `Lost0rz/InvestDesk`.
-- Target `main` at audit start: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- Target `main` at audit end: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- Open PRs observed: none.
-- Remote branches observed: `main` only.
-- Target mutation by this audit: none.
+- Target verified `main` start SHA: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
+- User-approved design: minimal adoption only; no new governance/domain/incident artifacts.
 
-## Project Governance findings
+## Affected governance domains
 
-Keep the existing InvestDesk control plane and project-specific policies. It already has strong three-file authority, non-destructive worktree lifecycle, Mac mini/Air acceptance, and README entry routing.
+- Project Governance / control-plane semantics.
+- Task metadata and handoff structure.
 
-Bounded adoption recommendations:
+Domain Navigation is validated by existing InvestDesk semantic authorities and requires no new artifact. Incident Doctor remains inactive.
 
-1. In `AGENTS.md`, make baseline/PR/worktree checks explicitly task-relevant/conditional instead of requiring an active PR/worktree fact when a task has not created one yet; preserve STOP for unexplained drift or unknown unique work where destructive assumptions would be required.
-2. In `AGENTS.md`, state explicitly that `CURRENT_STATUS.md` is a fact snapshot, not an authorization override. If a new verified fact changes a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, reconcile/re-authorize `CURRENT_TASK.md` before state-changing work.
-3. For the next safe task transition, use stable Task ID, affected domains, verified start baseline, risk + verification rationale, and consolidated STOP conditions in `CURRENT_TASK.md`. Do not interrupt the current MVP-D planning gate merely to reformat it unless adoption is intentionally made the active task.
+## Allowed target changes
 
-No `CURRENT_STATUS.md` structural rewrite is required.
+On one bounded adoption branch only:
 
-## Domain Navigation findings
+1. `CURRENT_STATUS.md` and `CURRENT_TASK.md` to establish and later hand off the adoption task;
+2. `AGENTS.md` only for the two approved governance corrections:
+   - make PR/branch/worktree verification conditional on task relevance while preserving protection against unexplained drift and unknown unique work;
+   - state explicitly that `CURRENT_STATUS.md` is factual state, never an authorization override, and that a status fact invalidating a task-owned prerequisite/acceptance/STOP/allowed-side-effect/authorization boundary requires `CURRENT_TASK.md` reconciliation before state-changing work.
+3. Use the adoption task's own `CURRENT_TASK.md` to demonstrate stable Task ID, affected domains, exact start baseline, risk/verification rationale, and consolidated STOP conditions.
 
-Existing semantic authorities are sufficient and must be preserved:
+## Forbidden target changes
 
-- `docs/product/BUSINESS_CAPABILITY_MAP.md`
-- `docs/product/DOMAIN_MODEL_MAP.md`
-- `docs/product/CORE_BUSINESS_OBJECTS.md`
-- relevant user-journey/product contracts
+- product source or tests;
+- schema, migration, persistence, API, frontend behavior, dependencies, CI behavior, or business contracts;
+- MVP-D Decision↔Transaction business semantics;
+- `DOMAIN_MAP.md`, `DOMAIN.md`, `INCIDENT.md`;
+- new probes, telemetry, observability expansion, navigation scripts/index/database/daemon/runtime;
+- unrelated documentation cleanup or refactor;
+- merge to target `main` without explicit user merge authorization.
 
-For the current MVP-D task, focused routing succeeds without a new semantic map:
+## Risk and verification rationale
 
-- Decision authority/source: `apps/api/src/investdesk_api/application/decision.py` → `DecisionService`
-- Transaction product/ledger: `application/trade_transaction.py` → `TradeTransactionService`; `application/transaction_ledger.py`
-- Position: `application/position_reconstruction.py` → `PositionQuantityReconstructionService`
-- Workspace composition: `application/asset_workspace.py` → `AssetWorkspaceReadService`
-- backend tests: `test_decisions.py`, `test_trade_transactions.py`, `test_transactions.py`, `test_position_reconstruction.py`, `test_asset_workspace.py`
-- frontend/API routing evidence: `apps/web/src/api/investdesk.ts`, `App.decision.test.tsx`, `App.trade-transactions.test.tsx`, `App.tsx`
+Risk: low but authority-sensitive. The change is documentation/control-plane only, but incorrect wording could block normal development or create competing authorization semantics.
 
-`docs/observability/BOUNDARY_MAP.md` is a specialized diagnostic/runtime boundary aid, not general product/domain truth.
+Verification level: `V0` plus independent remote diff audit. This is sufficient because no executable/product behavior is authorized. Verify exact paths, branch ancestry, target-main freshness, absence of product/test changes, and semantic compliance with the approved design.
 
-Initial adoption recommendation: **do not add `DOMAIN_MAP.md`, `DOMAIN.md`, or a separate navigation projection yet**. Use the real-task trial to measure whether repeated routing friction actually exists; add a derived navigation projection later only with evidence of durable value.
+## Consolidated STOP conditions
 
-## Incident Doctor trigger decision
+STOP without target mutation beyond already-authorized control establishment if:
 
-`DO_NOT_TRIGGER`.
+- target `main` differs from the verified start SHA before branch creation and cannot be coherently reconciled;
+- existing target controls reveal a conflicting higher-authority task or changed business objective;
+- the necessary change would require product/test/schema/runtime mutation;
+- an additional governance/domain/incident artifact appears necessary;
+- unexpected branch/PR/worktree authority is discovered that makes the bounded remote edit unsafe;
+- the final diff contains anything outside `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
 
-Current InvestDesk work is a product contract/authority planning gate, not a real failure with insufficient evidence. Existing D1-D5 diagnostics are accepted/closed. Do not manufacture an incident or add probes/telemetry/diagnostic infrastructure for adoption.
+## Acceptance criteria
 
-## Adoption proposal
+- one bounded target branch from the verified target baseline;
+- target control plane explicitly authorizes adoption before `AGENTS.md` changes;
+- only the approved two `AGENTS.md` corrections are made;
+- no new governance/domain/incident artifact;
+- no product/test/schema/dependency/business-contract change;
+- target branch independently audited against unchanged target `main`;
+- adoption branch stops at `WAITING_FOR_INDEPENDENT_WEB_AUDIT` or audited equivalent;
+- no merge without explicit user authorization.
 
-### KEEP
+## Current stop point
 
-- existing `AGENTS.md` project-specific rules except for the bounded wording corrections above;
-- existing `CURRENT_STATUS.md` role/content model;
-- current business/domain authorities under `docs/product/`;
-- README control-plane/product-document routing;
-- current worktree/branch lifecycle and Mac mini/Air interactive acceptance policy;
-- existing closed observability/diagnostic foundation.
-
-### MODIFY
-
-- `AGENTS.md`: bounded Project Governance alignment only;
-- `CURRENT_TASK.md`: adopt richer task metadata at the next safe task transition (or in a deliberately authorized adoption transition), without changing the current MVP-D business objective/semantics.
-
-### ADD
-
-- none in the initial adoption.
-
-### DO NOT ADD
-
-- new semantic `DOMAIN_MAP.md` / `DOMAIN.md`;
-- `INCIDENT.md` without a real Doctor-triggering incident;
-- new probes, telemetry, diagnostic platform/runtime;
-- Repo Map/index/vector DB/daemon/navigation script;
-- installer/bootstrap/enforcement runtime;
-- duplicate business/domain authority.
-
-## Real-task trial acceptance criteria
-
-After bounded adoption, use the next real InvestDesk business task and verify:
-
-1. **Task clarity:** a new executor can identify objective, authority, affected domains, baseline, scope, acceptance, verification depth, and STOP conditions without chat history.
-2. **Navigation efficiency:** from the task, the executor reaches the relevant semantic authorities and focused source/symbol/tests without a broad whole-repository survey; no duplicate domain truth is created.
-3. **Business-first behavior:** most work proceeds on the actual product task; governance does not become a parallel workstream.
-4. **STOP quality:** STOP occurs only for material authority/baseline/scope/safety problems, not because optional PR/worktree facts are absent before they exist.
-5. **Doctor routing:** ordinary design/test failures with sufficient evidence are handled normally; Incident Doctor triggers only for a real decision-blocking evidence gap.
-6. **Verification proportionality:** the task uses the lightest V0–V3 level that establishes the result safely, including Air-side LAN acceptance when an interactive web surface changes.
-7. **Closeout:** task state, accepted baseline, PR/branch/worktree lifecycle, and next milestone are accurately synchronized.
-
-## Unresolved unknowns
-
-- Local Mac mini worktree state was not independently visible to this Web audit; remote truth shows only `main` and no open PRs.
-- Whether a persistent derived navigation projection is worthwhile remains intentionally unresolved until a real task demonstrates repeated navigation friction.
-
-## Stop point
-
-`WAITING_FOR_USER_ADOPTION_DESIGN_REVIEW`
-
-No InvestDesk mutation is authorized under this Task ID.
+`ACTIVE_BOUNDED_ADOPTION`
