@@ -1,157 +1,120 @@
-# CURRENT TASK — Domain Navigation Authority Gate Corrective
+# CURRENT TASK — Project Governance Structure & Authority Principles
 
-Task ID: `EG-DOMAIN-NAV-AUTHORITY-GATE-035`
+Task ID: `EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036`
 
-State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
+State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`
 
-Mode: `REUSABLE_SKILL_CORRECTIVE`
+Mode: `REUSABLE_SKILL_ENHANCEMENT`
 
 ## Objective
 
-Fix one repeated cross-project Domain Navigation defect: the Skill must not infer or treat an active/current task as authoritative when task/control freshness is materially unresolved.
+Add two accepted reusable development principles to `project-governance` without turning the Skill into a generic style checker or broad refactoring mandate:
 
-Issue ID:
+1. single canonical authority per fact/state/behavior class;
+2. domain-coherent code structure with anti-redundancy and responsibility-based decomposition.
 
-`DN-001 — do not route from stale or unverified task authority`
+The principles must guide normal planning, implementation, and review while preserving business-first delivery and proportional scope.
 
-## Verified evidence basis
+## Authoritative baseline
 
-### RemoteOrbit reproduction
+- Repository: `Lost0rz/Engineering-Governance`.
+- Accepted DN-001 merge/main HEAD before this control transition: `b139811812f73d32927287a0bfbae2b5c6b93afa`.
+- Existing top-level Skills remain exactly: `project-governance`, `domain-navigation`, `incident-doctor`.
+- This task is a new Project Governance enhancement, not a continuation of DN-001.
 
-A read-only Domain Navigation trial could not verify the current project control authority from the local checkout, then inferred a current `non-seize HID audit / diagnostic monitor mode` task from a stale branch name and local source state. That inference was not the live remote task.
+## Required principle A — Single Canonical Authority
 
-### FloatTabs reproduction
+The reusable contract must make the following semantics explicit:
 
-A second unprompted read-only Domain Navigation trial explicitly observed:
+- For each fact, state, policy, mapping, lifecycle, business rule, or behavior contract, establish one canonical authority/owner.
+- Multiple consumers, adapters, CLI/UI surfaces, read models, projections, caches, or diagnostics may coexist, but they must derive from or delegate to the canonical authority rather than become competing sources of truth.
+- Before adding a new backend/owner/writer for an existing state or behavior class, discover the existing authority and reuse, extend, or explicitly replace it rather than creating a parallel authority.
+- Multiple independent writers for the same state class are an architectural risk and require reconciliation rather than silent coexistence.
+- Temporary migration coexistence is allowed only when the primary authority, synchronization direction, cutover condition, and retirement boundary are explicit.
+- A cache, projection, mirror, UI state, diagnostic view, or compatibility adapter does not become authority merely because it stores or displays the same data.
+- "One authority" is per fact/state/behavior class, not one authority for the entire application.
 
-- local HEAD `0a3588bf6e4675d897aa02b336c1349ef090b692`;
-- local cached upstream relation ahead 1 / behind 25;
-- remote refs were not refreshed;
-- local controls represented an older topology-probe phase.
+This is a hard architecture principle, not merely a style preference.
 
-Despite that unresolved freshness, it continued to route the old local topology-probe task to source, symbols, and tests. Independent live evidence showed remote `main` at `569e43783a98c8caca681ce8139ec87dd4fa276e`, PR #115 already merged, and the remote controls themselves lagging the completed merge state. The correct current-task navigation action was therefore to stop and return to Project Governance reconciliation.
+## Required principle B — Domain-coherent structure and anti-redundancy
 
-These two independent project observations satisfy the repository rule for a repeated reusable Skill corrective.
+The reusable contract must make the following semantics explicit:
 
-## Authorized change scope
+- Keep modules/files cohesive around a clear Domain/capability/responsibility and reason to change.
+- Avoid accidental duplicate business behavior, duplicate state ownership, duplicate parsers/adapters/backends/helpers when an accepted semantic implementation already exists.
+- Prefer reuse of semantics and invariants, not abstraction merely because syntax looks similar.
+- Code duplication alone is a signal, not automatic justification for a shared abstraction. Extract shared code only when responsibility, lifecycle, invariants, and reason-to-change are materially the same.
+- Large files are a structural signal, not a hard line-count violation. Split when a file/module mixes distinct capabilities, authorities, orchestration, I/O, UI, persistence, or otherwise accumulates multiple independent reasons to change.
+- Do not introduce arbitrary line-count thresholds as a universal rule.
+- Do not perform broad opportunistic cleanup simply because duplication or a large file is visible. Refactor only as far as the authorized task needs for correctness, maintainability, safe extension, or clear ownership.
 
-Primary files:
+## Intended placement
 
-- `skills/domain-navigation/SKILL.md`
-- `skills/domain-navigation/references/mapping-workflow.md`
+Preferred minimal structure:
 
-`skills/domain-navigation/references/evidence-rules.md` may be changed only if one concise supporting rule is necessary to make the entry gate unambiguous. Do not expand other Domain Navigation material merely for consistency prose.
+- add `skills/project-governance/references/code-structure.md` as the detailed reusable reference;
+- update `skills/project-governance/SKILL.md` to load/reference it when planning or implementing source changes;
+- update `skills/project-governance/references/development-flow.md` with the smallest implementation/review gate needed to apply the principles.
 
-After the corrective behavior is independently validated on the task branch, `plugin.json` may be bumped from package version `0.1.0` to `0.1.1` as release metadata preparation. Do not create a Release or tag under this task.
+Do not modify templates merely for symmetry. `skills/project-governance/assets/templates/AGENTS.md` already says to preserve one owner per fact class; change it only if a concrete semantic gap remains after the primary reference is written and explain why.
 
-Do not modify:
+## Not authorized
 
-- `project-governance` Skill content;
-- `incident-doctor` Skill content;
-- business repositories;
-- runtime, MCP, hooks, telemetry, indexing, Repo Map machinery, daemons, databases, installers, or diagnostics.
+Do not:
 
-## Required semantic rule
+- modify `domain-navigation` or `incident-doctor` Skill content;
+- create a fourth Skill;
+- add linters, static analyzers, file-size enforcement, telemetry, daemons, databases, runtime checks, Repo Map machinery, or automatic remediation;
+- impose universal file line-count thresholds;
+- rewrite unrelated Project Governance references/templates for consistency prose;
+- mutate any business repository;
+- bump `plugin.json` version;
+- create a Git tag, GitHub Release, or release ZIP;
+- merge the task branch.
 
-For **current-task navigation**:
+## Verification
 
-1. Establish the task/control authority needed for the requested routing decision before treating any task as current.
-2. A local `CURRENT_TASK.md` or similar control file is not automatically current authority when repository freshness is materially unresolved.
-3. Do not infer current active task or executable authority from:
-   - branch names;
-   - dirty/staged/untracked files;
-   - local code shape;
-   - stale or conflicting control files;
-   - historical documents;
-   - chat context or memory.
-4. If current task/control authority is unavailable, materially stale, contradictory, or cannot be verified enough for the requested current-task route, stop current-task navigation and hand back to Project Governance reconciliation. Do not continue source/symbol/test routing under a guessed task.
-5. This is not a generic requirement to fetch every remote or force perfect freshness. The gate applies only when unresolved freshness/authority is material to the requested navigation decision.
+Use `V0 + focused contract review`.
 
-## Explicit bounded-navigation exception
+Required checks:
 
-The corrective must preserve useful read-only navigation when the user explicitly scopes a historical or fixed snapshot, for example:
+1. exact changed-path scope is minimal;
+2. `git diff --check` PASS;
+3. Project Governance clearly distinguishes one authority **per fact/state/behavior class** from one authority for the whole application;
+4. consumers/adapters/projections/caches remain allowed but are explicitly non-competing/derived;
+5. migration coexistence has explicit primary/cutover/retirement semantics;
+6. code structure guidance is responsibility/domain based rather than a hard line-count rule;
+7. anti-redundancy guidance does not create premature abstraction pressure;
+8. business-first rule remains intact: no opportunistic refactor outside task relevance;
+9. `domain-navigation` and `incident-doctor` trees are unchanged;
+10. `plugin.json` remains version `0.1.0`;
+11. no business repository is modified.
 
-- “analyze commit X”;
-- “map this historical branch”;
-- “locate the domain for this file/symbol without claiming it is the current task.”
+A lightweight scenario review should cover:
 
-In that case, navigation may proceed against the specified snapshot, but the output must clearly classify it as bounded/historical snapshot navigation and must not present it as current task authority or authorization.
-
-## Regression acceptance
-
-Validate four cases with the smallest sufficient evidence. Do not create new telemetry or a test harness merely for this corrective.
-
-### Case A — RemoteOrbit stale/unavailable current authority
-
-Expected:
-
-`STOP_CURRENT_TASK_NAVIGATION`
-
-The Skill must not infer the current task from the historical branch/source state.
-
-### Case B — FloatTabs stale checkout
-
-Given the reproduced stale-local condition and unresolved remote/control drift, expected:
-
-`STOP_CURRENT_TASK_NAVIGATION`
-
-The Skill must not route the old topology-probe work as the current task.
-
-### Case C — fresh verified current task
-
-Given a project/snapshot where the current task authority is sufficiently verified, navigation must continue normally:
-
-`task -> affected capability -> semantic authority -> source -> key symbols -> focused tests`
-
-The new gate must not create a blanket STOP or require unnecessary repository-wide freshness work.
-
-### Case D — explicit historical snapshot
-
-Given an explicit bounded request to navigate a named historical commit/branch/file without claiming current-task authority, navigation must proceed and clearly mark the result as historical/bounded snapshot navigation.
-
-## Verification level
-
-`V0 + focused Skill behavior regression`.
-
-Reason: the change is reusable Skill contract text and routing behavior, not product/runtime code. Verify exact diff/scope plus fresh-session behavior for the four cases above. Do not run unrelated business-project test suites.
+- two UI/CLI consumers sharing one backend authority -> allowed;
+- two independent writers for the same session/mapping state -> reject/reconcile;
+- a 1200-line cohesive generated/schema/table file -> not automatically split;
+- a 500-line file mixing UI + persistence + orchestration + multiple authorities -> structural split candidate;
+- two syntactically similar blocks with different lifecycle/reasons-to-change -> do not force abstraction;
+- task encounters unrelated large/duplicate code -> report if relevant, do not expand scope automatically.
 
 ## Branch/workspace
 
 Use a dedicated branch such as:
 
-`codex/domain-navigation-authority-gate-v1`
+`codex/project-governance-structure-authority-v1`
 
 Before modification:
 
 1. fetch canonical remote;
-2. require local base to safely fast-forward/reconcile to live `origin/main` containing this task;
-3. preserve unknown local work;
-4. STOP rather than reset/stash/delete unknown work or improvise around baseline divergence.
+2. require local base to safely reconcile/fast-forward to live `origin/main` containing this task;
+3. preserve unknown staged/unstaged/untracked/local-only work;
+4. STOP rather than reset/stash/delete/overwrite unknown work.
 
-## Acceptance criteria
+## Acceptance
 
-PASS only if:
-
-- the change is minimal and limited to the Domain Navigation authority-entry defect;
-- Cases A and B stop current-task navigation without guessing;
-- Case C continues normal fresh navigation without false STOP;
-- Case D continues explicit historical/snapshot navigation without pretending it is current authority;
-- Project Governance and Incident Doctor Skill trees are unchanged;
-- no new runtime/infrastructure/diagnostic machinery is introduced;
-- any package version bump is only `0.1.0 -> 0.1.1` and no tag/release is created;
-- final task branch is clean and pushed at an exact remote-matching HEAD.
-
-## STOP conditions
-
-STOP without destructive correction if:
-
-- local unique/unknown work prevents safe baseline reconciliation;
-- the corrective appears to require broad Project Governance or Incident Doctor changes;
-- the proposed gate causes blanket current-task STOPs where authority is already sufficiently verified;
-- the historical/snapshot exception cannot remain clearly separated from current-task authority;
-- validation requires mutating RemoteOrbit, FloatTabs, or another business project.
-
-## Handoff
+PASS only if the two principles are explicit, reusable, minimally placed, and do not create a new enforcement platform or broad-refactor mandate.
 
 Stop at:
 
@@ -160,7 +123,7 @@ Stop at:
 Return:
 
 ```text
-TASK_ID: EG-DOMAIN-NAV-AUTHORITY-GATE-035
+TASK_ID: EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036
 REMOTE_CONTROL_HEAD:
 LOCAL_BASELINE_AFTER_SYNC:
 TASK_BRANCH:
@@ -168,29 +131,23 @@ FINAL_BRANCH_HEAD:
 REMOTE_BRANCH_HEAD:
 LOCAL_REMOTE_MATCH:
 CHANGED_PATHS:
-DN001_RULE_ADDED: YES/NO
-CURRENT_TASK_AUTHORITY_GATE: PASS/STOP
-REMOTEORBIT_REGRESSION: PASS/STOP
-FLOATTABS_REGRESSION: PASS/STOP
-FRESH_AUTHORITY_CASE: PASS/STOP
-HISTORICAL_SNAPSHOT_CASE: PASS/STOP
-PROJECT_GOVERNANCE_UNCHANGED: YES/NO
+CODE_STRUCTURE_REFERENCE_ADDED: YES/NO
+SINGLE_AUTHORITY_RULE: PASS/STOP
+AUTHORITY_PER_CLASS_NOT_GLOBAL_SINGLETON: PASS/STOP
+CONSUMER_DERIVATION_RULE: PASS/STOP
+MIGRATION_BOUNDARY_RULE: PASS/STOP
+DOMAIN_COHESION_RULE: PASS/STOP
+NO_HARD_LINE_THRESHOLD: PASS/STOP
+NO_PREMATURE_ABSTRACTION: PASS/STOP
+BUSINESS_FIRST_REFACTOR_BOUNDARY: PASS/STOP
+PROJECT_GOVERNANCE_SCOPE_ONLY: PASS/STOP
+DOMAIN_NAVIGATION_UNCHANGED: YES/NO
 INCIDENT_DOCTOR_UNCHANGED: YES/NO
-PLUGIN_VERSION:
-RELEASE_CREATED: NO
-DIFF_CHECK:
+PLUGIN_VERSION: 0.1.0
+BUSINESS_REPO_MUTATED: NO
+DIFF_CHECK: PASS/STOP
 WORKING_TREE:
 FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
 ```
 
-Do not merge or publish Plugin v0.1.1 under this task.
-
-## Executor handoff
-
-- Remote control head and local baseline after sync: `0aee551e4ce2fbe843221f070dafaac490a33bb9`.
-- Task branch: `codex/domain-navigation-authority-gate-v1`.
-- Changed Domain Navigation contract files: `skills/domain-navigation/SKILL.md` and `skills/domain-navigation/references/mapping-workflow.md`.
-- Focused contract review: RemoteOrbit and FloatTabs resolve to `STOP_CURRENT_TASK_NAVIGATION`; sufficiently verified fresh authority continues through normal routing; an explicitly named historical/bounded target proceeds with the `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION` label.
-- Review type: four-case contract-level scenario replay after rereading the changed Skill text. No business repository was modified, and no test harness was added.
-- `project-governance` and `incident-doctor` content was not changed. `plugin.json` remains `0.1.0`; no release, tag, or merge was created.
-- Next action: independent Web audit of the exact pushed branch head.
+Do not merge or publish under this task.

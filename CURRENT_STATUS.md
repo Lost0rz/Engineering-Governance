@@ -4,40 +4,34 @@ Last verified: 2026-10-08.
 
 ## Accepted Plugin v0.1.0 release
 
-- Packaging PR #6 merged.
-- Accepted plugin payload HEAD: `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
-- GitHub Release `plugin-v0.1.0` exists, is published, and targets the exact accepted payload HEAD.
+- GitHub Release `plugin-v0.1.0` is published from accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
 - Release asset: `engineering-governance-plugin.zip`.
 - Release asset SHA-256: `c7de1b03f8471ae8cdf38fa35947167d5a1a3238850fd5b8432cd39fb1af36f0`.
-- Plugin package version `0.1.0` remains distinct from the historical immutable repository tag `v0.1.0`.
-- Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
+- Plugin package version is still `0.1.0`.
 
-## Real-use validation finding
+## Accepted DN-001 corrective
 
-Plugin installation/discovery succeeded on MacBook Air. Real read-only trials found a repeated cross-project Domain Navigation authority-entry defect:
+- PR #7 merged after independent Web audit.
+- Audited corrective head: `a177bcd20d68b4361876e234b008c3d851f1281e`.
+- Accepted merge/main HEAD before this control transition: `b139811812f73d32927287a0bfbae2b5c6b93afa`.
+- Domain Navigation now gates current-task routing on sufficiently verified task/control authority and preserves explicit bounded/historical snapshot navigation.
+- `project-governance` and `incident-doctor` were unchanged by DN-001.
 
-- RemoteOrbit: when current authority/control could not be verified, Domain Navigation inferred the active task from a stale local branch and local code shape.
-- FloatTabs: with a stale local checkout (ahead 1 / behind 25, remote freshness not refreshed), Domain Navigation treated old local controls/topology-probe work as the current task and continued source/symbol/test routing.
-- Project Governance correctly identified the live FloatTabs control-plane drift and stopped state-changing work.
-- Incident Doctor did not spuriously trigger.
+## New reusable governance finding
 
-This is now classified as a repeated cross-project reusable Skill issue: `DN-001 — do not route from stale or unverified task authority`.
+Two durable cross-project development principles are now accepted for addition to `project-governance`:
+
+1. **Single canonical authority.** For each fact/state/policy/mapping/lifecycle/behavior class, establish one canonical authority/owner. Multiple consumers, adapters, projections, caches, or views may exist, but they must derive from or delegate to the canonical authority rather than maintain competing truth or parallel writers. Temporary migration coexistence must identify the primary authority, synchronization/cutover direction, and retirement boundary.
+2. **Domain-coherent code structure and anti-redundancy.** Keep modules/files cohesive around a clear Domain/capability responsibility, avoid accidental duplicate behavior/authority, reuse semantics rather than merely similar syntax, and split when responsibilities or reasons-to-change diverge. File length is a signal, not a hard threshold. Do not perform opportunistic broad refactors outside the authorized task.
 
 ## Current task
 
-- Task: `EG-DOMAIN-NAV-AUTHORITY-GATE-035`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
-- Mode: `REUSABLE_SKILL_CORRECTIVE`.
-- Task branch: `codex/domain-navigation-authority-gate-v1`, based on remote control head `0aee551e4ce2fbe843221f070dafaac490a33bb9`.
-- Local contract review passed the RemoteOrbit, FloatTabs, fresh-authority, and explicit historical-snapshot scenarios; the authority gate and bounded-snapshot label are present in the Domain Navigation Skill.
-- Plugin package remains `0.1.0`; no release or tag was created.
-
-## Corrective boundary
-
-Modify only the Domain Navigation reusable contract needed to add an authority-entry gate. Do not broaden governance, diagnostics, telemetry, indexing, Repo Map, or incident behavior.
-
-The corrective must preserve valid bounded historical/snapshot navigation when the user explicitly asks for it, while preventing stale local state, branch names, dirty files, code shape, historical docs, or chat context from being treated as current task authority.
+- Task: `EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036`.
+- State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`.
+- Mode: `REUSABLE_SKILL_ENHANCEMENT`.
+- Scope is limited to `project-governance` reusable guidance plus control handoff.
+- No Plugin version bump, tag, release, or business-repository mutation is authorized under this task.
 
 ## Next milestone
 
-Independent Web audit of the pushed task branch. Do not release or tag v0.1.1 under this task.
+Implement the smallest reusable Project Governance guidance for these two principles on a dedicated branch, validate content/scope and non-overreach, then stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
