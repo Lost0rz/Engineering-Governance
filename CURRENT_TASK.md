@@ -1,172 +1,186 @@
-# CURRENT TASK — Engineering Governance Plugin Release
+# CURRENT TASK — Domain Navigation Authority Gate Corrective
 
-Task ID: `EG-CODEX-PLUGIN-RELEASE-034`
+Task ID: `EG-DOMAIN-NAV-AUTHORITY-GATE-035`
 
-State: `AUTHORIZED_FOR_LOCAL_RELEASE_PACKAGING`
+State: `AUTHORIZED_FOR_CORRECTIVE_IMPLEMENTATION`
 
-Mode: `PLUGIN_RELEASE`
+Mode: `REUSABLE_SKILL_CORRECTIVE`
 
 ## Objective
 
-From the independently audited and merged plugin payload, produce one clean downloadable ZIP on the Mac mini and publish it as the first Engineering Governance Plugin GitHub Release for MacBook Air installation.
+Fix one repeated cross-project Domain Navigation defect: the Skill must not infer or treat an active/current task as authoritative when task/control freshness is materially unresolved.
 
-## Authority and exact source
+Issue ID:
 
-- Repository: `Lost0rz/Engineering-Governance`.
-- Packaging PR: `#6` — merged.
-- Exact accepted plugin payload HEAD: `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
-- Plugin manifest version: `0.1.0`.
-- Reusable Skill baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
-- Do not build the release payload from an unverified later working-tree state; archive the exact accepted payload HEAD.
+`DN-001 — do not route from stale or unverified task authority`
 
-## Release tag
+## Verified evidence basis
 
-The repository already has an existing historical `v0.1.0` tag. It is immutable and must not be moved, deleted, overwritten, or reused.
+### RemoteOrbit reproduction
 
-Use this release tag instead:
+A read-only Domain Navigation trial could not verify the current project control authority from the local checkout, then inferred a current `non-seize HID audit / diagnostic monitor mode` task from a stale branch name and local source state. That inference was not the live remote task.
 
-`plugin-v0.1.0`
+### FloatTabs reproduction
 
-Release title:
+A second unprompted read-only Domain Navigation trial explicitly observed:
 
-`Engineering Governance Plugin v0.1.0`
+- local HEAD `0a3588bf6e4675d897aa02b336c1349ef090b692`;
+- local cached upstream relation ahead 1 / behind 25;
+- remote refs were not refreshed;
+- local controls represented an older topology-probe phase.
 
-The package version remains `0.1.0`; the `plugin-` prefix only disambiguates the repository Release tag namespace.
+Despite that unresolved freshness, it continued to route the old local topology-probe task to source, symbols, and tests. Independent live evidence showed remote `main` at `569e43783a98c8caca681ce8139ec87dd4fa276e`, PR #115 already merged, and the remote controls themselves lagging the completed merge state. The correct current-task navigation action was therefore to stop and return to Project Governance reconciliation.
 
-## Fixed local output
+These two independent project observations satisfy the repository rule for a repeated reusable Skill corrective.
 
-Create exactly:
+## Authorized change scope
 
-`/Users/ox_miles/Documents/Code/Engineering-Governance/dist/engineering-governance-plugin.zip`
+Primary files:
 
-The ZIP root must be:
+- `skills/domain-navigation/SKILL.md`
+- `skills/domain-navigation/references/mapping-workflow.md`
 
-`engineering-governance/`
+`skills/domain-navigation/references/evidence-rules.md` may be changed only if one concise supporting rule is necessary to make the entry gate unambiguous. Do not expand other Domain Navigation material merely for consistency prose.
 
-Allowed payload only:
+After the corrective behavior is independently validated on the task branch, `plugin.json` may be bumped from package version `0.1.0` to `0.1.1` as release metadata preparation. Do not create a Release or tag under this task.
 
-```text
-engineering-governance/
-├── plugin.json
-└── skills/
-    ├── project-governance/
-    ├── domain-navigation/
-    └── incident-doctor/
-```
+Do not modify:
 
-Preserve each Skill's existing `SKILL.md`, `references/`, `assets/`, and `scripts/` exactly as present at the accepted payload HEAD.
+- `project-governance` Skill content;
+- `incident-doctor` Skill content;
+- business repositories;
+- runtime, MCP, hooks, telemetry, indexing, Repo Map machinery, daemons, databases, installers, or diagnostics.
 
-## Forbidden ZIP contents
+## Required semantic rule
 
-Do not include:
+For **current-task navigation**:
 
-- `.git/`
-- root `AGENTS.md`
-- root `CURRENT_STATUS.md`
-- root `CURRENT_TASK.md`
-- `docs/`
-- `examples/`
-- root `references/`
-- local marketplace/config files
-- Codex caches
-- build caches
-- secrets
-- machine-specific absolute-path metadata
+1. Establish the task/control authority needed for the requested routing decision before treating any task as current.
+2. A local `CURRENT_TASK.md` or similar control file is not automatically current authority when repository freshness is materially unresolved.
+3. Do not infer current active task or executable authority from:
+   - branch names;
+   - dirty/staged/untracked files;
+   - local code shape;
+   - stale or conflicting control files;
+   - historical documents;
+   - chat context or memory.
+4. If current task/control authority is unavailable, materially stale, contradictory, or cannot be verified enough for the requested current-task route, stop current-task navigation and hand back to Project Governance reconciliation. Do not continue source/symbol/test routing under a guessed task.
+5. This is not a generic requirement to fetch every remote or force perfect freshness. The gate applies only when unresolved freshness/authority is material to the requested navigation decision.
 
-## Packaging procedure
+## Explicit bounded-navigation exception
 
-1. Freshness gate: fetch canonical remote and confirm `origin/main` contains accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`; preserve unknown local work and STOP if the canonical checkout is not safe to use.
-2. Do not modify the accepted three Skill trees or `plugin.json` during packaging.
-3. Recreate `dist/engineering-governance-plugin.zip` from exact accepted payload HEAD. Prefer a deterministic Git archive equivalent to:
+The corrective must preserve useful read-only navigation when the user explicitly scopes a historical or fixed snapshot, for example:
 
-```bash
-git archive \
-  --format=zip \
-  --prefix=engineering-governance/ \
-  --output=dist/engineering-governance-plugin.zip \
-  a29c3ecbc513e4db6fc9663c8b933b39bc088292 \
-  plugin.json skills
-```
+- “analyze commit X”;
+- “map this historical branch”;
+- “locate the domain for this file/symbol without claiming it is the current task.”
 
-4. Compute SHA-256 and byte size.
-5. Extract to a temporary directory and verify:
-   - exactly one top-level directory `engineering-governance/`;
-   - `plugin.json` parses;
-   - all three `SKILL.md` files exist;
-   - no forbidden path exists;
-   - extracted Skill tree identities/content match the accepted payload.
-6. Verify existing historical tag `v0.1.0` is unchanged.
-7. Verify `plugin-v0.1.0` does not already exist. STOP rather than overwrite an existing tag/release.
-8. Publish GitHub Release tag `plugin-v0.1.0` targeting exact accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292` and upload exactly one required asset: `engineering-governance-plugin.zip`.
-9. Release notes must record:
-   - plugin package version `0.1.0`;
-   - source HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`;
-   - ZIP SHA-256;
-   - included Skills: `project-governance`, `domain-navigation`, `incident-doctor`;
-   - no MCP/hooks/runtime.
-10. Verify from GitHub after publishing:
-   - release exists and is not draft unless a platform constraint requires review first;
-   - tag is `plugin-v0.1.0`;
-   - target resolves to the exact accepted payload HEAD;
-   - asset name is exactly `engineering-governance-plugin.zip`;
-   - asset is downloadable.
+In that case, navigation may proceed against the specified snapshot, but the output must clearly classify it as bounded/historical snapshot navigation and must not present it as current task authority or authorization.
 
-## Repository changes
+## Regression acceptance
 
-No reusable Skill or plugin payload source change is authorized in this task.
+Validate four cases with the smallest sufficient evidence. Do not create new telemetry or a test harness merely for this corrective.
 
-Do not commit the ZIP into Git unless a later task explicitly authorizes that. `dist/` is a local release-output location, not a required tracked source directory.
+### Case A — RemoteOrbit stale/unavailable current authority
 
-Control-only closeout changes after verified publication are allowed only to record release evidence and hand off to independent Web audit.
+Expected:
+
+`STOP_CURRENT_TASK_NAVIGATION`
+
+The Skill must not infer the current task from the historical branch/source state.
+
+### Case B — FloatTabs stale checkout
+
+Given the reproduced stale-local condition and unresolved remote/control drift, expected:
+
+`STOP_CURRENT_TASK_NAVIGATION`
+
+The Skill must not route the old topology-probe work as the current task.
+
+### Case C — fresh verified current task
+
+Given a project/snapshot where the current task authority is sufficiently verified, navigation must continue normally:
+
+`task -> affected capability -> semantic authority -> source -> key symbols -> focused tests`
+
+The new gate must not create a blanket STOP or require unnecessary repository-wide freshness work.
+
+### Case D — explicit historical snapshot
+
+Given an explicit bounded request to navigate a named historical commit/branch/file without claiming current-task authority, navigation must proceed and clearly mark the result as historical/bounded snapshot navigation.
 
 ## Verification level
 
-`V0 + release artifact acceptance`.
+`V0 + focused Skill behavior regression`.
 
-Reason: source payload was already independently audited; this task verifies archive composition, identity, release targeting, integrity, and downloadability.
+Reason: the change is reusable Skill contract text and routing behavior, not product/runtime code. Verify exact diff/scope plus fresh-session behavior for the four cases above. Do not run unrelated business-project test suites.
+
+## Branch/workspace
+
+Use a dedicated branch such as:
+
+`codex/domain-navigation-authority-gate-v1`
+
+Before modification:
+
+1. fetch canonical remote;
+2. require local base to safely fast-forward/reconcile to live `origin/main` containing this task;
+3. preserve unknown local work;
+4. STOP rather than reset/stash/delete unknown work or improvise around baseline divergence.
+
+## Acceptance criteria
+
+PASS only if:
+
+- the change is minimal and limited to the Domain Navigation authority-entry defect;
+- Cases A and B stop current-task navigation without guessing;
+- Case C continues normal fresh navigation without false STOP;
+- Case D continues explicit historical/snapshot navigation without pretending it is current authority;
+- Project Governance and Incident Doctor Skill trees are unchanged;
+- no new runtime/infrastructure/diagnostic machinery is introduced;
+- any package version bump is only `0.1.0 -> 0.1.1` and no tag/release is created;
+- final task branch is clean and pushed at an exact remote-matching HEAD.
 
 ## STOP conditions
 
 STOP without destructive correction if:
 
-- accepted payload HEAD is not reachable from canonical remote;
-- local unknown work would be overwritten or cleaned;
-- any Skill/plugin source differs from accepted payload during archive creation;
-- ZIP contains forbidden files or misses required payload;
-- existing historical `v0.1.0` would need to move/change;
-- `plugin-v0.1.0` already exists with different content/target;
-- release target cannot be fixed to the accepted payload HEAD;
-- uploading would require changing plugin source or business repositories.
+- local unique/unknown work prevents safe baseline reconciliation;
+- the corrective appears to require broad Project Governance or Incident Doctor changes;
+- the proposed gate causes blanket current-task STOPs where authority is already sufficiently verified;
+- the historical/snapshot exception cannot remain clearly separated from current-task authority;
+- validation requires mutating RemoteOrbit, FloatTabs, or another business project.
 
 ## Handoff
 
-After publication and verification, update control files with evidence, commit/push only those control closeout changes if needed, and stop at:
+Stop at:
 
-`WAITING_FOR_INDEPENDENT_WEB_RELEASE_AUDIT`
+`WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Return:
 
 ```text
-TASK_ID: EG-CODEX-PLUGIN-RELEASE-034
-ACCEPTED_PAYLOAD_HEAD:
-LIVE_REMOTE_MAIN:
-HISTORICAL_V0_1_0_UNCHANGED: YES/NO
-RELEASE_TAG: plugin-v0.1.0
-RELEASE_TITLE:
-RELEASE_TARGET_HEAD:
-ZIP_PATH:
-ZIP_SHA256:
-ZIP_SIZE_BYTES:
-ZIP_ROOT:
-ZIP_REQUIRED_PATHS: PASS/STOP
-ZIP_FORBIDDEN_PATHS: PASS/STOP
-SKILL_PAYLOAD_MATCH: PASS/STOP
-RELEASE_PUBLISHED: PASS/STOP
-RELEASE_ASSET_NAME:
-RELEASE_ASSET_DOWNLOADABLE: PASS/STOP
-SOURCE_MUTATED: NO
+TASK_ID: EG-DOMAIN-NAV-AUTHORITY-GATE-035
+REMOTE_CONTROL_HEAD:
+LOCAL_BASELINE_AFTER_SYNC:
+TASK_BRANCH:
+FINAL_BRANCH_HEAD:
+REMOTE_BRANCH_HEAD:
+LOCAL_REMOTE_MATCH:
+CHANGED_PATHS:
+DN001_RULE_ADDED: YES/NO
+CURRENT_TASK_AUTHORITY_GATE: PASS/STOP
+REMOTEORBIT_REGRESSION: PASS/STOP
+FLOATTABS_REGRESSION: PASS/STOP
+FRESH_AUTHORITY_CASE: PASS/STOP
+HISTORICAL_SNAPSHOT_CASE: PASS/STOP
+PROJECT_GOVERNANCE_UNCHANGED: YES/NO
+INCIDENT_DOCTOR_UNCHANGED: YES/NO
+PLUGIN_VERSION:
+RELEASE_CREATED: NO
+DIFF_CHECK:
 WORKING_TREE:
-FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_RELEASE_AUDIT / STOP
+FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
 ```
 
-Do not clean merged branches or perform unrelated repository lifecycle cleanup under this task.
+Do not merge or publish Plugin v0.1.1 under this task.

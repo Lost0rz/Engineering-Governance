@@ -2,32 +2,39 @@
 
 Last verified: 2026-10-08.
 
-## Accepted plugin packaging
+## Accepted Plugin v0.1.0 release
 
-- PR #6 merged successfully.
-- Accepted plugin payload merge HEAD: `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
-- Root `plugin.json` packages `engineering-governance` version `0.1.0`.
-- The three reusable Skill trees remain unchanged from accepted baseline `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
-- Plugin packaging/local discovery audit: PASS.
+- Packaging PR #6 merged.
+- Accepted plugin payload HEAD: `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
+- GitHub Release `plugin-v0.1.0` exists, is published, and targets the exact accepted payload HEAD.
+- Release asset: `engineering-governance-plugin.zip`.
+- Release asset SHA-256: `c7de1b03f8471ae8cdf38fa35947167d5a1a3238850fd5b8432cd39fb1af36f0`.
+- Plugin package version `0.1.0` remains distinct from the historical immutable repository tag `v0.1.0`.
+- Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Release naming constraint
+## Real-use validation finding
 
-Repository tag `v0.1.0` already exists as historical governance tag and must not be moved or reused. The plugin package version remains `0.1.0`, but its first GitHub Release tag is `plugin-v0.1.0`.
+Plugin installation/discovery succeeded on MacBook Air. Real read-only trials found a repeated cross-project Domain Navigation authority-entry defect:
+
+- RemoteOrbit: when current authority/control could not be verified, Domain Navigation inferred the active task from a stale local branch and local code shape.
+- FloatTabs: with a stale local checkout (ahead 1 / behind 25, remote freshness not refreshed), Domain Navigation treated old local controls/topology-probe work as the current task and continued source/symbol/test routing.
+- Project Governance correctly identified the live FloatTabs control-plane drift and stopped state-changing work.
+- Incident Doctor did not spuriously trigger.
+
+This is now classified as a repeated cross-project reusable Skill issue: `DN-001 — do not route from stale or unverified task authority`.
 
 ## Current task
 
-- Task: `EG-CODEX-PLUGIN-RELEASE-034`.
-- State: `AUTHORIZED_FOR_LOCAL_RELEASE_PACKAGING`.
-- Mode: `PLUGIN_RELEASE`.
+- Task: `EG-DOMAIN-NAV-AUTHORITY-GATE-035`.
+- State: `AUTHORIZED_FOR_CORRECTIVE_IMPLEMENTATION`.
+- Mode: `REUSABLE_SKILL_CORRECTIVE`.
 
-## Release target
+## Corrective boundary
 
-Create a single downloadable asset from exact accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`:
+Modify only the Domain Navigation reusable contract needed to add an authority-entry gate. Do not broaden governance, diagnostics, telemetry, indexing, Repo Map, or incident behavior.
 
-`engineering-governance-plugin.zip`
-
-The ZIP must contain only the portable plugin payload under root directory `engineering-governance/`: root `plugin.json` plus the complete three `skills/` directories and their existing references/assets/scripts.
+The corrective must preserve valid bounded historical/snapshot navigation when the user explicitly asks for it, while preventing stale local state, branch names, dirty files, code shape, historical docs, or chat context from being treated as current task authority.
 
 ## Next milestone
 
-Mac mini generates and validates the ZIP at the fixed `dist/` path, publishes GitHub Release `plugin-v0.1.0`, uploads the single asset, verifies release/tag/asset identity, and stops for independent Web audit before lifecycle cleanup.
+Implement the smallest Domain Navigation authority-gate corrective, validate it against the two reproduced bad cases plus one fresh-authority case and one explicit historical-snapshot case, then stop for independent Web audit before any v0.1.1 release.
