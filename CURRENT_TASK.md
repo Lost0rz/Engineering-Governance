@@ -1,176 +1,172 @@
-# CURRENT TASK — Codex Plugin Packaging and Local Install Test
+# CURRENT TASK — Engineering Governance Plugin Release
 
-Task ID: `EG-CODEX-PLUGIN-PACKAGING-033`
+Task ID: `EG-CODEX-PLUGIN-RELEASE-034`
 
-State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
+State: `AUTHORIZED_FOR_LOCAL_RELEASE_PACKAGING`
 
-Mode: `CODEX_PLUGIN_PACKAGING`
+Mode: `PLUGIN_RELEASE`
 
 ## Objective
 
-Package the existing Engineering-Governance repository as one local Codex plugin named `engineering-governance`, containing the existing three Skills unchanged, then install and validate it through a personal local marketplace.
+From the independently audited and merged plugin payload, produce one clean downloadable ZIP on the Mac mini and publish it as the first Engineering Governance Plugin GitHub Release for MacBook Air installation.
 
-## Authoritative start baseline
+## Authority and exact source
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Remote start HEAD before this control transition: `32ad185bbe5f5f058ff8c40d7a0ee0cffe1c8c2b`.
-- Local executor previously reported a clean but stale checkout at `e4e3ed975b46617c29b9bf83346a835bf0be8420`.
-- The executor must fetch the verified canonical remote and fast-forward clean local `main` to the live remote `main` containing this task before doing any packaging work.
+- Packaging PR: `#6` — merged.
+- Exact accepted plugin payload HEAD: `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
+- Plugin manifest version: `0.1.0`.
+- Reusable Skill baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
+- Do not build the release payload from an unverified later working-tree state; archive the exact accepted payload HEAD.
 
-## Existing payload — must remain unchanged
+## Release tag
 
-Reuse exactly these existing Skill directories:
+The repository already has an existing historical `v0.1.0` tag. It is immutable and must not be moved, deleted, overwritten, or reused.
 
-- `skills/project-governance/`
-- `skills/domain-navigation/`
-- `skills/incident-doctor/`
+Use this release tag instead:
 
-Do not rewrite, copy, rename, or semantically modify their `SKILL.md`, references, assets, or scripts as part of packaging.
+`plugin-v0.1.0`
 
-## Authorized repository change
+Release title:
 
-Add only the minimum plugin packaging metadata required by the current supported OpenAI/Codex plugin format.
+`Engineering Governance Plugin v0.1.0`
 
-Preferred repository change:
+The package version remains `0.1.0`; the `plugin-` prefix only disambiguates the repository Release tag namespace.
 
-- root `plugin.json` portable manifest.
+## Fixed local output
 
-A `.codex-plugin/plugin.json` compatibility manifest is allowed only if current official OpenAI documentation or actual local-host validation shows it is required for this local test. Do not add it by default merely for redundancy.
+Create exactly:
 
-The plugin is Skills-only. Do not add MCP configuration, apps, hooks, commands, daemons, databases, runtimes, enforcement, analytics, telemetry, installers, or bootstrap CLIs.
+`/Users/ox_miles/Documents/Code/Engineering-Governance/dist/engineering-governance-plugin.zip`
 
-## Authorized local user changes
+The ZIP root must be:
 
-For this test only, the executor may create/update user-local Codex plugin/marketplace state described by current official OpenAI documentation, including:
+`engineering-governance/`
 
-- a personal local plugin copy under the user's Codex plugin area;
-- `~/.agents/plugins/marketplace.json` or the equivalent currently documented personal marketplace path;
-- installation/enabled state needed for the local plugin test.
+Allowed payload only:
 
-Preserve any pre-existing personal marketplace entries. Do not replace unrelated plugin configuration. Back up the prior marketplace file before editing if one exists.
+```text
+engineering-governance/
+├── plugin.json
+└── skills/
+    ├── project-governance/
+    ├── domain-navigation/
+    └── incident-doctor/
+```
 
-Do not add plugin files or marketplace configuration to RemoteOrbit, InvestDesk, Merloom, MemoX, FloatTabs, or any other business repository.
+Preserve each Skill's existing `SKILL.md`, `references/`, `assets/`, and `scripts/` exactly as present at the accepted payload HEAD.
 
-## Plugin identity
+## Forbidden ZIP contents
 
-- package name: `engineering-governance`
-- display name: `Engineering Governance`
-- description: concise statement that the plugin supplies reusable project governance, domain navigation, and evidence-gated incident investigation Skills.
-- package version: choose an explicit initial plugin package version and report it. Do not imply that the package version is an existing Git tag unless that Git tag actually exists.
+Do not include:
 
-## Installation validation
+- `.git/`
+- root `AGENTS.md`
+- root `CURRENT_STATUS.md`
+- root `CURRENT_TASK.md`
+- `docs/`
+- `examples/`
+- root `references/`
+- local marketplace/config files
+- Codex caches
+- build caches
+- secrets
+- machine-specific absolute-path metadata
 
-After packaging and local installation, start a fresh supported Codex/ChatGPT desktop Codex session and validate:
+## Packaging procedure
 
-1. the local marketplace recognizes `engineering-governance`;
-2. the plugin can be installed/enabled without MCP or authentication requirements;
-3. all three Skills are discoverable from the installed plugin;
-4. direct invocation of `project-governance` in RemoteOrbit can read the target controls and summarize the current task/authority read-only;
-5. direct invocation of `domain-navigation` can route the current RemoteOrbit task to focused source/test boundaries without creating a new Domain Map;
-6. direct invocation or trigger-decision test of `incident-doctor` correctly evaluates whether a qualifying incident exists without adding probes or mutating the target.
+1. Freshness gate: fetch canonical remote and confirm `origin/main` contains accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`; preserve unknown local work and STOP if the canonical checkout is not safe to use.
+2. Do not modify the accepted three Skill trees or `plugin.json` during packaging.
+3. Recreate `dist/engineering-governance-plugin.zip` from exact accepted payload HEAD. Prefer a deterministic Git archive equivalent to:
 
-The RemoteOrbit validation is read-only. No RemoteOrbit source, control, branch, PR, worktree, runtime, settings, diagnostic behavior, or installed app may be changed by this packaging task.
+```bash
+git archive \
+  --format=zip \
+  --prefix=engineering-governance/ \
+  --output=dist/engineering-governance-plugin.zip \
+  a29c3ecbc513e4db6fc9663c8b933b39bc088292 \
+  plugin.json skills
+```
+
+4. Compute SHA-256 and byte size.
+5. Extract to a temporary directory and verify:
+   - exactly one top-level directory `engineering-governance/`;
+   - `plugin.json` parses;
+   - all three `SKILL.md` files exist;
+   - no forbidden path exists;
+   - extracted Skill tree identities/content match the accepted payload.
+6. Verify existing historical tag `v0.1.0` is unchanged.
+7. Verify `plugin-v0.1.0` does not already exist. STOP rather than overwrite an existing tag/release.
+8. Publish GitHub Release tag `plugin-v0.1.0` targeting exact accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292` and upload exactly one required asset: `engineering-governance-plugin.zip`.
+9. Release notes must record:
+   - plugin package version `0.1.0`;
+   - source HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`;
+   - ZIP SHA-256;
+   - included Skills: `project-governance`, `domain-navigation`, `incident-doctor`;
+   - no MCP/hooks/runtime.
+10. Verify from GitHub after publishing:
+   - release exists and is not draft unless a platform constraint requires review first;
+   - tag is `plugin-v0.1.0`;
+   - target resolves to the exact accepted payload HEAD;
+   - asset name is exactly `engineering-governance-plugin.zip`;
+   - asset is downloadable.
+
+## Repository changes
+
+No reusable Skill or plugin payload source change is authorized in this task.
+
+Do not commit the ZIP into Git unless a later task explicitly authorizes that. `dist/` is a local release-output location, not a required tracked source directory.
+
+Control-only closeout changes after verified publication are allowed only to record release evidence and hand off to independent Web audit.
 
 ## Verification level
 
-`V0 + local plugin discovery/install acceptance`.
+`V0 + release artifact acceptance`.
 
-Reason: repository changes are packaging metadata only, but successful local discovery/install cannot be established by file inspection alone.
-
-## Executor evidence and current stop point
-
-- Freshness reconciliation fetched canonical `origin` and fast-forwarded local `main` from `e4e3ed975b46617c29b9bf83346a835bf0be8420` to remote control HEAD `b4fac9370cc54724d4083f9f1e94d884261ad4e4` before creating the task branch.
-- Packaging commit: `c53dc19f1ac8bf968b331b659f00e01d8003ca5b`, pushed to `codex/engineering-governance-plugin-packaging-v1` and verified equal to its remote ref before this handoff update.
-- Manifest: root `plugin.json`; `engineering-governance` version `0.1.0`, display name `Engineering Governance`. The version is the plugin package version, not a claim about a Git tag.
-- Manifest JSON and required fields parsed successfully; `git diff --check` passed. No `mcp.json` or hooks were added.
-- All 22 tracked Skill files matched byte-for-byte against baseline `2d3274735449c4164dff5859d7a4dd74ddef8f39` (combined tree digest `e97667e2608accc83bacca528c9ceae30c206db505de48de5c6817c00fe861fe`).
-- Personal marketplace: `/Users/ox_miles/.agents/plugins/marketplace.json`; plugin source copy: `/Users/ox_miles/.codex/plugins/engineering-governance`; installed cache: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.1.0`.
-- The marketplace file did not exist before this task. Codex CLI `0.160.0` listed the plugin as available, then installed and enabled it without an MCP server or authentication prompt. Existing marketplace definitions and all pre-existing plugin entries in `~/.codex/config.toml` remained present.
-- Fresh ephemeral Codex CLI sessions directly loaded all three Skills from the installed cache. A RemoteOrbit control/routing/incident trigger pass used GitHub-read-only contents pinned to `Lost0rz/RemoteOrbit` branch HEAD `c90edbf73ad9b0642fa344734571c0e806c0eb73`; it reported task `RO-DUAL-RECEIVER-MOMENTARY-ROUTING-019` waiting for user early hardware acceptance, routed to focused source/test files, created no Domain Map, and found no new qualifying incident.
-- No RemoteOrbit files, controls, branches, PRs, worktrees, runtime, settings, diagnostic behavior, or installed app were changed. No local RemoteOrbit checkout/runtime was available; runtime identity was not independently verified.
-- Stop here for independent Web audit. Do not merge or publish.
-
-Required repository verification:
-
-- exact changed paths;
-- JSON parse/schema sanity for plugin manifest(s);
-- prove the three Skill trees are byte-for-byte unchanged relative to the authorized baseline;
-- `git diff --check`;
-- clean final task branch/worktree;
-- pushed branch HEAD matches remote branch HEAD.
-
-Required local-install evidence:
-
-- plugin source/copy path;
-- personal marketplace path;
-- plugin entry identity/version;
-- install/enabled result;
-- fresh-session discovery result for all three Skills;
-- read-only RemoteOrbit smoke-test results.
-
-## Branch/workspace
-
-Use a dedicated task branch such as:
-
-`codex/engineering-governance-plugin-packaging-v1`
-
-Create it only after local `main` is fast-forwarded to the live authoritative remote task. A separate clean worktree is optional, not mandatory, because the reported local checkout is clean; do not invent a worktree if it provides no safety value.
-
-## Acceptance criteria
-
-PASS only if:
-
-- local baseline is reconciled to the live remote control plane before work;
-- the repository packaging change is minimal and contains no Skill semantic change;
-- the personal local marketplace/install preserves unrelated existing configuration;
-- the plugin is actually visible/installable in a supported local Codex surface;
-- the installed plugin exposes all three intended Skills;
-- the RemoteOrbit smoke tests are read-only and route correctly;
-- no MCP server, hook, runtime, daemon, database, installer, bootstrap CLI, or business-repository mutation is introduced.
+Reason: source payload was already independently audited; this task verifies archive composition, identity, release targeting, integrity, and downloadability.
 
 ## STOP conditions
 
-STOP and report without destructive correction if:
+STOP without destructive correction if:
 
-- local `main` cannot fast-forward to the authoritative remote because of unique local work or divergence;
-- current official OpenAI documentation contradicts the assumed portable/local-marketplace format in a way that changes scope materially;
-- packaging appears to require changing Skill contents;
-- an existing personal marketplace cannot be safely preserved;
-- the local host cannot discover the plugin without introducing MCP/runtime machinery outside this task;
-- RemoteOrbit validation would require target mutation.
+- accepted payload HEAD is not reachable from canonical remote;
+- local unknown work would be overwritten or cleaned;
+- any Skill/plugin source differs from accepted payload during archive creation;
+- ZIP contains forbidden files or misses required payload;
+- existing historical `v0.1.0` would need to move/change;
+- `plugin-v0.1.0` already exists with different content/target;
+- release target cannot be fixed to the accepted payload HEAD;
+- uploading would require changing plugin source or business repositories.
 
 ## Handoff
 
-Return exactly enough evidence for independent review:
+After publication and verification, update control files with evidence, commit/push only those control closeout changes if needed, and stop at:
+
+`WAITING_FOR_INDEPENDENT_WEB_RELEASE_AUDIT`
+
+Return:
 
 ```text
-TASK_ID: EG-CODEX-PLUGIN-PACKAGING-033
-REMOTE_CONTROL_HEAD:
-LOCAL_BASELINE_AFTER_SYNC:
-TASK_BRANCH:
-FINAL_BRANCH_HEAD:
-REMOTE_BRANCH_HEAD:
-LOCAL_REMOTE_MATCH:
-REPO_CHANGED_PATHS:
-PLUGIN_MANIFEST_PATH:
-PLUGIN_NAME:
-PLUGIN_VERSION:
-SKILL_CONTENT_UNCHANGED: YES/NO
-MCP_ADDED: NO
-HOOKS_ADDED: NO
-RUNTIME_ADDED: NO
-PERSONAL_PLUGIN_PATH:
-PERSONAL_MARKETPLACE_PATH:
-PREEXISTING_MARKETPLACE_PRESERVED: YES/NO/NOT_APPLICABLE
-PLUGIN_DISCOVERED: PASS/STOP
-PLUGIN_INSTALLED_ENABLED: PASS/STOP
-PROJECT_GOVERNANCE_DISCOVERY: PASS/STOP
-DOMAIN_NAVIGATION_DISCOVERY: PASS/STOP
-INCIDENT_DOCTOR_TRIGGER_TEST: PASS/STOP
-REMOTEORBIT_MUTATED: NO
-DIFF_CHECK:
+TASK_ID: EG-CODEX-PLUGIN-RELEASE-034
+ACCEPTED_PAYLOAD_HEAD:
+LIVE_REMOTE_MAIN:
+HISTORICAL_V0_1_0_UNCHANGED: YES/NO
+RELEASE_TAG: plugin-v0.1.0
+RELEASE_TITLE:
+RELEASE_TARGET_HEAD:
+ZIP_PATH:
+ZIP_SHA256:
+ZIP_SIZE_BYTES:
+ZIP_ROOT:
+ZIP_REQUIRED_PATHS: PASS/STOP
+ZIP_FORBIDDEN_PATHS: PASS/STOP
+SKILL_PAYLOAD_MATCH: PASS/STOP
+RELEASE_PUBLISHED: PASS/STOP
+RELEASE_ASSET_NAME:
+RELEASE_ASSET_DOWNLOADABLE: PASS/STOP
+SOURCE_MUTATED: NO
 WORKING_TREE:
-FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
+FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_RELEASE_AUDIT / STOP
 ```
 
-Do not merge the packaging branch under this task. Stop at independent Web audit.
+Do not clean merged branches or perform unrelated repository lifecycle cleanup under this task.
