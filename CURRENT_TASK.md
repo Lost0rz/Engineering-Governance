@@ -2,77 +2,45 @@
 
 Task ID: `EG-INVESTDESK-BOUNDED-ADOPTION-030`
 
-State: `ACTIVE_BOUNDED_ADOPTION`
+State: `WAITING_FOR_USER_MERGE_AUTHORIZATION`
 
-Mode: `TARGET_GOVERNANCE_ADOPTION_ONLY`
+Mode: `ADOPTION_AUDIT_PASSED`
 
 ## Objective
 
-Apply the user-approved minimal Engineering-Governance adoption to `Lost0rz/InvestDesk` without changing product/business behavior. Preserve existing InvestDesk authorities and make only the bounded Project Governance alignment proven necessary by the read-only gap audit.
+Hold the independently audited InvestDesk minimal adoption at the explicit merge-decision gate. Do not mutate the target further, merge it, or begin the real business-task trial until the user authorizes merge.
 
-## Authority and verified start baselines
+## Accepted reusable baseline
 
-- Engineering-Governance accepted Skill/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
-- Engineering-Governance task start head: `1bbef2a9988b6b200f464c8460ad80228bda4687`.
-- Target repository: `Lost0rz/InvestDesk`.
-- Target verified `main` start SHA: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- User-approved design: minimal adoption only; no new governance/domain/incident artifacts.
+- Engineering-Governance Skill/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
+- No reusable Skill change occurred during this adoption.
 
-## Affected governance domains
+## Target audit evidence
 
-- Project Governance / control-plane semantics.
-- Task metadata and handoff structure.
+- Repository: `Lost0rz/InvestDesk`.
+- Authorized / still-live target `main`: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
+- Branch: `codex/engineering-governance-minimal-adoption`.
+- Final branch head: `26eca91e54d14a6b5ab545e6320076d4f74bc6ce`.
+- Compare against `main`: ahead 5 / behind 0; merge base equals `main`.
+- Changed paths: exactly `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
+- Product/test/schema/migration/dependency/business-contract/runtime changes: none.
+- Added governance/domain/incident/runtime artifacts: none.
 
-Domain Navigation is validated by existing InvestDesk semantic authorities and requires no new artifact. Incident Doctor remains inactive.
+## Accepted target content
 
-## Allowed target changes
+`AGENTS.md` contains only the approved bounded semantics:
 
-On one bounded adoption branch only:
+1. task-relevant/conditional PR-branch-worktree verification while preserving STOP for unexplained drift and unknown dirty/unique local work;
+2. `CURRENT_STATUS.md` fact-only semantics and mandatory task reconciliation when a verified fact invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary.
 
-1. `CURRENT_STATUS.md` and `CURRENT_TASK.md` to establish and later hand off the adoption task;
-2. `AGENTS.md` only for the two approved governance corrections:
-   - make PR/branch/worktree verification conditional on task relevance while preserving protection against unexplained drift and unknown unique work;
-   - state explicitly that `CURRENT_STATUS.md` is factual state, never an authorization override, and that a status fact invalidating a task-owned prerequisite/acceptance/STOP/allowed-side-effect/authorization boundary requires `CURRENT_TASK.md` reconciliation before state-changing work.
-3. Use the adoption task's own `CURRENT_TASK.md` to demonstrate stable Task ID, affected domains, exact start baseline, risk/verification rationale, and consolidated STOP conditions.
+Target controls demonstrate stable Task ID, affected domains, exact start baseline, risk/verification rationale, acceptance criteria, consolidated STOP conditions, and handoff state.
 
-## Forbidden target changes
+## Merge gate
 
-- product source or tests;
-- schema, migration, persistence, API, frontend behavior, dependencies, CI behavior, or business contracts;
-- MVP-D Decision↔Transaction business semantics;
-- `DOMAIN_MAP.md`, `DOMAIN.md`, `INCIDENT.md`;
-- new probes, telemetry, observability expansion, navigation scripts/index/database/daemon/runtime;
-- unrelated documentation cleanup or refactor;
-- merge to target `main` without explicit user merge authorization.
+Merge is **not** authorized by this task state alone. Before any merge action, freshly verify that target `main` is still `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc` and the branch diff remains limited to the same three paths.
 
-## Risk and verification rationale
-
-Risk: low but authority-sensitive. The change is documentation/control-plane only, but incorrect wording could block normal development or create competing authorization semantics.
-
-Verification level: `V0` plus independent remote diff audit. This is sufficient because no executable/product behavior is authorized. Verify exact paths, branch ancestry, target-main freshness, absence of product/test changes, and semantic compliance with the approved design.
-
-## Consolidated STOP conditions
-
-STOP without target mutation beyond already-authorized control establishment if:
-
-- target `main` differs from the verified start SHA before branch creation and cannot be coherently reconciled;
-- existing target controls reveal a conflicting higher-authority task or changed business objective;
-- the necessary change would require product/test/schema/runtime mutation;
-- an additional governance/domain/incident artifact appears necessary;
-- unexpected branch/PR/worktree authority is discovered that makes the bounded remote edit unsafe;
-- the final diff contains anything outside `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
-
-## Acceptance criteria
-
-- one bounded target branch from the verified target baseline;
-- target control plane explicitly authorizes adoption before `AGENTS.md` changes;
-- only the approved two `AGENTS.md` corrections are made;
-- no new governance/domain/incident artifact;
-- no product/test/schema/dependency/business-contract change;
-- target branch independently audited against unchanged target `main`;
-- adoption branch stops at `WAITING_FOR_INDEPENDENT_WEB_AUDIT` or audited equivalent;
-- no merge without explicit user authorization.
+After explicit user merge authorization and successful closeout, the next target task should restore MVP-D Decision ↔ Transaction Traceability planning and then run the first real-business-task adoption trial.
 
 ## Current stop point
 
-`ACTIVE_BOUNDED_ADOPTION`
+`WAITING_FOR_USER_MERGE_AUTHORIZATION`

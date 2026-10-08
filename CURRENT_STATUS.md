@@ -1,33 +1,35 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-08 — the reusable repository remains `AUDIT_CLEAN`. The InvestDesk read-only adoption-gap audit completed against `Lost0rz/InvestDesk@e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`, and the user has accepted the proposed minimal adoption design.
+Last verified: 2026-10-08 — the reusable repository remains `AUDIT_CLEAN`. The first bounded adoption against `Lost0rz/InvestDesk` has been implemented on a target branch and independently audited by Web; the target is now waiting for explicit user merge authorization.
 
 ## Accepted reusable baseline
 
 - Accepted post-audit Skill/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
 - Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
-- No reusable Skill change is authorized by the current adoption task.
+- No reusable Skill content changed during InvestDesk adoption.
 
-## InvestDesk adoption state
+## InvestDesk adoption result
 
-Target: `Lost0rz/InvestDesk`.
+- Target repository: `Lost0rz/InvestDesk`.
+- Authorized target base: `main@e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
+- Adoption branch: `codex/engineering-governance-minimal-adoption`.
+- Final target branch head after audit-state closeout: `26eca91e54d14a6b5ab545e6320076d4f74bc6ce`.
+- Final freshness check: target `main` remained exactly `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
+- Final compare: ahead 5 / behind 0; changed paths exactly `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`.
+- No product/test/schema/migration/dependency/business-contract/runtime path changed.
+- No `DOMAIN_MAP.md`, `DOMAIN.md`, `INCIDENT.md`, navigation runtime/index, or diagnostics/probes were added.
 
-Accepted adoption design:
+Independent Web audit accepted the two bounded `AGENTS.md` corrections:
 
-- preserve InvestDesk's existing three-file control plane and project-specific policies;
-- make only bounded `AGENTS.md` Project Governance wording corrections;
-- use the adoption transition itself to establish richer `CURRENT_TASK.md` metadata without changing InvestDesk business semantics;
-- add no `DOMAIN_MAP.md`, `DOMAIN.md`, `INCIDENT.md`, navigation runtime/index, or new diagnostics/probes;
-- do not change product source, tests, schema, migrations, dependencies, business contracts, or MVP-D semantics.
-
-The target baseline must remain the freshly verified `main` SHA unless a live refresh proves a legitimate advance and the task is reconciled before writing.
+1. PR/branch/worktree checks are task-relevant/conditional, without weakening STOP protection for unexplained drift and unknown dirty/unique local work.
+2. `CURRENT_STATUS.md` is fact-only and cannot authorize/override work; task-owned prerequisite/acceptance/STOP/allowed-side-effect/authorization changes require `CURRENT_TASK.md` reconciliation before state-changing work.
 
 ## Current task
 
 - Task: `EG-INVESTDESK-BOUNDED-ADOPTION-030`.
-- State: `ACTIVE_BOUNDED_ADOPTION`.
-- Mode: `TARGET_GOVERNANCE_ADOPTION_ONLY`.
+- State: `WAITING_FOR_USER_MERGE_AUTHORIZATION`.
+- Mode: `ADOPTION_AUDIT_PASSED`.
 
 ## Next milestone
 
-Create one bounded InvestDesk adoption branch from the verified target baseline, first establish target-local adoption authorization in `CURRENT_STATUS.md` / `CURRENT_TASK.md`, then apply only the approved `AGENTS.md` wording changes. Independently audit the exact branch diff and stop before merge for explicit user merge authorization.
+Wait for explicit user authorization to merge the audited InvestDesk adoption branch. No further target mutation and no real business-task trial are authorized before that merge/closeout decision.
