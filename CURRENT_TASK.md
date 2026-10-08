@@ -2,7 +2,7 @@
 
 Task ID: `EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036`
 
-State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `REUSABLE_SKILL_ENHANCEMENT`
 
@@ -151,3 +151,13 @@ FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
 ```
 
 Do not merge or publish under this task.
+
+## Executor handoff
+
+- Remote control head and local baseline after sync: `3237d4f24f8f46657ba6e5fc859f10b50b2915a0`.
+- Task branch: `codex/project-governance-structure-authority-v1`.
+- Implementation paths: `skills/project-governance/references/code-structure.md` (new), `skills/project-governance/SKILL.md`, and `skills/project-governance/references/development-flow.md`.
+- Focused contract review: A shared backend read by CLI and Settings UI is allowed; B independent writers for one session/mapping state require ownership reconciliation; C a cohesive 1200-line generated/schema/table file is not automatically split; D a 500-line module mixing UI, persistence, orchestration, and multiple authorities is a split candidate; E similar syntax with different lifecycle/reason-to-change is not forced into a shared abstraction; F unrelated large/duplicated code does not expand the task.
+- V0 checks: `git diff --check` passed; implementation paths are limited to the three authorized Project Governance files; relevant reference links resolve; `domain-navigation`, `incident-doctor`, the existing AGENTS template, and `plugin.json` are unchanged; package version remains `0.1.0`.
+- No business repository was accessed or modified. No enforcement, diagnostics, new Skill, tag, release, ZIP, or merge was created.
+- Next action: independent Web audit of the exact pushed task branch head.
