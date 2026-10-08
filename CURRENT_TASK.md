@@ -1,47 +1,78 @@
-# CURRENT TASK — Full Audit Closeout and Adoption Handoff
+# CURRENT TASK — InvestDesk Adoption Gap Audit
 
-Task ID: `EG-FULL-AUDIT-CLOSEOUT-028`
+Task ID: `EG-INVESTDESK-ADOPTION-GAP-AUDIT-029`
 
-State: `CLOSED_ACCEPTED_MAIN`
+State: `ACTIVE_READ_ONLY_AUDIT`
 
-Mode: `AUDIT_CLOSEOUT`
+Mode: `READ_ONLY_TARGET_ADOPTION_AUDIT`
 
 ## Objective
 
-Record the independently verified completion of the full three-Skill quality audit, corrective cycles, final cross-Skill/root consistency pass, and remote branch cleanup; hand off the repository at an `ADOPTION_READY` stop point without starting adoption.
+Perform the first full adoption-gap audit of the accepted Engineering-Governance three-Skill baseline against the current remote truth of `Lost0rz/InvestDesk`, without modifying InvestDesk. Produce the smallest evidence-backed adoption proposal and validation plan needed before any target-project mutation.
 
-## Accepted evidence
+## Authority and baseline
 
-- Accepted post-audit reusable/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
-- Branch-cleanup authorization/main head: `516c9735c6d2da3a2edac49f5630321bd17183ea`.
-- GitHub remote verification after cleanup: only branch `main` remains.
-- GitHub open pull requests after cleanup: none.
-- Historical `v0.1.0` annotated tag object: `a794ee0e9d039bad0f8fa418ad422316c5315fb3`.
-- Historical `v0.1.0^{}` target: `738627a0caad330d277f60cfdaff5f153593135e`.
-- Frozen pre-audit comparison baseline `v0.2.0`: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18`.
+- Engineering-Governance accepted reusable/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
+- Engineering-Governance control start head: `ed3506ecf3fb479fcc5f1d18429d626c72a44680`.
+- Target repository: `Lost0rz/InvestDesk`.
+- Target baseline must be read fresh from remote `main`; do not assume a historical SHA.
 
-## Audit acceptance
+## Audit scope
 
-- `project-governance`: PASS after repeated audit, bounded corrective, and re-audit.
-- `domain-navigation`: PASS after repeated audit, bounded corrective, and re-audit.
-- `incident-doctor`: PASS after repeated audit, bounded corrective, and re-audit.
-- final cross-Skill routing/ownership audit: PASS.
-- root/reference consistency audit: PASS.
-- remaining `BLOCKING` content/design findings: 0.
-- remaining `IMPORTANT` content/design findings: 0.
-- remote branch lifecycle: clean; only `main` remains.
-- open PR lifecycle: clean; none remain.
+1. **Project Governance fit**
+   - inspect target `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md` and relevant repo lifecycle evidence;
+   - classify role clarity, duplication, task/status ownership, scope/STOP burden, and business-first fit.
+2. **Domain Navigation fit**
+   - discover existing business/product/domain/capability maps or other semantic authorities regardless of filename;
+   - test whether a real current/next task can route to authority, source, symbol, and tests without broad repository scanning;
+   - do not assume `DOMAIN_MAP.md` is required.
+3. **Incident Doctor fit**
+   - determine whether a real evidence-deficient incident currently exists;
+   - if not, record `DO_NOT_TRIGGER`; do not manufacture an incident or propose diagnostic infrastructure.
+4. **Adoption proposal**
+   - return `KEEP / MODIFY / ADD / DO_NOT_ADD` with reasons and exact candidate target paths where justified;
+   - define acceptance criteria for bounded adoption and a later real-business-task trial.
 
-## Closed scope
+## Out of scope
 
-No further Skill enrichment, governance expansion, diagnostic infrastructure, runtime/tooling work, branch cleanup, or target-project adoption is authorized under this Task ID.
+- any write to InvestDesk;
+- any source/product/business behavior change;
+- creating or editing target governance/navigation files;
+- changing Engineering-Governance Skill content;
+- probes, telemetry, diagnostic platforms, scripts, indexes, daemons, installers, or automatic enforcement;
+- starting the real-task trial before bounded adoption is reviewed and accepted.
 
-The accepted Skill/content baseline remains `2d3274735449c4164dff5859d7a4dd74ddef8f39`; this closeout updates repository controls only.
+## Verification
 
-## Adoption handoff
+`V0` read-only evidence audit:
 
-The next phase requires a **new** task that names a target project and begins with evidence-backed inspection of that target repository. The adopting agent must reuse existing semantic/product/domain authorities where they exist, create only the governance/navigation artifacts that add value, and keep Incident Doctor reactive rather than prebuilding diagnostics.
+- fresh target `main` identity;
+- target control files read from that identity;
+- existing semantic/navigation authorities discovered from the target repository;
+- focused source/test evidence used only where needed to verify routing;
+- target `main` unchanged at audit end;
+- no target branch/file/PR mutation;
+- adoption proposal distinguishes existing authority from derived navigation.
+
+## Stop conditions
+
+- target repository/ref cannot be verified;
+- target control plane indicates another task that makes even read-only inspection unsafe or misleading;
+- target `main` materially changes during the audit and evidence cannot be refreshed coherently;
+- required evidence is inaccessible;
+- audit would require target mutation.
+
+## Required output
+
+- target baseline SHA;
+- Project Governance findings;
+- Domain Navigation findings;
+- Incident Doctor trigger decision;
+- `KEEP / MODIFY / ADD / DO_NOT_ADD` proposal;
+- real-task-trial acceptance criteria;
+- unresolved unknowns;
+- final freshness check showing target `main` unchanged or explicitly reconciled.
 
 ## Current stop point
 
-`ADOPTION_READY`
+`ACTIVE_READ_ONLY_AUDIT`
