@@ -2,38 +2,32 @@
 
 Last verified: 2026-10-08.
 
-## Accepted Plugin v0.1.0 release
+## Accepted plugin and reusable Skill state
 
-- GitHub Release `plugin-v0.1.0` is published from accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
-- Release asset: `engineering-governance-plugin.zip`.
-- Release asset SHA-256: `c7de1b03f8471ae8cdf38fa35947167d5a1a3238850fd5b8432cd39fb1af36f0`.
-- Plugin package version is still `0.1.0`.
+- GitHub Release `plugin-v0.1.0` remains the published package baseline from accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
+- Plugin package version remains `0.1.0`.
+- Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Accepted DN-001 corrective
+## Accepted Domain Navigation corrective
 
 - PR #7 merged after independent Web audit.
-- Audited corrective head: `a177bcd20d68b4361876e234b008c3d851f1281e`.
-- Accepted merge/main HEAD before this control transition: `b139811812f73d32927287a0bfbae2b5c6b93afa`.
-- Domain Navigation now gates current-task routing on sufficiently verified task/control authority and preserves explicit bounded/historical snapshot navigation.
-- `project-governance` and `incident-doctor` were unchanged by DN-001.
+- Domain Navigation now requires sufficiently verified current-task authority before current-task routing and preserves explicit bounded/historical snapshot navigation.
 
-## New reusable governance finding
+## Accepted Project Governance structure/authority enhancement
 
-Two durable cross-project development principles are now accepted for addition to `project-governance`:
-
-1. **Single canonical authority.** For each fact/state/policy/mapping/lifecycle/behavior class, establish one canonical authority/owner. Multiple consumers, adapters, projections, caches, or views may exist, but they must derive from or delegate to the canonical authority rather than maintain competing truth or parallel writers. Temporary migration coexistence must identify the primary authority, synchronization/cutover direction, and retirement boundary.
-2. **Domain-coherent code structure and anti-redundancy.** Keep modules/files cohesive around a clear Domain/capability responsibility, avoid accidental duplicate behavior/authority, reuse semantics rather than merely similar syntax, and split when responsibilities or reasons-to-change diverge. File length is a signal, not a hard threshold. Do not perform opportunistic broad refactors outside the authorized task.
+- PR #8 merged after independent Web audit.
+- Accepted merge/main HEAD before this control transition: `11536eef2a76a18e8b197695d8936914133233dd`.
+- `project-governance` now includes one canonical authority per fact/state/behavior class plus domain-coherent structure and anti-redundancy guidance.
+- `domain-navigation` and `incident-doctor` were unchanged by task 036.
 
 ## Current task
 
-- Task: `EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+- Task: `EG-PROJECT-GOVERNANCE-LIFECYCLE-IDENTITY-WORKSPACE-037`.
+- State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`.
 - Mode: `REUSABLE_SKILL_ENHANCEMENT`.
-- Scope is limited to `project-governance` reusable guidance plus control handoff.
-- Task branch: `codex/project-governance-structure-authority-v1`, based on remote control head `3237d4f24f8f46657ba6e5fc859f10b50b2915a0`.
-- The code-structure reference and minimal Skill/development-flow gates passed V0 scope/link/diff checks and all six focused contract scenarios.
-- No Plugin version bump, tag, release, or business-repository mutation is authorized under this task.
+- Scope: add three Project Governance execution-integrity principles only: task lifecycle transitions, exact evidence/artifact identity, and selected task-workspace identity.
+- No Plugin version bump, tag, release, ZIP publication, business-repository mutation, new Skill, runtime, diagnostics, or enforcement platform is authorized.
 
 ## Next milestone
 
-Independent Web audit of the pushed task branch. Do not merge, tag, release, or publish a new package under this task.
+Implement the smallest reusable Project Governance guidance for task lifecycle, evidence identity, and workspace identity on a dedicated branch, validate focused scenarios and non-overreach, then stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.

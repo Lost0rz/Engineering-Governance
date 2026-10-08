@@ -1,62 +1,95 @@
-# CURRENT TASK — Project Governance Structure & Authority Principles
+# CURRENT TASK — Project Governance Lifecycle, Identity & Workspace Integrity
 
-Task ID: `EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036`
+Task ID: `EG-PROJECT-GOVERNANCE-LIFECYCLE-IDENTITY-WORKSPACE-037`
 
-State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
+State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`
 
 Mode: `REUSABLE_SKILL_ENHANCEMENT`
 
 ## Objective
 
-Add two accepted reusable development principles to `project-governance` without turning the Skill into a generic style checker or broad refactoring mandate:
+Add three reusable Project Governance execution-integrity principles without creating new runtime/enforcement machinery or slowing ordinary business development:
 
-1. single canonical authority per fact/state/behavior class;
-2. domain-coherent code structure with anti-redundancy and responsibility-based decomposition.
+1. task lifecycle must transition when reality changes so a completed/superseded task cannot remain active authority;
+2. verification/acceptance evidence must stay bound to the exact source, artifact, build, runtime, or revision it actually proves unless equivalence/provenance is established;
+3. state-changing work must identify the selected task workspace and its relationship to the authorized repository/ref/revision rather than trusting a project-looking directory by path alone.
 
-The principles must guide normal planning, implementation, and review while preserving business-first delivery and proportional scope.
+These rules address repeated cross-project failure modes involving stale task controls after merges, evidence transferred across different HEAD/build/runtime identities, and old/symlink/worktree checkouts being mistaken for the active workspace.
 
 ## Authoritative baseline
 
 - Repository: `Lost0rz/Engineering-Governance`.
-- Accepted DN-001 merge/main HEAD before this control transition: `b139811812f73d32927287a0bfbae2b5c6b93afa`.
-- Existing top-level Skills remain exactly: `project-governance`, `domain-navigation`, `incident-doctor`.
-- This task is a new Project Governance enhancement, not a continuation of DN-001.
+- Accepted task 036 merge/main HEAD before this control transition: `11536eef2a76a18e8b197695d8936914133233dd`.
+- Existing top-level Skills remain exactly: `project-governance`, `domain-navigation`, and `incident-doctor`.
+- This task modifies only reusable `project-governance` guidance plus control handoff.
 
-## Required principle A — Single Canonical Authority
-
-The reusable contract must make the following semantics explicit:
-
-- For each fact, state, policy, mapping, lifecycle, business rule, or behavior contract, establish one canonical authority/owner.
-- Multiple consumers, adapters, CLI/UI surfaces, read models, projections, caches, or diagnostics may coexist, but they must derive from or delegate to the canonical authority rather than become competing sources of truth.
-- Before adding a new backend/owner/writer for an existing state or behavior class, discover the existing authority and reuse, extend, or explicitly replace it rather than creating a parallel authority.
-- Multiple independent writers for the same state class are an architectural risk and require reconciliation rather than silent coexistence.
-- Temporary migration coexistence is allowed only when the primary authority, synchronization direction, cutover condition, and retirement boundary are explicit.
-- A cache, projection, mirror, UI state, diagnostic view, or compatibility adapter does not become authority merely because it stores or displays the same data.
-- "One authority" is per fact/state/behavior class, not one authority for the entire application.
-
-This is a hard architecture principle, not merely a style preference.
-
-## Required principle B — Domain-coherent structure and anti-redundancy
+## Principle A — Task lifecycle integrity
 
 The reusable contract must make the following semantics explicit:
 
-- Keep modules/files cohesive around a clear Domain/capability/responsibility and reason to change.
-- Avoid accidental duplicate business behavior, duplicate state ownership, duplicate parsers/adapters/backends/helpers when an accepted semantic implementation already exists.
-- Prefer reuse of semantics and invariants, not abstraction merely because syntax looks similar.
-- Code duplication alone is a signal, not automatic justification for a shared abstraction. Extract shared code only when responsibility, lifecycle, invariants, and reason-to-change are materially the same.
-- Large files are a structural signal, not a hard line-count violation. Split when a file/module mixes distinct capabilities, authorities, orchestration, I/O, UI, persistence, or otherwise accumulates multiple independent reasons to change.
-- Do not introduce arbitrary line-count thresholds as a universal rule.
-- Do not perform broad opportunistic cleanup simply because duplication or a large file is visible. Refactor only as far as the authorized task needs for correctness, maintainability, safe extension, or clear ownership.
+- A task/control state is not indefinitely authoritative merely because its file still exists.
+- Material lifecycle events such as merge, release, deployment, explicit human acceptance, abandonment, supersession, rollback, or a prerequisite invalidation must be reconciled into the active control state before further state-changing work that depends on the old phase.
+- A task that has reached a terminal outcome must not continue to authorize implementation from an earlier phase such as `READY_FOR_MERGE`, `WAITING_FOR_ACCEPTANCE`, or `ACTIVE_IMPLEMENTATION`.
+- Exact lifecycle state names are project-specific; do not impose a universal enum. What matters is that the current task contract accurately represents reality and does not silently remain in an obsolete phase.
+- If the next action is a genuinely new objective/scope, open/reconcile the next task instead of stretching a completed task.
+- Do not create churn for non-material status changes that do not affect authorization, prerequisites, acceptance, STOP conditions, side effects, or next action.
+
+## Principle B — Exact identity and evidence binding
+
+The reusable contract must distinguish identities such as, when relevant:
+
+- source/commit HEAD;
+- PR head;
+- merge commit/tree;
+- build/package artifact;
+- installed application/package;
+- running runtime/process;
+- deployed revision;
+- release artifact.
+
+Required semantics:
+
+- Evidence proves only the identity it actually observed or a different identity whose equivalence/provenance has been established.
+- Do not silently transfer a CI/test result from PR HEAD X to merge commit Y, or runtime acceptance from installed build B to source HEAD A, merely because they are related by history or naming.
+- Evidence may carry forward without rerunning when the relevant equivalence is actually proven, for example exact tree/content identity, immutable artifact hash identity, or an explicit provenance chain sufficient for the task decision. Do not require redundant reruns when equivalence is established.
+- Automated verification, human acceptance, and runtime/incident observation are different evidence classes. Record what each proves; do not let one silently stand in for another when the task requires the missing class.
+- Acceptance/closeout claims should name the exact revision/artifact/runtime being accepted when that identity matters to the decision.
+- Do not turn every documentation-only or low-risk task into a build/runtime identity exercise; apply identity depth proportionally to the changed system and acceptance claim.
+
+## Principle C — Selected task workspace identity
+
+For source-controlled state-changing work:
+
+- Identify the selected task workspace/check-out/worktree and establish its relationship to the authorized repository/ref/revision before mutation.
+- A directory containing project files is not automatically the authoritative workspace.
+- Branch name, folder name, symlink path, archived copy, old worktree, detached checkout, or local clone location does not by itself establish task authority.
+- A non-main task worktree is valid when it is the intentionally selected authorized workspace; `main` is not automatically the only valid place to work.
+- Preserve unknown staged/unstaged/untracked/local-only work in other or selected workspaces. Do not reset/stash/clean/delete merely to force alignment.
+- Do not scan every disk path, worktree, clone, or remote by default. Expand workspace discovery only when ambiguity, lifecycle cleanup, unique work, or the task decision materially requires it.
+- If workspace identity/relationship is materially unresolved for the requested mutation, stop and reconcile rather than proceeding from an inferred checkout.
+
+## Evidence-class distinction
+
+Where acceptance depends on behavior, keep the following concepts separate:
+
+- automated verification: evidence about the checked source/tree/artifact and tested assertions;
+- human acceptance: evidence about the user-visible behavior actually observed;
+- runtime/incident evidence: evidence about the specific running execution observed.
+
+A task may need one or more classes. The Skill must not require all three universally.
 
 ## Intended placement
 
-Preferred minimal structure:
+Prefer the smallest coherent Project Governance update. Suitable locations include:
 
-- add `skills/project-governance/references/code-structure.md` as the detailed reusable reference;
-- update `skills/project-governance/SKILL.md` to load/reference it when planning or implementing source changes;
-- update `skills/project-governance/references/development-flow.md` with the smallest implementation/review gate needed to apply the principles.
+- `skills/project-governance/references/control-plane.md` for lifecycle reconciliation;
+- `skills/project-governance/references/development-flow.md` for selected workspace and execution flow;
+- `skills/project-governance/references/verification-tiers.md` for identity/evidence binding;
+- `skills/project-governance/SKILL.md` only for minimal entry/reference wording if needed.
 
-Do not modify templates merely for symmetry. `skills/project-governance/assets/templates/AGENTS.md` already says to preserve one owner per fact class; change it only if a concrete semantic gap remains after the primary reference is written and explain why.
+A new focused reference such as `references/execution-integrity.md` is allowed only if it materially reduces duplication and keeps the above contracts clearer than scattering them across existing references. Do not create a new file merely for symmetry.
+
+Do not modify templates merely for consistency unless a concrete reusable semantic gap remains after the primary references are updated.
 
 ## Not authorized
 
@@ -64,13 +97,12 @@ Do not:
 
 - modify `domain-navigation` or `incident-doctor` Skill content;
 - create a fourth Skill;
-- add linters, static analyzers, file-size enforcement, telemetry, daemons, databases, runtime checks, Repo Map machinery, or automatic remediation;
-- impose universal file line-count thresholds;
-- rewrite unrelated Project Governance references/templates for consistency prose;
+- add runtime identity collectors, telemetry, daemons, databases, scanners, background monitors, automatic worktree cleanup, automatic remediation, or enforcement hooks;
+- require scanning every worktree/clone/remote for ordinary tasks;
+- require rebuilding/retesting merely because a commit SHA differs when relevant tree/artifact equivalence is already established;
 - mutate any business repository;
 - bump `plugin.json` version;
-- create a Git tag, GitHub Release, or release ZIP;
-- merge the task branch.
+- create a Git tag, GitHub Release, release ZIP, or merge the task branch.
 
 ## Verification
 
@@ -80,30 +112,70 @@ Required checks:
 
 1. exact changed-path scope is minimal;
 2. `git diff --check` PASS;
-3. Project Governance clearly distinguishes one authority **per fact/state/behavior class** from one authority for the whole application;
-4. consumers/adapters/projections/caches remain allowed but are explicitly non-competing/derived;
-5. migration coexistence has explicit primary/cutover/retirement semantics;
-6. code structure guidance is responsibility/domain based rather than a hard line-count rule;
-7. anti-redundancy guidance does not create premature abstraction pressure;
-8. business-first rule remains intact: no opportunistic refactor outside task relevance;
-9. `domain-navigation` and `incident-doctor` trees are unchanged;
-10. `plugin.json` remains version `0.1.0`;
-11. no business repository is modified.
+3. completed/superseded lifecycle states cannot silently remain active authority;
+4. lifecycle reconciliation does not create meaningless control churn;
+5. evidence is bound to exact source/artifact/runtime identity unless equivalence/provenance is established;
+6. proven equivalence can avoid redundant reruns;
+7. automated, human, and runtime evidence classes are distinguished without universally requiring all three;
+8. selected task workspace identity is established before state-changing work when relevant;
+9. non-main authorized worktrees remain valid;
+10. no full-disk/full-worktree/full-remote scan is required by default;
+11. unknown local work remains preserved;
+12. `domain-navigation` and `incident-doctor` trees are unchanged;
+13. `plugin.json` remains version `0.1.0`;
+14. no business repository is modified.
 
-A lightweight scenario review should cover:
+## Focused scenarios
 
-- two UI/CLI consumers sharing one backend authority -> allowed;
-- two independent writers for the same session/mapping state -> reject/reconcile;
-- a 1200-line cohesive generated/schema/table file -> not automatically split;
-- a 500-line file mixing UI + persistence + orchestration + multiple authorities -> structural split candidate;
-- two syntactically similar blocks with different lifecycle/reasons-to-change -> do not force abstraction;
-- task encounters unrelated large/duplicate code -> report if relevant, do not expand scope automatically.
+Review at least these cases:
+
+### Case A — stale task after merge
+
+A task says `READY_FOR_MERGE`, but the PR has already merged and main advanced.
+
+Expected: reconcile/close/supersede the obsolete lifecycle phase before using it to authorize further state-changing work. Do not continue as if merge were still pending.
+
+### Case B — superseded or abandoned task
+
+A newer accepted task replaces an older task, or the old task is explicitly abandoned.
+
+Expected: the old task no longer authorizes execution; preserve history without keeping it active.
+
+### Case C — CI on PR head vs merge commit
+
+CI passed exact PR HEAD X; merge commit Y now exists.
+
+Expected: do not claim exact-head CI for Y unless relevant equivalence/provenance is established. If Y has the same accepted tree/content for the claim, evidence may carry without a redundant rerun.
+
+### Case D — source vs installed/running build
+
+Source HEAD A is current, but human/runtime acceptance observed installed build B.
+
+Expected: acceptance applies to B and may apply to A only if build/provenance identity is established. Do not silently transfer the claim.
+
+### Case E — stale/symlink/archived workspace
+
+A directory contains the project but is an old branch/worktree, archived copy, symlinked checkout, or detached state whose relation to the authorized task is unresolved.
+
+Expected: stop mutation until selected workspace identity and relation to the authorized repo/ref/revision are established.
+
+### Case F — valid non-main task worktree
+
+A dedicated task worktree is intentionally authorized while canonical main has unrelated preserved untracked output.
+
+Expected: task worktree is valid; preserve unrelated work; do not force work onto main or clean other workspaces.
+
+### Case G — ordinary unambiguous task
+
+The selected workspace and task revision are already sufficiently established and no material ambiguity exists.
+
+Expected: proceed without scanning every clone/worktree/remote or adding unnecessary verification burden.
 
 ## Branch/workspace
 
 Use a dedicated branch such as:
 
-`codex/project-governance-structure-authority-v1`
+`codex/project-governance-lifecycle-identity-workspace-v1`
 
 Before modification:
 
@@ -114,7 +186,7 @@ Before modification:
 
 ## Acceptance
 
-PASS only if the two principles are explicit, reusable, minimally placed, and do not create a new enforcement platform or broad-refactor mandate.
+PASS only if the three principles are reusable, proportional, and prevent stale control/evidence/workspace identity errors without creating a heavyweight universal preflight.
 
 Stop at:
 
@@ -123,7 +195,7 @@ Stop at:
 Return:
 
 ```text
-TASK_ID: EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036
+TASK_ID: EG-PROJECT-GOVERNANCE-LIFECYCLE-IDENTITY-WORKSPACE-037
 REMOTE_CONTROL_HEAD:
 LOCAL_BASELINE_AFTER_SYNC:
 TASK_BRANCH:
@@ -131,15 +203,16 @@ FINAL_BRANCH_HEAD:
 REMOTE_BRANCH_HEAD:
 LOCAL_REMOTE_MATCH:
 CHANGED_PATHS:
-CODE_STRUCTURE_REFERENCE_ADDED: YES/NO
-SINGLE_AUTHORITY_RULE: PASS/STOP
-AUTHORITY_PER_CLASS_NOT_GLOBAL_SINGLETON: PASS/STOP
-CONSUMER_DERIVATION_RULE: PASS/STOP
-MIGRATION_BOUNDARY_RULE: PASS/STOP
-DOMAIN_COHESION_RULE: PASS/STOP
-NO_HARD_LINE_THRESHOLD: PASS/STOP
-NO_PREMATURE_ABSTRACTION: PASS/STOP
-BUSINESS_FIRST_REFACTOR_BOUNDARY: PASS/STOP
+LIFECYCLE_INTEGRITY_RULE: PASS/STOP
+TERMINAL_TASK_NOT_ACTIVE_RULE: PASS/STOP
+NO_MEANINGLESS_CONTROL_CHURN: PASS/STOP
+EXACT_IDENTITY_BINDING_RULE: PASS/STOP
+PROVEN_EQUIVALENCE_REUSE_RULE: PASS/STOP
+EVIDENCE_CLASS_DISTINCTION: PASS/STOP
+SELECTED_WORKSPACE_IDENTITY_RULE: PASS/STOP
+NON_MAIN_WORKTREE_ALLOWED: PASS/STOP
+NO_GLOBAL_SCAN_DEFAULT: PASS/STOP
+UNKNOWN_WORK_PRESERVED: YES/NO
 PROJECT_GOVERNANCE_SCOPE_ONLY: PASS/STOP
 DOMAIN_NAVIGATION_UNCHANGED: YES/NO
 INCIDENT_DOCTOR_UNCHANGED: YES/NO
@@ -151,13 +224,3 @@ FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
 ```
 
 Do not merge or publish under this task.
-
-## Executor handoff
-
-- Remote control head and local baseline after sync: `3237d4f24f8f46657ba6e5fc859f10b50b2915a0`.
-- Task branch: `codex/project-governance-structure-authority-v1`.
-- Implementation paths: `skills/project-governance/references/code-structure.md` (new), `skills/project-governance/SKILL.md`, and `skills/project-governance/references/development-flow.md`.
-- Focused contract review: A shared backend read by CLI and Settings UI is allowed; B independent writers for one session/mapping state require ownership reconciliation; C a cohesive 1200-line generated/schema/table file is not automatically split; D a 500-line module mixing UI, persistence, orchestration, and multiple authorities is a split candidate; E similar syntax with different lifecycle/reason-to-change is not forced into a shared abstraction; F unrelated large/duplicated code does not expand the task.
-- V0 checks: `git diff --check` passed; implementation paths are limited to the three authorized Project Governance files; relevant reference links resolve; `domain-navigation`, `incident-doctor`, the existing AGENTS template, and `plugin.json` are unchanged; package version remains `0.1.0`.
-- No business repository was accessed or modified. No enforcement, diagnostics, new Skill, tag, release, ZIP, or merge was created.
-- Next action: independent Web audit of the exact pushed task branch head.
