@@ -1,43 +1,42 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-07 — the full repository/content/design audit and the three Skill corrective cycles are complete. The final durable root/reference corrective is merged on `main` at `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
+Last verified: 2026-10-08 — the full repository/content/design audit, three Skill corrective cycles, final cross-Skill/root pass, and remote branch hygiene have all completed and been independently re-verified against GitHub remote state.
 
-## Audit result
+## Final audit result
 
-- `project-governance`: repeated audit + corrective + re-audit — PASS.
-- `domain-navigation`: repeated audit + corrective + re-audit — PASS.
-- `incident-doctor`: repeated audit + corrective + re-audit — PASS.
-- final cross-Skill routing/ownership audit — PASS.
-- root README/AGENTS/reference consistency audit — PASS after bounded correction.
+- `project-governance`: repeated audit + bounded corrective + re-audit — PASS.
+- `domain-navigation`: repeated audit + bounded corrective + re-audit — PASS.
+- `incident-doctor`: repeated audit + bounded corrective + re-audit — PASS.
+- cross-Skill routing/ownership consistency — PASS.
+- root `README.md` / `AGENTS.md` / repository reference consistency — PASS.
 - `BLOCKING` content/design findings remaining: 0.
 - `IMPORTANT` content/design findings remaining: 0.
 
 ## Accepted post-audit reusable baseline
 
 - Reusable/content baseline: `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
-- Frozen pre-audit comparison baseline `v0.2.0`: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18` remains historical and is not moved.
-- Historical `v0.1.0^{}` remains `738627a0caad330d277f60cfdaff5f153593135e`.
-- Exactly three Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
+- Frozen pre-audit comparison baseline `v0.2.0`: `4bc63eadbf1e1166ef8d9106c7f387a8ebb42c18` remains historical and unchanged.
+- Historical `v0.1.0` annotated tag object remains `a794ee0e9d039bad0f8fa418ad422316c5315fb3`, dereferencing to commit `738627a0caad330d277f60cfdaff5f153593135e`.
+- Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
 
-## Final V0 evidence
+## Repository hygiene
 
-- All three `SKILL.md` frontmatter blocks are present and their referenced local files/cross-Skill routes exist in the accepted tree.
-- Normal routing is coherent: Project Governance is the default; Domain Navigation locates/validates semantic and source evidence; Incident Doctor triggers only for a real blocker with insufficient evidence; any unauthorized fix returns to Project Governance.
-- No literal `DOMAIN_MAP.md` is required for adoption; semantic authorities remain project-owned and navigation projections are optional/derived.
-- Live tree adds no executable/runtime/dependency/index/database/daemon/installer/new Skill.
-- `docs/superpowers/**` is retained as maintainer history and is not reusable Skill payload; superseded historical wording there is not a live-contract defect.
-- Open pull requests: none at final audit.
+Independent remote verification after `EG-REPO-BRANCH-HYGIENE-027` established:
 
-## Remaining repository hygiene
+- branch-cleanup authorization/main head remained `516c9735c6d2da3a2edac49f5630321bd17183ea` during cleanup;
+- GitHub remote branch list contains only `main`;
+- open pull requests: none;
+- `v0.1.0` tag target is unchanged;
+- no post-audit Skill/content change was introduced by branch cleanup.
 
-Ten non-`main` remote task/control branches remain. Every inspected branch is fully contained in the accepted post-audit baseline; the final corrective branch equals the accepted content head before this control update. No unique remote work was found on those branches.
+Local-only worktree state is outside the Web audit surface; the cleanup receipt reported no local branch/worktree mutation. Remote acceptance does not depend on treating that local-only claim as independently observed.
 
-The current GitHub connector cannot delete branch refs, so branch deletion is the only remaining repository-hygiene action. It is not a Skill/content/design finding, but adoption remains paused until the remote branch list is reduced to the intended baseline and re-verified.
+## Current state
 
-## Active task
+`AUDIT_CLEAN / ADOPTION_READY`
 
-- Task: `EG-REPO-BRANCH-HYGIENE-027`.
-- State: `AUTHORIZED_FOR_LOCAL_EXECUTION`.
-- Mode: `REMOTE_BRANCH_CLEANUP_ONLY`.
+The reusable Skill repository is accepted as the clean source baseline for the next phase. Adoption has **not** started and is not authorized by the completed audit/cleanup tasks.
 
-Do not modify repository files or tags under this task.
+## Next milestone
+
+Select a target project for the first adoption and open a new bounded adoption task. Adoption should inspect that target repository first and adapt only the applicable Skill guidance/templates to verified project evidence; it must not mechanically copy this repository or create a mandatory `DOMAIN_MAP.md` when the target already has sufficient semantic authorities/routing.
