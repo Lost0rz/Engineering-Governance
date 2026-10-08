@@ -18,11 +18,23 @@ Use this Skill when navigation for an affected Domain/capability is missing or s
 - [DOMAIN.md template](assets/templates/DOMAIN.md)
 - [Optional script boundary](scripts/README.md)
 
+## Verify current-task authority before routing
+
+Apply this gate when the requested route is for a current or active task. Before treating a task as current, identify the selected repository/checkout, read its applicable controls, and establish that the task authority is current enough for this routing decision from its declared authority and freshness basis. Use only the narrowest relevant revision, ref, or control-state evidence needed. If the project's controls designate a local task contract as authoritative and nothing material calls its applicability or freshness into question, do not require a repository-wide refresh or fetch of every remote.
+
+A local control file's presence is not, by itself, proof that it remains current. Branch names, staged/unstaged/untracked files, local code shape, historical documents, chat context, and memory cannot identify or authorize the current task. They may reveal a mismatch or freshness concern, but they cannot fill an authority gap.
+
+If the current task/control authority is unavailable, materially stale, contradictory, or materially unresolved for the requested route, return `STOP_CURRENT_TASK_NAVIGATION`, state the authority evidence and unresolved point, and hand the task back to Project Governance reconciliation. Stop before routing that guessed task to source files, symbols, or tests.
+
+## Explicit bounded or historical navigation
+
+When the user explicitly names a bounded target such as a commit, historical branch, file, or symbol and does not ask to treat it as the current task, navigate only that target. Clearly label the result `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION`, identify the target revision or scope, and do not present it as current task authority or authorization. This path remains available when current-task authority is unresolved.
+
 ## Route from task to source
 
 Follow the smallest useful route:
 
-`CURRENT_TASK -> affected Domain(s) -> existing semantic authorities and/or navigation projection -> candidate authorities / entry points / symbols / tests -> optional targeted search or Repo Map -> focused source reading -> confirmed route + unresolved gaps`
+`verified CURRENT_TASK -> affected Domain(s) -> existing semantic authorities and/or navigation projection -> candidate authorities / entry points / symbols / tests -> optional targeted search or Repo Map -> focused source reading -> confirmed route + unresolved gaps`
 
 If an existing semantic map already owns product/domain meaning, reference it and keep navigation-specific source/symbol/test routing derived and separate. If no current navigation projection exists, do not create a literal `DOMAIN_MAP.md` merely because the filename is absent; first route from the accepted authorities and focused evidence, then create or refresh a navigation projection only when it adds durable routing value. Keep confirmed routes distinct from unresolved ownership or source gaps. Use an optional Repo Map only to select candidate material; direct source reading remains the verification step.
 

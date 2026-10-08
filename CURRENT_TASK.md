@@ -2,7 +2,7 @@
 
 Task ID: `EG-DOMAIN-NAV-AUTHORITY-GATE-035`
 
-State: `AUTHORIZED_FOR_CORRECTIVE_IMPLEMENTATION`
+State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`
 
 Mode: `REUSABLE_SKILL_CORRECTIVE`
 
@@ -184,3 +184,13 @@ FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
 ```
 
 Do not merge or publish Plugin v0.1.1 under this task.
+
+## Executor handoff
+
+- Remote control head and local baseline after sync: `0aee551e4ce2fbe843221f070dafaac490a33bb9`.
+- Task branch: `codex/domain-navigation-authority-gate-v1`.
+- Changed Domain Navigation contract files: `skills/domain-navigation/SKILL.md` and `skills/domain-navigation/references/mapping-workflow.md`.
+- Focused contract review: RemoteOrbit and FloatTabs resolve to `STOP_CURRENT_TASK_NAVIGATION`; sufficiently verified fresh authority continues through normal routing; an explicitly named historical/bounded target proceeds with the `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION` label.
+- Review type: four-case contract-level scenario replay after rereading the changed Skill text. No business repository was modified, and no test harness was added.
+- `project-governance` and `incident-doctor` content was not changed. `plugin.json` remains `0.1.0`; no release, tag, or merge was created.
+- Next action: independent Web audit of the exact pushed branch head.
