@@ -27,11 +27,13 @@ Two durable cross-project development principles are now accepted for addition t
 ## Current task
 
 - Task: `EG-PROJECT-GOVERNANCE-STRUCTURE-AUTHORITY-036`.
-- State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 - Mode: `REUSABLE_SKILL_ENHANCEMENT`.
 - Scope is limited to `project-governance` reusable guidance plus control handoff.
+- Task branch: `codex/project-governance-structure-authority-v1`, based on remote control head `3237d4f24f8f46657ba6e5fc859f10b50b2915a0`.
+- The code-structure reference and minimal Skill/development-flow gates passed V0 scope/link/diff checks and all six focused contract scenarios.
 - No Plugin version bump, tag, release, or business-repository mutation is authorized under this task.
 
 ## Next milestone
 
-Implement the smallest reusable Project Governance guidance for these two principles on a dedicated branch, validate content/scope and non-overreach, then stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+Independent Web audit of the pushed task branch. Do not merge, tag, release, or publish a new package under this task.
