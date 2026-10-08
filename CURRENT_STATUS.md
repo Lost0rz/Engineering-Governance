@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-08 — InvestDesk minimal adoption has been accepted into target `main`, and the first real-business-task trial is now staged through the restored MVP-D Decision ↔ Transaction Traceability planning gate.
+Last verified: 2026-10-08 — the accepted reusable three-Skill baseline remains `AUDIT_CLEAN`. InvestDesk minimal adoption is complete, but its real-task trial is deferred because the user's active development priority is now RemoteOrbit. A new read-only RemoteOrbit adoption-gap audit is authorized before any target mutation.
 
 ## Accepted reusable baseline
 
@@ -11,32 +11,25 @@ Last verified: 2026-10-08 — InvestDesk minimal adoption has been accepted into
 
 ## InvestDesk adoption result
 
-- Target repository: `Lost0rz/InvestDesk`.
-- Pre-adoption base: `e21b5be07c5e0295d21b7aea8d1c40f1101fbebc`.
-- Audited adoption head accepted into target `main`: `26eca91e54d14a6b5ab545e6320076d4f74bc6ce`.
+- Minimal adoption: accepted into target `main`.
+- Audited adoption head: `26eca91e54d14a6b5ab545e6320076d4f74bc6ce`.
 - Target closeout/control transition head: `18d63405962247237e637c8e4f520f602a4d6ab6`.
-- Accepted adoption content changed only `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`; no product/test/schema/migration/dependency/business-contract/runtime behavior changed.
-- No `DOMAIN_MAP.md`, `DOMAIN.md`, `INCIDENT.md`, navigation runtime/index, or new diagnostics/probes were added.
+- Real-task trial: `DEFERRED`, not failed; the project is not the user's current primary development focus.
 
-## Real-task trial
+## RemoteOrbit validation
 
-InvestDesk has restored **MVP-D — Decision ↔ Transaction Traceability** as the active business planning gate using the richer task-contract structure proven by adoption.
+Target repository: `Lost0rz/RemoteOrbit`.
 
-Trial intent:
+Current phase: **read-only adoption gap audit**. The audit must inspect the target's live remote control plane, branch/PR state, existing domain/authority navigation, diagnostic/incident architecture, and current real task before proposing any adoption change.
 
-1. verify task clarity without chat history;
-2. verify focused Domain/authority/source/test navigation without a broad repository survey;
-3. verify business-first progress with no parallel governance workstream;
-4. verify STOP only on material authority/baseline/scope/safety conditions;
-5. verify Incident Doctor remains dormant unless a real evidence-deficient incident appears;
-6. verify proportional V0–V3 validation and correct closeout.
+No RemoteOrbit mutation is authorized in this phase. No Engineering-Governance Skill modification is authorized in this phase.
 
 ## Current task
 
-- Task: `EG-INVESTDESK-REAL-TASK-TRIAL-031`.
-- State: `READY_FOR_TARGET_REAL_TASK_TRIAL`.
-- Mode: `ADOPTION_REAL_TASK_VALIDATION`.
+- Task: `EG-REMOTEORBIT-ADOPTION-GAP-AUDIT-032`.
+- State: `ACTIVE_READ_ONLY_AUDIT`.
+- Mode: `READ_ONLY_TARGET_ADOPTION_AUDIT`.
 
 ## Next milestone
 
-Run the InvestDesk MVP-D planning task under its own target control plane. Engineering-Governance should observe and audit the trial, not add new reusable governance unless repeated cross-project evidence justifies a later corrective.
+Return an evidence-backed RemoteOrbit `KEEP / MODIFY / ADD / DO_NOT_ADD` proposal, with special attention to whether adoption reduces false STOP/control churn, preserves existing diagnostic authority, and avoids expanding diagnostics merely for governance. Do not begin bounded adoption until the proposal is reviewed.
