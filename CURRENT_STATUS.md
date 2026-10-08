@@ -23,11 +23,11 @@ Last verified: 2026-10-08.
 ## Current task
 
 - Task: `EG-PROJECT-GOVERNANCE-LIFECYCLE-IDENTITY-WORKSPACE-037`.
-- State: `AUTHORIZED_FOR_LOCAL_IMPLEMENTATION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 - Mode: `REUSABLE_SKILL_ENHANCEMENT`.
-- Scope: add three Project Governance execution-integrity principles only: task lifecycle transitions, exact evidence/artifact identity, and selected task-workspace identity.
+- Scope: three Project Governance execution-integrity principles are implemented on a dedicated task branch: task lifecycle transitions, exact evidence/artifact identity, and selected task-workspace identity.
 - No Plugin version bump, tag, release, ZIP publication, business-repository mutation, new Skill, runtime, diagnostics, or enforcement platform is authorized.
 
 ## Next milestone
 
-Implement the smallest reusable Project Governance guidance for task lifecycle, evidence identity, and workspace identity on a dedicated branch, validate focused scenarios and non-overreach, then stop at `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+Independent Web audit of the committed and pushed task branch; no merge or publication is authorized by this task.

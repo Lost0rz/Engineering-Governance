@@ -16,3 +16,9 @@ The project-local `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` have d
 - Keep the active authorization in `CURRENT_TASK.md`. If the objective or scope materially changes, stop the affected work, update the task contract, and obtain re-authorization before continuing. Ordinary evidence discovery inside the accepted objective does not by itself change the task.
 - A newly verified status fact does not itself modify task authorization. If that fact changes or invalidates a `CURRENT_TASK.md` prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, stop state-changing work and reconcile and re-authorize `CURRENT_TASK.md` before continuing. If the task-owned conditions are unaffected, the status refresh does not require a task rewrite.
 - Update only the control whose owned information changed. A handoff may update task state and the status snapshot when their respective facts change; it does not grant the executor independent acceptance authority.
+
+## Task lifecycle integrity
+
+- Reconcile a material lifecycle event—such as merge, release, deployment, explicit human acceptance, abandonment, supersession, rollback, or invalidation of a task prerequisite—into the active task controls before any state-changing action that relies on the earlier phase.
+- A task that has reached its project-defined terminal outcome no longer authorizes work under an earlier phase such as `READY_FOR_MERGE`, `WAITING_FOR_ACCEPTANCE`, or `ACTIVE_IMPLEMENTATION`. Mark it inactive and retain its historical record according to project controls; authorize a new task when the next objective or scope is new. Keep lifecycle names project-specific rather than imposing a universal status enum.
+- Reconcile only when the event changes authorization, prerequisites, acceptance, STOP conditions, allowed side effects, or the next action. Non-material status changes do not require control churn.

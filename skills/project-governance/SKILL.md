@@ -26,9 +26,9 @@ For source-controlled projects, establish the task-relevant repository/ref/revis
 
 Load the relevant contracts as needed:
 
-- [Control plane roles and updates](references/control-plane.md)
-- [Business-first development flow](references/development-flow.md)
-- [Verification tiers](references/verification-tiers.md)
+- [Control plane roles, updates, and lifecycle reconciliation](references/control-plane.md)
+- [Business-first development flow and selected task workspaces](references/development-flow.md)
+- [Verification tiers and evidence identity](references/verification-tiers.md)
 - [AGENTS.md template](assets/templates/AGENTS.md)
 - [CURRENT_STATUS.md template](assets/templates/CURRENT_STATUS.md)
 - [CURRENT_TASK.md template](assets/templates/CURRENT_TASK.md)
