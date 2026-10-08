@@ -1,70 +1,85 @@
-# CURRENT TASK — InvestDesk Real-Task Adoption Trial
+# CURRENT TASK — RemoteOrbit Adoption Gap Audit
 
-Task ID: `EG-INVESTDESK-REAL-TASK-TRIAL-031`
+Task ID: `EG-REMOTEORBIT-ADOPTION-GAP-AUDIT-032`
 
-State: `READY_FOR_TARGET_REAL_TASK_TRIAL`
+State: `ACTIVE_READ_ONLY_AUDIT`
 
-Mode: `ADOPTION_REAL_TASK_VALIDATION`
+Mode: `READ_ONLY_TARGET_ADOPTION_AUDIT`
 
 ## Objective
 
-Validate the accepted Engineering-Governance three-Skill model during the next real InvestDesk business task, without adding new governance infrastructure or changing reusable Skill content unless repeated cross-project evidence later justifies a separate corrective.
+Audit live `Lost0rz/RemoteOrbit` against the accepted Engineering-Governance three-Skill model and produce the smallest evidence-backed adoption design before any target mutation.
 
-## Target task
+## Target
 
-Target repository: `Lost0rz/InvestDesk`.
+- Repository: `Lost0rz/RemoteOrbit`.
+- User priority: current primary development project.
+- Validation intent: use RemoteOrbit as the first sustained real-development trial because it exercises normal governance, domain/source navigation, and real incident/diagnostic boundaries.
 
-Target active task: `INVESTDESK-MVP-D-TRACEABILITY-PLANNING-031` — MVP-D Decision ↔ Transaction Traceability planning gate.
+## Audit scope
 
-Target control head after adoption closeout: `18d63405962247237e637c8e4f520f602a4d6ab6`.
+### Project Governance
 
-## Trial questions
+Determine whether the current control plane:
 
-The trial must observe whether:
+- cleanly separates durable rules, current facts, and task authorization;
+- creates false STOPs from stale prerequisites or task artifacts that do not yet exist;
+- protects unknown local work without making normal progress brittle;
+- supports clean task/PR/worktree lifecycle without repeated reconciliation churn.
 
-1. a fresh executor can identify objective, affected domains, authority, baseline, scope, acceptance, verification rationale, and STOP conditions without relying on chat history;
-2. Domain Navigation reaches existing semantic authorities plus focused Decision / Transaction / Position / Workspace source and tests without creating duplicate domain truth or requiring a broad repository survey;
-3. most work remains actual MVP-D product-contract work rather than governance maintenance;
-4. task-relevant PR/branch/worktree checks avoid false STOPs before those artifacts exist, while unexplained drift and unknown unique local work still stop safely;
-5. Incident Doctor stays inactive for ordinary product-contract questions and only activates for a real decision-blocking evidence gap;
-6. verification remains proportional to risk and later interactive implementation preserves Air-side LAN acceptance;
-7. task/branch/PR/worktree/control closeout remains synchronized when the planning task reaches independent review.
+### Domain Navigation
+
+Determine whether a fresh executor can route from the current task to the correct authorities, source symbols, runtime boundaries, and focused tests without broad repository scanning or duplicate semantic maps.
+
+### Incident Doctor
+
+Determine whether the target already has sufficient incident/diagnostic authority, whether Doctor should be active for the current real issue, and whether existing diagnostic machinery is redundant or outside the minimum decision-linked evidence path.
 
 ## In scope
 
-- read and audit InvestDesk control-plane and trial evidence;
-- compare target task behavior against the accepted three-Skill contracts;
-- record concrete friction, false STOPs, navigation failures, authority duplication, or successful routing;
-- at trial completion, classify findings as target-project-specific versus genuinely reusable/cross-project.
+- live remote `main`, branches, PRs, and relevant commit evidence;
+- target `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`;
+- existing architecture/domain/diagnostic/incident documents and focused source/test evidence needed to route the current task;
+- `KEEP / MODIFY / ADD / DO_NOT_ADD` classification;
+- proposed real-task trial acceptance criteria.
 
 ## Out of scope
 
-- modifying Engineering-Governance Skill content during the trial;
-- adding governance runtime, index, database, daemon, installer, enforcement tooling, or diagnostic platform;
-- altering InvestDesk product scope from this repository;
-- treating a one-off project-specific issue as sufficient evidence for reusable Skill change.
+- any RemoteOrbit mutation;
+- any Engineering-Governance Skill/content change;
+- behavior fixes for the current RemoteOrbit issue;
+- speculative diagnostics expansion;
+- new semantic authority where an accepted target authority already exists;
+- treating historical chat or memory as current truth without live repository verification.
+
+## Verification level
+
+`V0 — read-only control/documentation/repository evidence audit`.
+
+Reason: this phase makes no target behavior or source change.
 
 ## Acceptance criteria
 
-The trial passes if:
+The audit must establish from current remote evidence:
 
-- Project Governance supports the real MVP-D task without unnecessary process churn;
-- Domain Navigation finds the required authorities and focused implementation evidence efficiently;
-- Incident Doctor does not trigger without a qualifying incident;
-- no duplicate semantic authority is introduced;
-- no governance workstream overtakes business progress;
-- any STOP is attributable to a material safety/authority/baseline/scope condition;
-- the target task reaches its own independent-review handoff with accurate control-plane/lifecycle state.
+1. exact RemoteOrbit `main` and live branch/PR state;
+2. the current target task and whether its controls agree with verified repository facts;
+3. which project governance rules should be kept versus minimally corrected;
+4. whether any new navigation artifact is justified;
+5. whether Incident Doctor should trigger for the current real issue and what existing diagnostic authority it should consume;
+6. the smallest bounded adoption design;
+7. what must explicitly not be added;
+8. how the following real RemoteOrbit development work will be evaluated for false STOPs, navigation efficiency, Doctor trigger quality, business-first progress, and closeout cost.
 
 ## STOP conditions
 
-STOP reusable changes and report rather than correcting in place if:
+STOP and report rather than mutate if:
 
-- a trial observation suggests changing a Skill based on only this single project instance;
-- target controls materially drift from their live repository state;
-- the trial would require changing InvestDesk product semantics outside its target `CURRENT_TASK.md`;
-- the distinction between target-project issue and reusable governance defect cannot yet be established.
+- live target controls or `main` materially move during the audit such that conclusions depend on stale state;
+- the current target task cannot be reconciled from remote evidence;
+- a claimed local runtime/worktree fact cannot be verified remotely and would require guessing;
+- a proposed reusable Skill change is supported only by this single target instance.
 
-## Next action
+## Current stop point
 
-Proceed through the target InvestDesk MVP-D planning task under the target repository's own authority. This Engineering-Governance task remains observational/validation-only until the target trial reaches a meaningful handoff point.
+Complete the read-only audit and wait at `WAITING_FOR_USER_ADOPTION_DESIGN_REVIEW` before any RemoteOrbit adoption change.
