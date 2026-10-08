@@ -26,8 +26,11 @@ This is now classified as a repeated cross-project reusable Skill issue: `DN-001
 ## Current task
 
 - Task: `EG-DOMAIN-NAV-AUTHORITY-GATE-035`.
-- State: `AUTHORIZED_FOR_CORRECTIVE_IMPLEMENTATION`.
+- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
 - Mode: `REUSABLE_SKILL_CORRECTIVE`.
+- Task branch: `codex/domain-navigation-authority-gate-v1`, based on remote control head `0aee551e4ce2fbe843221f070dafaac490a33bb9`.
+- Local contract review passed the RemoteOrbit, FloatTabs, fresh-authority, and explicit historical-snapshot scenarios; the authority gate and bounded-snapshot label are present in the Domain Navigation Skill.
+- Plugin package remains `0.1.0`; no release or tag was created.
 
 ## Corrective boundary
 
@@ -37,4 +40,4 @@ The corrective must preserve valid bounded historical/snapshot navigation when t
 
 ## Next milestone
 
-Implement the smallest Domain Navigation authority-gate corrective, validate it against the two reproduced bad cases plus one fresh-authority case and one explicit historical-snapshot case, then stop for independent Web audit before any v0.1.1 release.
+Independent Web audit of the pushed task branch. Do not release or tag v0.1.1 under this task.
