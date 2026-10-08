@@ -1,125 +1,163 @@
-# CURRENT TASK — RemoteOrbit Adoption Gap Audit Handoff
+# CURRENT TASK — Codex Plugin Packaging and Local Install Test
 
-Task ID: `EG-REMOTEORBIT-ADOPTION-GAP-AUDIT-032`
+Task ID: `EG-CODEX-PLUGIN-PACKAGING-033`
 
-State: `WAITING_FOR_USER_ADOPTION_DESIGN_REVIEW`
+State: `AUTHORIZED_FOR_LOCAL_PACKAGING_AND_INSTALL_TEST`
 
-Mode: `READ_ONLY_TARGET_ADOPTION_AUDIT`
+Mode: `CODEX_PLUGIN_PACKAGING`
 
 ## Objective
 
-Hand off the completed read-only RemoteOrbit adoption-gap audit for user review. No RemoteOrbit mutation and no reusable Skill change is authorized under this task.
+Package the existing Engineering-Governance repository as one local Codex plugin named `engineering-governance`, containing the existing three Skills unchanged, then install and validate it through a personal local marketplace.
 
-## Verified target baseline
+## Authoritative start baseline
 
-- Repository: `Lost0rz/RemoteOrbit`.
-- Target `main` at audit start: `edcb4817f9ff9ae3400882f22ec61ec689f7fbaa`.
-- Target `main` at audit end: `edcb4817f9ff9ae3400882f22ec61ec689f7fbaa`.
-- Active target task: `RO-DUAL-RECEIVER-MOMENTARY-ROUTING-019`.
-- Authorized implementation branch: `codex/dual-receiver-momentary-routing-v1`.
-- Implementation branch head observed at audit end: `aa6f604056a64e4da0680904117cbd58049b6da1`.
-- Branch relation to `main`: ahead 4 / behind 0; merge base equals `main`.
-- Open PRs observed: none.
-- Target mutation by this audit: none.
+- Repository: `Lost0rz/Engineering-Governance`.
+- Remote start HEAD before this control transition: `32ad185bbe5f5f058ff8c40d7a0ee0cffe1c8c2b`.
+- Local executor previously reported a clean but stale checkout at `e4e3ed975b46617c29b9bf83346a835bf0be8420`.
+- The executor must fetch the verified canonical remote and fast-forward clean local `main` to the live remote `main` containing this task before doing any packaging work.
 
-## Project Governance findings
+## Existing payload — must remain unchanged
 
-### KEEP
+Reuse exactly these existing Skill directories:
 
-Keep the existing RemoteOrbit `AGENTS.md` rather than replacing it with a generic template. It already provides project-specific protections for runtime/source identity, forensic preservation, local-only evidence, non-destructive unknown-work handling, task authority, and atomic material control transitions.
+- `skills/project-governance/`
+- `skills/domain-navigation/`
+- `skills/incident-doctor/`
 
-### MODIFY at the next safe transition
+Do not rewrite, copy, rename, or semantically modify their `SKILL.md`, references, assets, or scripts as part of packaging.
 
-1. `CURRENT_STATUS.md` currently exceeds a fact-snapshot role by duplicating detailed product/architecture truth and granting executable `Implementation authority`. At the next safe control transition, remove authorization from STATUS and reduce duplicated design/plan detail. STATUS should record verified current facts, freshness basis, blockers, active task/branch facts, and next milestone, while pointing to TASK/spec/plan for authorization and detailed contract truth.
-2. Do not rewrite active task `RO-DUAL-RECEIVER-MOMENTARY-ROUTING-019` merely for format. On the next natural task transition, use explicit affected domains, verified start baseline, risk + verification rationale, concise acceptance, consolidated STOP conditions, and handoff; reference the frozen design spec and implementation plan rather than reproducing their full execution detail.
+## Authorized repository change
 
-No immediate `AGENTS.md` correction is required by this audit. Whether any existing freshness/control-transition rule produces repeated false STOPs must be measured during real development before loosening it.
+Add only the minimum plugin packaging metadata required by the current supported OpenAI/Codex plugin format.
 
-## Domain Navigation findings
+Preferred repository change:
 
-No new domain/navigation artifact is justified.
+- root `plugin.json` portable manifest.
 
-Current routing is already focused:
+A `.codex-plugin/plugin.json` compatibility manifest is allowed only if current official OpenAI documentation or actual local-host validation shows it is required for this local test. Do not add it by default merely for redundancy.
 
-1. **Voice Gesture Classification / Trigger Gating** — current task + frozen dual-receiver design/plan; `main.swift`; branch-added `DualReceiverVoiceGestureRecognizer.swift`; focused classifier/runtime tests.
-2. **Raw F5 HID Parking / Event Ownership** — `KeyMapping/HIDMonitor.swift`; `KeyMapping/EventSuppressor.swift`; `EventSuppressorTests`.
-3. **Synthetic Receiver Trigger Ownership** — `VoiceOptionTrigger.swift`; `VoiceTriggerKey.swift`; `VoiceOptionTriggerTests`.
-4. **BLE / Audio Transaction Lifetime** — `BLEBridge.swift`; `AudioPipe.swift`; BLE/voice coordinator tests; first-PCM and release/drain rules from the accepted design.
-5. **Dual-mode Settings / Mapping** — existing settings and mapping seams referenced by the current task; no new authority.
-6. **Installed Runtime Acceptance** — packaging/install/runtime identity evidence only at the already authorized hardware gate.
+The plugin is Skills-only. Do not add MCP configuration, apps, hooks, commands, daemons, databases, runtimes, enforcement, analytics, telemetry, installers, or bootstrap CLIs.
 
-The implementation branch itself demonstrates focused navigation: its first four commits cover classifier corrective, dual classifier, per-transaction trigger key, and raw-F5 parking, with only eight relevant source/test paths changed.
+## Authorized local user changes
 
-`DOMAIN_MAP.md`, `DOMAIN.md`, Repo Map, repository index, or a navigation runtime are not justified now. Reconsider only if the real-task trial shows repeated routing friction across multiple tasks.
+For this test only, the executor may create/update user-local Codex plugin/marketplace state described by current official OpenAI documentation, including:
 
-## Incident Doctor trigger decision
+- a personal local plugin copy under the user's Codex plugin area;
+- `~/.agents/plugins/marketplace.json` or the equivalent currently documented personal marketplace path;
+- installation/enabled state needed for the local plugin test.
 
-`DO_NOT_TRIGGER_NOW`.
+Preserve any pre-existing personal marketplace entries. Do not replace unrelated plugin configuration. Back up the prior marketplace file before editing if one exists.
 
-Reason:
+Do not add plugin files or marketplace configuration to RemoteOrbit, InvestDesk, Merloom, MemoX, FloatTabs, or any other business repository.
 
-- the current work is authorized feature construction, not an unexplained incident;
-- Tasks 1-4 are progressing on the intended implementation branch;
-- no evidence-deficient failure currently blocks the next safe decision.
+## Plugin identity
 
-Existing diagnostic infrastructure is already sufficient as the default evidence surface if a qualifying incident later appears:
+- package name: `engineering-governance`
+- display name: `Engineering Governance`
+- description: concise statement that the plugin supplies reusable project governance, domain navigation, and evidence-gated incident investigation Skills.
+- package version: choose an explicit initial plugin package version and report it. Do not imply that the package version is an existing Git tag unless that Git tag actually exists.
 
-- accepted `DiagnosticAuthority` owns new machine-readable event schema/journal/query authority;
-- the diagnostic CLI is a read-only consumer, not a second authority;
-- legacy `VoiceDiagnosticLogger` and text/audio evidence remain specialized/compatibility sources where still applicable;
-- production control remains separate from diagnostic observation.
+## Installation validation
 
-If the early hardware gate later fails in an unexplained way, first ask whether existing evidence is sufficient to choose the next safe action. Only if one specific decision-blocking fact is missing should Incident Doctor authorize a minimum probe/fresh capture. Do not prebuild diagnostics.
+After packaging and local installation, start a fresh supported Codex/ChatGPT desktop Codex session and validate:
 
-## Repository lifecycle observation
+1. the local marketplace recognizes `engineering-governance`;
+2. the plugin can be installed/enabled without MCP or authentication requirements;
+3. all three Skills are discoverable from the installed plugin;
+4. direct invocation of `project-governance` in RemoteOrbit can read the target controls and summarize the current task/authority read-only;
+5. direct invocation of `domain-navigation` can route the current RemoteOrbit task to focused source/test boundaries without creating a new Domain Map;
+6. direct invocation or trigger-decision test of `incident-doctor` correctly evaluates whether a qualifying incident exists without adding probes or mutating the target.
 
-The remote contains many historical `codex/*` branches but no open PR. Their lifecycle state was not exhaustively classified in this audit, and some may contain unique historical evidence. Do not delete them under adoption authority. A separate post-task lifecycle inventory may classify merged/retained/stale branches after the active feature reaches a safe closeout point.
+The RemoteOrbit validation is read-only. No RemoteOrbit source, control, branch, PR, worktree, runtime, settings, diagnostic behavior, or installed app may be changed by this packaging task.
 
-## Adoption proposal
+## Verification level
 
-### KEEP
+`V0 + local plugin discovery/install acceptance`.
 
-- existing `AGENTS.md` project-specific rules;
-- current three-file control plane;
-- current frozen design spec and audited implementation plan;
-- active branch/worktree authority and preservation of unrelated local dirt;
-- single diagnostic authority + read-only CLI + existing bounded diagnostic sources.
+Reason: repository changes are packaging metadata only, but successful local discovery/install cannot be established by file inspection alone.
 
-### MODIFY
+Required repository verification:
 
-- `CURRENT_STATUS.md` role/content at the next safe control transition;
-- future `CURRENT_TASK.md` shape at the next natural task transition, without disrupting task 019.
+- exact changed paths;
+- JSON parse/schema sanity for plugin manifest(s);
+- prove the three Skill trees are byte-for-byte unchanged relative to the authorized baseline;
+- `git diff --check`;
+- clean final task branch/worktree;
+- pushed branch HEAD matches remote branch HEAD.
 
-### ADD
+Required local-install evidence:
 
-- none.
+- plugin source/copy path;
+- personal marketplace path;
+- plugin entry identity/version;
+- install/enabled result;
+- fresh-session discovery result for all three Skills;
+- read-only RemoteOrbit smoke-test results.
 
-### DO NOT ADD
+## Branch/workspace
 
-- `DOMAIN_MAP.md` / `DOMAIN.md`;
-- `INCIDENT.md` without a qualifying incident;
-- Repo Map/index/vector DB/navigation daemon;
-- governance runtime/installer/enforcement layer;
-- second diagnostic authority;
-- broad logging/probe/telemetry work for adoption;
-- historical branch cleanup inside the active feature task.
+Use a dedicated task branch such as:
 
-## Real-task trial acceptance criteria
+`codex/engineering-governance-plugin-packaging-v1`
 
-Use ongoing RemoteOrbit development as the trial and record only concrete friction/evidence:
+Create it only after local `main` is fast-forwarded to the live authoritative remote task. A separate clean worktree is optional, not mandatory, because the reported local checkout is clean; do not invent a worktree if it provides no safety value.
 
-1. **Task clarity** — executor can identify objective, authority, branch/worktree, scope, acceptance and STOP conditions without chat history.
-2. **STOP quality** — record each STOP as material or false/process-only; repeated false STOPs are a governance signal, not a reason to loosen safety after one event.
-3. **Navigation efficiency** — reach the relevant gesture/HID/trigger/BLE/settings/test boundaries without broad repository survey or authority rework.
-4. **Business-first progress** — feature commits/tests/hardware acceptance dominate; governance or diagnostics do not become a parallel project.
-5. **Doctor trigger quality** — normal implementation/test failures remain normal engineering; Doctor activates only on a real blocking evidence gap.
-6. **Verification proportionality** — use focused tests while boundaries are local, broader suite/build/runtime/hardware evidence only where the accepted task requires them.
-7. **Closeout cost** — task/branch/worktree/control state should reconcile with minimal follow-up rounds at handoff/merge.
+## Acceptance criteria
+
+PASS only if:
+
+- local baseline is reconciled to the live remote control plane before work;
+- the repository packaging change is minimal and contains no Skill semantic change;
+- the personal local marketplace/install preserves unrelated existing configuration;
+- the plugin is actually visible/installable in a supported local Codex surface;
+- the installed plugin exposes all three intended Skills;
+- the RemoteOrbit smoke tests are read-only and route correctly;
+- no MCP server, hook, runtime, daemon, database, installer, bootstrap CLI, or business-repository mutation is introduced.
 
 ## STOP conditions
 
-Do not mutate RemoteOrbit under this audit task. If the adoption design is accepted, open a separate bounded target-adoption task or defer the correction to the next safe target control transition. Do not interrupt the active feature merely to satisfy governance formatting.
+STOP and report without destructive correction if:
 
-## Current stop point
+- local `main` cannot fast-forward to the authoritative remote because of unique local work or divergence;
+- current official OpenAI documentation contradicts the assumed portable/local-marketplace format in a way that changes scope materially;
+- packaging appears to require changing Skill contents;
+- an existing personal marketplace cannot be safely preserved;
+- the local host cannot discover the plugin without introducing MCP/runtime machinery outside this task;
+- RemoteOrbit validation would require target mutation.
 
-`WAITING_FOR_USER_ADOPTION_DESIGN_REVIEW`
+## Handoff
+
+Return exactly enough evidence for independent review:
+
+```text
+TASK_ID: EG-CODEX-PLUGIN-PACKAGING-033
+REMOTE_CONTROL_HEAD:
+LOCAL_BASELINE_AFTER_SYNC:
+TASK_BRANCH:
+FINAL_BRANCH_HEAD:
+REMOTE_BRANCH_HEAD:
+LOCAL_REMOTE_MATCH:
+REPO_CHANGED_PATHS:
+PLUGIN_MANIFEST_PATH:
+PLUGIN_NAME:
+PLUGIN_VERSION:
+SKILL_CONTENT_UNCHANGED: YES/NO
+MCP_ADDED: NO
+HOOKS_ADDED: NO
+RUNTIME_ADDED: NO
+PERSONAL_PLUGIN_PATH:
+PERSONAL_MARKETPLACE_PATH:
+PREEXISTING_MARKETPLACE_PRESERVED: YES/NO/NOT_APPLICABLE
+PLUGIN_DISCOVERED: PASS/STOP
+PLUGIN_INSTALLED_ENABLED: PASS/STOP
+PROJECT_GOVERNANCE_DISCOVERY: PASS/STOP
+DOMAIN_NAVIGATION_DISCOVERY: PASS/STOP
+INCIDENT_DOCTOR_TRIGGER_TEST: PASS/STOP
+REMOTEORBIT_MUTATED: NO
+DIFF_CHECK:
+WORKING_TREE:
+FINAL_STATE: WAITING_FOR_INDEPENDENT_WEB_AUDIT / STOP
+```
+
+Do not merge the packaging branch under this task. Stop at independent Web audit.
