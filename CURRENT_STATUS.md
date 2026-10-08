@@ -2,32 +2,36 @@
 
 Last verified: 2026-10-08.
 
-## Accepted plugin and reusable Skill state
+## Accepted reusable baseline
 
-- GitHub Release `plugin-v0.1.0` remains the published package baseline from accepted payload HEAD `a29c3ecbc513e4db6fc9663c8b933b39bc088292`.
-- Plugin package version remains `0.1.0`.
 - Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
+- Plugin v0.1.0 remains the currently published package.
+- DN-001 authority-gate corrective was accepted and merged in PR #7.
+- Project Governance canonical-authority/code-structure enhancement was accepted and merged in PR #8.
+- Project Governance lifecycle/evidence-identity/workspace-integrity enhancement was independently audited and merged in PR #9.
+- Current accepted `main` before this release-control transition: `302dd233036ec77a423fa870d1ca994613d415c4`.
 
-## Accepted Domain Navigation corrective
+## Release decision
 
-- PR #7 merged after independent Web audit.
-- Domain Navigation now requires sufficiently verified current-task authority before current-task routing and preserves explicit bounded/historical snapshot navigation.
+The accumulated accepted changes are now large enough for an overall Plugin minor release rather than a patch-only corrective. The next package version is `0.2.0` and the GitHub Release tag is `plugin-v0.2.0`.
 
-## Accepted Project Governance structure/authority enhancement
+The release payload remains exactly the packaged Plugin surface:
 
-- PR #8 merged after independent Web audit.
-- Accepted merge/main HEAD before this control transition: `11536eef2a76a18e8b197695d8936914133233dd`.
-- `project-governance` now includes one canonical authority per fact/state/behavior class plus domain-coherent structure and anti-redundancy guidance.
-- `domain-navigation` and `incident-doctor` were unchanged by task 036.
+- `plugin.json`
+- `skills/**`
+
+under ZIP root `engineering-governance/`.
+
+Root governance controls, maintainer docs/history, examples, Git metadata, caches, secrets, and unrelated repository files are not part of the packaged payload.
 
 ## Current task
 
-- Task: `EG-PROJECT-GOVERNANCE-LIFECYCLE-IDENTITY-WORKSPACE-037`.
-- State: `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
-- Mode: `REUSABLE_SKILL_ENHANCEMENT`.
-- Scope: three Project Governance execution-integrity principles are implemented on a dedicated task branch: task lifecycle transitions, exact evidence/artifact identity, and selected task-workspace identity.
-- No Plugin version bump, tag, release, ZIP publication, business-repository mutation, new Skill, runtime, diagnostics, or enforcement platform is authorized.
+- Task: `EG-PLUGIN-V0.2.0-RELEASE-038`.
+- State: `AUTHORIZED_FOR_RELEASE_PREP_AND_PUBLICATION`.
+- Mode: `PLUGIN_RELEASE`.
+- Allowed product change: bump `plugin.json` package version `0.1.0 -> 0.2.0`; do not change Skill semantics during release preparation.
+- Release must be built from an exact accepted merged source revision and verified by file list plus SHA-256 before publication.
 
 ## Next milestone
 
-Independent Web audit of the committed and pushed task branch; no merge or publication is authorized by this task.
+Prepare and independently verify the exact v0.2.0 payload, merge only the release metadata change, package `engineering-governance-plugin.zip`, publish GitHub Release `plugin-v0.2.0`, and verify the published release target and asset identity.
