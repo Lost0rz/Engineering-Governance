@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "engineering-governance",
+  "version": "0.1.0",
+  "description": "Reusable project governance, domain navigation, and evidence-gated incident investigation Skills.",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Engineering Governance",
+        "shortDescription": "Reusable governance and investigation Skills."
+      }
+    }
+  }
+}

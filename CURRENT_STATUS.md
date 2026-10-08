@@ -6,35 +6,25 @@ Last verified: 2026-10-08.
 
 - Reusable Skill/content baseline remains `2d3274735449c4164dff5859d7a4dd74ddef8f39`.
 - Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
-- Full repeated Skill/content audit remains accepted with zero blocking/important design findings.
-- RemoteOrbit read-only adoption-gap audit is complete; no RemoteOrbit mutation is part of the current task.
+- Packaging verification found all 22 Skill files byte-for-byte unchanged from that baseline.
+- RemoteOrbit was not modified.
 
-## Current packaging objective
+## Current packaging state
 
-The next authorized step is to package the existing three Skills as one local Codex plugin named `engineering-governance`, then install and validate that plugin in a supported local Codex surface.
+- Task `EG-CODEX-PLUGIN-PACKAGING-033` is `WAITING_FOR_INDEPENDENT_WEB_AUDIT`.
+- The portable root `plugin.json` packages `engineering-governance` version `0.1.0`; its display name is `Engineering Governance`.
+- The personal marketplace at `~/.agents/plugins/marketplace.json` exposes a local copy at `~/.codex/plugins/engineering-governance`.
+- Codex CLI reports the plugin installed and enabled from `~/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.1.0`.
+- No marketplace file existed before this task. Existing `~/.codex/config.toml` marketplace and plugin entries were preserved when Codex enabled the new plugin.
+- A fresh Codex CLI `0.160.0` session directly discovered all three Skills from the installed cache.
 
-This is packaging/distribution metadata only. It does not authorize changing any Skill instructions, templates, reference semantics, target-project controls, product code, diagnostics, runtime behavior, MCP servers, hooks, daemons, databases, or enforcement tooling.
+## RemoteOrbit read-only validation
 
-The preferred portable package shape is the existing repository root plus a minimal root `plugin.json`; the existing root `skills/` directory remains the Skill payload. A compatibility `.codex-plugin/plugin.json` may be added only if the local host demonstrably requires it after checking current official OpenAI plugin documentation.
-
-## Local executor freshness issue
-
-A local executor reported a clean checkout at `e4e3ed975b46617c29b9bf83346a835bf0be8420`, 67 commits behind its local `origin/main`, and correctly stopped because its local control plane was stale and authorized an unrelated Doctor CLI closeout.
-
-The authoritative remote control plane is newer. Before packaging, the local executor must fetch the verified canonical remote and fast-forward the clean local `main` to the current remote `main`. It must not continue from the stale local task. If the fast-forward is not possible without overwriting unique local work, STOP and report.
-
-## Installation/test boundary
-
-The packaging task may also make user-local Codex configuration changes needed for a personal local plugin test, including the personal marketplace and plugin copy/cache workflow described by current official OpenAI documentation. These user-local changes must remain outside business repositories.
-
-The installation test should use a new Codex chat after installation and perform read-only discovery/routing checks against RemoteOrbit. The test must not mutate RemoteOrbit merely to prove plugin discovery.
-
-## Current task
-
-- Task: `EG-CODEX-PLUGIN-PACKAGING-033`.
-- State: `AUTHORIZED_FOR_LOCAL_PACKAGING_AND_INSTALL_TEST`.
-- Mode: `CODEX_PLUGIN_PACKAGING`.
+- Controls and focused source/test evidence were read from `Lost0rz/RemoteOrbit` branch `codex/dual-receiver-momentary-routing-v1` at remote HEAD `c90edbf73ad9b0642fa344734571c0e806c0eb73`.
+- That snapshot reports task `RO-DUAL-RECEIVER-MOMENTARY-ROUTING-019` waiting for user early hardware acceptance. The Skills summarized the authority, routed to focused source/tests without creating a Domain Map, and found no new qualifying incident.
+- No local RemoteOrbit checkout or runtime was available to this validation. Its status records installed source `ef29186e25c64cd4d1d7209cb2a41f95c51d4a11`; the relationship to the remote branch HEAD was not verified here.
+- No RemoteOrbit source, controls, branch, PR, worktree, runtime, settings, diagnostic behavior, or installed app was changed.
 
 ## Next milestone
 
-Produce the minimal plugin package, install it through a personal local marketplace, verify all three Skills are discoverable/usable from a fresh Codex session, and return exact repository and local-install evidence for independent review before any broader distribution or reusable Skill change.
+Independent Web audit of the pushed packaging branch and evidence. Do not merge or publish the plugin under this task.
