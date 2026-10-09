@@ -10,37 +10,47 @@ Last verified: 2026-10-09.
 - Published asset SHA-256: `c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`.
 - Published capability set remains exactly three top-level Skills: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Current development task
+## v0.4.0 candidate
 
 - Task: `EG-GLOBAL-ROUTING-V0.4.0-042`.
-- State: `ACTIVE`.
+- State: `WAITING_FOR_INDEPENDENT_AUDIT`.
 - Start `main`: `b7e47e2de346fa229818013d4369ae60cee6e0fa`.
 - Task branch: `codex/global-routing-v0.4.0`.
-- Goal: produce a v0.4.0 source candidate that adds global Skill routing/adoption semantics and folds verified v0.3.0 pilot corrections into Project Governance.
-- This task is source evolution only. No Plugin v0.4.0 GitHub Release or target-project installation is authorized here.
+- Candidate package metadata: `0.4.0`.
+- This is a source candidate only; no Plugin v0.4.0 GitHub Release has been published.
+- `main` remained at the authorized start revision during construction and author self-audit.
 
-## Verified motivation
+## Implemented capability changes
 
-v0.3.0 application established three follow-up needs:
+1. **Global Skill routing** — Project Governance is now the normal route for project/repository engineering work; Domain Navigation is conditional for unclear semantic/source routes; Incident Doctor remains reactive and evidence-gated.
+2. **Agent-mediated adoption/upgrade** — the Plugin payload now carries an exact marker-bounded global `AGENTS.md` routing template plus an idempotent adoption contract. Installation is complete only when all three Skills are available and exactly one current global routing block is verified.
+3. **Control identity semantics** — provenance/transition parents, current-control heads, explicit locked/execution heads, and remote freshness are separate identity classes. Relationship checks are no longer silently converted into equality checks.
+4. **Workspace identity semantics** — local branch, remote branch, worktree registration, filesystem path, HEAD, working-tree/unique-work state, write capability, and overlapping authority are verified as separate facts.
+5. **Verification cadence** — `V0`–`V3` remains the sole risk/scope taxonomy; construction/corrective/task/merge-release cadence is separate. Verification effort follows change risk, not change count.
+6. **Project templates** — `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` templates now carry the new routing boundary, control-identity, workspace-identity, and cadence semantics without copying the full reusable contracts.
 
-1. The three Skills contain their own triggers, but the shipped model lacks a reusable global `AGENTS.md` routing contract that tells an agent which Skill to invoke before the Skill has already been selected.
-2. A pilot produced a false `STOP_CONTROL_HEAD_DRIFT` when a recorded control parent was treated as the required current HEAD; the corrected evidence showed the parent was provenance for a control transition. Project Governance must distinguish provenance/transition anchors from explicit current/locked-head requirements.
-3. Verification needs an explicit cadence rule in addition to `V0`–`V3`: construction should use focused checks appropriate to risk, while broader regression/CI belongs at justified corrective/task/merge boundaries rather than after every small acceptance correction.
+## Author self-audit
 
-## Design direction
+A detailed remote exact-source self-audit was performed during construction. It found and corrected two material design-propagation issues before handoff:
 
-- Keep exactly three Skills; do not create a Router Skill.
-- `project-governance` is the normal engineering entry point.
-- `domain-navigation` is conditional when semantic/source ownership or route is unclear.
-- `incident-doctor` is reactive and evidence-gated for a real blocking failure with insufficient evidence.
-- Ship the routing/adoption contract and managed global-`AGENTS.md` block template inside `skills/**` so the existing Plugin payload can carry them.
-- Adoption remains agent-mediated and non-destructive; no installer runtime, daemon, hook, MCP service, or automatic remediation is introduced.
-- Preserve project-local governance ownership: global routing selects Skills; project `AGENTS.md` describes that repository; Skill references own reusable workflow detail.
+- **Important — template propagation gap:** reusable control-identity/cadence rules were initially absent from `CURRENT_TASK.md`/`CURRENT_STATUS.md` templates. Corrected.
+- **Important — installation/default-route gap:** the initial adoption text did not bind Skill availability and global routing adoption into one installation-completion gate, and the first routing wording allowed simple repository work to bypass Project Governance. Corrected.
+
+After corrective changes:
+
+- top-level Skill directory count remains exactly three;
+- routing/adoption files are inside `skills/**` and therefore inside the established Plugin payload boundary;
+- the managed global block contains one BEGIN/END marker pair and names the three expected Skills;
+- no Router Skill, installer executable, Bootstrap CLI, daemon, hook, MCP service, background runtime, or automatic remediation was added;
+- the historical-control-parent false-positive case is explicitly guarded while explicit locked-head equality remains a hard gate;
+- no competing L1–L4 validation taxonomy was introduced.
+
+Because the same remote session authored the changes and performed this self-audit, the self-audit is not represented as independent review.
 
 ## Verification posture
 
-This is a documentation/contract/package-metadata change, so the active task uses `V0 + semantic scenario audit`. The final branch must be checked for exact diff scope, link/frontmatter/layout consistency, three-Skill packaging shape, routing/adoption scenario coverage, control-identity semantics, verification-cadence consistency, and duplication/conflict across authorities.
+`V0 + semantic scenario audit` is the accepted level for this documentation/contract/package-metadata task. No executable product runtime changed, so no runtime/build test claim is made. Final handoff requires an exact-PR-head diff/path/link/semantic check and explicit disclosure that independent reviewer evidence is still absent unless a separate reviewer performs it.
 
 ## Next milestone
 
-Complete the v0.4.0 candidate on the task branch, create a reviewable PR, and perform a detailed exact-head remote audit before any merge or release decision.
+Open the v0.4.0 candidate PR against `main`, verify its exact final head, and obtain an independent merge decision. A separate task is required to publish Plugin v0.4.0 and to apply the new installation/adoption contract to target environments/projects.
