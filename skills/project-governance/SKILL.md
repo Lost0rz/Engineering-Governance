@@ -1,11 +1,11 @@
 ---
 name: project-governance
-description: Use as the normal Engineering Governance entry for nontrivial project/repository engineering work, and when establishing or repairing project governance, starting or executing governed development, reconciling scope/control state, choosing proportional verification, or reconciling/closing task workspace lifecycle. Route to Domain Navigation or Incident Doctor only when their narrower triggers apply.
+description: Use as the normal Engineering Governance entry for software/project/repository engineering work, and when establishing or repairing project governance, starting or executing governed development, reconciling scope/control state, choosing proportional verification, or reconciling/closing task workspace lifecycle. Route to Domain Navigation or Incident Doctor only when their narrower triggers apply.
 ---
 
 # Project Governance
 
-Use this Skill as the normal Engineering Governance entry point for nontrivial software, repository, and project engineering work when the Plugin's global routing contract is adopted. It establishes or repairs project governance and starts, executes, reconciles, verifies, hands off, or closes normal authorized product and business work. Inspect the target repository and its existing authorities first, then adapt the templates to verified evidence. Keep unsupported facts unknown; do not copy templates blindly.
+Use this Skill as the normal Engineering Governance entry point for software, repository, and project engineering work when the Plugin's global routing contract is adopted. Scale the procedure to the task: simple low-risk work should remain lightweight and must not acquire extra plans, worktrees, broad scans, or broad validation merely because Project Governance is active. This Skill establishes or repairs project governance and starts, executes, reconciles, verifies, hands off, or closes normal authorized product and business work. Inspect the target repository and its existing authorities first, then adapt the templates to verified evidence. Keep unsupported facts unknown; do not copy templates blindly.
 
 ## Choose the right route
 
