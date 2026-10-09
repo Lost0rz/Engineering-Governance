@@ -18,6 +18,10 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 [Actual verified repository identity, branch/ref, revision, and relevant remote or runtime identity. For source-controlled work, include the task-relevant workspace/unique-work state when it affects safe execution. Do not use an assumed baseline.]
 
+## Workspace lifecycle
+
+[When the project uses task branches, worktrees, multiple checkouts, or an equivalent workspace model, record the selected workspace identity, any relevant predecessor/conflicting-writer state, expected terminal disposition, and any explicit retain-until condition. Use `not applicable` when the project does not use task workspaces. Keep global workspace history out of this task file.]
+
 ## In scope
 
 - [Explicitly authorized work]
@@ -44,10 +48,10 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Stop conditions
 
-- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include task-relevant baseline/control drift and unknown unique work when they cannot be resolved without destructive assumptions.]
+- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include task-relevant baseline/control drift, unresolved conflicting predecessors, and unknown unique work when they cannot be resolved without destructive assumptions.]
 
 ## Handoff / current stop point
 
-[Required evidence, recipient or review state, and next authorized milestone. A handoff does not itself mean independent review accepted the work.]
+[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition or explicit retention reason/release condition. A handoff does not itself mean independent review accepted the work.]
 
 Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues.
