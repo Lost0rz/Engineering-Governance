@@ -1,71 +1,97 @@
-# CURRENT TASK — Plugin v0.2.0 Release
+# CURRENT TASK — Project Governance Workspace Lifecycle
 
-Task ID: `EG-PLUGIN-V0.2.0-RELEASE-038`
+Task ID: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`
 
-State: `CLOSED`
+State: `ACTIVE`
 
-Mode: `PLUGIN_RELEASE`
+Mode: `BOUNDED_GOVERNANCE_CHANGE`
 
-## Outcome
+## Objective
 
-`RELEASED`
+Add a small, reusable workspace/worktree lifecycle and closeout contract to `project-governance` so governed projects do not accumulate unclassified stale task workspaces that later require expensive archaeological cleanup.
 
-Engineering Governance Plugin v0.2.0 was published successfully and the published release identity was independently verified.
+## Affected domains
 
-## Accepted release identity
+- Reusable Skill: `skills/project-governance/`
+- Root governance controls for this repository
 
-- Package version: `0.2.0`.
-- Release tag: `plugin-v0.2.0`.
-- Release title: `Engineering Governance Plugin v0.2.0`.
-- Exact source/target SHA: `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`.
-- Tag resolution: `plugin-v0.2.0` -> `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`.
-- Draft: `NO`.
-- Prerelease: `NO`.
-- Asset: `engineering-governance-plugin.zip`.
-- Asset size: `36224` bytes.
-- Asset SHA-256: `99ab0679c5692dd382d515cf39a92c6fb1e9c68ae119c43637b3cec65b19436e`.
+No new top-level Skill or runtime component is authorized.
 
-## Package acceptance
+## Start baseline
 
-The accepted ZIP payload is rooted at `engineering-governance/` and contains only:
+- Repository: `Lost0rz/Engineering-Governance`
+- Canonical branch: `main`
+- Verified start HEAD: `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`
+- Authorized task branch: `codex/project-governance-workspace-lifecycle-v1`
+- Prior task: `EG-PLUGIN-V0.2.0-RELEASE-038`, `CLOSED_RELEASED`
+- Published Plugin v0.2.0 identity remains immutable and is not changed by this task.
 
-- `plugin.json`;
-- `skills/**`.
+## In scope
 
-Exactly three reusable Skills are present:
+- Define lifecycle classification for non-canonical task workspaces without imposing one universal project status enum.
+- Require bounded workspace inventory/classification before creating or selecting conflicting successor writer workspaces.
+- Prevent a new writer for the same capability/authority while a predecessor workspace is unresolved or contains unknown unique work.
+- Define terminal closeout behavior for merged, accepted, abandoned, superseded, or otherwise terminal tasks.
+- Define explicit retention semantics for non-terminal workspaces such as PR/review/QA waiting states.
+- Preserve unknown staged, unstaged, untracked, and local-only work; prohibit force-clean as a lifecycle shortcut.
+- Define a concise closeout evidence/handoff shape and a legacy reconciliation path that can establish zero unclassified workspaces without requiring full-repository archaeology on every new task.
+- Update the `project-governance` Skill entry point, relevant references, and templates only where needed for consistency.
+- Update root controls when their owned durable/current facts change.
 
-- `project-governance`;
-- `domain-navigation`;
-- `incident-doctor`.
+## Out of scope
 
-Root controls, maintainer docs/history, examples, root references, Git metadata, prior `dist/` inputs, caches, secrets, credentials, OS metadata, and unrelated repository files are excluded.
+- New top-level Skill.
+- CLI, daemon, database, hook, background scanner, installer, automatic cleanup, automatic branch deletion, or automatic remediation.
+- Repository-specific hard-coded branch/worktree commands in the reusable Skill.
+- Requiring all projects to have only one worktree.
+- Deleting or modifying any target project's local worktrees as part of this task.
+- Changes to `domain-navigation` or `incident-doctor` behavior except links if strictly required; none are currently expected.
+- Publishing a new Plugin release.
 
-The published asset's byte size, SHA-256, and ZIP file list were verified to match the prepublication artifact.
+## Known evidence
 
-## Release-content boundary
+- Existing `project-governance` already requires task-relevant workspace identity and non-destructive handling of unknown local work.
+- Existing development flow says task branches/worktrees should be closed or retained according to verified lifecycle rules, but does not define the closeout gate, successor-writer rule, retention evidence, or zero-unclassified-workspace invariant.
+- Existing control-plane lifecycle integrity covers terminal task authorization but not physical workspace disposition.
+- Repeated project cleanup work has demonstrated that deferred classification/closeout increases later audit cost; the accepted design is to close this gap without creating a cleanup subsystem.
 
-No Skill semantics changed during release preparation. The release metadata change was limited to `plugin.json` version `0.1.0 -> 0.2.0` before packaging.
+## Risk and rationale
 
-The published release contains the already accepted reusable enhancements from PRs #7, #8, and #9. No MCP, hooks, daemon, runtime service, database, telemetry, installer, automatic refactor, or automatic remediation was added.
+This is a reusable governance-semantics change: wording can unintentionally over-constrain projects or create unnecessary audit work. Keep the contract proportional, project-adaptable, non-destructive, and limited to lifecycle facts needed for safe continuation. Do not turn normal task startup into a full historical repository audit.
 
-## Lifecycle closeout
+## Verification level and rationale
 
-This task no longer authorizes release preparation, publication, republishing, tag movement, asset replacement, or additional Skill changes.
+`V0` — documentation/control/layout change only. Required checks:
 
-The release target remains the exact published source SHA `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`. Any later control closeout commit is intentionally outside the release artifact identity.
+- exact branch/base identity and final diff scope;
+- markdown/content consistency and internal-link/path verification;
+- no contradictory lifecycle rules across `SKILL.md`, references, and templates;
+- explicit confirmation that no runtime/CLI/automation surface was added;
+- self-audit against the accepted design and out-of-scope list;
+- post-merge exact-main verification if merge is authorized and available.
 
-Do not move or overwrite `plugin-v0.2.0`. Any future package release or reusable Skill enhancement requires a separately authorized task.
+No runtime or product test suite is required because this task changes reusable documentation/Skill semantics only.
 
-## Final state
+## Acceptance criteria
 
-```text
-TASK_ID: EG-PLUGIN-V0.2.0-RELEASE-038
-PLUGIN_VERSION: 0.2.0
-RELEASE_TAG: plugin-v0.2.0
-RELEASE_TARGET_SHA: cf2df83e7e6bde39a5cce7f51e47d59e3911d71c
-ASSET_NAME: engineering-governance-plugin.zip
-PUBLISHED_ASSET_SIZE_BYTES: 36224
-PUBLISHED_ASSET_SHA256: 99ab0679c5692dd382d515cf39a92c6fb1e9c68ae119c43637b3cec65b19436e
-POST_PUBLISH_VERIFICATION: PASS
-FINAL_STATE: CLOSED_RELEASED
-```
+- `project-governance` explicitly owns workspace/worktree lifecycle and closeout when the target project uses those mechanisms.
+- Existing relevant workspaces are classified only to the depth needed for the active task; routine startup does not become broad archaeology.
+- Same-capability/authority successor writer creation is blocked when the predecessor is unresolved or unique work is unknown.
+- Terminal tasks require prompt workspace disposition: safe closeout or explicit justified retention with a release condition.
+- Non-terminal review/QA/PR workspaces may remain when their owner, reason, and release condition are explicit.
+- Unknown/unique local work is preserved and causes stop/reconciliation rather than destructive cleanup.
+- Legacy accumulated workspaces have a bounded one-time reconciliation path whose target invariant is zero unclassified workspaces.
+- Templates make lifecycle disposition visible without turning `CURRENT_STATUS.md` into a history log.
+- No new top-level Skill, automation, daemon, database, or cleanup runtime is added.
+- Final V0 self-audit finds no material contradiction, broken link, scope leak, or unsupported claim.
+
+## Stop conditions
+
+- `main` or the authorized task branch moves unexpectedly in a way that invalidates the verified baseline or exact reviewed diff.
+- Existing repository evidence contradicts the accepted design or shows a separate canonical lifecycle authority that this change would duplicate.
+- Implementing the contract would require runtime automation, destructive cleanup, or a new top-level Skill.
+- Any unknown remote change or unique work is discovered that cannot be reconciled non-destructively.
+
+## Handoff / current stop point
+
+Authorized to implement the accepted bounded design on `codex/project-governance-workspace-lifecycle-v1`, self-audit the exact branch, and merge only if the reviewed content remains within this contract and the merge target has not drifted incompatibly.

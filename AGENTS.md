@@ -48,6 +48,7 @@ A target project is adapted by an AI agent after inspecting that project's real 
 - The Web/remote planning side defines and audits the accepted task contract. Local AI execution follows that contract and returns evidence for independent review.
 - If the verified remote baseline, active task, or authorized branch differs from the execution card, stop rather than improvising.
 - Do not expand a task into adjacent governance work merely because an improvement is visible.
+- When a source-controlled project uses task branches or worktrees, every non-canonical workspace must have a known task owner and lifecycle disposition. Before creating a successor writer for the same capability or authority, reconcile the predecessor workspace. When a task reaches a terminal outcome, close obsolete workspace/branch state promptly or explicitly retain it with a verified reason and release condition; preserve unknown or unique local work and stop rather than force-cleaning it.
 
 ## Verification levels
 

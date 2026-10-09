@@ -31,11 +31,13 @@ No MCP, hooks, daemon, runtime service, database, telemetry, installer, automati
 
 ## Current task
 
-- Task: `EG-PLUGIN-V0.2.0-RELEASE-038`.
-- State: `CLOSED`.
-- Outcome: `RELEASED`.
-- Release target remains `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`; this closeout is a later control-only commit and is not part of the released artifact identity.
+- Task: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`.
+- State: `ACTIVE`.
+- Mode: `BOUNDED_GOVERNANCE_CHANGE`.
+- Start baseline: `main` at `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`.
+- Authorized branch: `codex/project-governance-workspace-lifecycle-v1`.
+- Objective: add a reusable workspace/worktree lifecycle and closeout contract to `project-governance`, including bounded pre-task classification, same-authority successor gating, terminal closeout, explicit retention, and non-destructive unique-work handling.
 
 ## Next milestone
 
-No further reusable Skill expansion is currently authorized. Use Plugin v0.2.0 in normal business projects and promote future generic changes only from repeated, evidence-backed cross-project issues.
+Implement the accepted workspace lifecycle contract in `project-governance`, update its templates/references consistently, run V0 diff/content/link/scope verification plus a self-audit for contradictions or overreach, then merge only if the exact reviewed branch remains aligned with the authorized baseline and scope.
