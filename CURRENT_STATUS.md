@@ -32,12 +32,13 @@ No MCP, hooks, daemon, runtime service, database, telemetry, installer, automati
 ## Current task
 
 - Task: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`.
-- State: `ACTIVE`.
+- State: `READY_FOR_MERGE`.
 - Mode: `BOUNDED_GOVERNANCE_CHANGE`.
 - Start baseline: `main` at `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`.
 - Authorized branch: `codex/project-governance-workspace-lifecycle-v1`.
-- Objective: add a reusable workspace/worktree lifecycle and closeout contract to `project-governance`, including bounded pre-task classification, same-authority successor gating, terminal closeout, explicit retention, and non-destructive unique-work handling.
+- Reviewed implementation HEAD: `485cbeb3817128549b23c0daba55502138c8181a`.
+- V0 self-audit: PASS for scope, links, control ownership, lifecycle semantics, and absence of runtime/automation changes.
 
 ## Next milestone
 
-Implement the accepted workspace lifecycle contract in `project-governance`, update its templates/references consistently, run V0 diff/content/link/scope verification plus a self-audit for contradictions or overreach, then merge only if the exact reviewed branch remains aligned with the authorized baseline and scope.
+Re-check the exact branch and merge target, merge only if the reviewed task branch remains compatible with the verified baseline, then perform post-merge exact-main verification and close the task controls.
