@@ -6,21 +6,21 @@ Use this contract when Engineering Governance is adopted into a user's cross-pro
 
 1. Follow higher-priority system, developer, user, and explicitly selected Skill instructions.
 2. Follow the selected repository's applicable `AGENTS.md` and declared project controls.
-3. For nontrivial software/project/repository engineering work that has not already selected a more specific Engineering Governance Skill, use `project-governance` as the normal Engineering Governance entry point.
+3. For software/project/repository engineering work that acts on or reasons about a project/repository, use `project-governance` as the normal Engineering Governance entry point unless a higher-priority instruction already selected a narrower Engineering Governance route.
 4. Route conditionally from that governed work when one of the narrower capability triggers below is met.
 
-Do not force Engineering Governance onto casual conversation, general knowledge work, writing-only requests, or other non-engineering activity merely because the Plugin is installed.
+Project Governance is intentionally lightweight for simple, low-risk repository work: entering through it does not require creating extra plans, branches, worktrees, broad scans, or broad validation when the project/task does not need them. Do not force Engineering Governance onto casual conversation, general knowledge work, writing-only requests, or other non-project/non-engineering activity merely because the Plugin is installed.
 
 ## Route table
 
 | Situation | Route | Return path |
 | --- | --- | --- |
-| Starting, planning, executing, reconciling, verifying, handing off, or closing normal project/repository engineering work | `project-governance` | Remain in Project Governance unless a narrower route is needed. |
+| Starting, planning, executing, reconciling, verifying, handing off, or closing project/repository engineering work, including simple low-risk changes | `project-governance` | Remain in Project Governance unless a narrower route is needed; scale procedure to actual risk. |
 | The responsible Domain/capability, semantic authority, source location, symbol, runtime entry, dependency, or relevant test cannot be established safely | `domain-navigation` | Return the verified route/unresolved gap to the caller, normally Project Governance. |
 | A real failure, unexplained behavior, or unsafe ambiguity blocks safe progress **and** current evidence is insufficient for the next safe decision | `incident-doctor` | Return evidence/fix boundary to Project Governance when task reconciliation or behavior-change authorization is needed. |
 | Incident investigation also cannot locate the relevant Domain/authority/code/test evidence | `incident-doctor -> domain-navigation -> incident-doctor` | Domain Navigation locates/verifies evidence; Incident Doctor retains diagnosis ownership. |
 | Existing evidence already supports the next safe decision for a bug/failure | Stay in the authorized Project Governance flow | Do not enter Incident Doctor merely because a defect exists. |
-| Simple non-project/non-engineering request | No Engineering Governance route required | Not applicable. |
+| Non-project/non-engineering request | No Engineering Governance route required | Not applicable. |
 
 ## Composition rules
 
