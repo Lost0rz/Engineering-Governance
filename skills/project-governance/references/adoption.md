@@ -4,6 +4,17 @@ Engineering Governance adoption is performed by an authorized AI agent. This con
 
 The adoption target is the user's declared global agent-guidance file. For Codex-style setups this is commonly the global `AGENTS.md` under the user's agent configuration directory; if the environment declares a different authoritative global file, use that authority instead of guessing a path.
 
+## Installation completion contract
+
+Treat Engineering Governance installation/adoption as a two-part result:
+
+1. the Plugin payload is installed/available and all three expected Skills resolve: `project-governance`, `domain-navigation`, and `incident-doctor`;
+2. the authoritative global guidance contains exactly one verified current Engineering Governance managed routing block.
+
+Do not report installation as complete when only the Skill payload exists but the global route has not been adopted. Likewise, a routing block that points to unavailable Skills is not a complete installation. If the environment cannot establish one of the two parts, report the partial state and the missing requirement rather than silently treating it as success.
+
+For an upgrade, verify the new Skill payload first, then update the managed routing block if its current template differs. This ordering avoids installing a route that points to capability definitions that are not yet available.
+
 ## Managed block identity
 
 The reusable block is bounded by the exact markers shipped in [GLOBAL_AGENTS_ROUTING.md](../assets/templates/GLOBAL_AGENTS_ROUTING.md):
@@ -33,6 +44,7 @@ Applying the same Plugin routing template repeatedly to a valid target must conv
 
 When the Plugin routing template changes:
 
+- verify the upgraded Plugin payload and all three Skill identities first;
 - compare the installed managed region with the current template;
 - replace only that region when an upgrade is required;
 - never copy full Skill procedures into the global file as part of an upgrade;
@@ -43,6 +55,7 @@ When the Plugin routing template changes:
 
 After adoption or upgrade, verify at minimum:
 
+- the installed Plugin identity/version intended by the adoption is established and all three expected Skills are available;
 - exactly one BEGIN marker and one END marker exist in the authoritative global file;
 - BEGIN precedes END and they bound exactly one managed region;
 - the block names the three expected Skills: `project-governance`, `domain-navigation`, `incident-doctor`;
