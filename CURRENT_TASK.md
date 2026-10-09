@@ -2,7 +2,7 @@
 
 Task ID: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-CORRECTIVE-040`
 
-State: `ACTIVE`
+State: `READY_FOR_MERGE`
 
 Mode: `BOUNDED_GOVERNANCE_CORRECTIVE`
 
@@ -29,17 +29,16 @@ No new top-level Skill or runtime component is authorized.
 ## Workspace lifecycle
 
 - Selected task workspace: remote branch `codex/project-governance-workspace-lifecycle-corrective-v1`.
-- Prior 039 branch is terminal, fully merged, and retained only because current connector capability does not expose branch-ref deletion; it is not an active writer and does not block this corrective.
+- Prior 039 branch is terminal, fully merged, and retained only because current connector capability does not expose branch-ref deletion; it is not write-capable under a current task authorization and does not block this corrective.
 - Retain current 040 branch until merge or another explicit terminal disposition.
 - This is a remote-only task; no local worktree-cleanliness claim is authorized.
 
-## In scope
+## Accepted corrective scope
 
-1. Narrow root durable wording from all non-canonical workspaces to task-relevant non-canonical workspaces, with unrelated historical workspaces requiring expansion only when they create ambiguity, collision, unique-work risk, lifecycle cleanup, or are explicitly under legacy reconciliation.
-2. Replace broad same-capability writer gating with overlapping write-authority/state/behavior-class semantics, consistent with `code-structure.md` canonical-authority granularity.
-3. Make retained predecessors that remain write-capable count as writers; a successor writer for the overlapping authority is blocked until the predecessor is terminal, superseded, explicitly frozen/read-only, or otherwise cannot resume writes without new authorization.
-4. Clarify that merge, release, acceptance, abandonment, supersession, rollback, or similar events end a task/phase only when project/task controls define them as terminal or when the event materially changes authorization; merge alone does not universally imply terminal closeout.
-5. Update only the minimal Skill/reference/template/root-control surfaces needed for internal consistency.
+1. Root and reusable rules now classify only task-relevant workspaces for routine decisions; unrelated historical workspaces expand into scope only for ambiguity, collision, unique-work risk, lifecycle cleanup, or explicit legacy reconciliation.
+2. Writer conflict is defined at overlapping fact/state/policy/behavior authority. Domain/capability labels are routing hints and do not create automatic mutual exclusion.
+3. A retained predecessor that can still resume writes under its current authorization remains a writer and blocks a successor for overlapping authority until a verified non-writing boundary exists, such as terminal state, supersession, explicit freeze/read-only disposition, or equivalent project rule.
+4. Merge, release, deployment, acceptance, abandonment, supersession, rollback, and similar lifecycle events are not terminal by name alone; project/task controls determine whether the event ends the task/phase, advances authorization, or is non-terminal.
 
 ## Out of scope
 
@@ -47,51 +46,44 @@ No new top-level Skill or runtime component is authorized.
 - Plugin version bump, package build, tag, release, or publication.
 - Changes to `domain-navigation` or `incident-doctor` behavior.
 - Any target-project worktree cleanup.
-- Broader refactoring of the three-file control plane or verification tiers unless required to resolve an actual contradiction found during audit.
+- Broader refactoring of the three-file control plane or verification tiers.
 
-## Known evidence
+## Verification
 
-- Full audit after task 039 found the root `AGENTS.md` wording broader than the canonical lifecycle reference (`every non-canonical` versus `task-relevant`).
-- `code-structure.md` defines canonical ownership at fact/state/policy/behavior-class granularity, so capability alone is too coarse as a mandatory writer lock.
-- A retained non-terminal workspace can be fully classified yet still be able to resume writes after review/QA feedback; classification alone therefore does not eliminate a parallel-writer risk.
-- `control-plane.md` already distinguishes material lifecycle events from the project-defined terminal outcome, while `workspace-lifecycle.md` currently phrases several events too categorically.
+`V0` whole-Skill audit — PASS on reviewed corrective HEAD `1e1affa284d7d3e3bfacfb44f19ee58d5f3778b9`, tree `b5e818ea93359ba98ef680d55d9e5796927b6fa7`.
 
-## Risk and rationale
+Fresh evidence established:
 
-This is documentation/Skill semantics only, but an imprecise rule can materially slow development or recreate parallel-writer ambiguity across every governed project. Keep the corrective narrow and align all summaries to one canonical detailed lifecycle authority rather than adding another policy layer.
-
-## Verification level and rationale
-
-`V0` — documentation/control semantics only.
-
-Required checks:
-
-- exact base/head and final diff scope;
-- whole `project-governance` consistency across `SKILL.md`, all references, templates, and root `AGENTS.md`;
-- consistency with `code-structure.md` authority granularity and `control-plane.md` lifecycle semantics;
-- boundary review against `domain-navigation` and `incident-doctor` to ensure no trigger/authority leakage;
-- confirmation normal startup remains bounded and legacy reconciliation remains the only broad historical inventory path;
-- confirmation no plugin-release/runtime/automation surface changes;
-- post-merge exact-main/tree/content verification.
+- exact baseline `main` remained `1e80848880b902ccf56ffcd70e22b19788b7b8d4` during implementation audit;
+- branch is ahead 10, behind 0 from that exact baseline;
+- changed paths are limited to root `AGENTS.md`, root controls, `project-governance` entry/reference/template Markdown files;
+- `plugin.json` remains version `0.2.0` and is unchanged;
+- `verification-tiers.md`, `code-structure.md`, `domain-navigation/SKILL.md`, and `incident-doctor/SKILL.md` remain outside the diff;
+- `code-structure.md` canonical authority remains fact/state/policy/behavior-class granular and the corrected lifecycle contract now uses compatible overlapping-authority semantics;
+- `domain-navigation` still only routes evidence and does not authorize tasks; `incident-doctor` remains evidence-gated diagnosis and returns authorization changes to `project-governance`;
+- project-governance reference paths exist on the exact branch, including `workspace-lifecycle.md`, `code-structure.md`, `control-plane.md`, `development-flow.md`, and `verification-tiers.md`;
+- normal startup remains bounded; broad historical inventory remains isolated to explicit legacy reconciliation or task-relevant ambiguity/collision/unique-work/lifecycle needs;
+- audit-found wording ambiguity in the writer invariant was corrected before merge review.
 
 ## Acceptance criteria
 
-- Root and Skill wording consistently limits routine classification to task-relevant workspaces.
-- Writer exclusion is based on overlapping write authority/state/behavior class, not capability name alone.
-- A retained predecessor that can still resume writes blocks a successor writer for the overlapping authority until it is frozen/read-only, superseded, terminal, or otherwise cannot write without new authorization.
-- Merge/release/etc. are not universally treated as terminal; project/task lifecycle authority determines whether the event ends authorization or moves phases.
-- Multi-worktree coexistence for disjoint writers/readers remains permitted.
-- Unknown/unique work preservation and remote/local evidence boundaries remain intact.
-- No new top-level capability, runtime, automation, or Plugin publication is added.
-- Final whole-Skill audit finds no material contradiction, duplicate authority, over-constraint, broken link, or scope leak.
+- Routine classification is task-relevant rather than repository-global. — PASS
+- Writer exclusion uses overlapping authority rather than capability name alone. — PASS
+- Retained write-capable predecessors still block overlapping successor writers. — PASS
+- Lifecycle event names do not automatically imply terminal status. — PASS
+- Multi-worktree coexistence for disjoint writers/readers remains permitted. — PASS
+- Unknown/unique work preservation and remote/local evidence boundaries remain intact. — PASS
+- Control-plane, code-structure, Domain Navigation, and Incident Doctor boundaries remain internally consistent. — PASS
+- No new runtime/automation/top-level Skill or Plugin publication is present. — PASS
+- V0 audit found no remaining material contradiction, duplicate authority, broken referenced path, or scope leak. — PASS
 
 ## Stop conditions
 
-- `main` or authorized branch moves incompatibly with the reviewed baseline.
-- A separate canonical lifecycle authority is discovered that changes the correction design.
-- The correction requires new runtime/enforcement behavior or Plugin publication.
-- Any ambiguity would require destructive or unsupported cleanup action.
+- `main` or the task branch changes incompatibly before merge.
+- PR diff differs materially from this exact reviewed branch.
+- Mergeability/status evidence reveals a blocker.
+- A separate canonical lifecycle authority is discovered before merge.
 
 ## Handoff / current stop point
 
-Authorized to implement the four bounded semantic corrections on `codex/project-governance-workspace-lifecycle-corrective-v1`, perform a whole-Skill V0 audit, create and merge a PR only if the exact reviewed branch remains aligned, then close task 040 after post-merge verification.
+Ready to create a PR from exact reviewed HEAD `1e1affa284d7d3e3bfacfb44f19ee58d5f3778b9`. Before merge, independently inspect the PR diff, base/head identity, mergeability, and available status/workflow evidence. Merge only with expected-head protection. After merge, verify exact `main` tree/content equivalence and reconcile this task to a terminal closed state. Plugin publication remains separate.
