@@ -20,8 +20,8 @@ It is not a business product, governance runtime, installer executable, Bootstra
 
 ## AI-adapted use
 
-1. Adopt or verify the managed global routing block when cross-project automatic Skill selection is desired.
-2. For nontrivial engineering/project work, enter through **Project Governance** unless a higher-priority instruction explicitly selects another route.
+1. Install/verify the Plugin payload and adopt or verify the managed global routing block when Engineering Governance is being installed for cross-project use. Installation is complete only when all three expected Skills are available **and** the authoritative global guidance has exactly one current managed routing block.
+2. For software, repository, or project engineering work, enter through **Project Governance** unless a higher-priority instruction explicitly selects another route. Project Governance scales down for simple low-risk work; this default does not require extra plans, worktrees, broad scans, or broad validation.
 3. Use **Domain Navigation** only when the responsible Domain/capability/authority/source/test/runtime route is unclear.
 4. Use **Incident Doctor** only when a real problem blocks safe progress and existing evidence is insufficient for the next safe decision.
 5. Inspect the target repository's own controls, source, semantic authorities, and runtime evidence.
@@ -36,7 +36,7 @@ The reusable Project Governance payload contains:
 - `references/adoption.md` — idempotent agent-mediated install/upgrade contract;
 - `assets/templates/GLOBAL_AGENTS_ROUTING.md` — the exact marker-bounded global routing block.
 
-Adoption inspects the existing authoritative global file, inserts or replaces exactly one managed block, preserves unrelated rules, and stops rather than guessing when multiple/conflicting managed regions exist. Project-local `AGENTS.md` files remain repository-specific and do not receive a duplicate global routing block by default.
+Adoption verifies the three Skill identities, inspects the existing authoritative global file, inserts or replaces exactly one managed block, preserves unrelated rules, and stops rather than guessing when multiple/conflicting managed regions exist. Project-local `AGENTS.md` files remain repository-specific and do not receive a duplicate global routing block by default.
 
 ## Fixed principles
 
