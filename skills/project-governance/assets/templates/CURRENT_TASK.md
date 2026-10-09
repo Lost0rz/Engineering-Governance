@@ -20,7 +20,7 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Workspace lifecycle
 
-[When the project uses task branches, worktrees, multiple checkouts, or an equivalent workspace model, record the selected workspace identity, any relevant predecessor/conflicting-writer state, expected terminal disposition, and any explicit retain-until condition. Use `not applicable` when the project does not use task workspaces. Keep global workspace history out of this task file.]
+[When the project uses task branches, worktrees, multiple checkouts, or an equivalent workspace model, record the selected workspace identity, any task-relevant predecessor whose write authority materially overlaps this task, whether a retained predecessor can still resume writes, the expected terminal/non-terminal disposition, and any explicit retain-until condition. Use `not applicable` when the project does not use task workspaces. Do not treat a broad Domain/capability label as an automatic writer lock, and keep unrelated global workspace history out of this task file unless this task explicitly performs legacy reconciliation.]
 
 ## In scope
 
@@ -48,10 +48,10 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Stop conditions
 
-- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include task-relevant baseline/control drift, unresolved conflicting predecessors, and unknown unique work when they cannot be resolved without destructive assumptions.]
+- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include task-relevant baseline/control drift, a predecessor that remains able to write an overlapping authority, and unknown unique work when they cannot be resolved without destructive assumptions or parallel writers.]
 
 ## Handoff / current stop point
 
-[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition or explicit retention reason/release condition. A handoff does not itself mean independent review accepted the work.]
+[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition, current write capability if retained, explicit retention reason/release condition, and whether the latest lifecycle event is terminal for this task/phase. A merge or similarly named event does not itself prove terminal status or local closeout. A handoff does not itself mean independent review accepted the work.]
 
 Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues.

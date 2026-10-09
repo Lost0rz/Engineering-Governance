@@ -8,27 +8,27 @@ Last verified: 2026-10-09.
 - Package version: `0.2.0`.
 - Exact release/source SHA: `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`.
 - Release asset SHA-256: `99ab0679c5692dd382d515cf39a92c6fb1e9c68ae119c43637b3cec65b19436e`.
-- The published v0.2.0 artifact does not include later repository changes merged by task 039.
+- The published v0.2.0 artifact does not include the workspace-lifecycle changes merged after that release or this corrective task.
 
 ## Accepted repository main
 
-- PR #11 merged `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039` into `main`.
-- Merge commit: `c3f5889dfc35ddc087b1027fbd84e74412f4ddae`.
-- Merged tree: `353239c9607bb53b16c64a2297b133eefc70d87a`, exactly matching the final reviewed task-branch tree.
-- `project-governance` now includes a reusable workspace/worktree lifecycle and closeout contract covering bounded pre-task classification, conflicting-writer/predecessor gating, explicit retention, terminal closeout, unique-work preservation, legacy reconciliation, and remote/local evidence boundaries.
-- No new top-level Skill, runtime, CLI, daemon, database, hook, installer, or automatic cleanup/remediation capability was added.
+- Current verified `main`: `1e80848880b902ccf56ffcd70e22b19788b7b8d4`.
+- Task `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039` is closed and merged.
+- `project-governance` includes the workspace/worktree lifecycle contract; task 040 corrects four semantic edge cases identified by the post-039 full audit.
+- No new top-level Skill, runtime, CLI, daemon, database, hook, installer, or automatic cleanup/remediation capability is added.
 
 ## Current task
 
-- Task: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`.
-- State: `CLOSED`.
-- Outcome: `MERGED_VERIFIED`.
-- PR: #11, merged 2026-10-09.
-- Reviewed task head: `e809800268040bcf7309fb11802d2e2a6b8c5ddd`.
-- Merge commit: `c3f5889dfc35ddc087b1027fbd84e74412f4ddae`.
-- Post-merge audit: PASS; the merge commit adds no file difference over the reviewed task head.
-- Remote task branch remains present because the available GitHub connector exposes no branch-ref deletion action. Its head is fully contained in `main`; remove it when verified branch-deletion capability is available. No claim is made about local worktree state.
+- Task: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-CORRECTIVE-040`.
+- State: `READY_FOR_MERGE`.
+- Mode: `BOUNDED_GOVERNANCE_CORRECTIVE`.
+- Start baseline: `main` at `1e80848880b902ccf56ffcd70e22b19788b7b8d4`.
+- Authorized branch: `codex/project-governance-workspace-lifecycle-corrective-v1`.
+- Reviewed corrective HEAD: `1e1affa284d7d3e3bfacfb44f19ee58d5f3778b9`.
+- Reviewed tree: `b5e818ea93359ba98ef680d55d9e5796927b6fa7`.
+- V0 whole-Skill audit: PASS for the four corrective requirements, code-structure authority alignment, project-governance/domain-navigation/incident-doctor boundaries, path/link presence, bounded startup semantics, and absence of Plugin/runtime/automation scope expansion.
+- Final diff versus exact baseline: ahead 10, behind 0; only nine authorized Markdown/control paths changed.
 
 ## Next milestone
 
-Use the new lifecycle contract in target projects. Any future Plugin publication, additional reusable Skill enhancement, or branch-cleanup action beyond the verified remote capability requires separate authorization or an available supported tool.
+Create an exact-head PR, independently re-read the PR diff and mergeability/status evidence, merge only if the reviewed head and base remain aligned, then verify merge-tree/content equivalence and close task 040. Plugin publication remains a separate future task.
