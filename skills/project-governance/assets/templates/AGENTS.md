@@ -14,9 +14,13 @@ Derive this durable guidance from verified target-repository evidence and accept
 
 [Link to accepted business/product/domain/capability authorities already present in the project and, only when it adds durable routing value, any derived navigation projection. A literal `DOMAIN_MAP.md` is not required. Keep unclear ownership `unknown` rather than inferring it from directory names.]
 
+## Global routing boundary
+
+[Do not copy the Engineering Governance global managed routing block into this project file by default. Global routing selects reusable Skills; this file owns repository-specific durable rules. Record only project-specific routing exceptions or constraints that are actually verified and needed here.]
+
 ## Normal development flow
 
-[Describe durable repository-specific workflow rules supported by current evidence. Do not copy the active task or current progress from `CURRENT_TASK.md` or `CURRENT_STATUS.md`. If the project uses Git, branches, worktrees, or multiple checkouts, record only the verified lifecycle/freshness rules it actually needs: non-destructive handling of unknown local work, bounded task-relevant pre-task workspace classification, overlapping-write-authority/predecessor rules, retained-workspace write-capability and release conditions, project-defined terminal closeout expectations, and what baseline/control/workspace drift requires a stop. A broad Domain/capability label alone should not create an automatic writer lock, and unrelated historical workspaces should not require routine full classification unless the active decision or an explicit legacy-reconciliation task requires it. Do not impose worktrees on projects that do not use them.]
+[Describe durable repository-specific workflow rules supported by current evidence. Do not copy the active task or current progress from `CURRENT_TASK.md` or `CURRENT_STATUS.md`. If the project uses Git, branches, worktrees, or multiple checkouts, record only the verified lifecycle/freshness rules it actually needs: non-destructive handling of unknown local work, bounded task-relevant pre-task workspace classification, overlapping-write-authority/predecessor rules, retained-workspace write-capability and release conditions, project-defined terminal closeout expectations, and what baseline/control/workspace drift requires a stop. Distinguish provenance/transition parents from explicit current/locked-head equality gates. A broad Domain/capability label alone should not create an automatic writer lock, and unrelated historical workspaces should not require routine full classification unless the active decision or an explicit legacy-reconciliation task requires it. Do not impose worktrees on projects that do not use them.]
 
 ## Doctor on demand
 
@@ -24,7 +28,7 @@ Derive this durable guidance from verified target-repository evidence and accept
 
 ## Verification policy
 
-[Describe the repository's evidence-based verification policy and when each applicable level is required. Keep current task checks in `CURRENT_TASK.md`.]
+[Describe the repository's evidence-based `V0`–`V3` policy and any repository-specific verification cadence. Preserve the principle that verification effort follows change risk, not change count: use focused checks during construction, group related acceptance findings into a bounded corrective when practical, and run broader affected regression at justified corrective/task/merge boundaries. Keep current task checks in `CURRENT_TASK.md`.]
 
 ## Project-specific commands
 
@@ -32,4 +36,4 @@ Derive this durable guidance from verified target-repository evidence and accept
 
 ## Stop conditions
 
-[List evidence, authority, baseline, workspace, or safety conditions that require stopping and identify what verified input is needed to continue. In source-controlled projects, unknown unique work, a task-relevant predecessor that can still write an overlapping authority, and task-relevant authority/baseline drift are stop conditions unless the repository's accepted workflow explicitly resolves them without data loss or parallel writers.]
+[List evidence, authority, baseline, workspace, or safety conditions that require stopping and identify what verified input is needed to continue. In source-controlled projects, unknown unique work, a task-relevant predecessor that can still write an overlapping authority, a failed explicit head lock, and task-relevant authority/baseline drift are stop conditions unless the repository's accepted workflow explicitly resolves them without data loss or parallel writers. Do not stop merely because a historical transition parent differs from the verified current control head when no equality lock was declared.]

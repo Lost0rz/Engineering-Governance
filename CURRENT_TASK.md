@@ -1,111 +1,101 @@
-# CURRENT TASK — Plugin v0.3.0 Release
+# CURRENT TASK — Global Routing and v0.4.0 Governance Corrective
 
-Task ID: `EG-PLUGIN-V0.3.0-RELEASE-041`
+Task ID: `EG-GLOBAL-ROUTING-V0.4.0-042`
 
-State: `CLOSED`
+State: `READY_FOR_MERGE`
 
-Mode: `PLUGIN_RELEASE`
+Mode: `GOVERNANCE_SKILL_EVOLUTION`
 
-## Outcome
+## Objective
 
-`RELEASED_VERIFIED`
+Evolve the accepted Plugin v0.3.0 source into a v0.4.0 candidate that adds durable global routing/adoption for the three existing Skills and folds verified pilot corrections into Project Governance without adding a fourth Skill or installer runtime.
 
-Engineering Governance Plugin v0.3.0 was published from an exact accepted source revision and passed post-publication source/tag/package/asset verification.
+## Start authority
 
-## Accepted identities
+- Accepted start `main`: `b7e47e2de346fa229818013d4369ae60cee6e0fa`.
+- Task branch: `codex/global-routing-v0.4.0`.
+- Published baseline: Plugin v0.3.0 remains the last released version until the separate release task completes.
+- Final audited reusable source before release-handoff control updates: `0a00ebf1a5ebe17163431fa099249b8e2fc70a22`.
 
-- Start `main`: `fe59b6eb38a40f312f86872248d26f2e151bf07b`
-- Release-source branch final head: `bb38fe3eed8c1238ae343a315a11abc22159a396`
-- Release-source PR: #13
-- Accepted release source / merge commit: `d11ed12bfdac4c8ff22d37961753190a400358da`
-- Release tag: `plugin-v0.3.0`
-- Release title: `Engineering Governance Plugin v0.3.0`
-- Asset: `engineering-governance-plugin.zip`
-- Asset size: `42166` bytes
-- Asset SHA-256: `c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`
-- Release ID: `407632762`
-- Asset ID: `624206295`
+## Accepted implemented scope
 
-## Source verification
+1. Global request-to-Skill routing with `project-governance` as the normal project/repository engineering route, `domain-navigation` conditional for unclear semantic/source routing, and `incident-doctor` reactive/evidence-gated.
+2. Agent-mediated adoption/upgrade with one marker-bounded global routing block; installation completion requires both three-Skill availability and exactly one current routing block.
+3. Control identity semantics separating provenance/transition parents, transition heads, current controls, explicit locked/execution heads, and remote freshness.
+4. Workspace lifecycle semantics separating local branch, remote branch, worktree registration/path, HEAD, working-tree/unique-work state, write capability, and overlapping authority, with bounded lifecycle checkpoints during normal development.
+5. Construction-time code-structure governance based on Domain/capability/responsibility/authority/lifecycle/dependency/invariants/reason-to-change rather than line count or edit size.
+6. Single canonical authority per fact/state/behavior class, with explicit migration boundaries for temporary coexistence.
+7. `V0`–`V3` as the single risk/scope taxonomy plus separate construction/corrective/task/merge-release cadence.
+8. Reuse of accepted semantic maps; optional Domain navigation projection remains derived routing evidence rather than product/domain truth.
+9. Project templates and root guidance updated without copying the full global routing contract into each project.
 
-`V0 + release artifact identity verification` — PASS.
+## Non-goals preserved
 
-- Exact pre-release baseline remained `fe59b6eb38a40f312f86872248d26f2e151bf07b` during release-source preparation.
-- Final source PR changed exactly three paths: `plugin.json`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`.
-- No `skills/**` file changed during release preparation.
-- `plugin.json` changed only package version `0.2.0 -> 0.3.0`.
-- PR #13 was `mergeable=true`; exact source head was merged with expected-head protection.
-- Comparing source PR head `bb38fe3...` to accepted merge `d11ed12...` shows one merge commit and zero file differences.
-- `plugin.json` at the accepted source is version `0.3.0`, blob `bae0047c2deaa3e4ec0fbb26db587bd46010578e`.
+- No fourth Router Skill.
+- No Bootstrap CLI, installer executable, daemon, hook, MCP server, background service, automatic remediation, or automatic global-file mutation runtime.
+- No automatic target-project modification by Plugin runtime.
+- No full global `AGENTS.md` rewrite contract; only a marker-bounded managed routing block.
+- No Plugin v0.4.0 publication inside this task; publication belongs to the separate release task after merge.
+- No changes to target business repositories.
 
-## Package verification
+## Verification level and cadence
 
-Publisher run `37897783880` completed successfully.
+Level: `V0 + multi-pass semantic/adversarial audit`.
 
-Its verified sequence was:
+Audit passes covered:
 
-1. confirmed `plugin-v0.3.0` tag/Release identity was unused;
-2. checked out exact source `d11ed12bfdac4c8ff22d37961753190a400358da`;
-3. verified `plugin.json` version `0.3.0`;
-4. verified exactly three top-level Skill directories: `domain-navigation`, `incident-doctor`, `project-governance`;
-5. assembled only `plugin.json` and `skills/**` under ZIP root `engineering-governance/`;
-6. rejected symlinks and any path outside the authorized payload;
-7. verified root controls, `.github`, docs, examples, and root references were absent from the ZIP;
-8. produced 40 ZIP entries;
-9. recorded package size `42166` bytes;
-10. recorded SHA-256 `c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`;
-11. published the exact Release using that package and source SHA.
+1. routing precedence, route composition, and return paths;
+2. adoption/idempotency and partial-install rejection;
+3. Domain/semantic navigation and existing-map reuse;
+4. canonical authority and responsibility-based code structure;
+5. proactive worktree lifecycle checkpoints versus legacy archaeology;
+6. control-parent/current-head false-stop regression;
+7. verification-risk/cadence separation;
+8. package boundary and exact-source publication transport;
+9. anti-bypass wording and exact-head re-read.
 
-## Post-publication verification
+## Findings resolved
 
-PASS.
+- Template propagation gap for control identity/cadence.
+- Installation completion/default-route ambiguity.
+- Structure governance initially did not make construction-time responsibility checks explicit enough.
+- Workspace lifecycle initially lacked explicit PR/QA/freeze/terminal/successor checkpoints.
+- Final release-preflight found one residual wording loophole: a checklist item said `Before writing substantial new code`, which could let a small responsibility-changing edit skip the structure guard. Corrected at `0a00ebf1a5ebe17163431fa099249b8e2fc70a22` so responsibility change, not edit size, is the trigger.
 
-- GitHub Release `plugin-v0.3.0` exists and is published.
-- `draft=false`.
-- `prerelease=false`.
-- Release `target_commitish` is exactly `d11ed12bfdac4c8ff22d37961753190a400358da`.
-- `refs/tags/plugin-v0.3.0` resolves directly to the same commit.
-- Published asset name is exactly `engineering-governance-plugin.zip`.
-- GitHub-reported asset size is `42166` bytes.
-- GitHub-reported digest is `sha256:c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`, matching the pre-upload package hash.
-- Release notes record the same source SHA, size, hash, included Skills, and major v0.3.0 capability changes.
-- Accepted `main` source contains no `.github/` publisher workflow; publisher transport files are outside the tagged source and ZIP.
+No Critical or Important issue remained after the final exact reusable-source audit.
 
-## Duplicate transport trigger
+## Release-relevant invariants
 
-A second transport run `37897798746` was triggered while the first publisher run was already active. After the first run published successfully, the second run failed at the first guard step `Confirm release identity is unused`; all checkout/package/publish steps were skipped. It therefore made no Release, tag, source, or asset mutation and is classified as a safely rejected duplicate transport attempt rather than a release failure.
+- live `main` remained `b7e47e2de346fa229818013d4369ae60cee6e0fa` through the reusable-source audit;
+- exactly three top-level Skill directories remain;
+- `plugin.json` version is exactly `0.4.0`;
+- routing/adoption artifacts required for installation are under `skills/**` and therefore inside the established Plugin payload boundary;
+- managed routing template contains one BEGIN/END marker pair and names all three Skills;
+- Project Governance is the default engineering entry; Domain Navigation is conditional; Incident Doctor is reactive/evidence-gated;
+- code-structure decisions are responsibility-driven and construction-time;
+- workspace governance uses bounded lifecycle checkpoints and keeps full legacy archaeology exceptional;
+- explicit locked-head equality remains hard while historical control-parent inequality alone is not drift;
+- no competing L1–L4 taxonomy exists;
+- no unauthorized runtime/installer mechanism was added.
 
-## Workspace lifecycle closeout
+## Package/release handoff
 
-- Release-source branch `codex/plugin-v0.3.0-release-v1`: terminal, fully merged into accepted source/main, no longer write-authorized.
-- Publisher branch `codex/plugin-v0.3.0-publisher-v1`: terminal transport-only branch, never merged to main, not the Release target, not included in the ZIP.
-- Both remote branches may remain present because the available connector does not expose branch-ref deletion. Their retention is explicit tooling debt, not unknown workspace state.
-- Local workspace disposition is not established by this remote-only task; no local cleanliness/removal claim is made.
+This task may merge the audited source into `main`. Publication itself requires a new release task after the exact merged source SHA is known.
 
-## Final state
+The release task must:
 
-```text
-TASK_ID: EG-PLUGIN-V0.3.0-RELEASE-041
-START_MAIN: fe59b6eb38a40f312f86872248d26f2e151bf07b
-RELEASE_SOURCE_BRANCH: codex/plugin-v0.3.0-release-v1
-RELEASE_SOURCE_HEAD: bb38fe3eed8c1238ae343a315a11abc22159a396
-ACCEPTED_SOURCE_HEAD: d11ed12bfdac4c8ff22d37961753190a400358da
-PLUGIN_VERSION: 0.3.0
-SKILL_SEMANTICS_CHANGED_DURING_RELEASE: NO
-PACKAGE_SIZE_BYTES: 42166
-PACKAGE_SHA256: c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400
-PACKAGE_ENTRY_COUNT: 40
-PACKAGE_FILE_LIST_CHECK: PASS
-RELEASE_TAG: plugin-v0.3.0
-RELEASE_TARGET_SHA: d11ed12bfdac4c8ff22d37961753190a400358da
-RELEASE_PUBLISHED: YES
-RELEASE_DRAFT: NO
-RELEASE_PRERELEASE: NO
-ASSET_NAME: engineering-governance-plugin.zip
-PUBLISHED_ASSET_SIZE_BYTES: 42166
-PUBLISHED_ASSET_SHA256: c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400
-POST_PUBLISH_VERIFICATION: PASS
-PUBLISHER_BRANCH_DISPOSITION: TERMINAL_RETAINED_TOOLING_LIMIT_NOT_MERGED
-LOCAL_WORKSPACE_STATUS: NOT_CLAIMED
-FINAL_STATE: RELEASED_VERIFIED
-```
+- verify the merged source contains the same Plugin payload as audited reusable source `0a00ebf1a5ebe17163431fa099249b8e2fc70a22` except permitted control-only merge/source bookkeeping;
+- verify `plugin-v0.4.0` Release/tag identity is unused;
+- package exactly one `engineering-governance/` root containing only `plugin.json` and `skills/**`;
+- verify exactly three top-level Skills and reject symlinks/extra repository files;
+- record package size and SHA-256 before upload;
+- publish Release `plugin-v0.4.0` targeting the exact accepted merged release-source SHA;
+- verify GitHub Release tag target, non-draft/non-prerelease state, asset name/size/digest, and absence of publisher workflow/transport files from `main` and tagged source.
+
+## Stop conditions
+
+Stop merge or release handoff if the final control-only seal contains any Skill/plugin payload change, if `main` drifts before merge, if the PR head is not the exact verified head, or if any routing/Skill/package invariant above is contradicted.
+
+## Handoff / current stop point
+
+User changed the accepted sequence to: **final audit -> publish -> local reinstall -> real acceptance**. Perform one final control-only exact-head comparison after this update. If the delta from reusable source `0a00ebf1a5ebe17163431fa099249b8e2fc70a22` is control-only and `main` is unchanged, merge PR #14 with expected-head protection. Then start the separate Plugin v0.4.0 release task from the exact merged source.

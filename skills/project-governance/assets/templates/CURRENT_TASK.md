@@ -16,11 +16,11 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Start baseline
 
-[Actual verified repository identity, branch/ref, revision, and relevant remote or runtime identity. For source-controlled work, include the task-relevant workspace/unique-work state when it affects safe execution. Do not use an assumed baseline.]
+[Actual verified repository identity, branch/ref, revision, and relevant remote or runtime identity. For every material recorded Git identity, state its semantic role when ambiguity is possible: transition/provenance parent, transition head, current control head, or explicit locked/expected/execution head. Do not treat a historical parent as a current-head equality requirement unless the task explicitly declares that lock. For source-controlled work, include the task-relevant workspace/unique-work state when it affects safe execution. Do not use an assumed baseline.]
 
 ## Workspace lifecycle
 
-[When the project uses task branches, worktrees, multiple checkouts, or an equivalent workspace model, record the selected workspace identity, any task-relevant predecessor whose write authority materially overlaps this task, whether a retained predecessor can still resume writes, the expected terminal/non-terminal disposition, and any explicit retain-until condition. Use `not applicable` when the project does not use task workspaces. Do not treat a broad Domain/capability label as an automatic writer lock, and keep unrelated global workspace history out of this task file unless this task explicitly performs legacy reconciliation.]
+[When the project uses task branches, worktrees, multiple checkouts, or an equivalent workspace model, record the selected workspace identity, any task-relevant predecessor whose write authority materially overlaps this task, whether a retained predecessor can still resume writes, the expected terminal/non-terminal disposition, and any explicit retain-until condition. Distinguish local branch, remote branch, worktree registration/path, HEAD, working-tree/unique-work state, and write capability when those facts matter. Use `not applicable` when the project does not use task workspaces. Do not treat a broad Domain/capability label as an automatic writer lock, and keep unrelated global workspace history out of this task file unless this task explicitly performs legacy reconciliation.]
 
 ## In scope
 
@@ -38,9 +38,9 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 [Concise change radius, material risks, and why the chosen verification depth is suitable. Do not calculate a numerical risk score.]
 
-## Verification level and rationale
+## Verification level, cadence, and rationale
 
-[Chosen `V0`–`V3` level, short rationale, required checks, and material checks intentionally omitted. Choose the lightest level that can safely establish the result.]
+[Chosen `V0`–`V3` risk/scope level, short rationale, required checks, and material checks intentionally omitted. Also state any cadence expectations that matter: focused construction checks, broader affected regression at bounded-corrective close, task-close checks, or merge/release-boundary checks. Choose the lightest level that can safely establish the result; verification effort follows change risk, not change count.]
 
 ## Acceptance criteria
 
@@ -48,7 +48,7 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Stop conditions
 
-- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include task-relevant baseline/control drift, a predecessor that remains able to write an overlapping authority, and unknown unique work when they cannot be resolved without destructive assumptions or parallel writers.]
+- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include a failed explicit head lock, task-relevant baseline/control relationship failure, a predecessor that remains able to write an overlapping authority, and unknown unique work when they cannot be resolved without destructive assumptions or parallel writers. A historical transition parent differing from a verified current control head is not by itself a stop condition.]
 
 ## Handoff / current stop point
 

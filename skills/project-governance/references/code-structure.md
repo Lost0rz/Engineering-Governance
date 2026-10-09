@@ -1,6 +1,6 @@
 # Code Structure and Canonical Authority
 
-Use this reference when an authorized task adds or changes state ownership, writers, shared behavior, or module boundaries. It guides architecture decisions within the active task; it is not a style checker, a line-count policy, or authorization for unrelated refactoring.
+Use this reference when an authorized task adds or changes state ownership, writers, shared behavior, module boundaries, or would extend an existing module with a materially new responsibility. It guides architecture decisions within the active task; it is not a style checker, a line-count policy, or authorization for unrelated refactoring.
 
 ## One canonical authority per fact or behavior class
 
@@ -38,6 +38,16 @@ Consider a structural split when a module or file:
 
 Split along responsibility and ownership boundaries. Refactor only as far as the authorized task requires for correctness, maintainability, safe extension, or ownership clarity. Report unrelated large files or duplicate-looking code as follow-up evidence; do not expand the active task into broad cleanup by default.
 
+## Construction-time structure guard
+
+Apply structure governance while code is being designed and written, not only during final review or after a file becomes visibly large.
+
+Before adding a materially new responsibility to an existing module, decide whether that responsibility belongs to the same Domain/capability, authority, lifecycle, dependency direction, invariants, and reason to change. If it does, extend the existing cohesive module even when the file is already large. If it does not, establish the responsibility/ownership boundary before writing the bulk of the new implementation, and split or create the appropriate module when that boundary is within the active task and needed for safe extension.
+
+Re-run this check when implementation discoveries materially change the planned responsibility boundary. Do not knowingly accumulate a second responsibility with the intention to "finish first and split later" merely to reduce short-term friction. Conversely, do not interrupt cohesive work just because line count crosses an arbitrary threshold.
+
+The purpose is to prevent structural debt at the point it would be introduced, while keeping refactoring bounded to the authorized task.
+
 ## Planning and review checks
 
 For relevant source changes, be able to answer:
@@ -46,6 +56,7 @@ For relevant source changes, be able to answer:
 2. Do new or existing consumers delegate to that owner, or are there independent writers that require ownership reconciliation?
 3. If authority must coexist during migration, are `PRIMARY_AUTHORITY`, `SYNC_DIRECTION`, `CUTOVER_CONDITION`, and `RETIREMENT_BOUNDARY` explicit?
 4. If behavior is shared or a module is split, do the responsibilities, lifecycle, invariants, and reasons to change support that boundary?
-5. Is the proposed change needed by the active task, and is the split based on responsibility rather than file length alone?
+5. Would this edit introduce a materially different responsibility or reason to change, regardless of how few lines it adds? If yes, establish the boundary now rather than relying on a later size-driven cleanup.
+6. Is the proposed change needed by the active task, and is any split based on responsibility rather than file length alone?
 
-If these answers reveal competing owners, resolve the ownership decision before adding another writer. If they reveal only unrelated size or duplication, keep the current task bounded and record a follow-up when useful.
+If these answers reveal competing owners, resolve the ownership decision before adding another writer. If they reveal a new responsibility boundary required by the active task, establish it during construction. If they reveal only unrelated size or duplication, keep the current task bounded and record a follow-up when useful.
