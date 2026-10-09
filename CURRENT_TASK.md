@@ -2,88 +2,80 @@
 
 Task ID: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-CORRECTIVE-040`
 
-State: `READY_FOR_MERGE`
+State: `CLOSED`
 
 Mode: `BOUNDED_GOVERNANCE_CORRECTIVE`
 
-## Objective
+## Outcome
 
-Correct four semantic edge cases in the accepted workspace/worktree lifecycle contract so routine task startup remains bounded, writer conflicts are scoped by overlapping authority rather than broad capability labels, retained write-capable predecessors cannot create parallel writers, and merge/release events are terminal only when the project/task defines them as terminal or they otherwise change authorization.
+`MERGED_VERIFIED`
 
-## Affected domains
+The four workspace-lifecycle semantic corrections identified by the post-039 full audit are merged into repository `main` through PR #12 and passed exact post-merge identity/content verification.
 
-- Root repository governance rule: `AGENTS.md`
-- Reusable Skill: `skills/project-governance/`
+## Accepted identities
 
-No new top-level Skill or runtime component is authorized.
+- Start `main`: `1e80848880b902ccf56ffcd70e22b19788b7b8d4`
+- Final PR/task branch: `77c0f3c4ae68472a09386a22573a8d8e15b5ba2e`
+- PR: #12
+- Merge commit: `4fe236b91295fe4594c4d5932da8375086a7648d`
+- Final reviewed/merged tree: `8b0f15dbe15164bcf40d45661c6881955b6f90f9`
+- Canonical lifecycle blob on `main`: `832b1a46085968b6b340f03f78d0e4fc6920ed94`
+- `project-governance/SKILL.md` blob on `main`: `b98e62a60e95ff570d2261ae0dc872e94fc26059`
 
-## Start baseline
+## Accepted corrections
 
-- Repository: `Lost0rz/Engineering-Governance`
-- Canonical branch: `main`
-- Verified start HEAD: `1e80848880b902ccf56ffcd70e22b19788b7b8d4`
-- Authorized task branch: `codex/project-governance-workspace-lifecycle-corrective-v1`
-- Prior lifecycle task 039: `CLOSED / MERGED_VERIFIED`
-- Published Plugin v0.2.0 remains unchanged and does not include tasks 039/040.
-
-## Workspace lifecycle
-
-- Selected task workspace: remote branch `codex/project-governance-workspace-lifecycle-corrective-v1`.
-- Prior 039 branch is terminal, fully merged, and retained only because current connector capability does not expose branch-ref deletion; it is not write-capable under a current task authorization and does not block this corrective.
-- Retain current 040 branch until merge or another explicit terminal disposition.
-- This is a remote-only task; no local worktree-cleanliness claim is authorized.
-
-## Accepted corrective scope
-
-1. Root and reusable rules now classify only task-relevant workspaces for routine decisions; unrelated historical workspaces expand into scope only for ambiguity, collision, unique-work risk, lifecycle cleanup, or explicit legacy reconciliation.
-2. Writer conflict is defined at overlapping fact/state/policy/behavior authority. Domain/capability labels are routing hints and do not create automatic mutual exclusion.
-3. A retained predecessor that can still resume writes under its current authorization remains a writer and blocks a successor for overlapping authority until a verified non-writing boundary exists, such as terminal state, supersession, explicit freeze/read-only disposition, or equivalent project rule.
-4. Merge, release, deployment, acceptance, abandonment, supersession, rollback, and similar lifecycle events are not terminal by name alone; project/task controls determine whether the event ends the task/phase, advances authorization, or is non-terminal.
-
-## Out of scope
-
-- New Skill, CLI, daemon, database, hook, scanner, installer, automation, or enforcement runtime.
-- Plugin version bump, package build, tag, release, or publication.
-- Changes to `domain-navigation` or `incident-doctor` behavior.
-- Any target-project worktree cleanup.
-- Broader refactoring of the three-file control plane or verification tiers.
+1. Routine workspace classification is task-relevant and bounded. Unrelated historical workspaces do not require routine full classification unless they create ambiguity, collision, unique-work risk, lifecycle cleanup, or are explicitly within legacy reconciliation.
+2. Writer conflict is defined at overlapping fact/state/policy/behavior authority; broad Domain/capability labels are routing hints rather than automatic mutual-exclusion boundaries.
+3. A retained predecessor that can still resume writes remains a writer for overlapping-authority checks. A successor is blocked until a verified non-writing boundary exists, such as terminal state, supersession, explicit freeze/read-only disposition, or another accepted project rule.
+4. Merge, release, deployment, acceptance, abandonment, supersession, rollback, and similar lifecycle events are not terminal by name alone. Project/task controls determine whether the event ends a task/phase, advances authorization, or is non-terminal.
 
 ## Verification
 
-`V0` whole-Skill audit — PASS on reviewed corrective HEAD `1e1affa284d7d3e3bfacfb44f19ee58d5f3778b9`, tree `b5e818ea93359ba98ef680d55d9e5796927b6fa7`.
+`V0` PASS.
 
-Fresh evidence established:
+Pre-merge audit established:
 
-- exact baseline `main` remained `1e80848880b902ccf56ffcd70e22b19788b7b8d4` during implementation audit;
-- branch is ahead 10, behind 0 from that exact baseline;
-- changed paths are limited to root `AGENTS.md`, root controls, `project-governance` entry/reference/template Markdown files;
-- `plugin.json` remains version `0.2.0` and is unchanged;
-- `verification-tiers.md`, `code-structure.md`, `domain-navigation/SKILL.md`, and `incident-doctor/SKILL.md` remain outside the diff;
-- `code-structure.md` canonical authority remains fact/state/policy/behavior-class granular and the corrected lifecycle contract now uses compatible overlapping-authority semantics;
-- `domain-navigation` still only routes evidence and does not authorize tasks; `incident-doctor` remains evidence-gated diagnosis and returns authorization changes to `project-governance`;
-- project-governance reference paths exist on the exact branch, including `workspace-lifecycle.md`, `code-structure.md`, `control-plane.md`, `development-flow.md`, and `verification-tiers.md`;
-- normal startup remains bounded; broad historical inventory remains isolated to explicit legacy reconciliation or task-relevant ambiguity/collision/unique-work/lifecycle needs;
-- audit-found wording ambiguity in the writer invariant was corrected before merge review.
+- exact baseline `main` remained `1e80848880b902ccf56ffcd70e22b19788b7b8d4` during implementation review;
+- PR #12 base/head were exactly `1e80848880b902ccf56ffcd70e22b19788b7b8d4` -> `77c0f3c4ae68472a09386a22573a8d8e15b5ba2e`;
+- PR changed exactly nine authorized Markdown/control paths;
+- actual PR diff was independently re-read after implementation and matched the corrective scope;
+- GitHub reported `mergeable=true` before merge;
+- the final PR head had no commit-status entries and no PR workflow runs, so no configured CI gate was pending;
+- `plugin.json` remained version `0.2.0` and outside the diff;
+- `verification-tiers.md`, `code-structure.md`, `domain-navigation/SKILL.md`, and `incident-doctor/SKILL.md` remained unchanged;
+- code-structure authority granularity and corrected workspace writer granularity are aligned;
+- project-governance reference paths remained present and normal startup stayed bounded;
+- no new runtime, automation, top-level Skill, or Plugin release surface was introduced.
 
-## Acceptance criteria
+Post-merge audit established:
 
-- Routine classification is task-relevant rather than repository-global. — PASS
-- Writer exclusion uses overlapping authority rather than capability name alone. — PASS
-- Retained write-capable predecessors still block overlapping successor writers. — PASS
-- Lifecycle event names do not automatically imply terminal status. — PASS
-- Multi-worktree coexistence for disjoint writers/readers remains permitted. — PASS
-- Unknown/unique work preservation and remote/local evidence boundaries remain intact. — PASS
-- Control-plane, code-structure, Domain Navigation, and Incident Doctor boundaries remain internally consistent. — PASS
-- No new runtime/automation/top-level Skill or Plugin publication is present. — PASS
-- V0 audit found no remaining material contradiction, duplicate authority, broken referenced path, or scope leak. — PASS
+- PR #12 reports `merged=true` with merge commit `4fe236b91295fe4594c4d5932da8375086a7648d`;
+- `main` resolved to that merge commit before this control-only closeout;
+- merge tree `8b0f15dbe15164bcf40d45661c6881955b6f90f9` exactly equals the final PR-head tree;
+- comparing PR head to merge commit shows one merge commit and zero file differences;
+- main lifecycle and Skill-entry blobs exactly match the audited branch content.
 
-## Stop conditions
+## Workspace lifecycle closeout
 
-- `main` or the task branch changes incompatibly before merge.
-- PR diff differs materially from this exact reviewed branch.
-- Mergeability/status evidence reveals a blocker.
-- A separate canonical lifecycle authority is discovered before merge.
+- Task lifecycle: terminal / merged and verified.
+- Remote task branch: `codex/project-governance-workspace-lifecycle-corrective-v1` at `77c0f3c4ae68472a09386a22573a8d8e15b5ba2e`.
+- Remote branch content: fully contained in `main`; it no longer authorizes writes.
+- Remote branch disposition: retained only because the available connector does not expose branch-ref deletion.
+- Retain until: verified branch-deletion capability is available or equivalent maintainer cleanup is performed.
+- Local workspace disposition: not established by this remote-only task; no local cleanliness/removal claim is made.
 
-## Handoff / current stop point
+## Final state
 
-Ready to create a PR from exact reviewed HEAD `1e1affa284d7d3e3bfacfb44f19ee58d5f3778b9`. Before merge, independently inspect the PR diff, base/head identity, mergeability, and available status/workflow evidence. Merge only with expected-head protection. After merge, verify exact `main` tree/content equivalence and reconcile this task to a terminal closed state. Plugin publication remains separate.
+```text
+TASK_ID: EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-CORRECTIVE-040
+PR: 12
+TASK_HEAD: 77c0f3c4ae68472a09386a22573a8d8e15b5ba2e
+MERGE_COMMIT: 4fe236b91295fe4594c4d5932da8375086a7648d
+MERGED_TREE_MATCH: PASS
+POST_MERGE_AUDIT: PASS
+FOUR_SEMANTIC_CORRECTIONS: PASS
+PLUGIN_PUBLICATION: NOT_PART_OF_TASK
+REMOTE_TASK_BRANCH: RETAINED_TOOLING_LIMIT_FULLY_MERGED
+LOCAL_WORKSPACE_STATUS: NOT_CLAIMED
+FINAL_STATE: CLOSED_MERGED_VERIFIED
+```
