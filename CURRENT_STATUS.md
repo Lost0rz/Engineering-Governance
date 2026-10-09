@@ -13,30 +13,20 @@ Last verified: 2026-10-09.
 
 - Verified pre-release `main`: `fe59b6eb38a40f312f86872248d26f2e151bf07b`.
 - Tasks 039/040 added and corrected the reusable `project-governance` workspace/worktree lifecycle contract.
-- The accepted lifecycle semantics cover bounded task-relevant classification, overlapping-authority writer gating, retained write-capability handling, project-defined terminal-event semantics, unique-work preservation, legacy reconciliation, and remote/local evidence boundaries.
 - Exactly three reusable top-level Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Release decision
-
-The accepted reusable capability added after Plugin v0.2.0 warrants a minor release. The next Plugin version is `0.3.0` with GitHub Release tag `plugin-v0.3.0`.
-
-The release payload remains exactly:
-
-- `plugin.json`
-- `skills/**`
-
-under one ZIP root `engineering-governance/`.
-
-## Current task
+## Plugin v0.3.0 release preparation
 
 - Task: `EG-PLUGIN-V0.3.0-RELEASE-041`.
-- State: `AUTHORIZED_FOR_RELEASE_PREP_AND_PUBLICATION`.
-- Mode: `PLUGIN_RELEASE`.
-- Authorized source branch: `codex/plugin-v0.3.0-release-v1`.
-- Allowed reusable-source change during release prep: `plugin.json` version `0.2.0 -> 0.3.0` only; Skill semantics are frozen.
-- Root controls may record release evidence and lifecycle state.
-- Publication transport may use a separate remote-only publisher branch because the current GitHub connector does not expose direct Release/tag/asset creation. That transport branch must not be merged into `main`, must not be the Release target, and must not enter the Plugin ZIP.
+- State: `READY_FOR_SOURCE_PR`.
+- Release-source branch: `codex/plugin-v0.3.0-release-v1`.
+- Current reviewed release-source HEAD before control handoff: `20a7787bc67090d5f19be1a8e4c958b3254c11da`.
+- Version metadata: `plugin.json` is `0.3.0`.
+- Exact diff from start baseline is ahead 3 / behind 0 and contains only `plugin.json`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`; no Skill file changed.
+- GitHub currently has no `plugin-v0.3.0` Release and no `refs/tags/plugin-v0.3.0`, so there is no conflicting publication identity.
+- Release payload contract remains exactly `plugin.json` + `skills/**` under ZIP root `engineering-governance/`.
+- Direct Release/tag/asset creation is unavailable in the current connector; if source PR is accepted, publication may use the task-authorized remote-only publisher branch. That transport must not enter `main`, the source tag, or the ZIP.
 
 ## Next milestone
 
-Prepare and audit the exact v0.3.0 release-source diff, merge it, package from the exact merged source SHA, publish `plugin-v0.3.0`, independently verify release target and asset identity, then close task 041. The next step after release is installation/acceptance testing in target projects, not further governance expansion by default.
+Create and independently inspect the exact release-source PR. If accepted, merge with expected-head protection, lock the resulting merged source SHA, publish `plugin-v0.3.0` from that exact SHA, verify the GitHub-reported asset digest/size and release target, then close task 041.
