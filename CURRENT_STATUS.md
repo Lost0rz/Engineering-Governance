@@ -13,20 +13,21 @@ Last verified: 2026-10-09.
 ## v0.4.0 candidate
 
 - Task: `EG-GLOBAL-ROUTING-V0.4.0-042`.
-- State: `READY_FOR_INSTALLATION_ACCEPTANCE` pending final exact-head read-only seal after the latest control sync.
+- State: `READY_FOR_INSTALLATION_ACCEPTANCE`.
 - Start `main`: `b7e47e2de346fa229818013d4369ae60cee6e0fa`.
+- Sealed audited source before this status-only seal: `a1c737deb50628762e4f1326a8afce0c97dca96b`.
 - Task branch: `codex/global-routing-v0.4.0`.
 - Pull request: #14, Draft / Open / Unmerged.
 - Candidate package metadata: `0.4.0`.
 - This is a source candidate only; no Plugin v0.4.0 GitHub Release has been published.
-- Live `main` remained at the authorized start revision through the final pre-control audit.
+- Live `main` remained at the authorized start revision through the final exact-head audit.
 
 ## Implemented capability changes
 
 1. **Global Skill routing** — Project Governance is the normal route for project/repository engineering work, including simple low-risk edits while keeping procedure lightweight; Domain Navigation is conditional for unclear semantic/source routes; Incident Doctor remains reactive and evidence-gated.
 2. **Agent-mediated adoption/upgrade** — the Plugin payload carries an exact marker-bounded global `AGENTS.md` routing template plus an idempotent adoption contract. Installation is complete only when all three Skills are available and exactly one current global routing block is verified.
 3. **Control identity semantics** — provenance/transition parents, current-control heads, explicit locked/execution heads, and remote freshness are separate identity classes. Relationship checks are not silently converted into equality checks.
-4. **Workspace lifecycle prevention** — local branch, remote branch, worktree registration, filesystem path, HEAD, working-tree/unique-work state, write capability, and overlapping authority are separate facts. Bounded lifecycle checkpoints now run during normal development at workspace selection, successor-writer decisions, retained-state transitions, terminal events, and before overlapping next tasks; historical full reconciliation is exceptional.
+4. **Workspace lifecycle prevention** — local branch, remote branch, worktree registration, filesystem path, HEAD, working-tree/unique-work state, write capability, and overlapping authority are separate facts. Bounded lifecycle checkpoints run during normal development at workspace selection, successor-writer decisions, retained-state transitions, terminal events, and before overlapping next tasks; historical full reconciliation is exceptional.
 5. **Construction-time code structure** — file/module organization is governed by Domain/capability/responsibility/authority/lifecycle/reason-to-change boundaries, never by a universal line-count threshold. A new responsibility boundary is established while code is being written rather than deferred to final cleanup; cohesive large files are not split mechanically.
 6. **Verification cadence** — `V0`–`V3` remains the sole risk/scope taxonomy; construction/corrective/task/merge-release cadence is separate. Verification effort follows change risk, not change count.
 7. **Domain navigation** — existing semantic business/product/domain/capability maps are reused as authorities regardless of filename; an optional navigation projection is derived and does not duplicate product/domain truth.
@@ -65,8 +66,8 @@ The audit was performed as a separate adversarial review pass over exact PR sour
 
 ## Verification posture
 
-`V0 + multi-pass semantic/adversarial audit` is the accepted level for this documentation/contract/package-metadata task. No executable product runtime changed and the candidate HEAD has no CI/status checks, so no runtime/build/CI PASS is claimed.
+`V0 + multi-pass semantic/adversarial audit` is the accepted level for this documentation/contract/package-metadata task. No executable product runtime changed and the sealed candidate HEAD has no CI/status checks, so no runtime/build/CI PASS is claimed.
 
 ## Next milestone
 
-Seal the latest exact PR HEAD read-only. If scope/base/invariants remain unchanged, proceed to real installation acceptance of Plugin v0.4.0 + managed global routing in a controlled target environment while PR #14 remains Draft/unmerged. Merge and publication remain separate decisions after installation evidence.
+Proceed to real installation acceptance of Plugin v0.4.0 + managed global routing in a controlled target environment while PR #14 remains Draft/unmerged. Merge and publication remain separate decisions after installation evidence.
