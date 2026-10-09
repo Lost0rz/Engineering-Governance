@@ -1,81 +1,180 @@
-# CURRENT TASK — Workspace Lifecycle Corrective
+# CURRENT TASK — Plugin v0.3.0 Release
 
-Task ID: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-CORRECTIVE-040`
+Task ID: `EG-PLUGIN-V0.3.0-RELEASE-041`
 
-State: `CLOSED`
+State: `AUTHORIZED_FOR_RELEASE_PREP_AND_PUBLICATION`
 
-Mode: `BOUNDED_GOVERNANCE_CORRECTIVE`
+Mode: `PLUGIN_RELEASE`
 
-## Outcome
+## Objective
 
-`MERGED_VERIFIED`
+Publish Engineering Governance Plugin v0.3.0 containing the accepted reusable workspace/worktree lifecycle capability merged after Plugin v0.2.0, without changing Skill semantics during release preparation.
 
-The four workspace-lifecycle semantic corrections identified by the post-039 full audit are merged into repository `main` through PR #12 and passed exact post-merge identity/content verification.
+## Authoritative baseline
 
-## Accepted identities
+- Repository: `Lost0rz/Engineering-Governance`.
+- Accepted pre-release `main` HEAD: `fe59b6eb38a40f312f86872248d26f2e151bf07b`.
+- Published predecessor: GitHub Release `plugin-v0.2.0`, package version `0.2.0`, source SHA `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`.
+- Accepted reusable changes since v0.2.0: task 039 workspace lifecycle contract and task 040 semantic corrective.
+- Exactly three top-level reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-- Start `main`: `1e80848880b902ccf56ffcd70e22b19788b7b8d4`
-- Final PR/task branch: `77c0f3c4ae68472a09386a22573a8d8e15b5ba2e`
-- PR: #12
-- Merge commit: `4fe236b91295fe4594c4d5932da8375086a7648d`
-- Final reviewed/merged tree: `8b0f15dbe15164bcf40d45661c6881955b6f90f9`
-- Canonical lifecycle blob on `main`: `832b1a46085968b6b340f03f78d0e4fc6920ed94`
-- `project-governance/SKILL.md` blob on `main`: `b98e62a60e95ff570d2261ae0dc872e94fc26059`
+## Version decision
 
-## Accepted corrections
+Use package version `0.3.0` and release tag `plugin-v0.3.0`.
 
-1. Routine workspace classification is task-relevant and bounded. Unrelated historical workspaces do not require routine full classification unless they create ambiguity, collision, unique-work risk, lifecycle cleanup, or are explicitly within legacy reconciliation.
-2. Writer conflict is defined at overlapping fact/state/policy/behavior authority; broad Domain/capability labels are routing hints rather than automatic mutual-exclusion boundaries.
-3. A retained predecessor that can still resume writes remains a writer for overlapping-authority checks. A successor is blocked until a verified non-writing boundary exists, such as terminal state, supersession, explicit freeze/read-only disposition, or another accepted project rule.
-4. Merge, release, deployment, acceptance, abandonment, supersession, rollback, and similar lifecycle events are not terminal by name alone. Project/task controls determine whether the event ends a task/phase, advances authorization, or is non-terminal.
+Reason: this release adds a new reusable project-governance capability and materially extends normal governed development semantics, so it is a minor release rather than a patch-only correction.
+
+## Authorized source change
+
+Before packaging, release-source changes are limited to:
+
+- `plugin.json`: `"version": "0.2.0"` -> `"version": "0.3.0"`;
+- `CURRENT_STATUS.md` / `CURRENT_TASK.md`: release task/evidence state only.
+
+Do not modify Skill content during release preparation. If any Skill semantic change is needed, STOP and create a separate reusable-Skill task.
+
+## Package contract
+
+Create exactly one Release asset:
+
+`engineering-governance-plugin.zip`
+
+ZIP root must be:
+
+```text
+engineering-governance/
+├── plugin.json
+└── skills/
+    ├── project-governance/
+    ├── domain-navigation/
+    └── incident-doctor/
+```
+
+Include exactly:
+
+- `plugin.json`
+- `skills/**`
+
+Exclude repository controls, maintainer docs/history, examples, root references, Git metadata, release transport files, caches, editor/OS metadata, secrets, credentials, absolute-path metadata, and temporary files.
+
+## Exact identity requirements
+
+Before packaging, establish the exact merged source revision containing the `0.3.0` metadata. Package from that exact revision, not a moving branch name.
+
+Record and verify:
+
+- `SOURCE_HEAD`;
+- `plugin.json` version = `0.3.0`;
+- exact ZIP file list;
+- ZIP byte size;
+- ZIP SHA-256;
+- Release tag target;
+- published Release state;
+- asset name, size, and GitHub-reported digest/identity.
+
+## Release notes
+
+Release title:
+
+`Engineering Governance Plugin v0.3.0`
+
+Release tag:
+
+`plugin-v0.3.0`
+
+Release notes should state:
+
+- package version `0.3.0`;
+- exact source SHA;
+- asset name, byte size, and SHA-256;
+- included Skills: `project-governance`, `domain-navigation`, `incident-doctor`;
+- major changes since v0.2.0:
+  - reusable workspace/worktree lifecycle and closeout contract;
+  - bounded task-relevant workspace classification instead of routine repository archaeology;
+  - overlapping fact/state/policy/behavior-authority writer gating;
+  - explicit retained write-capability / frozen-read-only distinction;
+  - project-defined terminal-event semantics;
+  - legacy workspace reconciliation and remote/local evidence boundaries;
+- no MCP, hooks, daemon, runtime service, DB, telemetry, installer, automatic cleanup, or automatic remediation added.
+
+Do not create an ambiguous plain `v0.3.0` tag. Use `plugin-v0.3.0`.
+
+## Publication transport boundary
+
+The current GitHub connector does not expose direct tag/Release/asset creation. A one-shot remote publisher branch is authorized only as transport if needed.
+
+Requirements for that transport:
+
+- it is separate from the release-source branch and from `main`;
+- it is created only after the exact release-source commit is merged and verified;
+- it may contain a narrowly scoped GitHub Actions workflow that packages the exact locked `SOURCE_HEAD` and publishes `plugin-v0.3.0`;
+- the workflow must use `permissions: contents: write`, target the exact locked source SHA, verify version/file list/hash/size before publishing, and fail if the tag/release already exists;
+- its workflow/transport files must not be merged to `main`, must not be included in the source tag, and must not be included in the ZIP;
+- if GitHub Actions cannot run or lacks write permission, STOP publication rather than changing release identity or weakening verification.
 
 ## Verification
 
-`V0` PASS.
+Use `V0 + release artifact identity verification`.
 
-Pre-merge audit established:
+PASS only if:
 
-- exact baseline `main` remained `1e80848880b902ccf56ffcd70e22b19788b7b8d4` during implementation review;
-- PR #12 base/head were exactly `1e80848880b902ccf56ffcd70e22b19788b7b8d4` -> `77c0f3c4ae68472a09386a22573a8d8e15b5ba2e`;
-- PR changed exactly nine authorized Markdown/control paths;
-- actual PR diff was independently re-read after implementation and matched the corrective scope;
-- GitHub reported `mergeable=true` before merge;
-- the final PR head had no commit-status entries and no PR workflow runs, so no configured CI gate was pending;
-- `plugin.json` remained version `0.2.0` and outside the diff;
-- `verification-tiers.md`, `code-structure.md`, `domain-navigation/SKILL.md`, and `incident-doctor/SKILL.md` remained unchanged;
-- code-structure authority granularity and corrected workspace writer granularity are aligned;
-- project-governance reference paths remained present and normal startup stayed bounded;
-- no new runtime, automation, top-level Skill, or Plugin release surface was introduced.
+1. release-source diff changes no Skill semantics;
+2. package version is exactly `0.3.0`;
+3. exactly three top-level reusable Skills are packaged;
+4. ZIP contains only the authorized Plugin payload under one `engineering-governance/` root;
+5. forbidden repository/control/transport files are absent;
+6. ZIP SHA-256 and byte size are established before upload and reflected in release notes/evidence;
+7. Release tag resolves to the exact accepted merged source SHA;
+8. published Release is neither draft nor prerelease;
+9. asset name is exactly `engineering-governance-plugin.zip`;
+10. post-publication verification confirms release target, asset size, and digest/identity;
+11. `main` contains no publisher workflow or transport-only file.
 
-Post-merge audit established:
+## Workspace lifecycle
 
-- PR #12 reports `merged=true` with merge commit `4fe236b91295fe4594c4d5932da8375086a7648d`;
-- `main` resolved to that merge commit before this control-only closeout;
-- merge tree `8b0f15dbe15164bcf40d45661c6881955b6f90f9` exactly equals the final PR-head tree;
-- comparing PR head to merge commit shows one merge commit and zero file differences;
-- main lifecycle and Skill-entry blobs exactly match the audited branch content.
+- Release-source branch: `codex/plugin-v0.3.0-release-v1`, active until merged or explicitly abandoned.
+- Prior task branches 039/040 are terminal and no longer authorize writes.
+- Any publisher branch is transport-only, must be terminal after publication, and must be explicitly recorded as retained if branch deletion capability is unavailable.
+- This remote-only task does not claim local worktree cleanliness.
 
-## Workspace lifecycle closeout
+## STOP conditions
 
-- Task lifecycle: terminal / merged and verified.
-- Remote task branch: `codex/project-governance-workspace-lifecycle-corrective-v1` at `77c0f3c4ae68472a09386a22573a8d8e15b5ba2e`.
-- Remote branch content: fully contained in `main`; it no longer authorizes writes.
-- Remote branch disposition: retained only because the available connector does not expose branch-ref deletion.
-- Retain until: verified branch-deletion capability is available or equivalent maintainer cleanup is performed.
-- Local workspace disposition: not established by this remote-only task; no local cleanliness/removal claim is made.
+STOP without publishing if:
 
-## Final state
+- source HEAD or Release target is ambiguous;
+- release-source diff changes Skill semantics;
+- package includes unauthorized files;
+- version is not `0.3.0`;
+- package file list/hash/size cannot be verified;
+- existing `plugin-v0.3.0` tag/release already exists with conflicting identity;
+- publisher workflow cannot prove it packaged the exact locked source SHA;
+- GitHub Actions lacks required write permission;
+- publication succeeds but post-publication target/asset identity does not match expected evidence.
+
+## Handoff
+
+Return at completion:
 
 ```text
-TASK_ID: EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-CORRECTIVE-040
-PR: 12
-TASK_HEAD: 77c0f3c4ae68472a09386a22573a8d8e15b5ba2e
-MERGE_COMMIT: 4fe236b91295fe4594c4d5932da8375086a7648d
-MERGED_TREE_MATCH: PASS
-POST_MERGE_AUDIT: PASS
-FOUR_SEMANTIC_CORRECTIONS: PASS
-PLUGIN_PUBLICATION: NOT_PART_OF_TASK
-REMOTE_TASK_BRANCH: RETAINED_TOOLING_LIMIT_FULLY_MERGED
+TASK_ID: EG-PLUGIN-V0.3.0-RELEASE-041
+START_MAIN:
+RELEASE_SOURCE_BRANCH:
+ACCEPTED_SOURCE_HEAD:
+PLUGIN_VERSION: 0.3.0
+SKILL_SEMANTICS_CHANGED_DURING_RELEASE: NO
+PACKAGE_SIZE_BYTES:
+PACKAGE_SHA256:
+PACKAGE_FILE_LIST_CHECK: PASS/STOP
+RELEASE_TAG: plugin-v0.3.0
+RELEASE_TARGET_SHA:
+RELEASE_PUBLISHED: YES/NO
+RELEASE_DRAFT: NO
+RELEASE_PRERELEASE: NO
+ASSET_NAME: engineering-governance-plugin.zip
+PUBLISHED_ASSET_SIZE_BYTES:
+PUBLISHED_ASSET_SHA256_OR_VERIFIED_IDENTITY:
+POST_PUBLISH_VERIFICATION: PASS/STOP
+PUBLISHER_BRANCH_DISPOSITION:
 LOCAL_WORKSPACE_STATUS: NOT_CLAIMED
-FINAL_STATE: CLOSED_MERGED_VERIFIED
+FINAL_STATE: RELEASED / STOP
 ```
