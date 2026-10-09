@@ -31,11 +31,14 @@ No MCP, hooks, daemon, runtime service, database, telemetry, installer, automati
 
 ## Current task
 
-- Task: `EG-PLUGIN-V0.2.0-RELEASE-038`.
-- State: `CLOSED`.
-- Outcome: `RELEASED`.
-- Release target remains `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`; this closeout is a later control-only commit and is not part of the released artifact identity.
+- Task: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`.
+- State: `READY_FOR_MERGE`.
+- Mode: `BOUNDED_GOVERNANCE_CHANGE`.
+- Start baseline: `main` at `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`.
+- Authorized branch: `codex/project-governance-workspace-lifecycle-v1`.
+- Reviewed implementation HEAD: `485cbeb3817128549b23c0daba55502138c8181a`.
+- V0 self-audit: PASS for scope, links, control ownership, lifecycle semantics, and absence of runtime/automation changes.
 
 ## Next milestone
 
-No further reusable Skill expansion is currently authorized. Use Plugin v0.2.0 in normal business projects and promote future generic changes only from repeated, evidence-backed cross-project issues.
+Re-check the exact branch and merge target, merge only if the reviewed task branch remains compatible with the verified baseline, then perform post-merge exact-main verification and close the task controls.
