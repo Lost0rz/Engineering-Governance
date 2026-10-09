@@ -13,12 +13,27 @@ The goal is not “one worktree only.” The goal is that every task-relevant no
 5. **Retention is explicit, not accidental.** A non-terminal workspace may remain for review, PR, QA, runtime acceptance, recovery, or another verified reason, but its owner, reason, release/next-event condition, and write capability must be known.
 6. **Closeout is prompt and proportional.** Reconcile terminal workspace state before starting a conflicting successor task whenever practical. Do not turn every task start into a full historical repository archaeology exercise.
 
+## Workspace evidence dimensions
+
+Establish workspace facts independently; do not infer one dimension from another:
+
+- **Local branch identity** — whether the named local branch exists and what commit it resolves to.
+- **Remote branch identity** — whether the corresponding remote ref exists and what commit it resolves to. A missing remote branch does not prove the local branch/worktree is absent.
+- **Worktree registration** — whether Git currently registers the worktree. Registration does not by itself prove the filesystem path is present and usable.
+- **Filesystem path identity** — whether the expected checkout path exists and resolves to the intended repository/worktree. A directory name alone does not prove Git registration or task authority.
+- **HEAD/revision** — the commit actually checked out in the selected workspace.
+- **Working-tree state** — staged, unstaged, untracked, and local-only commit state. A clean remote PR does not prove local cleanliness.
+- **Write capability** — whether the retained workspace can resume writes under its current authorization without a new boundary.
+- **Overlapping authority** — which fact/state/policy/behavior authority the workspace can write relative to another current/proposed writer.
+
+When one dimension matters to the task, verify that dimension directly from the appropriate local or remote evidence. This prevents category errors such as treating “remote branch absent” as “worktree absent,” “worktree registered” as “path exists,” or “PR merged” as “local writer closed.”
+
 ## Before creating or selecting a task workspace
 
 Perform a bounded workspace check for the repository and active scope. Establish only what the task needs:
 
 - canonical repository/workspace identity and current ref/revision;
-- selected or proposed task workspace, branch/ref, HEAD, and working-tree state;
+- selected or proposed task workspace, local/remote branch state where relevant, worktree registration/path identity, HEAD, and working-tree state;
 - any existing workspace whose writes overlap the same affected fact/state/policy/behavior authority or that otherwise materially conflicts with the task;
 - whether those relevant workspaces are active, intentionally retained, terminal, uniquely dirty/local-only, or unresolved;
 - for any retained predecessor whose authority overlaps, whether it can still resume writes without a new authorization boundary.
@@ -92,7 +107,7 @@ After that baseline is established, normal tasks should use the bounded pre-task
 
 ## Remote and local evidence
 
-Remote repository evidence can establish PR, branch, commit, merge, and remote-ref state. It cannot by itself prove local worktree existence, working-tree cleanliness, untracked files, local-only commits, or that a retained local workspace cannot resume writes under some separate local authorization. Local evidence is required for those claims.
+Remote repository evidence can establish PR, remote branch/ref, commit, merge, and remote-ref state. It cannot by itself prove local branch existence, worktree registration/path existence, working-tree cleanliness, untracked files, local-only commits, or that a retained local workspace cannot resume writes under some separate local authorization. Local evidence is required for those claims.
 
 A remote/Web auditor may determine the expected lifecycle outcome; the local executor establishes local workspace/unique-work facts. Claim a fully clean closeout only when the evidence covers both sides needed by that claim.
 
