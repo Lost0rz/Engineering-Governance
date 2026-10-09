@@ -1,18 +1,18 @@
 ---
 name: project-governance
-description: Use when establishing or repairing project governance, starting or executing normal governed development, or reconciling a task after a scope change. This is the normal governance and development entry point; it does not perform deep repository discovery or incident diagnosis.
+description: Use when establishing or repairing project governance, starting or executing normal governed development, reconciling a task after a scope change, or reconciling/closing task workspace lifecycle. This is the normal governance and development entry point; it does not perform deep repository discovery or incident diagnosis.
 ---
 
 # Project Governance
 
-Use this Skill to establish or repair a project's governance controls and to start or execute normal, authorized product and business work. Inspect the target repository and its existing authorities first, then adapt the templates to verified evidence. Keep unsupported facts unknown; do not copy templates blindly.
+Use this Skill to establish or repair a project's governance controls and to start, execute, hand off, or close normal authorized product and business work. Inspect the target repository and its existing authorities first, then adapt the templates to verified evidence. Keep unsupported facts unknown; do not copy templates blindly.
 
 ## Choose the right route
 
-- Use this Skill for the three-file control plane, normal task flow, task-scope reconciliation, and proportional verification.
+- Use this Skill for the three-file control plane, normal task flow, task-scope reconciliation, proportional verification, and task workspace lifecycle/closeout when the project uses branches, worktrees, or equivalent task workspaces.
 - When the relevant Domain/capability, code location, or authority is unclear, use [domain-navigation](../domain-navigation/SKILL.md) to inspect the target repository and identify the right owner and evidence. Existing accepted business/product/domain/capability maps may already provide the semantic authority; do not require a separate navigation file merely to satisfy a template.
 - Use [incident-doctor](../incident-doctor/SKILL.md) only when a real failure, unexplained behavior, or unsafe ambiguity blocks safe progress and existing evidence cannot answer the needed question. Normal business development does not default to Doctor.
-- This Skill does not perform deep repository or domain architecture discovery, incident diagnosis, installation, runtime behavior, or enforcement. It adds no diagnostic infrastructure to routine feature work.
+- This Skill does not perform deep repository or domain architecture discovery, incident diagnosis, installation, runtime behavior, or enforcement. It adds no diagnostic or cleanup runtime to routine feature work.
 
 ## Normal governed development
 
@@ -20,7 +20,7 @@ Read the relevant project controls, establish only the baseline needed for the a
 
 Before planning or implementing source changes involving state ownership, writers, shared behavior, or module boundaries, apply [Code structure and canonical authority](references/code-structure.md) within the active task scope.
 
-For source-controlled projects, establish the task-relevant repository/ref/revision and current workspace state before state-changing work. Preserve unknown staged, unstaged, untracked, or local-only work; do not reset, stash, delete, overwrite, or force-clean it merely to make the workspace match an execution card. If authoritative baseline or control drift materially affects the active task, stop and reconcile rather than improvising. Projects that do not use these mechanisms should not invent them just to satisfy this Skill.
+For source-controlled projects, establish the task-relevant repository/ref/revision and current workspace state before state-changing work. If the project uses multiple task workspaces, apply [Workspace lifecycle and closeout](references/workspace-lifecycle.md): classify existing workspaces only to the depth needed for the active task, prevent an unresolved predecessor from being bypassed by a new writer for the same capability/authority, and close or explicitly retain task workspace state when its lifecycle requires it. Preserve unknown staged, unstaged, untracked, or local-only work; do not reset, stash, delete, overwrite, or force-clean it merely to make the workspace match an execution card. If authoritative baseline, control, predecessor-workspace, or unique-work ambiguity materially affects the active task, stop and reconcile rather than improvising. Projects that do not use these mechanisms should not invent them just to satisfy this Skill.
 
 `CURRENT_STATUS.md` is a verified current-state snapshot, not an authorization override. If a newly verified status fact changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, or authorization boundary, stop state-changing work, reconcile `CURRENT_TASK.md`, and obtain re-authorization before continuing. A status refresh that does not affect the task contract does not require task churn.
 
@@ -28,6 +28,7 @@ Load the relevant contracts as needed:
 
 - [Control plane roles, updates, and lifecycle reconciliation](references/control-plane.md)
 - [Business-first development flow and selected task workspaces](references/development-flow.md)
+- [Workspace lifecycle and closeout](references/workspace-lifecycle.md)
 - [Verification tiers and evidence identity](references/verification-tiers.md)
 - [AGENTS.md template](assets/templates/AGENTS.md)
 - [CURRENT_STATUS.md template](assets/templates/CURRENT_STATUS.md)
