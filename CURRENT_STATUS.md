@@ -2,53 +2,45 @@
 
 Last verified: 2026-10-09.
 
-## Published Plugin v0.3.0
+## Released baseline
 
-- GitHub Release: `plugin-v0.3.0`.
-- Release title: `Engineering Governance Plugin v0.3.0`.
-- Package version: `0.3.0`.
-- Exact release/source SHA: `d11ed12bfdac4c8ff22d37961753190a400358da`.
-- Tag `refs/tags/plugin-v0.3.0` resolves directly to that exact commit.
-- Release is published, `draft=false`, `prerelease=false`.
-- Asset: `engineering-governance-plugin.zip`.
-- Asset size: `42166` bytes.
-- Asset SHA-256 / GitHub digest: `c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`.
-- Package file-list verification: PASS; the publishing workflow validated one `engineering-governance/` root containing only `plugin.json` and `skills/**`, with exactly three top-level Skills and 40 ZIP entries.
+- Latest published Plugin remains `0.3.0`.
+- Release tag: `plugin-v0.3.0`.
+- Accepted release/source SHA: `d11ed12bfdac4c8ff22d37961753190a400358da`.
+- Published asset SHA-256: `c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`.
+- Published capability set remains exactly three top-level Skills: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Accepted reusable capability baseline
+## Current development task
 
-Plugin v0.3.0 contains exactly three reusable top-level Skills:
+- Task: `EG-GLOBAL-ROUTING-V0.4.0-042`.
+- State: `ACTIVE`.
+- Start `main`: `b7e47e2de346fa229818013d4369ae60cee6e0fa`.
+- Task branch: `codex/global-routing-v0.4.0`.
+- Goal: produce a v0.4.0 source candidate that adds global Skill routing/adoption semantics and folds verified v0.3.0 pilot corrections into Project Governance.
+- This task is source evolution only. No Plugin v0.4.0 GitHub Release or target-project installation is authorized here.
 
-- `project-governance`
-- `domain-navigation`
-- `incident-doctor`
+## Verified motivation
 
-Major reusable addition since v0.2.0 is the accepted `project-governance` workspace/worktree lifecycle and closeout contract, including bounded task-relevant workspace classification, overlapping-authority writer gating, retained write-capability/frozen-read-only handling, project-defined terminal-event semantics, legacy reconciliation, unique-work preservation, and remote/local evidence boundaries.
+v0.3.0 application established three follow-up needs:
 
-No MCP, hooks, daemon, runtime service, database, telemetry, installer, automatic cleanup, or automatic remediation was added.
+1. The three Skills contain their own triggers, but the shipped model lacks a reusable global `AGENTS.md` routing contract that tells an agent which Skill to invoke before the Skill has already been selected.
+2. A pilot produced a false `STOP_CONTROL_HEAD_DRIFT` when a recorded control parent was treated as the required current HEAD; the corrected evidence showed the parent was provenance for a control transition. Project Governance must distinguish provenance/transition anchors from explicit current/locked-head requirements.
+3. Verification needs an explicit cadence rule in addition to `V0`–`V3`: construction should use focused checks appropriate to risk, while broader regression/CI belongs at justified corrective/task/merge boundaries rather than after every small acceptance correction.
 
-## Release verification
+## Design direction
 
-- Release-source PR: #13, merged from exact head `bb38fe3eed8c1238ae343a315a11abc22159a396`.
-- Release-source merge/source commit: `d11ed12bfdac4c8ff22d37961753190a400358da`.
-- PR head -> merge comparison: one merge commit, zero file differences.
-- Release-source `plugin.json` blob: `bae0047c2deaa3e4ec0fbb26db587bd46010578e`, version `0.3.0`.
-- Publisher run `37897783880`: SUCCESS. Every required step passed: unused identity preflight, exact-source checkout, package verification, release-note construction, and release publication.
-- Workflow log independently reports package size `42166`, SHA-256 `c60dcf4860701e394f308ccaf293cc348166008b6e198fcb29e6e08bf5ebf400`, and 40 package entries.
-- GitHub Release metadata independently reports the same source SHA, asset name, size, and digest.
-- A second transport trigger run `37897798746` failed intentionally at `Confirm release identity is unused` after the first publication succeeded; checkout/package/publish were skipped, so it did not mutate the published Release.
-- `.github/` is absent from accepted `main`; the one-shot publisher workflow exists only on the transport branch and is not part of the tagged source or Plugin ZIP.
+- Keep exactly three Skills; do not create a Router Skill.
+- `project-governance` is the normal engineering entry point.
+- `domain-navigation` is conditional when semantic/source ownership or route is unclear.
+- `incident-doctor` is reactive and evidence-gated for a real blocking failure with insufficient evidence.
+- Ship the routing/adoption contract and managed global-`AGENTS.md` block template inside `skills/**` so the existing Plugin payload can carry them.
+- Adoption remains agent-mediated and non-destructive; no installer runtime, daemon, hook, MCP service, or automatic remediation is introduced.
+- Preserve project-local governance ownership: global routing selects Skills; project `AGENTS.md` describes that repository; Skill references own reusable workflow detail.
 
-## Current task
+## Verification posture
 
-- Task: `EG-PLUGIN-V0.3.0-RELEASE-041`.
-- State: `CLOSED`.
-- Outcome: `RELEASED_VERIFIED`.
-- Post-publication audit: PASS.
-- Release-source branch is fully merged and terminal.
-- Publisher transport branch is terminal and not merged to `main`; it remains remotely present only because the available connector does not expose branch-ref deletion.
-- No local workspace-cleanliness/removal claim is made by this remote-only task.
+This is a documentation/contract/package-metadata change, so the active task uses `V0 + semantic scenario audit`. The final branch must be checked for exact diff scope, link/frontmatter/layout consistency, three-Skill packaging shape, routing/adoption scenario coverage, control-identity semantics, verification-cadence consistency, and duplication/conflict across authorities.
 
 ## Next milestone
 
-Install Plugin v0.3.0 into selected target projects and run bounded acceptance testing of the adapted governance workflow. Do not expand governance infrastructure by default; use target-project evidence to decide whether any follow-up is needed.
+Complete the v0.4.0 candidate on the task branch, create a reviewable PR, and perform a detailed exact-head remote audit before any merge or release decision.
