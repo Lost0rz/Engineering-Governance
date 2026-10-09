@@ -1,11 +1,13 @@
 ---
 name: domain-navigation
-description: Use for evidence-backed domain and repository navigation when semantic routing is missing or stale, or an affected Domain/capability, ownership, authority, code location, symbol, or test is unclear. Route from the authorized task to focused source evidence; do not authorize tasks, diagnose incidents, or modify product code.
+description: Use conditionally when semantic routing is missing or stale, or an affected Domain/capability, ownership, authority, code location, symbol, runtime entry, dependency, or relevant test is unclear. Usually invoked from governed work to establish a focused evidence-backed route; do not authorize tasks, diagnose incidents, or modify product code.
 ---
 
 # Domain Navigation
 
-Use this Skill when navigation for an affected Domain/capability is missing or stale; when ownership, authority, or code location is unclear; when a task needs to be routed to relevant sources, symbols, or tests; or during repository onboarding bounded by a current task or a specific mapping goal. Before assuming a navigation artifact is missing, discover any accepted business, product, domain, or capability authorities already present in the target repository, regardless of filename, and determine what semantic truth they own. Treat those authorities as sources to reference, not material to duplicate. Any separate `DOMAIN_MAP.md` created or refreshed by this Skill is only an optional derived navigation projection, not product truth, domain authority, or task authorization.
+Use this Skill when navigation for an affected Domain/capability is missing or stale; when ownership, authority, code location, runtime entry, dependency, or relevant test is unclear; when a governed task needs to be routed to relevant sources, symbols, or tests; or during repository onboarding bounded by a current task or a specific mapping goal. Under the Engineering Governance global routing contract this is a **conditional** route, not the default entry for every engineering request. Return the verified route or unresolved gap to the calling workflow, normally Project Governance; if called by Incident Doctor, return to Doctor so diagnosis ownership stays there.
+
+Before assuming a navigation artifact is missing, discover any accepted business, product, domain, or capability authorities already present in the target repository, regardless of filename, and determine what semantic truth they own. Treat those authorities as sources to reference, not material to duplicate. Any separate `DOMAIN_MAP.md` created or refreshed by this Skill is only an optional derived navigation projection, not product truth, domain authority, or task authorization.
 
 ## Read the contracts
 
