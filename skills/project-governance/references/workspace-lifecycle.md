@@ -28,6 +28,20 @@ Establish workspace facts independently; do not infer one dimension from another
 
 When one dimension matters to the task, verify that dimension directly from the appropriate local or remote evidence. This prevents category errors such as treating “remote branch absent” as “worktree absent,” “worktree registered” as “path exists,” or “PR merged” as “local writer closed.”
 
+## Lifecycle checkpoints during normal development
+
+Workspace governance is not only an end-of-task cleanup step. Run a **bounded** lifecycle checkpoint when one of these events occurs:
+
+- selecting or creating the task workspace;
+- before authorizing a successor workspace that could overlap an existing writer;
+- when a task moves into or out of an intentionally retained state such as PR review, QA, runtime acceptance, recovery, or freeze/read-only;
+- when a lifecycle event may make the task/phase terminal;
+- before starting a new task whose write authority overlaps a retained predecessor.
+
+At each checkpoint, inspect only the task-relevant workspace set and only the dimensions needed for that decision. If a previously recorded retention/release condition has been satisfied, close or reclassify that workspace promptly while the evidence is fresh. If nothing material changed and the same workspace remains valid, do not repeat a historical inventory merely to prove cleanliness again.
+
+This checkpoint model is the normal prevention mechanism. `Legacy reconciliation` below is reserved for repositories that already accumulated ambiguous historical workspace debt; it is not the routine path for healthy projects.
+
 ## Before creating or selecting a task workspace
 
 Perform a bounded workspace check for the repository and active scope. Establish only what the task needs:
@@ -103,7 +117,7 @@ For that reconciliation:
 - leave unresolved items as blockers rather than guessing;
 - target **zero unclassified workspaces** at the end of the reconciliation.
 
-After that baseline is established, normal tasks should use the bounded pre-task check and prompt closeout instead of repeating the full legacy audit.
+After that baseline is established, normal tasks should use the bounded lifecycle checkpoints and prompt closeout instead of repeating the full legacy audit.
 
 ## Remote and local evidence
 
