@@ -1,37 +1,41 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-08.
+Last verified: 2026-10-09.
 
-## Accepted reusable baseline
+## Published Plugin v0.2.0
 
-- Exactly three reusable Skills remain: `project-governance`, `domain-navigation`, and `incident-doctor`.
-- Plugin v0.1.0 remains the currently published package.
-- DN-001 authority-gate corrective was accepted and merged in PR #7.
-- Project Governance canonical-authority/code-structure enhancement was accepted and merged in PR #8.
-- Project Governance lifecycle/evidence-identity/workspace-integrity enhancement was independently audited and merged in PR #9.
-- Current accepted `main` before this release-control transition: `302dd233036ec77a423fa870d1ca994613d415c4`.
+- GitHub Release `plugin-v0.2.0` is published and independently verified.
+- Release title: `Engineering Governance Plugin v0.2.0`.
+- Package version: `0.2.0`.
+- Exact release/source SHA: `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`.
+- Release tag `plugin-v0.2.0` resolves directly to that exact commit.
+- Release is neither draft nor prerelease.
+- Release asset: `engineering-governance-plugin.zip`.
+- Published asset size: `36224` bytes.
+- Published asset SHA-256: `99ab0679c5692dd382d515cf39a92c6fb1e9c68ae119c43637b3cec65b19436e`.
+- The release contains exactly the Plugin payload surface: `plugin.json` plus `skills/**` under root `engineering-governance/`.
+- Exactly three reusable Skills are included: `project-governance`, `domain-navigation`, and `incident-doctor`.
 
-## Release decision
+## Accepted v0.2.0 capability baseline
 
-The accumulated accepted changes are now large enough for an overall Plugin minor release rather than a patch-only corrective. The next package version is `0.2.0` and the GitHub Release tag is `plugin-v0.2.0`.
+The published release includes the accepted reusable changes merged after Plugin v0.1.0:
 
-The release payload remains exactly the packaged Plugin surface:
+- Domain Navigation current-task authority gate and bounded/historical snapshot navigation;
+- one canonical authority per fact/state/behavior class;
+- domain-coherent code structure and anti-redundancy guidance;
+- task lifecycle integrity;
+- exact evidence/artifact identity binding with proven-equivalence reuse;
+- selected task-workspace identity with bounded discovery.
 
-- `plugin.json`
-- `skills/**`
-
-under ZIP root `engineering-governance/`.
-
-Root governance controls, maintainer docs/history, examples, Git metadata, caches, secrets, and unrelated repository files are not part of the packaged payload.
+No MCP, hooks, daemon, runtime service, database, telemetry, installer, automatic refactor, or automatic remediation was added.
 
 ## Current task
 
 - Task: `EG-PLUGIN-V0.2.0-RELEASE-038`.
-- State: `AUTHORIZED_FOR_RELEASE_PREP_AND_PUBLICATION`.
-- Mode: `PLUGIN_RELEASE`.
-- Allowed product change: bump `plugin.json` package version `0.1.0 -> 0.2.0`; do not change Skill semantics during release preparation.
-- Release must be built from an exact accepted merged source revision and verified by file list plus SHA-256 before publication.
+- State: `CLOSED`.
+- Outcome: `RELEASED`.
+- Release target remains `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`; this closeout is a later control-only commit and is not part of the released artifact identity.
 
 ## Next milestone
 
-Prepare and independently verify the exact v0.2.0 payload, merge only the release metadata change, package `engineering-governance-plugin.zip`, publish GitHub Release `plugin-v0.2.0`, and verify the published release target and asset identity.
+No further reusable Skill expansion is currently authorized. Use Plugin v0.2.0 in normal business projects and promote future generic changes only from repeated, evidence-backed cross-project issues.
