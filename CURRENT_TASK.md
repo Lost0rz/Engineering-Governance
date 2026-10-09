@@ -2,101 +2,80 @@
 
 Task ID: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`
 
-State: `READY_FOR_MERGE`
+State: `CLOSED`
 
 Mode: `BOUNDED_GOVERNANCE_CHANGE`
 
-## Objective
+## Outcome
 
-Add a small, reusable workspace/worktree lifecycle and closeout contract to `project-governance` so governed projects do not accumulate unclassified stale task workspaces that later require expensive reconciliation.
+`MERGED_VERIFIED`
 
-## Affected domains
+The accepted workspace/worktree lifecycle contract is merged into repository `main` through PR #11 and passed post-merge identity/content verification.
 
-- Reusable Skill: `skills/project-governance/`
-- Root governance controls for this repository
+## Accepted identities
 
-No new top-level Skill or runtime component is authorized.
+- Start `main`: `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`
+- Final task branch: `e809800268040bcf7309fb11802d2e2a6b8c5ddd`
+- PR: #11
+- Merge commit: `c3f5889dfc35ddc087b1027fbd84e74412f4ddae`
+- Final reviewed/merged tree: `353239c9607bb53b16c64a2297b133eefc70d87a`
 
-## Start baseline
+## Accepted scope
 
-- Repository: `Lost0rz/Engineering-Governance`
-- Canonical branch: `main`
-- Verified start HEAD: `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`
-- Authorized task branch: `codex/project-governance-workspace-lifecycle-v1`
-- Prior task: `EG-PLUGIN-V0.2.0-RELEASE-038`, `CLOSED_RELEASED`
-- Published Plugin v0.2.0 identity remains unchanged by this task.
+The merged change:
 
-## Workspace lifecycle
+- adds `skills/project-governance/references/workspace-lifecycle.md` as the canonical detailed lifecycle authority;
+- routes workspace lifecycle through `project-governance/SKILL.md`, `development-flow.md`, and `control-plane.md`;
+- extends the `AGENTS.md` and `CURRENT_TASK.md` templates with lifecycle expectations;
+- establishes bounded startup classification rather than routine full-history archaeology;
+- blocks conflicting successor writers while a relevant predecessor remains unresolved;
+- separates terminal task state from physical workspace disposition;
+- permits intentional retained workspaces only with explicit owner/reason/release condition;
+- preserves unknown/unique local work pending verified disposition;
+- provides a one-time legacy reconciliation path targeting zero unclassified workspaces;
+- distinguishes remote repository evidence from local worktree evidence.
 
-- Selected task workspace: remote branch `codex/project-governance-workspace-lifecycle-v1`.
-- This task was executed through the remote GitHub control plane; no claim is made about any local checkout/worktree state.
-- Relevant predecessor writer: none; the prior repository task was already terminal before this branch was created.
-- Retain-until condition: keep the reviewed task branch until merge or another explicit terminal disposition.
-- After merge, reconcile root controls and verify the resulting `main` identity. Any local-workspace closeout claim would require separate local evidence.
+No new top-level Skill, runtime, CLI, daemon, database, hook, installer, automatic cleanup/remediation, `domain-navigation` behavior, or `incident-doctor` behavior was added. The published Plugin v0.2.0 artifact was not modified.
 
-## In scope
+## Verification
 
-- Define lifecycle classification for non-canonical task workspaces without imposing one universal project status enum.
-- Require bounded workspace classification before creating or selecting a conflicting successor writer workspace.
-- Prevent a new writer for the same capability/authority while a predecessor is unresolved or unique-work state is unknown.
-- Define terminal closeout behavior and explicit retention semantics.
-- Preserve unknown staged, unstaged, untracked, and local-only work until its disposition is verified.
-- Define concise closeout evidence and a one-time legacy reconciliation path targeting zero unclassified workspaces.
-- Update the `project-governance` entry point, relevant references, templates, and root controls where their owned facts change.
+`V0` PASS.
 
-## Out of scope
+Pre-merge:
 
-- New top-level Skill.
-- CLI, daemon, database, hook, background scanner, installer, or automatic cleanup/remediation.
-- Repository-specific hard-coded cleanup commands in the reusable Skill.
-- Requiring all projects to have only one worktree.
-- Modifying any target project's local workspaces.
-- Changes to `domain-navigation` or `incident-doctor` behavior.
-- Publishing a new Plugin release.
+- exact base/head comparison showed the task branch ahead of the unchanged start baseline with no behind commits;
+- PR diff contained only the authorized Markdown/control surfaces;
+- new relative lifecycle links resolved to the added reference;
+- self-audit found no material contradiction, scope leak, or over-constraint requiring one-worktree-only behavior.
 
-## Known evidence
+Post-merge:
 
-- Existing governance already covered selected-workspace identity and preservation of unknown local work.
-- The missing reusable layer was the lifecycle bridge between task state and physical workspace disposition.
-- The new canonical detail is `skills/project-governance/references/workspace-lifecycle.md`; other changed Skill files route to or summarize that authority rather than duplicating the full procedure.
+- PR #11 reports `merged=true` with merge commit `c3f5889dfc35ddc087b1027fbd84e74412f4ddae`;
+- `main` resolves to that merge commit;
+- merge tree `353239c9607bb53b16c64a2297b133eefc70d87a` exactly equals the final task-branch tree;
+- `skills/project-governance/SKILL.md` blob remains `8945b002bd038e591d8d3a00a676761846b8e814`;
+- `skills/project-governance/references/workspace-lifecycle.md` blob remains `771e439a1b71d05f92b9f573635d19481cb46d5a`;
+- comparing final task head to merge commit shows one merge commit and zero file differences.
 
-## Risk and rationale
+## Workspace lifecycle closeout
 
-This reusable semantics change must not over-constrain target projects or turn normal task startup into repository archaeology. The implementation therefore keeps normal checks task-bounded and reserves full historical reconciliation for repositories that already have accumulated unknown workspace debt.
+- Task lifecycle: terminal / merged.
+- Remote task branch: `codex/project-governance-workspace-lifecycle-v1` at `e809800268040bcf7309fb11802d2e2a6b8c5ddd`.
+- Remote branch content: fully contained in `main`; no remote-only file difference remains.
+- Remote branch disposition: retained only because the available GitHub connector does not expose a branch-ref deletion action.
+- Retain until: verified branch-deletion capability is available or a maintainer performs equivalent verified remote cleanup.
+- Local workspace disposition: not established by this remote-only task; no local worktree cleanliness/removal claim is made.
 
-## Verification level and rationale
+## Final state
 
-`V0` — documentation/control/layout change only.
-
-Fresh remote audit on 2026-10-09 established:
-
-- `main` remained at `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e` during implementation review;
-- reviewed implementation HEAD `485cbeb3817128549b23c0daba55502138c8181a` was ahead by 7 and behind by 0 from the exact start baseline;
-- the reviewed diff contained only Markdown/control surfaces in root governance and `skills/project-governance/`;
-- no `plugin.json`, runtime, CLI, automation component, `domain-navigation`, or `incident-doctor` behavior changed;
-- new lifecycle links resolve to the new reference, and control ownership remains separated among `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`;
-- content review found no conflict with multi-worktree coexistence, bounded startup checks, same-authority writer gating, explicit retention, terminal closeout, unique-work preservation, legacy reconciliation, or remote/local evidence boundaries.
-
-No runtime/product suite is required for this documentation/Skill-only change.
-
-## Acceptance criteria
-
-- `project-governance` owns workspace/worktree lifecycle when the target project uses those mechanisms. — PASS
-- Routine startup remains bounded to task-relevant workspace facts. — PASS
-- Conflicting successor writers are blocked while predecessor state is unresolved. — PASS
-- Terminal tasks require explicit workspace disposition; retained workspaces require a reason and release condition. — PASS
-- Unknown/unique local work remains preserved pending verified disposition. — PASS
-- Legacy workspace debt has a one-time reconciliation path targeting zero unclassified workspaces. — PASS
-- Templates expose durable policy and current-task disposition without turning `CURRENT_STATUS.md` into history. — PASS
-- No new top-level Skill or runtime/automation surface was added. — PASS
-- V0 self-audit found no material contradiction, broken new link, or scope leak. — PASS
-
-## Stop conditions
-
-- `main` or the task branch changes incompatibly before merge.
-- A separate canonical lifecycle authority is discovered that this change would duplicate.
-- The task would need expansion into runtime automation or another top-level Skill.
-
-## Handoff / current stop point
-
-Ready for merge after one final identity/diff check. After merge, verify exact `main` content and reconcile this task to a terminal closed state.
+```text
+TASK_ID: EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039
+PR: 11
+TASK_HEAD: e809800268040bcf7309fb11802d2e2a6b8c5ddd
+MERGE_COMMIT: c3f5889dfc35ddc087b1027fbd84e74412f4ddae
+MERGED_TREE_MATCH: PASS
+POST_MERGE_AUDIT: PASS
+REMOTE_TASK_BRANCH: RETAINED_TOOLING_LIMIT_FULLY_MERGED
+LOCAL_WORKSPACE_STATUS: NOT_CLAIMED
+FINAL_STATE: CLOSED_MERGED_VERIFIED
+```

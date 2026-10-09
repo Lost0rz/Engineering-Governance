@@ -4,41 +4,31 @@ Last verified: 2026-10-09.
 
 ## Published Plugin v0.2.0
 
-- GitHub Release `plugin-v0.2.0` is published and independently verified.
-- Release title: `Engineering Governance Plugin v0.2.0`.
+- GitHub Release `plugin-v0.2.0` remains the published release.
 - Package version: `0.2.0`.
 - Exact release/source SHA: `cf2df83e7e6bde39a5cce7f51e47d59e3911d71c`.
-- Release tag `plugin-v0.2.0` resolves directly to that exact commit.
-- Release is neither draft nor prerelease.
-- Release asset: `engineering-governance-plugin.zip`.
-- Published asset size: `36224` bytes.
-- Published asset SHA-256: `99ab0679c5692dd382d515cf39a92c6fb1e9c68ae119c43637b3cec65b19436e`.
-- The release contains exactly the Plugin payload surface: `plugin.json` plus `skills/**` under root `engineering-governance/`.
-- Exactly three reusable Skills are included: `project-governance`, `domain-navigation`, and `incident-doctor`.
+- Release asset SHA-256: `99ab0679c5692dd382d515cf39a92c6fb1e9c68ae119c43637b3cec65b19436e`.
+- The published v0.2.0 artifact does not include later repository changes merged by task 039.
 
-## Accepted v0.2.0 capability baseline
+## Accepted repository main
 
-The published release includes the accepted reusable changes merged after Plugin v0.1.0:
-
-- Domain Navigation current-task authority gate and bounded/historical snapshot navigation;
-- one canonical authority per fact/state/behavior class;
-- domain-coherent code structure and anti-redundancy guidance;
-- task lifecycle integrity;
-- exact evidence/artifact identity binding with proven-equivalence reuse;
-- selected task-workspace identity with bounded discovery.
-
-No MCP, hooks, daemon, runtime service, database, telemetry, installer, automatic refactor, or automatic remediation was added.
+- PR #11 merged `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039` into `main`.
+- Merge commit: `c3f5889dfc35ddc087b1027fbd84e74412f4ddae`.
+- Merged tree: `353239c9607bb53b16c64a2297b133eefc70d87a`, exactly matching the final reviewed task-branch tree.
+- `project-governance` now includes a reusable workspace/worktree lifecycle and closeout contract covering bounded pre-task classification, conflicting-writer/predecessor gating, explicit retention, terminal closeout, unique-work preservation, legacy reconciliation, and remote/local evidence boundaries.
+- No new top-level Skill, runtime, CLI, daemon, database, hook, installer, or automatic cleanup/remediation capability was added.
 
 ## Current task
 
 - Task: `EG-PROJECT-GOVERNANCE-WORKSPACE-LIFECYCLE-039`.
-- State: `READY_FOR_MERGE`.
-- Mode: `BOUNDED_GOVERNANCE_CHANGE`.
-- Start baseline: `main` at `533cefb1dcf07b4fde5a489408fbc8fa6f0e324e`.
-- Authorized branch: `codex/project-governance-workspace-lifecycle-v1`.
-- Reviewed implementation HEAD: `485cbeb3817128549b23c0daba55502138c8181a`.
-- V0 self-audit: PASS for scope, links, control ownership, lifecycle semantics, and absence of runtime/automation changes.
+- State: `CLOSED`.
+- Outcome: `MERGED_VERIFIED`.
+- PR: #11, merged 2026-10-09.
+- Reviewed task head: `e809800268040bcf7309fb11802d2e2a6b8c5ddd`.
+- Merge commit: `c3f5889dfc35ddc087b1027fbd84e74412f4ddae`.
+- Post-merge audit: PASS; the merge commit adds no file difference over the reviewed task head.
+- Remote task branch remains present because the available GitHub connector exposes no branch-ref deletion action. Its head is fully contained in `main`; remove it when verified branch-deletion capability is available. No claim is made about local worktree state.
 
 ## Next milestone
 
-Re-check the exact branch and merge target, merge only if the reviewed task branch remains compatible with the verified baseline, then perform post-merge exact-main verification and close the task controls.
+Use the new lifecycle contract in target projects. Any future Plugin publication, additional reusable Skill enhancement, or branch-cleanup action beyond the verified remote capability requires separate authorization or an available supported tool.
