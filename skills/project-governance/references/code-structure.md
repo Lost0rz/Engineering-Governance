@@ -56,7 +56,7 @@ For relevant source changes, be able to answer:
 2. Do new or existing consumers delegate to that owner, or are there independent writers that require ownership reconciliation?
 3. If authority must coexist during migration, are `PRIMARY_AUTHORITY`, `SYNC_DIRECTION`, `CUTOVER_CONDITION`, and `RETIREMENT_BOUNDARY` explicit?
 4. If behavior is shared or a module is split, do the responsibilities, lifecycle, invariants, and reasons to change support that boundary?
-5. Before writing substantial new code into an existing module, would this edit add a materially different responsibility or reason to change? If yes, establish the boundary now rather than relying on a later size-driven cleanup.
+5. Would this edit introduce a materially different responsibility or reason to change, regardless of how few lines it adds? If yes, establish the boundary now rather than relying on a later size-driven cleanup.
 6. Is the proposed change needed by the active task, and is any split based on responsibility rather than file length alone?
 
 If these answers reveal competing owners, resolve the ownership decision before adding another writer. If they reveal a new responsibility boundary required by the active task, establish it during construction. If they reveal only unrelated size or duplication, keep the current task bounded and record a follow-up when useful.
