@@ -13,44 +13,60 @@ Last verified: 2026-10-09.
 ## v0.4.0 candidate
 
 - Task: `EG-GLOBAL-ROUTING-V0.4.0-042`.
-- State: `WAITING_FOR_INDEPENDENT_AUDIT`.
+- State: `READY_FOR_INSTALLATION_ACCEPTANCE` pending final exact-head read-only seal after the latest control sync.
 - Start `main`: `b7e47e2de346fa229818013d4369ae60cee6e0fa`.
 - Task branch: `codex/global-routing-v0.4.0`.
+- Pull request: #14, Draft / Open / Unmerged.
 - Candidate package metadata: `0.4.0`.
 - This is a source candidate only; no Plugin v0.4.0 GitHub Release has been published.
-- `main` remained at the authorized start revision during construction and author self-audit.
+- Live `main` remained at the authorized start revision through the final pre-control audit.
 
 ## Implemented capability changes
 
-1. **Global Skill routing** — Project Governance is now the normal route for project/repository engineering work; Domain Navigation is conditional for unclear semantic/source routes; Incident Doctor remains reactive and evidence-gated.
-2. **Agent-mediated adoption/upgrade** — the Plugin payload now carries an exact marker-bounded global `AGENTS.md` routing template plus an idempotent adoption contract. Installation is complete only when all three Skills are available and exactly one current global routing block is verified.
-3. **Control identity semantics** — provenance/transition parents, current-control heads, explicit locked/execution heads, and remote freshness are separate identity classes. Relationship checks are no longer silently converted into equality checks.
-4. **Workspace identity semantics** — local branch, remote branch, worktree registration, filesystem path, HEAD, working-tree/unique-work state, write capability, and overlapping authority are verified as separate facts.
-5. **Verification cadence** — `V0`–`V3` remains the sole risk/scope taxonomy; construction/corrective/task/merge-release cadence is separate. Verification effort follows change risk, not change count.
-6. **Project templates** — `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` templates now carry the new routing boundary, control-identity, workspace-identity, and cadence semantics without copying the full reusable contracts.
+1. **Global Skill routing** — Project Governance is the normal route for project/repository engineering work, including simple low-risk edits while keeping procedure lightweight; Domain Navigation is conditional for unclear semantic/source routes; Incident Doctor remains reactive and evidence-gated.
+2. **Agent-mediated adoption/upgrade** — the Plugin payload carries an exact marker-bounded global `AGENTS.md` routing template plus an idempotent adoption contract. Installation is complete only when all three Skills are available and exactly one current global routing block is verified.
+3. **Control identity semantics** — provenance/transition parents, current-control heads, explicit locked/execution heads, and remote freshness are separate identity classes. Relationship checks are not silently converted into equality checks.
+4. **Workspace lifecycle prevention** — local branch, remote branch, worktree registration, filesystem path, HEAD, working-tree/unique-work state, write capability, and overlapping authority are separate facts. Bounded lifecycle checkpoints now run during normal development at workspace selection, successor-writer decisions, retained-state transitions, terminal events, and before overlapping next tasks; historical full reconciliation is exceptional.
+5. **Construction-time code structure** — file/module organization is governed by Domain/capability/responsibility/authority/lifecycle/reason-to-change boundaries, never by a universal line-count threshold. A new responsibility boundary is established while code is being written rather than deferred to final cleanup; cohesive large files are not split mechanically.
+6. **Verification cadence** — `V0`–`V3` remains the sole risk/scope taxonomy; construction/corrective/task/merge-release cadence is separate. Verification effort follows change risk, not change count.
+7. **Domain navigation** — existing semantic business/product/domain/capability maps are reused as authorities regardless of filename; an optional navigation projection is derived and does not duplicate product/domain truth.
+8. **Project templates** — `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` carry routing-boundary, control-identity, workspace-identity, and cadence semantics without copying full reusable contracts.
 
-## Author self-audit
+## Multi-pass audit outcome
 
-A detailed remote exact-source self-audit was performed during construction. It found and corrected two material design-propagation issues before handoff:
+Five audit passes were run against the PR/source, including routing/adoption, Domain/code-structure, workspace lifecycle, historical failure regression, and anti-bypass/exact-head review.
 
-- **Important — template propagation gap:** reusable control-identity/cadence rules were initially absent from `CURRENT_TASK.md`/`CURRENT_STATUS.md` templates. Corrected.
-- **Important — installation/default-route gap:** the initial adoption text did not bind Skill availability and global routing adoption into one installation-completion gate, and the first routing wording allowed simple repository work to bypass Project Governance. Corrected.
+Four material issue categories were found across construction plus audit and corrected:
 
-After corrective changes:
+- template propagation of identity/cadence;
+- installation completion + simple-work default routing;
+- proactive construction-time structure enforcement, including removal of edit-size as a possible bypass;
+- proactive bounded workspace lifecycle checkpoints so closeout is not deferred into later archaeology.
 
-- top-level Skill directory count remains exactly three;
-- routing/adoption files are inside `skills/**` and therefore inside the established Plugin payload boundary;
-- the managed global block contains one BEGIN/END marker pair and names the three expected Skills;
-- no Router Skill, installer executable, Bootstrap CLI, daemon, hook, MCP service, background runtime, or automatic remediation was added;
-- the historical-control-parent false-positive case is explicitly guarded while explicit locked-head equality remains a hard gate;
-- no competing L1–L4 validation taxonomy was introduced.
+After the corrective passes, no remaining Critical or Important issue was found.
 
-Because the same remote session authored the changes and performed this self-audit, the self-audit is not represented as independent review.
+## Core regression results
+
+- Large-file handling is responsibility-driven, not line-count driven: PASS.
+- Structure checks occur during construction when a new responsibility/authority boundary is introduced: PASS.
+- Existing Domain/semantic maps route code ownership/source/test discovery without requiring duplicate map files: PASS.
+- Stale/retained worktree handling occurs at bounded lifecycle checkpoints during development: PASS.
+- Unrelated historical worktrees do not trigger routine full archaeology: PASS.
+- Explicit one-time legacy reconciliation remains available for repositories that already accumulated ambiguous workspace debt: PASS.
+- Single canonical authority / no parallel writer principle remains enforced: PASS.
+- Historical control-parent false STOP is guarded while explicit locked-head equality remains hard: PASS.
+- Verification effort follows risk, not edit count: PASS.
+- Incident Doctor remains evidence-gated and does not become a routine diagnostics program: PASS.
+- Global routing remains selection-only and does not duplicate Skill procedures into global `AGENTS.md`: PASS.
+
+## Review-independence boundary
+
+The audit was performed as a separate adversarial review pass over exact PR source and did not rely on implementation claims. The same ChatGPT conversation also authored corrective commits, so separate-actor/separate-model independence is not claimed. The user authorized this multi-pass audit as the pre-installation gate; strict external reviewer identity can remain an optional merge gate.
 
 ## Verification posture
 
-`V0 + semantic scenario audit` is the accepted level for this documentation/contract/package-metadata task. No executable product runtime changed, so no runtime/build test claim is made. Final handoff requires an exact-PR-head diff/path/link/semantic check and explicit disclosure that independent reviewer evidence is still absent unless a separate reviewer performs it.
+`V0 + multi-pass semantic/adversarial audit` is the accepted level for this documentation/contract/package-metadata task. No executable product runtime changed and the candidate HEAD has no CI/status checks, so no runtime/build/CI PASS is claimed.
 
 ## Next milestone
 
-Open the v0.4.0 candidate PR against `main`, verify its exact final head, and obtain an independent merge decision. A separate task is required to publish Plugin v0.4.0 and to apply the new installation/adoption contract to target environments/projects.
+Seal the latest exact PR HEAD read-only. If scope/base/invariants remain unchanged, proceed to real installation acceptance of Plugin v0.4.0 + managed global routing in a controlled target environment while PR #14 remains Draft/unmerged. Merge and publication remain separate decisions after installation evidence.
