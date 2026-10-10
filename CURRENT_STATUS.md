@@ -6,7 +6,7 @@ Last verified: 2026-10-10.
 
 The repository has exactly one remote development branch: `main`.
 
-The accepted clean baseline produced by the integration/cleanup task is:
+The accepted clean source used for Plugin v0.5.0 publication is:
 
 `b288161c5a4b869ac9d95588c1501184229b2444`
 
@@ -14,38 +14,55 @@ At that revision:
 
 - Plugin version is `0.5.0`;
 - exactly three top-level Skills exist: `project-governance`, `domain-navigation`, `incident-doctor`;
-- integrated Navigation Refresh, lightweight Follow-ups, Project Storage Affinity, and Engineering-Governance-only execution split are accepted;
+- Navigation Refresh, lightweight Follow-ups, Project Storage Affinity, and the Engineering-Governance-only execution split are integrated and source-audited;
 - open PR count was `0`;
 - remote development branch set was exactly `main`;
-- historical RemoteOrbit adoption-gap evidence is preserved under archive tag `archive/remoteorbit-adoption-gap-audit-032` rather than a development branch.
+- historical RemoteOrbit adoption-gap evidence is preserved under archive tag `archive/remoteorbit-adoption-gap-audit-032`.
 
-## Published Plugin status
+## Published Plugin v0.5.0
 
-Latest published Release is still `plugin-v0.4.0`.
+GitHub Release:
 
-Fresh release preflight for `plugin-v0.5.0`:
+`plugin-v0.5.0`
 
-- Release exists before publication: `NO`
-- tag exists before publication: `NO`
+Release verification:
 
-## Active task
+- Release title: `Engineering Governance Plugin v0.5.0`
+- exact tag/source SHA: `b288161c5a4b869ac9d95588c1501184229b2444`
+- asset: `engineering-governance-plugin.zip`
+- asset size: `56882` bytes
+- asset SHA-256: `66a1b4b4eaf3b87eaf6e1addfe793cad578ceb4c35de3c0d681d02118f3250e0`
+- package file entries: `29`
+- asset count: exactly `1`
+- draft: `false`
+- prerelease: `false`
+- publisher: GitHub Actions
+- publisher workflow run: `38018881361`
+- published asset was downloaded again by the publisher and its SHA-256 matched the locally built artifact
+- one-shot publisher branch self-deleted after verification
 
-Task: `EG-PLUGIN-V0.5.0-RELEASE-050`.
+The tag itself was independently re-read after publication and points exactly to the accepted clean source SHA above.
 
-State: `AUTHORIZED_REMOTE_PUBLICATION`.
+## Accepted v0.5 capabilities
 
-Mode: `EXACT_CLEAN_BASELINE_RELEASE`.
+- affected-only Navigation refresh with current-route no-churn and explicit stale/historical/read-only boundaries;
+- lightweight evidence-backed non-blocking `CURRENT_STATUS.md / Follow-ups`, with `CURRENT_TASK.md` remaining the only repair authorization;
+- Project Storage Affinity derived from the canonical project location, with explicit project-local override and separate machine/runtime plus ephemeral-scratch classes;
+- Engineering-Governance repository-specific Web/remote construction and local installed/runtime validation split.
 
-Exact release source:
+Exactly three top-level Skills remain. Global Router remains selection-only. No fourth Skill, Findings platform, storage runtime subsystem, daemon, service, database, installer, or automatic remediation was added.
 
-`b288161c5a4b869ac9d95588c1501184229b2444`
+## Closed tasks
 
-Publication must package only that revision's `plugin.json + skills/**`, publish tag `plugin-v0.5.0` against that exact source, upload one `engineering-governance-plugin.zip` asset, verify artifact identity/hash, and leave no publisher branch behind.
+- `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049` — `PASS`
+- `EG-PLUGIN-V0.5.0-RELEASE-050` — `PASS`
 
-## Local validation boundary
+Current release state:
 
-No local Plugin reinstall/runtime behavior validation begins until this release is published and independently verified. Local validation must use the published v0.5.0 artifact/runtime identity rather than an old A2 or pre-integration candidate.
+`EG_PLUGIN_V0.5.0_RELEASED_VERIFIED`
 
 ## Next milestone
 
-Publish and verify Plugin v0.5.0 from the exact clean baseline, then hand the published artifact to local installation/runtime acceptance.
+Local reinstall and real runtime/behavior acceptance of the published v0.5.0 package.
+
+Local validation should first prove the active installed/runtime Plugin identity is the published v0.5.0 artifact and that no older competing Engineering-Governance authority remains. Then run the focused Navigation/Follow-up/Storage-Affinity behavior checks. Local AI must return evidence rather than repair reusable source; any reusable defect returns to a fresh Web/remote Engineering-Governance corrective task.
