@@ -115,13 +115,41 @@ Receipt evidence:
 
 The two earlier MemoX attempts are classified as `NOT_EXECUTED / INVALID_FIXTURE`, not Plugin failures. They correctly stopped before mutating the real MemoX repository.
 
+The disposable Case 5 fixture and explicit override were removed only after PASS had been recorded.
+
+### Case 1 — Navigation affected-only correction — PASS on Mac mini
+
+Validated in disposable fixture:
+
+`/Volumes/Jack-Dev/Acceptance/eg-v050-nav-case1-pg5OKI`
+
+Receipt and independent audit evidence:
+
+- machine: `Mac mini`
+- active Plugin: `engineering-governance v0.5.0`
+- Skills used: `project-governance`, `domain-navigation`
+- accepted stale Orders route: `src/legacy/orders-service.txt`
+- verified current Orders route: `src/orders/service.txt`
+- `DOMAIN_MAP.md` modified: `YES`
+- affected Orders fields changed: `Authority`, `Evidence`, `Freshness`
+- unrelated Billing entry changed: `NO`
+- actual task mutation: exactly one `case1-task-note` line appended to `src/orders/service.txt`
+- whole-map rewrite: `NO`
+- generalized mapping subsystem created: `NO`
+- pre-cleanup Git status contained only `DOMAIN_MAP.md` and `src/orders/service.txt`
+- independent mechanical audit proved Orders entry changed, Billing entry remained unchanged, and the task mutation existed exactly once
+- `git diff --check`: `PASS`
+- real business project mutated: `NO`
+- Engineering-Governance reusable source/plugin cache mutated: `NO`
+- disposable fixture removed only after final audit PASS
+
 ## Accepted v0.5 capabilities still awaiting behavior acceptance
 
-- affected-only Navigation refresh with current-route no-churn and explicit stale/historical/read-only boundaries;
+- current-route Navigation no-churn;
 - lightweight evidence-backed non-blocking `CURRENT_STATUS.md / Follow-ups`, with `CURRENT_TASK.md` remaining the only repair authorization;
 - strict read-only candidate-only behavior.
 
-Project Storage Affinity is now behavior-accepted on the Mac mini.
+Project Storage Affinity and affected-only Navigation correction are now behavior-accepted on the Mac mini.
 
 Exactly three top-level Skills remain. Global Router remains selection-only. No fourth Skill, Findings platform, storage runtime subsystem, daemon, service, database, installer, or automatic remediation was added.
 
@@ -142,7 +170,7 @@ Mode: `DISPOSABLE_PROJECT / EVIDENCE_ONLY / NO_REUSABLE_SOURCE_REPAIR`.
 
 Behavior progress:
 
-- Case 1 Navigation affected-only: `PENDING`
+- Case 1 Navigation affected-only: `PASS — Mac mini`
 - Case 2 Navigation no-churn: `PENDING`
 - Case 3 Follow-up lifecycle: `PENDING`
 - Case 4 Strict read-only: `PENDING`
@@ -150,6 +178,6 @@ Behavior progress:
 
 ## Next milestone
 
-Continue focused behavior acceptance in the same disposable Mac mini fixture when practical. Next target: Case 1, stale/wrong Navigation correction is affected-only.
+Continue focused behavior acceptance on Mac mini with a fresh disposable fixture. Next target: Case 2, correct/current Navigation route produces no churn.
 
 Do not modify Engineering-Governance reusable source during acceptance. Any reusable defect returns to a fresh Web/remote corrective task.
