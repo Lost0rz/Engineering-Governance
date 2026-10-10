@@ -9,6 +9,8 @@ Use this Skill when navigation for an affected Domain/capability is missing or s
 
 Before assuming a navigation artifact is missing, discover any accepted business, product, domain, or capability authorities already present in the target repository, regardless of filename, and determine what semantic truth they own. Treat those authorities as sources to reference, not material to duplicate. Any separate `DOMAIN_MAP.md` created or refreshed by this Skill is only an optional derived navigation projection, not product truth, domain authority, or task authorization.
 
+When focused routing checks an existing accepted navigation projection, distinguish whether the checked route is still correct, has a verified affected correction, or remains unresolved/stale. Correct routes do not churn. Verified corrections may refresh only the affected derived claim under [Incremental navigation refresh](references/refresh-policy.md); unresolved replacements stay explicit. Strict read-only work reports a correction candidate and does not mutate the projection.
+
 ## Read the contracts
 
 - [Domain model](references/domain-model.md)
