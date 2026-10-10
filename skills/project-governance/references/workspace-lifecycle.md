@@ -12,6 +12,26 @@ The goal is not “one worktree only.” The goal is that every task-relevant no
 4. **Unknown or unique work is never cleanup fuel.** Preserve staged, unstaged, untracked, and local-only work until its ownership and disposition are verified. Do not use reset, stash, overwrite, forced branch movement, or forced worktree deletion merely to reach a clean-looking baseline.
 5. **Retention is explicit, not accidental.** A non-terminal workspace may remain for review, PR, QA, runtime acceptance, recovery, or another verified reason, but its owner, reason, release/next-event condition, and write capability must be known.
 6. **Closeout is prompt and proportional.** Reconcile terminal workspace state before starting a conflicting successor task whenever practical. Do not turn every task start into a full historical repository archaeology exercise.
+7. **Durable workspace state follows the canonical project's storage authority by default.** Resolve the canonical project root before choosing locations for project-controlled worktrees, unique-work staging, retained task evidence, or other non-regenerable workspace state. A verified project-local path/authority rule for a specific durable asset overrides this default. Machine/runtime state and OS/tool-required ephemeral scratch are separate; unique or durable project state must not be abandoned in unrelated temporary or convenience locations at task closure.
+
+## Storage authority for durable task state
+
+Use the canonical project root as the default routing signal for project-controlled durable task state. Determine which storage authority contains that root before selecting a durable task-workspace or retention location. “Same storage authority” means the same project storage location/volume/filesystem authority established by the canonical root; it is not a universal host path, named external disk, user home, or machine rule.
+
+Project-controlled durable task state includes, when retained or non-regenerable:
+
+- Git worktrees or equivalent task checkouts;
+- task staging that contains unique work;
+- durable diagnostic, migration, recovery, or acceptance evidence;
+- project archives or retained task bundles;
+- release/acceptance artifacts that the project intentionally keeps;
+- other unique development state whose loss would require reconstruction or could lose evidence/work.
+
+A project may explicitly declare another durable location/authority for one of those asset classes; that project-local rule wins. Do not require ordinary projects to maintain a separate storage manifest merely to restate the default.
+
+OS/tool-required temporary files, sockets, disposable compiler scratch, and other short-lived scratch may use system temporary locations. If temporary staging becomes unique or must be retained, preserve it under the project's storage authority before closure instead of leaving the only durable copy in system temp or another unrelated convenience path.
+
+Machine/runtime state is a separate class. CI runner runtime, LaunchAgents, package-manager or runtime services, host caches, machine configuration, system temp, and similar host-operational state may remain machine-local unless the project explicitly owns that state as portable project data. Do not relocate host-operational state merely because the canonical project root is on another storage authority.
 
 ## Workspace evidence dimensions
 
@@ -21,6 +41,7 @@ Establish workspace facts independently; do not infer one dimension from another
 - **Remote branch identity** — whether the corresponding remote ref exists and what commit it resolves to. A missing remote branch does not prove the local branch/worktree is absent.
 - **Worktree registration** — whether Git currently registers the worktree. Registration does not by itself prove the filesystem path is present and usable.
 - **Filesystem path identity** — whether the expected checkout path exists and resolves to the intended repository/worktree. A directory name alone does not prove Git registration or task authority.
+- **Storage authority** — when durable placement matters, whether the selected project-controlled workspace/state is on the canonical project's storage authority or on an explicitly declared project-local override.
 - **HEAD/revision** — the commit actually checked out in the selected workspace.
 - **Working-tree state** — staged, unstaged, untracked, and local-only commit state. A clean remote PR does not prove local cleanliness.
 - **Write capability** — whether the retained workspace can resume writes under its current authorization without a new boundary.
@@ -47,6 +68,7 @@ This checkpoint model is the normal prevention mechanism. `Legacy reconciliation
 Perform a bounded workspace check for the repository and active scope. Establish only what the task needs:
 
 - canonical repository/workspace identity and current ref/revision;
+- canonical project root and, when durable placement is material, its storage authority plus any explicit project-local override for the proposed durable asset;
 - selected or proposed task workspace, local/remote branch state where relevant, worktree registration/path identity, HEAD, and working-tree state;
 - any existing workspace whose writes overlap the same affected fact/state/policy/behavior authority or that otherwise materially conflicts with the task;
 - whether those relevant workspaces are active, intentionally retained, terminal, uniquely dirty/local-only, or unresolved;
@@ -79,7 +101,7 @@ A safe closeout establishes, in order:
 
 1. the lifecycle event, whether it is terminal for this task/phase, and the exact task/workspace identity;
 2. staged, unstaged, untracked, and local-only commit state relevant to data preservation;
-3. the disposition of any unique work—integrated, preserved elsewhere with evidence, explicitly retained, or explicitly discarded only when authorized;
+3. the disposition of any unique work—integrated, preserved elsewhere with evidence, explicitly retained, or explicitly discarded only when authorized—and, when retained, that the only durable copy is not left in unrelated temporary/convenience storage;
 4. removal of the obsolete task worktree/checkout when safe and supported by project rules;
 5. removal of obsolete local task branches when safe and supported;
 6. remote task-branch cleanup only when repository policy and current collaboration state allow it;
@@ -153,5 +175,7 @@ Stop destructive or conflicting state-changing work when any of these materially
 - a predecessor can write an overlapping fact/state/policy/behavior authority and remains unresolved or write-capable under its current authorization;
 - staged, unstaged, untracked, or local-only work has unknown ownership/disposition;
 - the lifecycle event's effect on authorization or the retention condition cannot be verified;
+- the storage authority or applicable project-local durable-path override is unresolved when the task must choose a durable project-controlled location;
+- closeout would leave the only durable/unique project state in unrelated temporary or convenience storage without an authorized retention rule;
 - remote and local evidence disagree on an identity needed for the cleanup decision;
 - cleanup would require force, overwrite, reset, or another destructive assumption not explicitly authorized by the project.
