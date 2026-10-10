@@ -2,86 +2,50 @@
 
 Last verified: 2026-10-10.
 
-## Clean authoritative baseline
+## Clean authoritative source baseline
 
-Engineering-Governance now has one remote development branch:
+The repository has exactly one remote development branch: `main`.
 
-`main`
+The accepted clean baseline produced by the integration/cleanup task is:
 
-All terminal/superseded `codex/*` branches, completed publisher/release transport branches, the v0.5 design/implementation inputs, the Storage Affinity input branch, and the integration branch were removed after exact-head/lifecycle verification.
+`b288161c5a4b869ac9d95588c1501184229b2444`
 
-The formerly unique `control/remoteorbit-adoption-gap-audit` historical branch was preserved before deletion as archive tag:
+At that revision:
 
-`archive/remoteorbit-adoption-gap-audit-032`
+- Plugin version is `0.5.0`;
+- exactly three top-level Skills exist: `project-governance`, `domain-navigation`, `incident-doctor`;
+- integrated Navigation Refresh, lightweight Follow-ups, Project Storage Affinity, and Engineering-Governance-only execution split are accepted;
+- open PR count was `0`;
+- remote development branch set was exactly `main`;
+- historical RemoteOrbit adoption-gap evidence is preserved under archive tag `archive/remoteorbit-adoption-gap-audit-032` rather than a development branch.
 
-Target commit:
+## Published Plugin status
 
-`32ad185bbe5f5f058ff8c40d7a0ee0cffe1c8c2b`
+Latest published Release is still `plugin-v0.4.0`.
 
-Open PR count after cleanup: `0`.
+Fresh release preflight for `plugin-v0.5.0`:
 
-## Integrated v0.5 source
+- Release exists before publication: `NO`
+- tag exists before publication: `NO`
 
-Accepted audited candidate:
+## Active task
 
-`I1 = ee091fcdbad0e3edcec2b544067021068a0d54b9`
+Task: `EG-PLUGIN-V0.5.0-RELEASE-050`.
 
-PR #17 merged I1 plus later control-only receipt state to main:
+State: `AUTHORIZED_REMOTE_PUBLICATION`.
 
-`MERGE_SHA = 4b762490c035ecd0de0caa587c6e8a0e843377f1`
+Mode: `EXACT_CLEAN_BASELINE_RELEASE`.
 
-Post-merge closeout controls advance main without modifying reusable Plugin payload.
+Exact release source:
 
-Integrated source audit:
+`b288161c5a4b869ac9d95588c1501184229b2444`
 
-`PASS — Critical 0 / Important 0`
+Publication must package only that revision's `plugin.json + skills/**`, publish tag `plugin-v0.5.0` against that exact source, upload one `engineering-governance-plugin.zip` asset, verify artifact identity/hash, and leave no publisher branch behind.
 
-Current reusable Plugin state:
+## Local validation boundary
 
-- version: `0.5.0`
-- top-level Skills: exactly `project-governance`, `domain-navigation`, `incident-doctor`
-- Global Router: selection-only
-- Navigation Refresh: integrated
-- Lightweight Follow-ups: integrated
-- Project Storage Affinity: integrated
-- Engineering-Governance-only remote construction/local validation split: integrated in root project rules
-
-## Remote lifecycle evidence
-
-Terminal/superseded cleanup workflow:
-
-- run `38018606952`: PASS
-- 18 exact-head-verified old branches removed
-- post-delete survivor set verified
-- one-shot cleanup transport branch self-deleted
-
-Historical evidence archive workflow:
-
-- run `38018677973`: PASS
-- RemoteOrbit audit evidence identity verified
-- archive tag created and verified
-- historical branch deleted
-- only-main branch state verified
-- one-shot archive transport branch self-deleted
-
-## Published Plugin boundary
-
-Latest published release remains:
-
-`plugin-v0.4.0`
-
-v0.5.0 has **not** been published or installed under this task.
-
-No local Plugin cache/runtime and no business project were modified by the integration/cleanup task.
-
-## Closed task
-
-`EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`
-
-Final result:
-
-`EG_V0.5_INTEGRATED_MAIN_CLEAN_BASELINE_READY_FOR_RELEASE_INSTALL_TEST`
+No local Plugin reinstall/runtime behavior validation begins until this release is published and independently verified. Local validation must use the published v0.5.0 artifact/runtime identity rather than an old A2 or pre-integration candidate.
 
 ## Next milestone
 
-Create a fresh release/install-test task from the final clean `main`: package and publish Plugin v0.5.0 from the exact accepted main payload, then reinstall that published package locally and run the real behavior validation against the installed/runtime identity.
+Publish and verify Plugin v0.5.0 from the exact clean baseline, then hand the published artifact to local installation/runtime acceptance.
