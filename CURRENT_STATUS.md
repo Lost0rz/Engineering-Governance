@@ -8,13 +8,9 @@ Last verified: 2026-10-10.
 - Release title: `Engineering Governance Plugin v0.4.0`.
 - Package version: `0.4.0`.
 - Exact release/source SHA: `204f74952ce53fb97180e42f537fdf3236d1c48e`.
-- Tag `refs/tags/plugin-v0.4.0` resolves directly to that exact commit.
-- Release state: published, `draft=false`, `prerelease=false`.
 - Asset: `engineering-governance-plugin.zip`.
 - Asset size: `54754` bytes.
 - Asset SHA-256 / GitHub digest: `1d0d791acc167f47ff5d91b523528f53fed027f2bc9eac8d0b938983903a7922`.
-- Package entries: `44`.
-- Publisher workflow run: `37916223246`, conclusion `success`.
 
 ## Accepted reusable capability baseline
 
@@ -24,58 +20,55 @@ Plugin v0.4.0 contains exactly three top-level Skills:
 - `domain-navigation`
 - `incident-doctor`
 
-Accepted capabilities include:
+Accepted behavior:
 
-1. managed global Skill routing and idempotent global `AGENTS.md` adoption/upgrade;
-2. Project Governance as the normal project/repository engineering entry while simple low-risk work remains lightweight;
-3. Domain Navigation as conditional semantic/source routing that reuses accepted maps;
-4. Incident Doctor as reactive evidence-gated investigation only;
-5. construction-time responsibility/Domain/authority-based code structure independent of line count or edit size;
-6. one canonical authority per fact/state/behavior class and explicit migration boundaries for temporary coexistence;
-7. bounded worktree lifecycle checkpoints during normal development, with full legacy archaeology reserved for accumulated historical debt;
-8. control identity semantics that distinguish provenance/current/explicit locked heads;
-9. `V0`–`V3` risk/scope tiers with separate construction/corrective/task/merge-release verification cadence.
+1. Project Governance is the normal engineering entry and scales down for simple low-risk work.
+2. Domain Navigation is conditional when semantic/source/authority routing is unclear.
+3. Incident Doctor is reactive only for blocking problems with insufficient evidence.
+4. Global routing adoption is managed and idempotent.
+5. Worktree lifecycle and verification effort are bounded and risk-proportional.
 
-## Mac mini source/install state
+## Mac mini source/install/runtime state
 
 - Canonical source checkout: `/Volumes/Jack-Dev/Projects/Engineering-Governance`.
-- Source checkout is `main`, clean, and matched `origin/main` at `221bcd597e1b45aceae73bf1088792ca6df6cfb4` at the latest local receipt.
-- The previous mini-internal source checkout was retired after its only unique untracked ZIP was archived with matching SHA-256.
-- Installed plugin source path `/Users/ox_miles/.codex/plugins/engineering-governance` now reports version `0.4.0` with the three accepted Skills.
-- Previous `0.3.0` install was backed up and hash-verified.
-- The official v0.4.0 release asset identity was verified before local installation.
-- Global managed routing block count is exactly `1`; unrelated global rules were preserved; repeated adoption was idempotent.
-- Read-only routing acceptance passed for default Project Governance, conditional Domain Navigation, reactive-only Incident Doctor, and bounded worktree lifecycle behavior.
+- Source checkout is `main`, clean, and matched fresh `origin/main` at control head `36c6392323a55df246202561d8aa3962e8f607a4` for the activation task.
+- Previous mini-internal source checkout has been retired; its unique historical ZIP was archived separately with matching SHA-256.
+- Installed plugin source path: `/Users/ox_miles/.codex/plugins/engineering-governance`.
+- Installed plugin version: `0.4.0`.
+- Previous `0.3.0` installation backup remains preserved and verified.
+- Sole enabled registration: `engineering-governance-personal / engineering-governance`.
+- Active runtime cache path: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.4.0`.
+- Active runtime version: `0.4.0`.
+- Enabled registration count: `1`.
+- Enabled `0.3.0` registration remaining: `NO`.
+- Global managed routing block count: `1`.
+- Unrelated global rules preserved.
+- Runtime acceptance passed for default Project Governance, conditional Domain Navigation, and reactive-only Incident Doctor.
 
-## Remaining activation blocker
+## Task 044 resolution
 
-The sole enabled Codex registration still resolves to a stale runtime cache entry:
+Task `EG-PLUGIN-V0.4.0-RUNTIME-CACHE-ACTIVATION-044` is complete.
 
-`/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.3.0/plugin.json`
+The prior stale-cache observation was not reproducible in the fresh authoritative run: before any refresh, the sole enabled registration, cache, and current runtime already resolved to `0.4.0`; the previously recorded `0.3.0` cache path was absent. No refresh, reinstall, cache deletion, or client restart was required.
 
-Therefore local filesystem installation is v0.4.0, but runtime activation of v0.4.0 is not yet proven.
-
-Current evidence supports a registration/cache refresh boundary, not a source or routing-content defect. Do not modify Plugin source or global routing to address this symptom.
-
-OpenAI plugin documentation states that installed marketplace plugins are loaded from the Codex plugin cache and that marketplace/local-plugin updates require refresh/reinstall plus client restart/activation before the new cached copy is used.
+No source, Plugin payload, global routing, unrelated plugin, or business-project mutation occurred.
 
 ## Current posture
 
 ```text
 SOURCE_AUTHORITY=JACK_DEV
-SOURCE_MAIN_MATCH_ORIGIN=YES
 PUBLISHED_PLUGIN_VERSION=0.4.0
 INSTALLED_PLUGIN_SOURCE_VERSION=0.4.0
+ACTIVE_RUNTIME_CACHE_VERSION=0.4.0
+ENABLED_REGISTRATION_COUNT=1
+ENABLED_0_3_REGISTRATION=NO
 GLOBAL_ROUTING_BLOCK_COUNT=1
-GLOBAL_ROUTING_IDEMPOTENT=YES
 ROUTING_ACCEPTANCE=PASS
-ENABLED_RUNTIME_CACHE_VERSION=0.3.0
-PLUGIN_V0_4_RUNTIME_ACTIVATION=UNVERIFIED
+PLUGIN_V0_4_RUNTIME_ACTIVATION=PASS
 SOURCE_FIX_REQUIRED=NO
-ROUTING_REWRITE_REQUIRED=NO
-NEXT_ACTION=REFRESH_REGISTERED_PLUGIN_RUNTIME_CACHE
+RUNTIME_CACHE_REFRESH_REQUIRED=NO
 ```
 
 ## Next milestone
 
-Refresh the existing Engineering Governance plugin registration/runtime cache through supported plugin/marketplace mechanisms, preserve the verified v0.4.0 installed payload and global routing block, then prove the enabled runtime resolves to v0.4.0. If client restart is required, record that boundary explicitly rather than deleting caches speculatively.
+No Engineering-Governance corrective is currently required. Return to normal project work; only reopen plugin/runtime diagnosis if a concrete routing or activation failure recurs.
