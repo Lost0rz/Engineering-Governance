@@ -1,77 +1,92 @@
-# CURRENT TASK — v0.5 + Storage Affinity Integration and Clean Baseline
+# CURRENT TASK — Publish Engineering Governance Plugin v0.5.0
 
-Task ID: `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`
+Task ID: `EG-PLUGIN-V0.5.0-RELEASE-050`
 
-State: `CLOSED / PASS`
+State: `AUTHORIZED_REMOTE_PUBLICATION`
 
-Mode: `INTEGRATED_MAIN_REMOTE_LIFECYCLE_CLOSED`
+Mode: `EXACT_CLEAN_BASELINE_RELEASE`
 
 Authoritative branch: `main`
 
-## Final integrated baseline
+## Release source
 
-- Audited integrated reusable candidate I1: `ee091fcdbad0e3edcec2b544067021068a0d54b9`.
-- PR #17 control head B1: `22f8ceaa40adf41c3a18826a2b4f5eb944ebf578`.
-- PR #17 merge SHA: `4b762490c035ecd0de0caa587c6e8a0e843377f1`.
-- Post-merge control-transition main before final closeout: `934c29414c3dd9013610baef3f62475fe479748a`.
-- `I1..merge` changed only root controls after I1, so merged `plugin.json + skills/**` is payload-equivalent to exact audited I1.
+The exact accepted clean source revision is:
 
-## Integrated source audit
+`RELEASE_SOURCE = b288161c5a4b869ac9d95588c1501184229b2444`
 
-`INTEGRATED_SOURCE_AUDIT_I1 = PASS`
+This source is the closed result of `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`.
 
-- Critical: `0`
-- Important: `0`
-- Plugin source version: `0.5.0`
-- Top-level Skills: exactly `3`
-  - `project-governance`
-  - `domain-navigation`
-  - `incident-doctor`
-- Global Router: selection-only / unchanged responsibility
-- Navigation Refresh: accepted affected-only/no-churn/historical/read-only semantics preserved
-- Lightweight Follow-ups: accepted status-memory / Task-authorization boundary preserved
-- Project Storage Affinity: accepted canonical-root/storage-authority semantics preserved
-- Engineering-Governance-only Web construction / local runtime-validation rule: reconciled in root `AGENTS.md`
+Its reusable payload is exact-candidate-I1 equivalent; later task-control commits do not authorize or require any `plugin.json` or `skills/**` mutation.
 
-## Remote lifecycle closeout
+## Release identity
 
-One-shot audited cleanup run:
+- Plugin version: `0.5.0`
+- Release tag: `plugin-v0.5.0`
+- Release title: `Engineering Governance Plugin v0.5.0`
+- Asset: `engineering-governance-plugin.zip`
+- Package root: `engineering-governance/`
+- Package payload: exactly root `plugin.json` plus complete `skills/**`
 
-- workflow run: `38018606952`
-- result: `PASS`
-- main identity gate: PASS
-- 18 terminal/superseded branches deleted only after exact expected-head checks
-- survivor-set verification before self-delete: PASS
-- cleanup transport branch self-delete: PASS
+Fresh preflight confirmed that neither the GitHub Release nor tag `plugin-v0.5.0` exists before publication.
 
-The only remaining historical branch after that pass was `control/remoteorbit-adoption-gap-audit`, which carried unique historical evidence. That evidence was preserved as:
+## Publication contract
 
-`refs/tags/archive/remoteorbit-adoption-gap-audit-032`
+Use a one-shot remote publisher transport that is never merged into `main` and self-deletes after successful publication.
 
-pointing to:
+Package only files from exact `RELEASE_SOURCE`.
 
-`32ad185bbe5f5f058ff8c40d7a0ee0cffe1c8c2b`
+The publisher must verify before release:
 
-Archive workflow run:
+1. `plugin.json` parses and version is exactly `0.5.0`;
+2. package has exactly one `engineering-governance/` root;
+3. root contains `plugin.json` and `skills/` only;
+4. exactly three top-level Skill directories exist:
+   - `project-governance`
+   - `domain-navigation`
+   - `incident-doctor`
+5. no symlink is included;
+6. no root controls, docs, examples, `.github`, build artifacts, runtime cache, or business-project material enters the package;
+7. record ZIP entry count, byte size, and SHA-256;
+8. create tag `plugin-v0.5.0` pointing exactly to `RELEASE_SOURCE`;
+9. publish the Release and upload exactly one asset named `engineering-governance-plugin.zip`;
+10. download/verify published Release metadata and asset identity/hash when the available transport supports it;
+11. self-delete the one-shot publisher branch after success.
 
-- workflow run: `38018677973`
-- main/evidence identity gates: PASS
-- archive tag creation + SHA verification: PASS
-- historical branch deletion: PASS
-- only-main branch verification before transport self-delete: PASS
-- archive transport branch self-delete: PASS
+## Release notes scope
 
-## Final remote baseline evidence
+Summarize only the accepted v0.5 changes:
 
-- remote branch set: exactly `main`
-- open PR count: `0`
-- historical RemoteOrbit audit retained as archive tag, not development branch
-- published Plugin release remains `plugin-v0.4.0`; no v0.5 release was created under this task
-- no local Plugin install/cache/runtime mutation occurred
-- no business project was modified
+- verified affected-only Navigation refresh and no-churn/read-only/historical boundaries;
+- lightweight non-blocking `CURRENT_STATUS.md / Follow-ups` with Task authorization required before repair;
+- Project Storage Affinity derived from canonical project location with project-local override;
+- Engineering-Governance repository-specific Web construction/local runtime-validation workflow rule;
+- exactly three Skills and unchanged selection-only Global Router.
+
+Do not describe a new Findings platform, storage runtime, daemon, service, installer, or fourth Skill because none exists.
+
+## STOP conditions
+
+STOP without destructive correction if:
+
+- live `main` changes reusable payload after `RELEASE_SOURCE`;
+- tag or Release `plugin-v0.5.0` unexpectedly appears with another identity;
+- package file list differs from the authorized payload;
+- version/Skill topology is wrong;
+- tag cannot be proven to target exact `RELEASE_SOURCE`;
+- uploaded asset hash cannot be established;
+- publication would require mutating installed local Plugin/cache/runtime.
+
+## Out of scope
+
+- local reinstall/runtime validation;
+- target/business-project mutation;
+- global installed `AGENTS.md` changes;
+- reusable source fixes during publication.
 
 ## Final state
 
-`EG_V0.5_INTEGRATED_MAIN_CLEAN_BASELINE_READY_FOR_RELEASE_INSTALL_TEST`
+Success is:
 
-This task no longer authorizes source construction or branch cleanup. The next objective requires a new release/install-test task based on the final clean `main` head.
+`EG_PLUGIN_V0.5.0_RELEASED_VERIFIED`
+
+After that, local AI may reinstall the published v0.5.0 package and run actual Plugin/runtime behavior acceptance under a separate local acceptance task.
