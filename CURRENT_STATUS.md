@@ -79,9 +79,11 @@ Verified behavior:
 - independent mechanical audit and `git diff --check` passed;
 - disposable fixture was removed only after audit PASS.
 
-### Case 3A — Follow-up retention — PASS on Mac mini
+### Case 3 — Follow-up lifecycle — PASS on Mac mini
 
 Disposable fixture: `/Volumes/Jack-Dev/Acceptance/eg-v050-followup-case3-5D6C11`.
+
+#### 3A — retention without unauthorized repair — PASS
 
 Verified behavior:
 
@@ -96,7 +98,25 @@ Verified behavior:
 - independent mechanical audit proved only `CURRENT_STATUS.md` and `src/orders/service.txt` changed;
 - `git diff --check` passed.
 
-Case 3 remains open for 3B: next-task selection must consider the retained Follow-up, explicit `CURRENT_TASK.md` authorization must exist before repair, and mere selection must not delete the Follow-up.
+#### 3B — next-task selection without premature resolution — PASS
+
+Verified behavior:
+
+- old task state: `CLOSED / PASS`;
+- retained Follow-up was explicitly considered for next-task selection;
+- it was selected as the next task;
+- new task ID: `EG-V050-FOLLOWUP-ORDERS-ENDPOINT-DOC-001`;
+- `CURRENT_TASK.md` was updated to authorize only the documentation correction and post-fix Follow-up reconciliation;
+- the Follow-up remained present in `CURRENT_STATUS.md` after selection;
+- the Follow-up was not deleted or marked resolved merely because it was selected;
+- `docs/orders-operations.md` still contained `/orders/v0` and was not repaired early;
+- product/source files were not modified during task selection;
+- no backlog/Findings subsystem was created;
+- Git status before final audit contained only `CURRENT_TASK.md`;
+- independent mechanical audit proved Follow-up presence, unrepaired documentation, explicit new-task authorization, and unchanged source;
+- `git diff --check` passed.
+
+Case 3 behavior is accepted: a small evidence-backed non-blocking issue can be retained without scope expansion, then considered and explicitly authorized as a later task without selection itself deleting the Follow-up.
 
 ### Case 5 — Project Storage Affinity — PASS on Mac mini
 
@@ -115,14 +135,13 @@ Verified behavior:
 
 ## Remaining behavior acceptance
 
-- Case 3B Follow-up next-task selection: `PENDING`
 - Case 4 Strict read-only candidate-only: `PENDING`
 
 Current accepted behavior:
 
 - affected-only Navigation correction: `PASS — Mac mini`
 - current-route Navigation no-churn: `PASS — Mac mini`
-- Follow-up retention without unauthorized repair: `PASS — Mac mini`
+- Follow-up lifecycle: `PASS — Mac mini`
 - Project Storage Affinity: `PASS — Mac mini`
 
 ## Closed tasks
@@ -134,6 +153,6 @@ Current accepted behavior:
 
 ## Next milestone
 
-Continue Case 3 in the existing Mac mini disposable fixture. Next target: 3B, choose the retained Follow-up as the next task without repairing it yet and without deleting it merely because it was selected.
+Clean the accepted Case 3 disposable fixture, then run the final focused behavior check on Mac mini: Case 4, strict read-only candidate-only behavior.
 
 Do not modify Engineering-Governance reusable source during acceptance. Any reusable defect returns to a fresh Web/remote corrective task.
