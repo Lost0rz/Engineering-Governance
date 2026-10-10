@@ -1,164 +1,153 @@
-# CURRENT TASK — Project Storage Affinity Rule
+# CURRENT TASK — v0.5 + Storage Affinity Integration and Clean Baseline
 
-Task ID: `EG-PROJECT-STORAGE-AFFINITY-045`
+Task ID: `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`
 
-State: `AUTHORIZED`
+State: `AUTHORIZED_REMOTE_INTEGRATION`
 
-Mode: `BOUNDED_REUSABLE_RULE_CHANGE`
+Mode: `INTEGRATE_AUDIT_MERGE_THEN_LIFECYCLE_CLOSEOUT`
 
 Authoritative branch: `main`
 
-Implementation branch: `codex/project-storage-affinity-v1`
+Integration branch: `codex/v0.5-storage-affinity-integration-v1`
 
 ## Objective
 
-Update Engineering Governance so Project Governance derives project-controlled development storage from the canonical project's actual storage location rather than from a universal host path or external-volume default.
+Create one authoritative Engineering-Governance v0.5 source baseline by integrating the already-audited Navigation Refresh + Follow-ups work with the already-audited Project Storage Affinity work on top of fresh `main`, reconcile their overlapping Project Governance surfaces, merge the integrated result to `main`, then close terminal legacy PR/release branches so the repository has one clean baseline before any local install/runtime behavior testing.
 
-This is a bounded reusable-rule change. Do not add a new Skill, storage daemon, installer, global filesystem redirect, or machine-wide `TMPDIR` policy.
+## Owner-approved execution order
 
-## Owner-approved semantics
+1. Integrate v0.5 Navigation Refresh + Follow-ups and Project Storage Affinity first.
+2. Audit the integrated source as a new candidate; prior branch audits are inputs, not substitutes for integrated-candidate audit.
+3. Merge only the audited integrated candidate to `main`.
+4. After merge, classify and close terminal old PR/release/publisher branches that no longer carry unique active authority.
+5. Preserve any branch with unique unresolved historical evidence until its disposition is explicit.
+6. Finish with one clean authoritative `main` baseline before local Plugin installation and real behavior testing.
 
-The accepted rule is:
+## Inputs
 
-> Development storage follows the canonical project location.
+- Fresh starting `main`: `d04bf63cefa7d48c843f0bccda0aabad3842c05f` before this task-control transition.
+- v0.5 accepted frozen reusable candidate A2: `ecadcf67bf00a5a82cd644cd822ad4d45a76a420`.
+- v0.5 implementation branch: `codex/navigation-learning-followups-v0.5.0-implementation`.
+- Storage Affinity reusable implementation head: `c250b9b081a93949f1d000165e64dcaa53610bdb`.
+- Storage Affinity branch: `codex/project-storage-affinity-v1`.
 
-Required behavior:
+The v0.5 implementation branch and Storage Affinity branch are retained inputs, not parallel writers during integration. Do not mutate them while this integration task is active.
 
-1. Resolve the canonical project root before selecting project-controlled worktree/staging/diagnostic/archive paths.
-2. If the canonical project root is on external storage, project-controlled durable development assets should stay on that same storage authority.
-3. If the canonical project root is on local host storage, project-controlled durable development assets should stay local.
-4. Explicit project-specific path/authority rules override the derived same-storage default.
-5. Do not hard-code `/Volumes/Jack-Dev`, the Mac mini, or any one host as a universal development-storage target.
-6. Do not place durable or unique project state in unrelated convenience locations such as `/private/tmp`, `/tmp`, Desktop, Downloads, or arbitrary home-directory paths.
-7. OS/tool-required ephemeral scratch may use system temporary locations, but any unique/durable project evidence or state must be moved/retained under the project's storage authority before task closure.
-8. Machine-operational state is separate: CI runner runtime, LaunchAgents, Homebrew/package-manager services, host caches, system temp, and other host runtime state may remain machine-local unless the project explicitly owns them as portable data.
-9. The global managed routing block remains concise and unchanged unless inspection proves a minimal routing reference is strictly required. Do not duplicate the storage procedure into global routing.
+## Integration contract
 
-Examples are illustrative only, not hard-coded policy:
+Create `codex/v0.5-storage-affinity-integration-v1` from the fresh post-control `main` head.
 
-- canonical project under `/Volumes/Jack-Dev/Projects/MemoX` => project-controlled durable worktrees/diagnostics/archives remain on that external storage authority;
-- canonical project under `/Users/.../Merloom` => project-controlled durable development state remains on local storage;
-- CI runner state may remain under the host CI runtime location even when the governed project's source authority is external.
+Integrate the accepted reusable semantics from both inputs. Reconcile shared files deliberately rather than choosing one branch wholesale.
 
-## Gate 0 — fresh baseline
-
-1. From `/Volumes/Jack-Dev/Projects/Engineering-Governance`, run `git fetch origin --prune`.
-2. Require local `main` clean and ff-only synchronizable to fresh `origin/main`.
-3. Sync ff-only.
-4. Read fresh root `AGENTS.md`, `CURRENT_STATUS.md`, this task, `skills/project-governance/SKILL.md`, `skills/project-governance/references/development-flow.md`, and `skills/project-governance/references/workspace-lifecycle.md`.
-5. Inspect relevant assets/templates/tests/packaging checks before editing so the rule extends the existing authority/workspace model rather than creating a parallel model.
-6. STOP on unexpected dirty source or overlapping active writer.
-
-## Gate 1 — prove current gap
-
-Before editing, identify where current reusable guidance selects/permits worktree, temporary task state, diagnostic evidence, or archive locations.
-
-Record concise evidence for:
-
-- whether storage-location affinity is currently absent or ambiguous;
-- whether any current reusable text encourages `/private/tmp`, arbitrary home paths, or fixed external-volume paths;
-- which existing Project Governance files are the minimum authoritative surfaces for the rule.
-
-Do not perform a broad rewrite.
-
-## Gate 2 — minimal implementation
-
-Create branch:
-
-`codex/project-storage-affinity-v1`
-
-Implement the rule in the smallest coherent existing authority surfaces.
-
-Expected primary surfaces to inspect/use:
+Known overlapping reusable surfaces include:
 
 - `skills/project-governance/SKILL.md`
 - `skills/project-governance/references/development-flow.md`
-- `skills/project-governance/references/workspace-lifecycle.md`
 
-Update root `AGENTS.md`, README, templates, or other references only if needed for semantic consistency or existing verification contracts.
+The integrated result must preserve all of these semantics together:
 
-Requirements:
+### v0.5 Navigation + Follow-ups
 
-- one canonical concept, not repeated divergent rules;
-- no mandatory per-project storage manifest for ordinary projects;
-- canonical project location is the default routing signal;
-- explicit project-local authority/path rules can override it;
-- distinguish durable project-controlled assets from machine/runtime state;
-- distinguish durable evidence/state from ephemeral OS/tool scratch;
-- avoid absolute host/user paths in reusable normative text except as clearly non-normative examples;
-- do not change Skill count or routing model;
-- do not bump/release/install Plugin version in this task.
+- verified navigation corrections update only the affected accepted projection entry/fields;
+- correct + freshness-current routes produce no write/churn;
+- stale-but-same routes may refresh only evidence/freshness;
+- unresolved replacements remain unknown/stale rather than guessed;
+- historical/bounded snapshots do not rewrite the current projection without current-target evidence or explicit bounded mutation authority;
+- strict read-only reports correction/Follow-up candidates without mutation;
+- qualifying evidence-backed non-blocking adjacent issues are retained under `CURRENT_STATUS.md / Follow-ups` during normal state-changing status reconciliation;
+- Follow-ups do not authorize repair; selected work must enter `CURRENT_TASK.md` before mutation;
+- still-material Follow-ups survive unrelated status refresh and mere task selection.
 
-## Gate 3 — focused verification
+### Project Storage Affinity
 
-This is `V0` reusable documentation/Skill behavior, but because it ships in the Plugin payload, verify at least:
+- resolve the canonical project root first;
+- durable project-controlled development state follows the storage authority containing that canonical root by default;
+- explicit project-local asset/path authority overrides the default;
+- machine/runtime state remains a separate class and may stay machine-local;
+- OS/tool-required ephemeral scratch may use system temp;
+- unique/durable state must not be abandoned in unrelated temp/convenience locations at closure;
+- no universal `/Volumes/Jack-Dev`, user-home, or Mac-mini rule;
+- no mandatory storage manifest.
 
-1. focused text/structure consistency across changed Project Governance files;
-2. no contradictory storage guidance remains in reusable Project Governance payload;
-3. no new universal Jack-Dev/Mac-mini path rule exists;
-4. exactly three top-level Skills remain;
-5. existing package/payload validation relevant to changed files passes;
-6. changed paths are limited to the bounded rule/control surfaces;
-7. root/global routing managed block contract is not duplicated or broadened accidentally.
+### Engineering-Governance repository-specific execution rule
 
-If existing automated tests cover Skill/package structure, run the focused applicable set. Do not invent a broad product test suite for a documentation rule.
+Update root `AGENTS.md` only for this repository's durable execution split:
 
-## Gate 4 — handoff
+- Engineering-Governance Web/remote session owns reusable source construction, remote GitHub mutation, source audit, integration, and release preparation;
+- local AI is used primarily for installed/runtime/behavior validation;
+- reusable defects found locally return to the Web/remote Engineering-Governance flow for correction;
+- this is repository-specific and must not be generalized to other projects or copied into Global Router.
 
-Commit and push the implementation branch.
+## Version and routing
 
-Do not merge.
-Do not publish a Plugin release.
-Do not modify the installed v0.4.0 Plugin/runtime.
-Do not modify business projects.
+- Integrated Plugin version: `0.5.0`.
+- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
+- Global routing remains selection-only; do not add storage or Follow-up procedure to the managed global routing block.
+- Do not create a fourth Skill, storage subsystem, Findings subsystem, daemon, service, database, installer, or automatic remediation runtime.
 
-Return evidence for independent Web audit.
+## Integrated source audit
 
-## Final receipt
+This is a new candidate. Verify from its exact tree:
 
-```text
-EG_PROJECT_STORAGE_AFFINITY_045
+1. all v0.5 Navigation/Follow-up semantics remain intact;
+2. all Storage Affinity semantics remain intact;
+3. shared Project Governance files are coherent rather than duplicated/contradictory;
+4. root `AGENTS.md` project-specific execution rule is correctly scoped;
+5. `plugin.json` is exactly `0.5.0`;
+6. exactly three top-level Skills remain;
+7. Global Router is unchanged in responsibility and remains selection-only;
+8. no prohibited hard-coded host/storage rule exists in reusable normative policy;
+9. package payload remains `plugin.json + skills/**`;
+10. changed scope contains no unrelated business-project/runtime/install mutation.
 
-CONTROL_HEAD:
-BASELINE_MAIN:
-IMPLEMENTATION_BRANCH:
-FINAL_BRANCH_HEAD:
-REMOTE_BRANCH_HEAD:
-LOCAL_REMOTE_MATCH:
-WORKING_TREE:
+No local Plugin behavior test is authorized before the integrated baseline is merged and repository lifecycle closeout is complete.
 
-CURRENT_GAP:
-  storage_affinity_missing_or_ambiguous:
-  conflicting_or_fixed_path_guidance_found:
-  authoritative_surfaces_selected:
+## Merge gate
 
-IMPLEMENTATION:
-  changed_paths:
-  canonical_rule_summary:
-  explicit_project_override_preserved:
-  machine_runtime_exception_preserved:
-  ephemeral_temp_boundary_preserved:
-  hardcoded_jack_dev_rule_added: NO
-  new_skill_added: NO
-  global_routing_rewritten: NO
-  plugin_version_changed: NO
+After integrated source audit passes:
 
-VERIFICATION:
-  focused_checks:
-  package_or_structure_checks:
-  exactly_three_top_level_skills:
-  contradictory_storage_guidance_remaining:
-  scope_check:
+- create/verify a PR against `main` or otherwise use an exact-head protected GitHub merge path;
+- reverify live `main` before merge;
+- merge only the exact audited integration head;
+- verify post-merge `main` contains the exact integrated Plugin payload.
 
-SOURCE_MODIFIED: YES
-INSTALLED_PLUGIN_MODIFIED: NO
-PLUGIN_RUNTIME_MODIFIED: NO
-BUSINESS_PROJECTS_TOUCHED: NO
+Do not publish a release yet.
 
-FINAL_STATE:
-EG_PROJECT_STORAGE_AFFINITY_READY_FOR_AUDIT
+## Legacy branch / PR closeout gate
 
-or
+After merge, classify remote non-main branches.
 
-STOP_<exact reason>
-```
+Safe cleanup candidates include branches whose commits are fully contained in `main`, merged-PR branches, and completed one-shot publisher branches whose release/tag/artifact evidence is already durable elsewhere.
+
+Do not delete a branch merely because it is old. Preserve branches with unique unresolved historical evidence or still-active authority until their disposition is explicit.
+
+The v0.5 design branch is expected to be superseded by the implementation/integrated history if no unique commits remain.
+
+The target outcome is a clean remote repository baseline with `main` as the sole active development authority and only explicitly justified retained historical branches, if any.
+
+## STOP conditions
+
+STOP rather than improvise if:
+
+- fresh `main` changes in a way that affects Plugin payload or this integration contract;
+- either input branch has new reusable mutations beyond its audited candidate;
+- integration loses one input's required semantics;
+- a legacy branch contains unique work/evidence whose disposition is not established;
+- exact integrated source identity cannot be proven before merge;
+- cleanup would require deleting unresolved unique work.
+
+## Out of scope until clean baseline
+
+- local Plugin install/runtime V1;
+- publication/release of v0.5.0;
+- business-project mutation;
+- changing the global installed `AGENTS.md` routing block;
+- modifying installed Plugin cache/runtime.
+
+## Final state
+
+Success for this task is:
+
+`EG_V0.5_INTEGRATED_MAIN_CLEAN_BASELINE_READY_FOR_INSTALL_TEST`
+
+with exact integrated merge SHA, final remote branch inventory/dispositions, and no unresolved active parallel writer.
