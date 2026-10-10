@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-09.
+Last verified: 2026-10-10.
 
 ## Published Plugin v0.4.0
 
@@ -15,10 +15,6 @@ Last verified: 2026-10-09.
 - Asset SHA-256 / GitHub digest: `1d0d791acc167f47ff5d91b523528f53fed027f2bc9eac8d0b938983903a7922`.
 - Package entries: `44`.
 - Publisher workflow run: `37916223246`, conclusion `success`.
-- Publisher checked out exact source `204f74952ce53fb97180e42f537fdf3236d1c48e`, verified package version `0.4.0`, exactly three top-level Skills, required routing/adoption/structure/workspace files, final no-edit-size-bypass wording, and normal-development lifecycle checkpoints before packaging.
-- ZIP validation passed: one `engineering-governance/` root; only `plugin.json` and `skills/**`; no root controls, `.github`, docs, examples, root references, symlinks, or publisher transport files.
-- GitHub Release asset size/digest exactly matches publisher evidence.
-- Tagged source contains no `.github` publisher workflow.
 
 ## Accepted reusable capability baseline
 
@@ -40,22 +36,46 @@ Accepted capabilities include:
 8. control identity semantics that distinguish provenance/current/explicit locked heads;
 9. `V0`–`V3` risk/scope tiers with separate construction/corrective/task/merge-release verification cadence.
 
-## Release verification
+## Mac mini source/install state
 
-- Governance/routing PR #14 merged from exact head `3b969e45230923629d23bb0d1a432c1740b4ae3b` to merge commit `879521028a056a9fed4ce6fb9be89a6221eb80bf`; comparison showed zero file differences.
-- Final audited reusable payload was sealed at `0a00ebf1a5ebe17163431fa099249b8e2fc70a22`; subsequent PR #14 changes were control-only.
-- Release-source PR #15 merged control-only release authorization; final release source `204f74952ce53fb97180e42f537fdf3236d1c48e` differs from the accepted v0.4.0 merged source only in `CURRENT_STATUS.md` and `CURRENT_TASK.md`.
-- Release/tag identity was verified unused before publication.
-- All publisher steps passed: identity preflight, exact-source checkout, package verification, release-note construction, exact release publication.
-- Publisher transport branch is not the Release target and is not part of `main`, the tag, or the ZIP.
+- Canonical source checkout: `/Volumes/Jack-Dev/Projects/Engineering-Governance`.
+- Source checkout is `main`, clean, and matched `origin/main` at `221bcd597e1b45aceae73bf1088792ca6df6cfb4` at the latest local receipt.
+- The previous mini-internal source checkout was retired after its only unique untracked ZIP was archived with matching SHA-256.
+- Installed plugin source path `/Users/ox_miles/.codex/plugins/engineering-governance` now reports version `0.4.0` with the three accepted Skills.
+- Previous `0.3.0` install was backed up and hash-verified.
+- The official v0.4.0 release asset identity was verified before local installation.
+- Global managed routing block count is exactly `1`; unrelated global rules were preserved; repeated adoption was idempotent.
+- Read-only routing acceptance passed for default Project Governance, conditional Domain Navigation, reactive-only Incident Doctor, and bounded worktree lifecycle behavior.
 
-## Current task
+## Remaining activation blocker
 
-- Task: `EG-PLUGIN-V0.4.0-RELEASE-043`.
-- State: `CLOSED`.
-- Outcome: `RELEASED_VERIFIED`.
-- No local workspace-cleanliness or local installation claim is made by this remote-only release task.
+The sole enabled Codex registration still resolves to a stale runtime cache entry:
+
+`/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.3.0/plugin.json`
+
+Therefore local filesystem installation is v0.4.0, but runtime activation of v0.4.0 is not yet proven.
+
+Current evidence supports a registration/cache refresh boundary, not a source or routing-content defect. Do not modify Plugin source or global routing to address this symptom.
+
+OpenAI plugin documentation states that installed marketplace plugins are loaded from the Codex plugin cache and that marketplace/local-plugin updates require refresh/reinstall plus client restart/activation before the new cached copy is used.
+
+## Current posture
+
+```text
+SOURCE_AUTHORITY=JACK_DEV
+SOURCE_MAIN_MATCH_ORIGIN=YES
+PUBLISHED_PLUGIN_VERSION=0.4.0
+INSTALLED_PLUGIN_SOURCE_VERSION=0.4.0
+GLOBAL_ROUTING_BLOCK_COUNT=1
+GLOBAL_ROUTING_IDEMPOTENT=YES
+ROUTING_ACCEPTANCE=PASS
+ENABLED_RUNTIME_CACHE_VERSION=0.3.0
+PLUGIN_V0_4_RUNTIME_ACTIVATION=UNVERIFIED
+SOURCE_FIX_REQUIRED=NO
+ROUTING_REWRITE_REQUIRED=NO
+NEXT_ACTION=REFRESH_REGISTERED_PLUGIN_RUNTIME_CACHE
+```
 
 ## Next milestone
 
-Synchronize the local Engineering Governance source/install state to published Plugin v0.4.0, reinstall/upgrade the Plugin and its managed global routing block under the installation completion contract, verify idempotency and preservation of unrelated global rules, then run real routing acceptance against representative development scenarios before broader project rollout.
+Refresh the existing Engineering Governance plugin registration/runtime cache through supported plugin/marketplace mechanisms, preserve the verified v0.4.0 installed payload and global routing block, then prove the enabled runtime resolves to v0.4.0. If client restart is required, record that boundary explicitly rather than deleting caches speculatively.
