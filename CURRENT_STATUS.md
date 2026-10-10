@@ -2,43 +2,86 @@
 
 Last verified: 2026-10-10.
 
-## Published Plugin
+## Clean authoritative baseline
 
-- Latest published Release remains `plugin-v0.4.0`.
-- Published source SHA: `204f74952ce53fb97180e42f537fdf3236d1c48e`.
-- No v0.5 release has been published yet.
+Engineering-Governance now has one remote development branch:
 
-## Integrated v0.5 main baseline
+`main`
 
-PR #17 merged the audited integrated v0.5 + Project Storage Affinity source.
+All terminal/superseded `codex/*` branches, completed publisher/release transport branches, the v0.5 design/implementation inputs, the Storage Affinity input branch, and the integration branch were removed after exact-head/lifecycle verification.
 
-- Audited integrated candidate I1: `ee091fcdbad0e3edcec2b544067021068a0d54b9`.
-- PR/control head: `22f8ceaa40adf41c3a18826a2b4f5eb944ebf578`.
-- Merge SHA: `4b762490c035ecd0de0caa587c6e8a0e843377f1`.
-- Post-merge comparison from I1 changes only root `CURRENT_STATUS.md` and `CURRENT_TASK.md`; merged Plugin payload is exact-I1 equivalent.
-- Plugin source version on merged main: `0.5.0`.
-- Exactly three top-level Skills remain.
-- Global Router remains selection-only.
+The formerly unique `control/remoteorbit-adoption-gap-audit` historical branch was preserved before deletion as archive tag:
 
-Accepted integrated capabilities:
+`archive/remoteorbit-adoption-gap-audit-032`
 
-1. affected-only Navigation refresh with correct/no-churn, stale-same freshness refresh, unresolved, historical, and strict-read-only boundaries;
-2. lightweight evidence-backed non-blocking `CURRENT_STATUS.md / Follow-ups` with explicit Task authorization before repair;
-3. Project Storage Affinity derived from canonical project location, with explicit project override and separate machine/runtime + ephemeral scratch classes;
-4. Engineering-Governance-only Web/remote construction and local runtime-validation execution split.
+Target commit:
 
-## Active closeout
+`32ad185bbe5f5f058ff8c40d7a0ee0cffe1c8c2b`
 
-Task: `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`.
+Open PR count after cleanup: `0`.
 
-State: `ACTIVE_REMOTE_LIFECYCLE_CLOSEOUT`.
+## Integrated v0.5 source
 
-Current work is remote branch/PR lifecycle reconciliation only. Terminal merged-PR, obsolete release, completed publisher, and superseded integration-input branches may be removed after their disposition is verified. Unique unresolved historical evidence must be retained or preserved explicitly rather than deleted by age.
+Accepted audited candidate:
 
-## Testing/release boundary
+`I1 = ee091fcdbad0e3edcec2b544067021068a0d54b9`
 
-Do not run local Plugin V1 and do not publish v0.5.0 until the remote repository has a clean unique development baseline with no unresolved parallel writer.
+PR #17 merged I1 plus later control-only receipt state to main:
+
+`MERGE_SHA = 4b762490c035ecd0de0caa587c6e8a0e843377f1`
+
+Post-merge closeout controls advance main without modifying reusable Plugin payload.
+
+Integrated source audit:
+
+`PASS — Critical 0 / Important 0`
+
+Current reusable Plugin state:
+
+- version: `0.5.0`
+- top-level Skills: exactly `project-governance`, `domain-navigation`, `incident-doctor`
+- Global Router: selection-only
+- Navigation Refresh: integrated
+- Lightweight Follow-ups: integrated
+- Project Storage Affinity: integrated
+- Engineering-Governance-only remote construction/local validation split: integrated in root project rules
+
+## Remote lifecycle evidence
+
+Terminal/superseded cleanup workflow:
+
+- run `38018606952`: PASS
+- 18 exact-head-verified old branches removed
+- post-delete survivor set verified
+- one-shot cleanup transport branch self-deleted
+
+Historical evidence archive workflow:
+
+- run `38018677973`: PASS
+- RemoteOrbit audit evidence identity verified
+- archive tag created and verified
+- historical branch deleted
+- only-main branch state verified
+- one-shot archive transport branch self-deleted
+
+## Published Plugin boundary
+
+Latest published release remains:
+
+`plugin-v0.4.0`
+
+v0.5.0 has **not** been published or installed under this task.
+
+No local Plugin cache/runtime and no business project were modified by the integration/cleanup task.
+
+## Closed task
+
+`EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`
+
+Final result:
+
+`EG_V0.5_INTEGRATED_MAIN_CLEAN_BASELINE_READY_FOR_RELEASE_INSTALL_TEST`
 
 ## Next milestone
 
-Complete remote branch inventory and closeout, verify zero open PRs and one active development authority (`main`), then close this task as ready for the subsequent v0.5 packaging/release/install-test flow.
+Create a fresh release/install-test task from the final clean `main`: package and publish Plugin v0.5.0 from the exact accepted main payload, then reinstall that published package locally and run the real behavior validation against the installed/runtime identity.
