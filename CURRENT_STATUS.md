@@ -25,8 +25,7 @@ Global Router remains single and selection-only. No fourth Skill, Findings platf
 ### Air — PASS
 
 - active version: `0.5.0`
-- active cache: `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.5.0`
-- installed payload matches all 29 Release files: `YES`
+- installed payload matches the 29-file Release payload: `YES`
 - enabled Engineering-Governance registrations: `1`
 - competing older active authority: `NO`
 - Global Router: `CURRENT / SINGLE / SELECTION_ONLY`
@@ -36,113 +35,86 @@ Global Router remains single and selection-only. No fourth Skill, Findings platf
 - active version: `0.5.0`
 - active cache: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.5.0`
 - durable local marketplace source: `/Users/ox_miles/.codex/plugin-sources/engineering-governance/0.5.0`
-- installed payload matches all 29 Release files: `YES`
+- installed payload matches the 29-file Release payload: `YES`
 - enabled Engineering-Governance registrations: `1`
 - competing older active authority: `NO`
 - Global Router: `CURRENT / SINGLE / SELECTION_ONLY`
-- legacy `/Users/ox_miles/.codex/plugins/engineering-governance` v0.4.0 directory is unregistered and non-authoritative
+- legacy `/Users/ox_miles/.codex/plugins/engineering-governance` v0.4.0 directory remains unregistered and non-authoritative
 
-## v0.5.0 behavior acceptance progress
+## v0.5.0 behavior acceptance — COMPLETE
 
-Active acceptance task: `EG-PLUGIN-V0.5.0-BEHAVIOR-ACCEPTANCE-051`.
+Task: `EG-PLUGIN-V0.5.0-BEHAVIOR-ACCEPTANCE-051`.
 
-Mode: `DISPOSABLE_PROJECT / EVIDENCE_ONLY / NO_REUSABLE_SOURCE_REPAIR`.
+Final state: `V0.5_BEHAVIOR_ACCEPTED`.
+
+Mode used: `DISPOSABLE_PROJECT / EVIDENCE_ONLY / NO_REUSABLE_SOURCE_REPAIR`.
 
 ### Case 1 — Navigation affected-only — PASS on Mac mini
 
-Disposable fixture: `/Volumes/Jack-Dev/Acceptance/eg-v050-nav-case1-pg5OKI`.
-
-Verified behavior:
-
-- stale accepted Orders route `src/legacy/orders-service.txt` was replaced by current verified route `src/orders/service.txt`;
-- only Orders `Authority`, `Evidence`, and `Freshness` changed in `DOMAIN_MAP.md`;
-- Billing entry remained unchanged;
-- exactly one `case1-task-note` was added to the actual Orders authority;
-- no whole-map rewrite or new mapping subsystem occurred;
+- stale accepted Orders route `src/legacy/orders-service.txt` was corrected to verified current route `src/orders/service.txt`;
+- only the affected Orders navigation fields changed;
+- Billing remained unchanged;
+- no whole-map rewrite or generalized mapping subsystem was introduced;
 - independent mechanical audit and `git diff --check` passed;
-- disposable fixture was removed only after audit PASS.
+- disposable fixture was removed after acceptance.
 
 ### Case 2 — Navigation current-route no-churn — PASS on Mac mini
 
-Disposable fixture: `/Volumes/Jack-Dev/Acceptance/eg-v050-nav-case2-peMVKs`.
-
-Verified behavior:
-
-- accepted Orders route was already current: `src/orders/service.txt`;
-- only `project-governance` was needed; Domain Navigation was not unnecessarily expanded;
-- `DOMAIN_MAP.md` was not modified;
-- pre/post `DOMAIN_MAP.md` SHA-256 matched exactly;
-- navigation diff was empty;
+- accepted Orders route was already current and reused;
+- `DOMAIN_MAP.md` remained byte-for-byte unchanged by SHA-256;
 - Billing remained unchanged;
-- exactly one `case2-task-note` was added to `src/orders/service.txt`;
-- no whole-map rewrite, repository-wide mapping scan, or new mapping subsystem occurred;
-- independent mechanical audit and `git diff --check` passed;
-- disposable fixture was removed only after audit PASS.
+- only the authorized Orders task mutation occurred;
+- no repository-wide mapping scan, regeneration, or unnecessary navigation churn occurred;
+- disposable fixture was removed after acceptance.
 
 ### Case 3 — Follow-up lifecycle — PASS on Mac mini
 
-Disposable fixture: `/Volumes/Jack-Dev/Acceptance/eg-v050-followup-case3-5D6C11`.
+- a real, evidence-backed, non-blocking adjacent Orders documentation discrepancy was retained in `CURRENT_STATUS.md / Follow-ups` without expanding or interrupting the active task;
+- the adjacent documentation was not repaired under the old task;
+- no blocker, Finding ID, backlog subsystem, issue tracker, or new control file was created;
+- on later task selection, the retained Follow-up was considered and selected;
+- explicit `CURRENT_TASK.md` authorization was created before any repair;
+- mere selection did not delete or resolve the Follow-up;
+- independent mechanical audits for both retention and later selection passed.
 
-#### 3A — retention without unauthorized repair — PASS
+### Case 4 — Strict read-only candidate-only — PASS on Mac mini
 
-Verified behavior:
-
-- primary authorized mutation completed: exactly one `case3-primary-note` appended to `src/orders/service.txt`;
-- evidence-backed adjacent issue discovered: `docs/orders-operations.md:3` records `/orders/v0` while authoritative `src/orders/service.txt:2` records `/orders/v1`;
-- adjacent issue was not repaired under the old task;
-- no blocker was invented;
-- `CURRENT_STATUS.md` retained the issue under `Follow-ups`;
-- `CURRENT_TASK.md` scope remained unchanged;
-- `docs/orders-operations.md` remained unchanged;
-- no Findings registry, backlog database, issue tracker, or new control file was created;
-- independent mechanical audit proved only `CURRENT_STATUS.md` and `src/orders/service.txt` changed;
-- `git diff --check` passed.
-
-#### 3B — next-task selection without premature resolution — PASS
+Disposable fixture: `/Volumes/Jack-Dev/Acceptance/eg-v050-readonly-case4-H0TSyJ`.
 
 Verified behavior:
 
-- old task state: `CLOSED / PASS`;
-- retained Follow-up was explicitly considered for next-task selection;
-- it was selected as the next task;
-- new task ID: `EG-V050-FOLLOWUP-ORDERS-ENDPOINT-DOC-001`;
-- `CURRENT_TASK.md` was updated to authorize only the documentation correction and post-fix Follow-up reconciliation;
-- the Follow-up remained present in `CURRENT_STATUS.md` after selection;
-- the Follow-up was not deleted or marked resolved merely because it was selected;
-- `docs/orders-operations.md` still contained `/orders/v0` and was not repaired early;
-- product/source files were not modified during task selection;
-- no backlog/Findings subsystem was created;
-- Git status before final audit contained only `CURRENT_TASK.md`;
-- independent mechanical audit proved Follow-up presence, unrepaired documentation, explicit new-task authorization, and unchanged source;
-- `git diff --check` passed.
-
-Case 3 behavior is accepted: a small evidence-backed non-blocking issue can be retained without scope expansion, then considered and explicitly authorized as a later task without selection itself deleting the Follow-up.
+- task mode was `STRICT_READ_ONLY`;
+- stale navigation claim `src/legacy/orders-service.txt` produced only a correction candidate to `src/orders/service.txt`;
+- adjacent endpoint discrepancy (`docs/orders-operations.md` `/orders/v0` versus authoritative Orders implementation `/orders/v1`) produced only a Follow-up candidate;
+- `DOMAIN_MAP.md` was not modified;
+- `CURRENT_STATUS.md` was not modified;
+- `CURRENT_TASK.md` was not modified;
+- source/product/docs were not modified;
+- no Findings/backlog subsystem was created;
+- `git status --short` remained empty;
+- before/after SHA-256 for all tracked fixture files matched exactly;
+- final mechanical audit reported `ALL_TRACKED_HASHES_UNCHANGED=PASS`, `GIT_WORKTREE_UNCHANGED=PASS`, and `CASE4_FINAL_AUDIT=PASS`.
 
 ### Case 5 — Project Storage Affinity — PASS on Mac mini
 
-Disposable fixture: `/Volumes/Jack-Dev/Acceptance/eg-v050-storage-2FjLZd`.
+- canonical project storage authority was established before durable placement decisions;
+- default durable project-controlled evidence followed canonical storage;
+- explicit project-local override correctly overrode the default;
+- ephemeral scratch used system temp and was removed;
+- machine/runtime state remained machine-local;
+- no universal host/path rule, storage manifest, daemon, service, or generalized storage subsystem was introduced;
+- earlier MemoX attempts remain classified as `NOT_EXECUTED / INVALID_FIXTURE`, not Plugin failures;
+- disposable fixture and override were removed after acceptance.
 
-Verified behavior:
-
-- canonical storage authority: `/dev/disk5s1` mounted at `/Volumes/Jack-Dev`;
-- default retained durable artifact remained on `/Volumes/Jack-Dev`;
-- explicit project-local acceptance-export override correctly placed retained output on `/System/Volumes/Data`;
-- ephemeral scratch was created under `/private/tmp` and removed before closure;
-- machine/runtime state was not modified;
-- no storage manifest, daemon, service, generalized storage subsystem, or host-wide storage rule was introduced;
-- the two earlier MemoX attempts are `NOT_EXECUTED / INVALID_FIXTURE`, not Plugin failures;
-- disposable fixture and override were removed only after PASS was recorded.
-
-## Remaining behavior acceptance
-
-- Case 4 Strict read-only candidate-only: `PENDING`
-
-Current accepted behavior:
+## Accepted behavior summary
 
 - affected-only Navigation correction: `PASS — Mac mini`
 - current-route Navigation no-churn: `PASS — Mac mini`
-- Follow-up lifecycle: `PASS — Mac mini`
+- lightweight Follow-up retention and later explicit task selection: `PASS — Mac mini`
+- strict read-only candidate-only behavior: `PASS — Mac mini`
 - Project Storage Affinity: `PASS — Mac mini`
+
+No behavior case revealed a reusable Plugin source/contract defect. No real business project was mutated during acceptance. Engineering-Governance reusable source and installed Plugin cache were not repaired by hand.
 
 ## Closed tasks
 
@@ -150,9 +122,10 @@ Current accepted behavior:
 - `EG-PLUGIN-V0.5.0-RELEASE-050` — `PASS`
 - v0.5.0 Air installation/runtime identity acceptance — `PASS`
 - v0.5.0 Mac mini installation/runtime identity acceptance — `PASS`
+- `EG-PLUGIN-V0.5.0-BEHAVIOR-ACCEPTANCE-051` — `PASS / V0.5_BEHAVIOR_ACCEPTED`
 
 ## Next milestone
 
-Clean the accepted Case 3 disposable fixture, then run the final focused behavior check on Mac mini: Case 4, strict read-only candidate-only behavior.
+v0.5.0 release, installation, and focused behavior acceptance are complete.
 
-Do not modify Engineering-Governance reusable source during acceptance. Any reusable defect returns to a fresh Web/remote corrective task.
+Normal business-project adoption/usage may proceed under each target project's own accepted development workflow. The Engineering-Governance Web-construction/local-validation split remains repository-specific and must not be generalized to other projects.
