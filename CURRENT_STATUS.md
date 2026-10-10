@@ -39,7 +39,7 @@ Release verification:
 - published asset was downloaded again by the publisher and its SHA-256 matched the locally built artifact
 - one-shot publisher branch self-deleted after verification
 
-## Installed v0.5.0 acceptance
+## Installed v0.5.0 acceptance — Air
 
 Published v0.5.0 installation/runtime identity acceptance is complete on the Air.
 
@@ -63,7 +63,29 @@ Installation method used the supported Codex CLI registration remove/reinstall p
 
 The local Plugin list reported the active registration as installed and enabled at `0.5.0`. A remote catalog request warning was observed during listing, but the local registration identity was returned completely and is not currently classified as an installation blocker.
 
-Before behavior acceptance, use a fresh session/runtime so the newly installed Plugin files are loaded.
+## Installed v0.5.0 acceptance — Mac mini
+
+Published v0.5.0 installation/runtime identity acceptance is also complete on the Mac mini.
+
+Accepted receipt:
+
+- previous active version: `0.4.0`
+- installed/active version: `0.5.0`
+- active cache path: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.5.0`
+- durable local marketplace source: `/Users/ox_miles/.codex/plugin-sources/engineering-governance/0.5.0`
+- installed payload matches all `29` Release files: `YES`
+- active Skills: `project-governance`, `domain-navigation`, `incident-doctor`
+- enabled Engineering-Governance registration count: `1`
+- competing older active authority: `NO`
+- global managed routing block count: `1`
+- Global Router: `CURRENT / SINGLE / SELECTION_ONLY`
+- router update required: `NO_WRITE`
+- source repository mutation during install: `NO`
+- business-project mutation during install: `NO`
+
+A legacy v0.4.0 directory remains at `/Users/ox_miles/.codex/plugins/engineering-governance`, but it is unregistered and is not an active authority. It is therefore not an installation or behavior-acceptance blocker and does not require cleanup as part of this task.
+
+Before behavior acceptance on either machine, use a fresh session/runtime so the newly installed Plugin files are loaded.
 
 ## Accepted v0.5 capabilities awaiting behavior acceptance
 
@@ -78,7 +100,8 @@ Exactly three top-level Skills remain. Global Router remains selection-only. No 
 
 - `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049` — `PASS`
 - `EG-PLUGIN-V0.5.0-RELEASE-050` — `PASS`
-- v0.5.0 installation/runtime identity acceptance — `PASS`
+- v0.5.0 Air installation/runtime identity acceptance — `PASS`
+- v0.5.0 Mac mini installation/runtime identity acceptance — `PASS`
 
 ## Active task
 
@@ -90,7 +113,7 @@ Mode: `DISPOSABLE_PROJECT / EVIDENCE_ONLY / NO_REUSABLE_SOURCE_REPAIR`.
 
 ## Next milestone
 
-Run five focused behavior cases in a fresh local session against the published installed v0.5.0 Plugin:
+Run five focused behavior cases in a fresh local session against the published installed v0.5.0 Plugin. Either accepted machine may be used; if results are machine-sensitive, record the machine explicitly rather than assuming cross-machine equivalence.
 
 1. stale/wrong Navigation correction is affected-only;
 2. correct/current Navigation route produces no churn;
