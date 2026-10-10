@@ -31,44 +31,50 @@ Accepted behavior:
 ## Mac mini source/install/runtime state
 
 - Canonical source checkout: `/Volumes/Jack-Dev/Projects/Engineering-Governance`.
-- Source checkout is `main`, clean, and matched fresh `origin/main` at control head `36c6392323a55df246202561d8aa3962e8f607a4` for the activation task.
-- Previous mini-internal source checkout has been retired; its unique historical ZIP was archived separately with matching SHA-256.
 - Installed plugin source path: `/Users/ox_miles/.codex/plugins/engineering-governance`.
-- Installed plugin version: `0.4.0`.
-- Previous `0.3.0` installation backup remains preserved and verified.
+- Installed plugin/runtime version: `0.4.0`.
 - Sole enabled registration: `engineering-governance-personal / engineering-governance`.
-- Active runtime cache path: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.4.0`.
-- Active runtime version: `0.4.0`.
-- Enabled registration count: `1`.
-- Enabled `0.3.0` registration remaining: `NO`.
+- Active runtime cache version: `0.4.0`.
 - Global managed routing block count: `1`.
-- Unrelated global rules preserved.
 - Runtime acceptance passed for default Project Governance, conditional Domain Navigation, and reactive-only Incident Doctor.
 
 ## Task 044 resolution
 
-Task `EG-PLUGIN-V0.4.0-RUNTIME-CACHE-ACTIVATION-044` is complete.
+Task `EG-PLUGIN-V0.4.0-RUNTIME-CACHE-ACTIVATION-044` is complete with `EG_PLUGIN_V040_RUNTIME_ACTIVATION_PASS`.
 
-The prior stale-cache observation was not reproducible in the fresh authoritative run: before any refresh, the sole enabled registration, cache, and current runtime already resolved to `0.4.0`; the previously recorded `0.3.0` cache path was absent. No refresh, reinstall, cache deletion, or client restart was required.
+## New owner-approved rule direction
 
-No source, Plugin payload, global routing, unrelated plugin, or business-project mutation occurred.
+The next reusable Project Governance rule must keep development storage aligned with the canonical project's actual storage location instead of hard-coding a machine or external volume.
+
+Required semantics:
+
+- resolve the canonical project root first;
+- project-controlled development assets follow the storage location of that canonical project root;
+- if the canonical project is on external storage, project-controlled worktrees, durable diagnostics, archives, task staging, and other durable development state should remain on that same storage authority;
+- if the canonical project is on local host storage, those project-controlled assets remain local unless the project explicitly declares an exception;
+- do not create durable project state in unrelated locations such as `/private/tmp`, `/tmp`, Desktop, Downloads, or arbitrary home-directory paths merely for convenience;
+- OS/tool-required ephemeral scratch may use system temporary locations, but unique/durable project state must not remain there;
+- machine/runtime state such as CI runners, LaunchAgents, package-manager/runtime services, host caches, and other host-operational state remains machine-local unless the project explicitly owns it as portable data;
+- project-specific explicit path rules override the derived same-storage default;
+- no universal `/Volumes/Jack-Dev` rule is allowed.
+
+This rule belongs in Project Governance/workspace guidance, not as duplicated procedure inside the global routing block.
 
 ## Current posture
 
 ```text
 SOURCE_AUTHORITY=JACK_DEV
 PUBLISHED_PLUGIN_VERSION=0.4.0
-INSTALLED_PLUGIN_SOURCE_VERSION=0.4.0
-ACTIVE_RUNTIME_CACHE_VERSION=0.4.0
-ENABLED_REGISTRATION_COUNT=1
-ENABLED_0_3_REGISTRATION=NO
+INSTALLED_PLUGIN_VERSION=0.4.0
+PLUGIN_RUNTIME_VERSION=0.4.0
 GLOBAL_ROUTING_BLOCK_COUNT=1
-ROUTING_ACCEPTANCE=PASS
-PLUGIN_V0_4_RUNTIME_ACTIVATION=PASS
-SOURCE_FIX_REQUIRED=NO
-RUNTIME_CACHE_REFRESH_REQUIRED=NO
+STORAGE_AFFINITY_RULE=NOT_YET_IMPLEMENTED
+HARD_CODED_JACK_DEV_GLOBAL_RULE=FORBIDDEN
+NEW_TOP_LEVEL_SKILL_REQUIRED=NO
+GLOBAL_ROUTING_REWRITE_REQUIRED=NO
+NEXT_ACTION=IMPLEMENT_PROJECT_STORAGE_AFFINITY_RULE
 ```
 
 ## Next milestone
 
-No Engineering-Governance corrective is currently required. Return to normal project work; only reopen plugin/runtime diagnosis if a concrete routing or activation failure recurs.
+Implement and verify the bounded Project Governance storage-affinity rule in reusable source, with the smallest coherent documentation/Skill diff and no unrelated release, runtime, or business-project changes. After independent audit, decide release/version/install follow-up separately.
