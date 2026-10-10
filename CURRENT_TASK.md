@@ -2,91 +2,73 @@
 
 Task ID: `EG-PLUGIN-V0.5.0-RELEASE-050`
 
-State: `AUTHORIZED_REMOTE_PUBLICATION`
+State: `CLOSED / PASS`
 
-Mode: `EXACT_CLEAN_BASELINE_RELEASE`
+Mode: `RELEASED_VERIFIED`
 
 Authoritative branch: `main`
 
 ## Release source
 
-The exact accepted clean source revision is:
+Exact accepted clean source revision:
 
-`RELEASE_SOURCE = b288161c5a4b869ac9d95588c1501184229b2444`
+`b288161c5a4b869ac9d95588c1501184229b2444`
 
-This source is the closed result of `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`.
+The published tag `plugin-v0.5.0` was independently re-read after publication and points exactly to that commit.
 
-Its reusable payload is exact-candidate-I1 equivalent; later task-control commits do not authorize or require any `plugin.json` or `skills/**` mutation.
+## Published Release
 
-## Release identity
-
-- Plugin version: `0.5.0`
 - Release tag: `plugin-v0.5.0`
 - Release title: `Engineering Governance Plugin v0.5.0`
+- Source SHA: `b288161c5a4b869ac9d95588c1501184229b2444`
 - Asset: `engineering-governance-plugin.zip`
-- Package root: `engineering-governance/`
-- Package payload: exactly root `plugin.json` plus complete `skills/**`
+- Asset size: `56882` bytes
+- Asset SHA-256: `66a1b4b4eaf3b87eaf6e1addfe793cad578ceb4c35de3c0d681d02118f3250e0`
+- Package file entries: `29`
+- Included Skills:
+  - `project-governance`
+  - `domain-navigation`
+  - `incident-doctor`
+- Draft: `false`
+- Prerelease: `false`
 
-Fresh preflight confirmed that neither the GitHub Release nor tag `plugin-v0.5.0` exists before publication.
+## Publisher evidence
 
-## Publication contract
+One-shot publisher:
 
-Use a one-shot remote publisher transport that is never merged into `main` and self-deletes after successful publication.
+- trigger commit: `aa7273d7812e0f0ea96a4050eff0db7cd8ff302b`
+- workflow run: `38018881361`
+- conclusion: `success`
 
-Package only files from exact `RELEASE_SOURCE`.
+All publisher gates passed:
 
-The publisher must verify before release:
+1. release/tag absent before publication;
+2. exact source checkout matched `b288161c...`;
+3. `plugin.json` version = `0.5.0`;
+4. exactly three Skill directories verified;
+5. no symlink in authorized payload;
+6. deterministic portable ZIP built from `plugin.json + skills/**` only;
+7. tag created at exact source;
+8. Release + single asset published;
+9. published Release metadata verified;
+10. asset downloaded again and SHA-256 matched the locally built artifact;
+11. one-shot publisher branch self-deleted.
 
-1. `plugin.json` parses and version is exactly `0.5.0`;
-2. package has exactly one `engineering-governance/` root;
-3. root contains `plugin.json` and `skills/` only;
-4. exactly three top-level Skill directories exist:
-   - `project-governance`
-   - `domain-navigation`
-   - `incident-doctor`
-5. no symlink is included;
-6. no root controls, docs, examples, `.github`, build artifacts, runtime cache, or business-project material enters the package;
-7. record ZIP entry count, byte size, and SHA-256;
-8. create tag `plugin-v0.5.0` pointing exactly to `RELEASE_SOURCE`;
-9. publish the Release and upload exactly one asset named `engineering-governance-plugin.zip`;
-10. download/verify published Release metadata and asset identity/hash when the available transport supports it;
-11. self-delete the one-shot publisher branch after success.
+## Release content
 
-## Release notes scope
+v0.5.0 includes the accepted integrated features:
 
-Summarize only the accepted v0.5 changes:
+- affected-only Navigation refresh with no-churn, unresolved, historical, and strict-read-only boundaries;
+- lightweight evidence-backed non-blocking `CURRENT_STATUS.md / Follow-ups`, with explicit `CURRENT_TASK.md` authorization required before repair;
+- Project Storage Affinity based on the canonical project storage authority by default, with project-local override;
+- Engineering-Governance repository-specific remote/Web construction and local installed-runtime validation split.
 
-- verified affected-only Navigation refresh and no-churn/read-only/historical boundaries;
-- lightweight non-blocking `CURRENT_STATUS.md / Follow-ups` with Task authorization required before repair;
-- Project Storage Affinity derived from canonical project location with project-local override;
-- Engineering-Governance repository-specific Web construction/local runtime-validation workflow rule;
-- exactly three Skills and unchanged selection-only Global Router.
-
-Do not describe a new Findings platform, storage runtime, daemon, service, installer, or fourth Skill because none exists.
-
-## STOP conditions
-
-STOP without destructive correction if:
-
-- live `main` changes reusable payload after `RELEASE_SOURCE`;
-- tag or Release `plugin-v0.5.0` unexpectedly appears with another identity;
-- package file list differs from the authorized payload;
-- version/Skill topology is wrong;
-- tag cannot be proven to target exact `RELEASE_SOURCE`;
-- uploaded asset hash cannot be established;
-- publication would require mutating installed local Plugin/cache/runtime.
-
-## Out of scope
-
-- local reinstall/runtime validation;
-- target/business-project mutation;
-- global installed `AGENTS.md` changes;
-- reusable source fixes during publication.
+Global routing remains selection-only and exactly three top-level Skills remain. No fourth Skill, Findings platform, storage runtime subsystem, daemon, service, database, installer, or automatic remediation was added.
 
 ## Final state
 
-Success is:
-
 `EG_PLUGIN_V0.5.0_RELEASED_VERIFIED`
 
-After that, local AI may reinstall the published v0.5.0 package and run actual Plugin/runtime behavior acceptance under a separate local acceptance task.
+This release task no longer authorizes remote source or publication changes.
+
+Next step: local reinstall of the published v0.5.0 Plugin followed by real installed/runtime behavior acceptance. Local validation must not repair reusable source; any reusable defect returns to a fresh Engineering-Governance Web/remote corrective task.
