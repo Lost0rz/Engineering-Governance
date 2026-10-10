@@ -87,27 +87,41 @@ A legacy v0.4.0 directory remains at `/Users/ox_miles/.codex/plugins/engineering
 
 Before behavior acceptance on either machine, use a fresh session/runtime so the newly installed Plugin files are loaded.
 
-## Behavior acceptance evidence — Mac mini Case 5 attempt 1
+## v0.5.0 behavior acceptance progress
 
-The first Storage Affinity attempt is classified as `NOT_EXECUTED / INVALID_FIXTURE`, not as a reusable Plugin failure.
+### Case 5 — Project Storage Affinity — PASS on Mac mini
 
-Observed facts:
+Validated in disposable fixture:
 
-- Codex was operating in the real MemoX canonical repository at `/Volumes/Jack-Dev/Projects/MemoX`, not in a disposable acceptance repository;
-- MemoX was clean and no real project file was mutated;
-- the local agent correctly refused to create acceptance state inside the real project under the explicit no-real-project-mutation boundary;
-- no durable acceptance artifact, override artifact, ephemeral scratch, machine/runtime state, Engineering-Governance source, or Plugin cache was mutated;
-- the attempt therefore did not exercise the required file-placement behavior and cannot establish Case 5 PASS or FAIL;
-- `PLUGIN_DEFECT = NO_EVIDENCE` for this attempt.
+`/Volumes/Jack-Dev/Acceptance/eg-v050-storage-2FjLZd`
 
-The next Case 5 attempt must establish and verify the disposable fixture path as the current working repository before the behavior prompt is sent. If the active checkout resolves to any real business project, stop the attempt before mutation.
+Receipt evidence:
 
-## Accepted v0.5 capabilities awaiting behavior acceptance
+- machine: `Mac mini`
+- active Plugin: `engineering-governance v0.5.0`
+- preflight `pwd`, Git root, and saved fixture path all matched the disposable fixture
+- canonical storage authority: `/dev/disk5s1` mounted at `/Volumes/Jack-Dev`
+- default retained durable artifact: `/Volumes/Jack-Dev/Acceptance/eg-v050-storage-2FjLZd/acceptance-results/storage-affinity/default-durable-evidence.txt`
+- default artifact storage: `/dev/disk5s1` / `/Volumes/Jack-Dev`
+- explicit project-local acceptance-export override from `AGENTS.md`: `/Users/ox_miles/Documents/EG-Acceptance-Override/eg-v050-storage-2FjLZd`
+- override artifact: `/Users/ox_miles/Documents/EG-Acceptance-Override/eg-v050-storage-2FjLZd/EG-V050-STORAGE-AFFINITY-DISPOSABLE-001-acceptance-export.txt`
+- override artifact storage: `/dev/disk3s5` mounted at `/System/Volumes/Data`
+- ephemeral scratch: `/private/tmp/eg-v050-storage-affinity-disposable-001-scratch.txt`, created and removed before closure
+- machine/runtime state mutated: `NO`
+- real business project mutated: `NO`
+- Engineering-Governance reusable source/plugin cache hand-edited: `NO`
+- no storage manifest, daemon, service, generalized storage subsystem, or host-wide storage rule was introduced
+- local fixture result mutation remained uncommitted for inspection
+
+The two earlier MemoX attempts are classified as `NOT_EXECUTED / INVALID_FIXTURE`, not Plugin failures. They correctly stopped before mutating the real MemoX repository.
+
+## Accepted v0.5 capabilities still awaiting behavior acceptance
 
 - affected-only Navigation refresh with current-route no-churn and explicit stale/historical/read-only boundaries;
 - lightweight evidence-backed non-blocking `CURRENT_STATUS.md / Follow-ups`, with `CURRENT_TASK.md` remaining the only repair authorization;
-- Project Storage Affinity derived from the canonical project location, with explicit project-local override and separate machine/runtime plus ephemeral-scratch classes;
-- Engineering-Governance repository-specific Web/remote construction and local installed/runtime validation split.
+- strict read-only candidate-only behavior.
+
+Project Storage Affinity is now behavior-accepted on the Mac mini.
 
 Exactly three top-level Skills remain. Global Router remains selection-only. No fourth Skill, Findings platform, storage runtime subsystem, daemon, service, database, installer, or automatic remediation was added.
 
@@ -126,14 +140,16 @@ State: `AUTHORIZED_LOCAL_BEHAVIOR_ACCEPTANCE`.
 
 Mode: `DISPOSABLE_PROJECT / EVIDENCE_ONLY / NO_REUSABLE_SOURCE_REPAIR`.
 
+Behavior progress:
+
+- Case 1 Navigation affected-only: `PENDING`
+- Case 2 Navigation no-churn: `PENDING`
+- Case 3 Follow-up lifecycle: `PENDING`
+- Case 4 Strict read-only: `PENDING`
+- Case 5 Storage Affinity: `PASS — Mac mini`
+
 ## Next milestone
 
-Run five focused behavior cases in a fresh local session against the published installed v0.5.0 Plugin. Either accepted machine may be used; if results are machine-sensitive, record the machine explicitly rather than assuming cross-machine equivalence.
+Continue focused behavior acceptance in the same disposable Mac mini fixture when practical. Next target: Case 1, stale/wrong Navigation correction is affected-only.
 
-1. stale/wrong Navigation correction is affected-only;
-2. correct/current Navigation route produces no churn;
-3. lightweight Follow-up is retained without repair authorization and survives next-task selection until resolved/obsolete/no longer material;
-4. strict read-only reports candidates without mutating navigation or controls;
-5. Project Storage Affinity routes durable project-controlled state from the canonical project storage authority while keeping machine/runtime state and ephemeral scratch separate.
-
-Use a disposable test project or other explicitly safe fixture. Do not modify Engineering-Governance reusable source during acceptance. Any reusable defect returns to a fresh Web/remote corrective task.
+Do not modify Engineering-Governance reusable source during acceptance. Any reusable defect returns to a fresh Web/remote corrective task.
