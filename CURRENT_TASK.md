@@ -1,76 +1,171 @@
-# CURRENT TASK — Plugin v0.4.0 Release
+# CURRENT TASK — Plugin v0.4.0 Runtime Cache Activation
 
-Task ID: `EG-PLUGIN-V0.4.0-RELEASE-043`
+Task ID: `EG-PLUGIN-V0.4.0-RUNTIME-CACHE-ACTIVATION-044`
 
-State: `CLOSED`
+State: `AUTHORIZED`
 
-Mode: `PLUGIN_RELEASE`
+Mode: `LOCAL_PLUGIN_ACTIVATION_CORRECTIVE`
 
-## Outcome
+## Objective
 
-`RELEASED_VERIFIED`
+Refresh the sole enabled Engineering Governance Codex plugin registration/runtime cache so the active runtime resolves to Plugin v0.4.0, without modifying repository source, Plugin payload semantics, or the already-verified global routing block.
 
-Engineering Governance Plugin v0.4.0 was published from the exact accepted release source without changing Skill/plugin payload semantics during release preparation.
+## Accepted prior evidence
 
-## Exact release identity
+- Canonical source: `/Volumes/Jack-Dev/Projects/Engineering-Governance`.
+- Source `main` was clean and matched `origin/main` at `221bcd597e1b45aceae73bf1088792ca6df6cfb4` in the latest local receipt.
+- Official Plugin v0.4.0 release asset verified: size `54754`, SHA-256 `1d0d791acc167f47ff5d91b523528f53fed027f2bc9eac8d0b938983903a7922`.
+- Installed plugin source path `/Users/ox_miles/.codex/plugins/engineering-governance` reports version `0.4.0` and exactly three Skills: `project-governance`, `domain-navigation`, `incident-doctor`.
+- Previous `0.3.0` install backup is verified.
+- Global managed routing block count is `1`; unrelated rules preserved; repeated adoption is idempotent.
+- Read-only routing acceptance passed.
+- Sole enabled registration still has stale cache metadata at `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.3.0/plugin.json`.
+- Root cause boundary is registration/runtime-cache activation, not source or routing content.
 
-- Release/source SHA: `204f74952ce53fb97180e42f537fdf3236d1c48e`.
-- Tag: `plugin-v0.4.0` -> exact commit `204f74952ce53fb97180e42f537fdf3236d1c48e`.
-- Release title: `Engineering Governance Plugin v0.4.0`.
-- Release state: published, non-draft, non-prerelease.
-- Asset: `engineering-governance-plugin.zip`.
-- Size: `54754` bytes.
-- SHA-256: `1d0d791acc167f47ff5d91b523528f53fed027f2bc9eac8d0b938983903a7922`.
-- Package entries: `44`.
-- Publisher run: `37916223246`, `success`.
+## Hard constraints
 
-## Source provenance
+Do not:
 
-- Governance/routing PR #14 exact head: `3b969e45230923629d23bb0d1a432c1740b4ae3b`.
-- PR #14 merge: `879521028a056a9fed4ce6fb9be89a6221eb80bf` with zero file differences from the exact PR head.
-- Final audited reusable payload before control-only handoff: `0a00ebf1a5ebe17163431fa099249b8e2fc70a22`.
-- Release-source branch started from `879521028a056a9fed4ce6fb9be89a6221eb80bf` and changed only `CURRENT_STATUS.md` and `CURRENT_TASK.md`.
-- Release-source PR #15 exact head: `2088b2df13196482ec0cc8bf2b4b937d92b9d851`.
-- Final merged release source: `204f74952ce53fb97180e42f537fdf3236d1c48e`.
-- Compare `879521028a056a9fed4ce6fb9be89a6221eb80bf` -> `204f74952ce53fb97180e42f537fdf3236d1c48e`: only `CURRENT_STATUS.md` and `CURRENT_TASK.md`; no `plugin.json` or `skills/**` mutation.
+- edit repository source or tests;
+- rebuild or republish Plugin v0.4.0;
+- edit the verified Plugin payload manually;
+- rewrite the global routing block;
+- delete plugin caches speculatively;
+- delete or alter the verified 0.3.0 backup;
+- touch unrelated plugins;
+- touch Merloom, Gift, MemoX, InvestDesk, FloatTabs, DevBoard, RemoteOrbit, freqtrade, plineahome, or wedding-website;
+- claim activation merely because the source install directory says `0.4.0`.
 
-## Package verification
+Use supported Codex/plugin marketplace refresh or reinstall mechanisms where available. If a client restart is required, record it explicitly.
 
-The one-shot publisher:
+## Gate 0 — fresh control and source identity
 
-- confirmed Release/tag identity was unused;
-- checked out exact source `204f74952ce53fb97180e42f537fdf3236d1c48e` rather than publisher HEAD;
-- verified `plugin.json` version `0.4.0`;
-- verified exactly three top-level Skills: `domain-navigation`, `incident-doctor`, `project-governance`;
-- verified required routing/adoption/code-structure/workspace-lifecycle assets exist;
-- verified the final code-structure guard is independent of edit size;
-- verified normal-development workspace lifecycle checkpoints exist;
-- rejected symlinks;
-- packaged one `engineering-governance/` root containing only `plugin.json` and `skills/**`;
-- rejected root controls, `.github`, docs, examples, root references, and transport files;
-- produced size `54754`, SHA-256 `1d0d791acc167f47ff5d91b523528f53fed027f2bc9eac8d0b938983903a7922`, and `44` entries;
-- published the exact Release.
+1. From `/Volumes/Jack-Dev/Projects/Engineering-Governance`, run `git fetch origin --prune`.
+2. Require local `main` clean and ff-only synchronizable to fresh `origin/main`; sync ff-only if only behind.
+3. Read fresh `AGENTS.md`, `CURRENT_STATUS.md`, and this task.
+4. Require this Task ID exactly.
+5. Record installed source plugin version and stale cache version before mutation.
 
-GitHub Release metadata independently reports the same source SHA, asset name, size, and digest. The tag ref resolves directly to the exact release source. The tagged source has no `.github` publisher workflow.
+## Gate 1 — identify the authoritative registration path
 
-## Accepted v0.4.0 behavior
+Inspect metadata only for the Engineering Governance registration:
 
-- Project/repository engineering defaults to `project-governance`, including simple low-risk work with lightweight procedure.
-- `domain-navigation` is conditional for unclear semantic/authority/source routes and reuses accepted maps.
-- `incident-doctor` is reactive only when a real blocking failure plus insufficient evidence satisfies its gate.
-- code structure is governed during construction by responsibility/Domain/authority/lifecycle/reason-to-change, never by universal line-count or edit-size thresholds;
-- canonical authority prevents silent parallel truth/writers;
-- task-relevant worktrees are checked at bounded lifecycle transitions so normal development closes debt while evidence is fresh; full historical archaeology is exceptional;
-- historical control-parent inequality alone is not current-head drift; explicit locked-head equality remains hard;
-- verification effort follows risk, not edit count, using `V0`–`V3` plus separate cadence.
+- `~/.agents/plugins/marketplace.json` and any other marketplace file actually referenced by Codex;
+- relevant non-secret plugin registration entries in `~/.codex/config.toml`;
+- `codex plugin marketplace list` output if supported;
+- the enabled registration name/source/path/version;
+- the stale cache path and its `plugin.json` version.
 
-## Workspace / transport disposition
+Do not dump unrelated config values or secrets.
 
-- PR #14: merged / terminal.
-- PR #15: merged / terminal.
-- Publisher branch `codex/plugin-v0.4.0-publisher-v1`: transport-only and terminal after successful publication. It is not merged to `main` and is not part of the Release/tag/package. The available connector does not provide branch-ref deletion, so no remote branch deletion claim is made.
-- Local branches/worktrees/install state: not inspected or claimed by this remote-only task.
+Prove which marketplace/registration owns `engineering-governance-personal/engineering-governance` before refreshing anything.
 
-## Next authorized milestone
+If the owner cannot be identified, STOP with the smallest next metadata probe.
 
-Local reinstall and routing acceptance: synchronize local source/install state to published v0.4.0; install/upgrade all three Skills plus exactly one current managed global routing block; preserve unrelated global rules; verify repeated adoption is idempotent; then run representative real development requests to prove default Project Governance routing, conditional Domain Navigation, reactive Incident Doctor, construction-time structure governance, and bounded worktree lifecycle behavior.
+## Gate 2 — supported refresh first
+
+Use the supported Codex/plugin mechanism appropriate to the identified registration.
+
+Preferred order:
+
+1. refresh/upgrade the owning marketplace/source using supported `codex plugin marketplace ...` commands if applicable;
+2. refresh/reinstall the Engineering Governance plugin registration through the supported local/plugin UI or CLI mechanism if required;
+3. restart/reopen the relevant Codex/ChatGPT desktop client only if the supported install model requires restart to load the refreshed cached copy.
+
+Do not manually `rm -rf` the cache as the first action.
+
+If the current local registration mechanism has no supported refresh surface, STOP and report that fact before any direct cache surgery.
+
+## Gate 3 — activation proof
+
+After refresh/reinstall/restart as applicable, prove all of the following:
+
+- exactly one enabled Engineering Governance registration remains;
+- active/cached plugin version resolves to `0.4.0`;
+- active payload contains exactly the three expected Skills;
+- the loaded/cached copy corresponds to the verified v0.4.0 payload/source identity;
+- no enabled `0.3.0` registration remains;
+- global managed routing block count remains `1` and unrelated global content is unchanged;
+- canonical repository remains clean and matches fresh `origin/main`.
+
+If both 0.3.0 and 0.4.0 cache directories coexist, that alone is not failure. Failure is an enabled registration still resolving to 0.3.0. Do not delete historical cache entries unless the supported plugin mechanism does so or a later task authorizes cleanup.
+
+## Gate 4 — representative runtime acceptance
+
+Use a new supported Codex/ChatGPT session/context after activation if restart/new-session semantics apply.
+
+Verify read-only/runtime routing from the active plugin:
+
+- Project Governance available as default engineering route;
+- Domain Navigation available conditionally;
+- Incident Doctor available reactively;
+- reported/loaded plugin version is v0.4.0 where the runtime exposes version identity.
+
+No business repository mutation is allowed for this acceptance.
+
+## Gate 5 — safe final state
+
+Require:
+
+```text
+SOURCE_MODIFIED=NO
+PLUGIN_PAYLOAD_MANUALLY_EDITED=NO
+GLOBAL_ROUTING_REWRITTEN=NO
+UNRELATED_PLUGINS_TOUCHED=NO
+BUSINESS_PROJECTS_TOUCHED=NO
+```
+
+## Final receipt
+
+```text
+EG_PLUGIN_V040_RUNTIME_CACHE_ACTIVATION
+
+CONTROL_HEAD:
+LOCAL_HEAD:
+SOURCE_CLEAN:
+
+REGISTRATION:
+  marketplace_or_source:
+  registration_name:
+  enabled:
+  source_path:
+  pre_cache_path:
+  pre_cache_version:
+
+REFRESH:
+  mechanism:
+  marketplace_refresh_performed:
+  plugin_reinstall_or_refresh_performed:
+  client_restart_required:
+  client_restart_performed:
+
+ACTIVE_RUNTIME:
+  active_cache_path:
+  active_version:
+  expected_skills:
+  enabled_0_3_registration_remaining:
+  enabled_registration_count:
+
+GLOBAL_ROUTING:
+  managed_block_count:
+  unrelated_rules_preserved:
+
+RUNTIME_ACCEPTANCE:
+  project_governance:
+  domain_navigation:
+  incident_doctor:
+  v0_4_activation_proven:
+
+SOURCE_MODIFIED: NO
+PLUGIN_PAYLOAD_MANUALLY_EDITED: NO
+GLOBAL_ROUTING_REWRITTEN: NO
+UNRELATED_PLUGINS_TOUCHED: NO
+BUSINESS_PROJECTS_TOUCHED: NO
+
+FINAL_STATE:
+EG_PLUGIN_V040_RUNTIME_ACTIVATION_PASS
+
+or
+
+STOP_<exact reason>
+```
