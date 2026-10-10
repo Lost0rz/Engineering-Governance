@@ -2,152 +2,108 @@
 
 Task ID: `EG-V0.5-STORAGE-INTEGRATION-CLEAN-BASELINE-049`
 
-State: `AUTHORIZED_REMOTE_INTEGRATION`
+State: `READY_FOR_EXACT_HEAD_MERGE`
 
-Mode: `INTEGRATE_AUDIT_MERGE_THEN_LIFECYCLE_CLOSEOUT`
+Mode: `INTEGRATED_SOURCE_AUDIT_ACCEPTED`
 
 Authoritative branch: `main`
 
 Integration branch: `codex/v0.5-storage-affinity-integration-v1`
 
-## Objective
-
-Create one authoritative Engineering-Governance v0.5 source baseline by integrating the already-audited Navigation Refresh + Follow-ups work with the already-audited Project Storage Affinity work on top of fresh `main`, reconcile their overlapping Project Governance surfaces, merge the integrated result to `main`, then close terminal legacy PR/release branches so the repository has one clean baseline before any local install/runtime behavior testing.
-
 ## Owner-approved execution order
 
-1. Integrate v0.5 Navigation Refresh + Follow-ups and Project Storage Affinity first.
-2. Audit the integrated source as a new candidate; prior branch audits are inputs, not substitutes for integrated-candidate audit.
+1. Integrate v0.5 Navigation Refresh + Follow-ups and Project Storage Affinity.
+2. Audit the integrated source as a new exact candidate.
 3. Merge only the audited integrated candidate to `main`.
 4. After merge, classify and close terminal old PR/release/publisher branches that no longer carry unique active authority.
 5. Preserve any branch with unique unresolved historical evidence until its disposition is explicit.
-6. Finish with one clean authoritative `main` baseline before local Plugin installation and real behavior testing.
+6. Finish with one clean authoritative `main` baseline before local Plugin installation/runtime behavior testing.
 
-## Inputs
+## Integrated candidate
 
-- Fresh starting `main`: `d04bf63cefa7d48c843f0bccda0aabad3842c05f` before this task-control transition.
-- v0.5 accepted frozen reusable candidate A2: `ecadcf67bf00a5a82cd644cd822ad4d45a76a420`.
-- v0.5 implementation branch: `codex/navigation-learning-followups-v0.5.0-implementation`.
-- Storage Affinity reusable implementation head: `c250b9b081a93949f1d000165e64dcaa53610bdb`.
-- Storage Affinity branch: `codex/project-storage-affinity-v1`.
+`INTEGRATED_CANDIDATE_I1 = ee091fcdbad0e3edcec2b544067021068a0d54b9`
 
-The v0.5 implementation branch and Storage Affinity branch are retained inputs, not parallel writers during integration. Do not mutate them while this integration task is active.
+Start/control main for construction:
 
-## Integration contract
+`467a92daa1bc6c43a7c874684a607c9a637a4dc9`
 
-Create `codex/v0.5-storage-affinity-integration-v1` from the fresh post-control `main` head.
+Inputs reconciled:
 
-Integrate the accepted reusable semantics from both inputs. Reconcile shared files deliberately rather than choosing one branch wholesale.
+- v0.5 accepted frozen reusable A2: `ecadcf67bf00a5a82cd644cd822ad4d45a76a420`;
+- Storage Affinity reusable implementation: `c250b9b081a93949f1d000165e64dcaa53610bdb`.
 
-Known overlapping reusable surfaces include:
+The old input branches are frozen/read-only inputs under this integration task and are not parallel writers.
 
+## Integrated changed paths
+
+Relative to the post-control integration base, exact I1 changes only:
+
+- `AGENTS.md`
+- `README.md`
+- `docs/superpowers/plans/2026-10-09-v0.5.0-navigation-learning-findings-implementation.md`
+- `docs/superpowers/specs/2026-10-09-navigation-learning-deferred-findings-v0.5.0-design.md`
+- `plugin.json`
+- `skills/domain-navigation/SKILL.md`
+- `skills/domain-navigation/references/mapping-workflow.md`
+- `skills/domain-navigation/references/refresh-policy.md`
 - `skills/project-governance/SKILL.md`
+- `skills/project-governance/assets/templates/AGENTS.md`
+- `skills/project-governance/assets/templates/CURRENT_STATUS.md`
+- `skills/project-governance/references/control-plane.md`
 - `skills/project-governance/references/development-flow.md`
+- `skills/project-governance/references/workspace-lifecycle.md`
 
-The integrated result must preserve all of these semantics together:
-
-### v0.5 Navigation + Follow-ups
-
-- verified navigation corrections update only the affected accepted projection entry/fields;
-- correct + freshness-current routes produce no write/churn;
-- stale-but-same routes may refresh only evidence/freshness;
-- unresolved replacements remain unknown/stale rather than guessed;
-- historical/bounded snapshots do not rewrite the current projection without current-target evidence or explicit bounded mutation authority;
-- strict read-only reports correction/Follow-up candidates without mutation;
-- qualifying evidence-backed non-blocking adjacent issues are retained under `CURRENT_STATUS.md / Follow-ups` during normal state-changing status reconciliation;
-- Follow-ups do not authorize repair; selected work must enter `CURRENT_TASK.md` before mutation;
-- still-material Follow-ups survive unrelated status refresh and mere task selection.
-
-### Project Storage Affinity
-
-- resolve the canonical project root first;
-- durable project-controlled development state follows the storage authority containing that canonical root by default;
-- explicit project-local asset/path authority overrides the default;
-- machine/runtime state remains a separate class and may stay machine-local;
-- OS/tool-required ephemeral scratch may use system temp;
-- unique/durable state must not be abandoned in unrelated temp/convenience locations at closure;
-- no universal `/Volumes/Jack-Dev`, user-home, or Mac-mini rule;
-- no mandatory storage manifest.
-
-### Engineering-Governance repository-specific execution rule
-
-Update root `AGENTS.md` only for this repository's durable execution split:
-
-- Engineering-Governance Web/remote session owns reusable source construction, remote GitHub mutation, source audit, integration, and release preparation;
-- local AI is used primarily for installed/runtime/behavior validation;
-- reusable defects found locally return to the Web/remote Engineering-Governance flow for correction;
-- this is repository-specific and must not be generalized to other projects or copied into Global Router.
-
-## Version and routing
-
-- Integrated Plugin version: `0.5.0`.
-- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
-- Global routing remains selection-only; do not add storage or Follow-up procedure to the managed global routing block.
-- Do not create a fourth Skill, storage subsystem, Findings subsystem, daemon, service, database, installer, or automatic remediation runtime.
+No root control file is part of I1.
 
 ## Integrated source audit
 
-This is a new candidate. Verify from its exact tree:
+`INTEGRATED_SOURCE_AUDIT_I1 = PASS`
 
-1. all v0.5 Navigation/Follow-up semantics remain intact;
-2. all Storage Affinity semantics remain intact;
-3. shared Project Governance files are coherent rather than duplicated/contradictory;
-4. root `AGENTS.md` project-specific execution rule is correctly scoped;
-5. `plugin.json` is exactly `0.5.0`;
-6. exactly three top-level Skills remain;
-7. Global Router is unchanged in responsibility and remains selection-only;
-8. no prohibited hard-coded host/storage rule exists in reusable normative policy;
-9. package payload remains `plugin.json + skills/**`;
-10. changed scope contains no unrelated business-project/runtime/install mutation.
+Findings:
 
-No local Plugin behavior test is authorized before the integrated baseline is merged and repository lifecycle closeout is complete.
+- Critical: `0`
+- Important: `0`
 
-## Merge gate
+Fresh checks on exact I1 established:
 
-After integrated source audit passes:
+1. `plugin.json` is `0.5.0`.
+2. Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
+3. Global Router remains selection-only; its blob remains unchanged.
+4. Non-overlapping Navigation/Follow-up files retain the accepted A2 contracts.
+5. `project-governance/SKILL.md` and `development-flow.md` preserve both v0.5 and Storage Affinity semantics without contradictory ownership.
+6. Storage Affinity retains canonical-root-first routing, project-local override, machine/runtime separation, ephemeral scratch allowance, and no universal host/volume rule.
+7. Follow-ups remain non-blocking status memory only and never authorize repair.
+8. Navigation refresh remains affected-only, no-churn for current routes, candidate-only in strict read-only mode, and historical snapshots cannot rewrite the current projection by themselves.
+9. Root `AGENTS.md` scopes Web construction/local validation to Engineering-Governance only; Global Router is not broadened.
+10. No fourth Skill/control file, Findings platform, storage subsystem, daemon, service, database, installer, or automatic remediation was introduced.
+11. Maintainer Plan is explicitly marked historical where its old merge/release/test ordering was superseded by this task.
+12. Live `main` was reverified at `467a92daa1bc6c43a7c874684a607c9a637a4dc9` after audit; no parallel drift occurred.
 
-- create/verify a PR against `main` or otherwise use an exact-head protected GitHub merge path;
-- reverify live `main` before merge;
-- merge only the exact audited integration head;
-- verify post-merge `main` contains the exact integrated Plugin payload.
+## Merge authorization
 
-Do not publish a release yet.
+The user explicitly authorized this sequence: integrate first, then close old PR/branch debt, then test from the clean unique baseline.
 
-## Legacy branch / PR closeout gate
+Create an exact-head PR against `main` and merge only if:
 
-After merge, classify remote non-main branches.
+- PR head equals the later control head whose only delta from I1 is root controls;
+- live `main` remains `467a92daa1bc6c43a7c874684a607c9a637a4dc9` until merge;
+- the control receipt proves `I1..B1` contains only `CURRENT_TASK.md` and `CURRENT_STATUS.md`.
 
-Safe cleanup candidates include branches whose commits are fully contained in `main`, merged-PR branches, and completed one-shot publisher branches whose release/tag/artifact evidence is already durable elsewhere.
+After merge, do not release or run local Plugin V1 yet. Proceed directly to remote legacy branch/PR lifecycle closeout.
 
-Do not delete a branch merely because it is old. Preserve branches with unique unresolved historical evidence or still-active authority until their disposition is explicit.
+## Legacy branch closeout boundary
 
-The v0.5 design branch is expected to be superseded by the implementation/integrated history if no unique commits remain.
+Safe deletion candidates after merge:
 
-The target outcome is a clean remote repository baseline with `main` as the sole active development authority and only explicitly justified retained historical branches, if any.
+- branches fully contained in merged `main`;
+- branches tied to already merged PRs;
+- completed one-shot publisher branches whose release/tag/artifact evidence is durable elsewhere;
+- superseded v0.5 design/implementation/storage branches once their reusable content is integrated into main and no unique unresolved evidence remains.
 
-## STOP conditions
+Do not delete a branch containing unique unresolved historical evidence. Classify it and retain explicitly if necessary.
 
-STOP rather than improvise if:
-
-- fresh `main` changes in a way that affects Plugin payload or this integration contract;
-- either input branch has new reusable mutations beyond its audited candidate;
-- integration loses one input's required semantics;
-- a legacy branch contains unique work/evidence whose disposition is not established;
-- exact integrated source identity cannot be proven before merge;
-- cleanup would require deleting unresolved unique work.
-
-## Out of scope until clean baseline
-
-- local Plugin install/runtime V1;
-- publication/release of v0.5.0;
-- business-project mutation;
-- changing the global installed `AGENTS.md` routing block;
-- modifying installed Plugin cache/runtime.
-
-## Final state
-
-Success for this task is:
+## Final target
 
 `EG_V0.5_INTEGRATED_MAIN_CLEAN_BASELINE_READY_FOR_INSTALL_TEST`
 
-with exact integrated merge SHA, final remote branch inventory/dispositions, and no unresolved active parallel writer.
+with exact merge SHA, remote branch inventory/dispositions, and no unresolved active parallel writer.
