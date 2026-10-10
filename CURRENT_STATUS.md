@@ -87,6 +87,21 @@ A legacy v0.4.0 directory remains at `/Users/ox_miles/.codex/plugins/engineering
 
 Before behavior acceptance on either machine, use a fresh session/runtime so the newly installed Plugin files are loaded.
 
+## Behavior acceptance evidence — Mac mini Case 5 attempt 1
+
+The first Storage Affinity attempt is classified as `NOT_EXECUTED / INVALID_FIXTURE`, not as a reusable Plugin failure.
+
+Observed facts:
+
+- Codex was operating in the real MemoX canonical repository at `/Volumes/Jack-Dev/Projects/MemoX`, not in a disposable acceptance repository;
+- MemoX was clean and no real project file was mutated;
+- the local agent correctly refused to create acceptance state inside the real project under the explicit no-real-project-mutation boundary;
+- no durable acceptance artifact, override artifact, ephemeral scratch, machine/runtime state, Engineering-Governance source, or Plugin cache was mutated;
+- the attempt therefore did not exercise the required file-placement behavior and cannot establish Case 5 PASS or FAIL;
+- `PLUGIN_DEFECT = NO_EVIDENCE` for this attempt.
+
+The next Case 5 attempt must establish and verify the disposable fixture path as the current working repository before the behavior prompt is sent. If the active checkout resolves to any real business project, stop the attempt before mutation.
+
 ## Accepted v0.5 capabilities awaiting behavior acceptance
 
 - affected-only Navigation refresh with current-route no-churn and explicit stale/historical/read-only boundaries;
