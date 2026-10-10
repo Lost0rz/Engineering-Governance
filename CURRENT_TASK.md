@@ -22,7 +22,11 @@ Asset SHA-256:
 
 `66a1b4b4eaf3b87eaf6e1addfe793cad578ceb4c35de3c0d681d02118f3250e0`
 
-Local installation acceptance:
+Published asset size:
+
+`56882` bytes
+
+### Air installation acceptance
 
 - active version: `0.5.0`
 - active cache: `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.5.0`
@@ -34,7 +38,23 @@ Local installation acceptance:
 - source repository mutation during install: `NO`
 - business-project mutation during install: `NO`
 
-Use a fresh session/runtime before executing behavior cases so the newly installed Plugin files are loaded.
+### Mac mini installation acceptance
+
+- previous active version: `0.4.0`
+- active version: `0.5.0`
+- active cache: `/Users/ox_miles/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.5.0`
+- durable local marketplace source: `/Users/ox_miles/.codex/plugin-sources/engineering-governance/0.5.0`
+- installed payload matches the 29-file Release payload: `YES`
+- exactly one enabled Engineering-Governance registration: `YES`
+- competing old active authority: `NO`
+- global managed routing block count: `1`
+- Global Router: `CURRENT / SINGLE / SELECTION_ONLY`
+- source repository mutation during install: `NO`
+- business-project mutation during install: `NO`
+
+A legacy v0.4.0 directory remains at `/Users/ox_miles/.codex/plugins/engineering-governance`, but it is unregistered and is not an active authority. Do not treat its mere on-disk presence as a blocker or delete it as part of this acceptance task.
+
+Use a fresh session/runtime before executing behavior cases so the newly installed Plugin files are loaded. Either machine may run the focused acceptance. If a behavior or path decision differs by machine/storage context, identify the machine explicitly in the receipt rather than assuming equivalence.
 
 ## Objective
 
@@ -176,6 +196,7 @@ Return:
 ```text
 ENGINEERING_GOVERNANCE_V050_BEHAVIOR_ACCEPTANCE
 
+MACHINE: Air / Mac mini
 ACTIVE_PLUGIN_VERSION: 0.5.0
 FRESH_SESSION_USED: YES/NO
 DISPOSABLE_FIXTURE: <path>
