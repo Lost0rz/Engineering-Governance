@@ -39,6 +39,20 @@ Before declaring the task complete or handing it off as complete, run every chec
 
 When integration or release consequences require it, add exact-head/provenance checks and the broad build, integration, runtime, packaging, browser, or remote CI evidence appropriate to the affected system. A merge/release boundary does not automatically require every historical suite in the repository; it requires enough evidence for the integration/release claim actually being made.
 
+#### Final PR-head freeze
+
+When exact-head CI, independent audit, review, or another merge-gate check must bind to the final PR head, finish all intended source and control-file edits first, then designate that current PR head as the **frozen candidate**.
+
+After the candidate is frozen:
+
+- CI, review, independent audit, mergeability, and repository-host checks are live external evidence for that exact immutable head.
+- Do **not** create a source, status, task, handoff, or documentation commit solely to record that those external checks passed, failed, started, completed, or changed state. Such a commit changes the identity being verified and can create an endless `CI → evidence-only commit → new HEAD → CI` loop.
+- If external evidence reveals an actual source/control defect or materially changes scope, authorization, acceptance, or a stop condition, explicitly unfreeze the candidate, make the authorized correction, and begin a new exact-head cycle on the new head.
+- If the frozen candidate passes its gates, perform the independent audit and merge that same head. Do not add a final “audit passed”, “CI passed”, “ready to merge”, or similar commit after the last required exact-head evidence.
+- Post-merge CI may verify the merge commit. Treat that result as live evidence for the merge identity; do not create another commit solely to write the post-merge result back into controls.
+
+A control may state the durable rule or point to the external evidence authority, for example “the latest pushed PR head must have required CI success.” Transient run numbers and pass/fail observations may be reported in the audit/closure response without becoming a new commit unless the project has a separate, non-self-invalidating release record that explicitly owns those facts.
+
 ## Human acceptance loops
 
 A normal low-risk acceptance loop should look like:
@@ -49,11 +63,14 @@ related findings
 -> focused verification after each material edit
 -> targeted user/browser/runtime acceptance as needed
 -> broader affected regression once the corrective stabilizes
--> task/merge closure verification at the justified boundary
+-> freeze final PR head when exact-head evidence is required
+-> exact-head CI / independent audit on that frozen head
+-> merge the same frozen head
+-> post-merge verification as required, without evidence-only head churn
 ```
 
 If an edit raises the actual risk tier—for example a visual fix becomes an API, persistence, security, lifecycle, or cross-Domain change—upgrade the tier immediately and add the checks that higher risk requires. If the higher risk also changes business scope or authorization, stop and reconcile the task before continuing.
 
 ## Recording the decision
 
-Record the chosen `V0`–`V3` tier and a short rationale in `CURRENT_TASK.md`, plus any material cadence expectations such as checks deferred to corrective close, task close, or merge/release. Do not inherit a full historical suite solely because it exists. Report a check as passing only when current evidence supports that claim, and state material limits or checks not run.
+Record the chosen `V0`–`V3` tier and a short rationale in `CURRENT_TASK.md`, plus any material cadence expectations such as checks deferred to corrective close, task close, or merge/release. Do not inherit a full historical suite solely because it exists. Report a check as passing only when current evidence supports that claim, and state material limits or checks not run. Once the final PR head is frozen for exact-head verification, report later CI/review/audit outcomes from live evidence rather than mutating controls merely to record those outcomes.
