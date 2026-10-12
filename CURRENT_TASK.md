@@ -1,55 +1,55 @@
-# CURRENT TASK — Engineering Governance Plugin v0.5.0 Behavior Acceptance
+# CURRENT TASK — Final PR Head Freeze Rule
 
-Task ID: `EG-PLUGIN-V0.5.0-BEHAVIOR-ACCEPTANCE-051`
+Task ID: `EG-FINAL-PR-HEAD-FREEZE-052`
 
-State: `CLOSED / PASS`
+State: `ACTIVE`
 
-Final state: `V0.5_BEHAVIOR_ACCEPTED`
+Date: 2026-10-12
 
-Mode used: `DISPOSABLE_PROJECT / EVIDENCE_ONLY / NO_REUSABLE_SOURCE_REPAIR`
+Repository: `Lost0rz/Engineering-Governance`
 
-Authoritative branch: `main`
+## Objective
 
-## Accepted release prerequisite
+Prevent exact-head verification from creating a self-triggering loop where CI or independent-audit results are written back as control-file commits, thereby changing the PR HEAD and requiring another exact-head CI run.
 
-Release source:
+## Evidence
 
-`b288161c5a4b869ac9d95588c1501184229b2444`
+A live Gift lifecycle closeout demonstrated the failure mode:
 
-Release tag:
+`final PR head → exact-head CI PASS → controls-only evidence commit → new PR head → another exact-head CI`.
 
-`plugin-v0.5.0`
+The reusable governance contract currently binds evidence to identities and requires exact-head evidence at merge/release boundaries, but it does not explicitly freeze the final PR head or prohibit control churn that exists only to record external verification results.
 
-Asset SHA-256:
+## Authorized scope
 
-`66a1b4b4eaf3b87eaf6e1addfe793cad578ceb4c35de3c0d681d02118f3250e0`
+- `skills/project-governance/SKILL.md`
+- `skills/project-governance/references/verification-tiers.md`
+- `skills/project-governance/references/control-plane.md`
+- `CURRENT_STATUS.md`
+- `CURRENT_TASK.md`
 
-Published asset size: `56882` bytes.
+No new Skill, runtime, daemon, storage subsystem, CI mechanism, or enforcement tool is authorized.
 
-Air and Mac mini installation/runtime identity acceptance both passed before behavior acceptance.
+## Required rule
 
-## Acceptance result
+Before exact-head CI / independent audit at a merge boundary, complete source and control changes and designate the current PR head as the frozen candidate.
 
-All five focused v0.5.0 behavior cases passed on disposable Mac mini fixtures with direct Git/filesystem evidence and independent mechanical audits:
+After freeze:
 
-1. Navigation affected-only correction — `PASS`
-2. Navigation current-route no-churn — `PASS`
-3. Lightweight Follow-up retention and later explicit task selection — `PASS`
-4. Strict read-only candidate-only behavior — `PASS`
-5. Project Storage Affinity — `PASS`
+- CI, review, audit, mergeability, and other repository-host evidence are live external evidence for that immutable head;
+- do not create a source/control commit solely to record that those checks passed or failed;
+- if evidence requires an actual source/control correction, explicitly unfreeze, make the correction, and begin a new exact-head cycle on the new head;
+- if evidence passes, audit and merge the same frozen head;
+- post-merge CI may verify the merge commit, but its result must not cause another commit solely to record the result.
 
-## Closure evidence
+## Verification
 
-- no real business project was mutated;
-- Engineering-Governance reusable source was not repaired locally;
-- installed Plugin cache was not hand-edited;
-- no fourth Skill/control authority was created;
-- no generalized Findings/backlog platform, mapping subsystem, storage runtime subsystem, daemon, service, database, installer, or automatic remediation was introduced;
-- Case 4 strict read-only before/after tracked-file SHA-256 values matched exactly and the Git worktree remained clean;
-- no focused behavior case exposed a reusable Plugin source/contract defect.
+Risk tier: `V0/V1 process-contract change`.
 
-## Final target
+Verify the reusable wording is consistent across Project Governance, control-plane ownership, and verification cadence. The rule must preserve legitimate control updates before freeze and after material scope/authorization changes while prohibiting evidence-only head churn after freeze.
 
-`V0.5_BEHAVIOR_ACCEPTED`
+## Stop conditions
 
-This task is closed. Normal adoption/usage may proceed. Future work requires a new explicit `CURRENT_TASK.md` authorization; this closed task does not authorize additional reusable source changes or target-project mutations.
+- The change would require a fourth Skill or runtime enforcement mechanism.
+- The rule would prevent a necessary source/control correction after failed audit evidence.
+- The rule would weaken exact-head identity binding.
