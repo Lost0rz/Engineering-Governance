@@ -32,6 +32,8 @@ If the project uses multiple task workspaces, apply [Workspace lifecycle and clo
 
 `CURRENT_STATUS.md` is a verified current-state snapshot, not an authorization override or backlog database. Preserve still-material Follow-ups through unrelated status refreshes; remove them when verified resolved, obsolete, or no longer material. If a newly verified status fact changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, explicit head lock, or authorization boundary, stop state-changing work, reconcile `CURRENT_TASK.md`, and obtain re-authorization before continuing. A status refresh that does not affect the task contract does not require task churn.
 
+At a merge/release exact-head boundary, complete source and control changes before designating the final PR head. Once that head is frozen, CI, review, independent audit, mergeability, and repository-host checks are live external evidence for that immutable identity; do not create a source/control commit solely to record those results. If evidence requires a real correction, unfreeze, make the authorized change, and restart exact-head verification on the new head. If evidence passes, audit and merge the same frozen head. See [Verification tiers, cadence, and evidence identity](references/verification-tiers.md) and [Control plane roles, updates, and lifecycle reconciliation](references/control-plane.md).
+
 Load the relevant contracts as needed:
 
 - [Global Skill routing](references/global-routing.md)
