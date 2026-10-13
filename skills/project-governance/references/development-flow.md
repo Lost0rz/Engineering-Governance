@@ -17,32 +17,47 @@ Use this flow for normal governed product and business work. When the current de
 5. Confirm the requested work remains within the active objective and scope. Ordinary evidence discovery that supports the accepted objective does not create a new task. A material objective or scope change requires updating `CURRENT_TASK.md` and re-authorization before continuing. The task-file commit itself remains control identity; its new content is nevertheless authoritative for permission and scope.
 6. Apply [Code structure and canonical authority](code-structure.md) whenever a source edit would add/change an owner, backend, writer, shared behavior, module boundary, or materially new responsibility inside an existing module. Identify the existing canonical authority for each affected state or behavior class. If an edit would add a distinct Domain/capability/authority/lifecycle/reason-to-change to an existing file, establish the responsibility boundary before introducing that responsibility rather than knowingly accumulating mixed responsibility for a later size-driven cleanup. Reuse, extend, or explicitly replace an existing authority; reconcile independent writers instead of creating parallel truth. File length and edit size are never the split criteria. Re-run the structure check if implementation discoveries materially change the responsibility boundary, then implement the smallest authorized product or business outcome. If that authorized work materially changes a pointer in an already accepted derived navigation projection and the new route remains clear, reconcile only the affected claim before handoff; this normal governance-evidence maintenance does not require repeated per-task map-write boilerplate. If the route becomes genuinely unclear, return to Domain Navigation for bounded re-verification. Explicit metadata-write prohibitions and strict read-only mode still prevent the projection write.
 7. Choose the lightest safe `V0`–`V3` verification tier and a separate verification cadence under [Verification tiers and cadence](verification-tiers.md). During construction, prefer focused checks appropriate to the tier. Group related acceptance findings into one bounded corrective where practical, then run broader affected regression once the corrective stabilizes. Reserve task-close and merge/release checks for the boundary whose claim they prove; do not rerun unrelated full suites after every small edit. Reuse valid semantic CI/review/audit evidence across proven `CONTROL_ONLY_DRIFT`; require fresh semantic evidence for `DELIVERY_HEAD_CHANGE` when the accepted verification contract requires it. At merge/release time, separately read current repository-host gates and satisfy any required check/review/mergeability/current-base/latest-head rule bound to the literal identity the host governs.
-8. Update only controls whose owned, verified facts materially changed: durable rules in `AGENTS.md`, the current snapshot in `CURRENT_STATUS.md`, and the active authorization or handoff in `CURRENT_TASK.md`. During normal state-changing status reconciliation, when a small evidence-backed **non-blocking** adjacent problem materially deserves future consideration and therefore qualifies as a Follow-up, add or refresh one concise item under `CURRENT_STATUS.md / Follow-ups` without expanding the active task or authorizing its repair. Keep blockers in the blocker/current-task flow. Avoid duplicate Follow-up noise; preserve still-material Follow-ups through unrelated status refreshes and through mere selection into a future task, and remove an item only when current evidence shows it is resolved, obsolete, or no longer material. Strict read-only work may report a Follow-up candidate in its result but must not mutate project controls. Do not write controls merely because CI passed, review/audit completed, a PR became mergeable, a merge occurred, or another routine external lifecycle event changed.
-9. Leave a clean handoff or closeout with the baseline, changed paths, checks, unresolved evidence, and next authorized milestone stated accurately. If the project uses task branches/worktrees, apply the lifecycle checkpoint before handoff when the task enters a retained review/QA/acceptance state and again when project/task controls establish that the task or phase is terminal. Safely close obsolete workspace/branch state or retain it with a verified reason, release condition, and known write capability. A merge or other named lifecycle event alone does not prove terminal authorization or local closeout. Unknown work must remain preserved until its disposition is verified, and any retained unique/durable state must not be left only in unrelated temporary/convenience storage. Once closeout is verified, a later control-only main advance must not reopen it.
+8. At every governed handoff or closeout boundary, perform the mandatory control-reconciliation check from [Control plane roles, updates, and lifecycle reconciliation](control-plane.md). Update only controls whose owned, verified facts materially changed: durable rules in `AGENTS.md`, the current snapshot in `CURRENT_STATUS.md`, and the active authorization/current stop point in `CURRENT_TASK.md`. State-changing work that materially advances a task normally changes at least its handoff/current stop point; reconcile `CURRENT_TASK.md` when it does. Reconcile `CURRENT_STATUS.md` when the accepted project/delivery snapshot, blocker set, capability state, active development state, or next milestone changed. During normal state-changing status reconciliation, when a small evidence-backed **non-blocking** adjacent problem materially deserves future consideration and therefore qualifies as a Follow-up, add or refresh one concise item under `CURRENT_STATUS.md / Follow-ups` without expanding the active task or authorizing its repair. Keep blockers in the blocker/current-task flow. Avoid duplicate Follow-up noise; preserve still-material Follow-ups through unrelated status refreshes and through mere selection into a future task, and remove an item only when current evidence shows it is resolved, obsolete, or no longer material. CI/review/audit/merge/lifecycle events are evidence, not history-log entries: record only their control-owned current-state consequence. Strict read-only work must not mutate controls; if it proves a control stale, report the required reconciliation explicitly instead of silently claiming full control closeout.
+9. Leave a clean handoff or closeout with the baseline, changed paths, checks, unresolved evidence, next authorized milestone, and control-reconciliation result stated accurately. If the project uses task branches/worktrees, apply the lifecycle checkpoint before handoff when the task enters a retained review/QA/acceptance state and again when project/task controls establish that the task or phase is terminal. Safely close obsolete workspace/branch state or retain it with a verified reason, release condition, and known write capability. A merge or other named lifecycle event alone does not prove terminal authorization or local closeout. Unknown work must remain preserved until its disposition is verified, and any retained unique/durable state must not be left only in unrelated temporary/convenience storage. Once closeout is verified, a later control-only main advance must not reopen it. Do not report the task fully closed while writable controls are knowingly materially stale.
 
-## Next-task reconciliation
+## Final closeout receipt
 
-When Task A has already reached a verified accepted/terminal state but `CURRENT_STATUS.md` / `CURRENT_TASK.md` still describe the prior planning boundary, do not require a cosmetic intermediate “close Task A” commit before planning Task B.
+For governed work, expose the control result rather than making the reader infer it from prose. A concise receipt should include at least:
 
-Instead:
+```text
+SKILLS_USED: ...
+CONTROL_RECONCILIATION: PASS | NOT_REQUIRED | BLOCKED_READ_ONLY
+CURRENT_STATUS: UPDATED | NOT_REQUIRED | BLOCKED
+CURRENT_TASK: UPDATED | NOT_REQUIRED | BLOCKED
+```
+
+Add merge state, final Delivery / Semantic HEAD, literal Repository HEAD/remote head, changed paths, workspace disposition, or other project-required evidence when relevant. Receipt fields summarize closeout; they do not replace the controls or repository evidence.
+
+## Recovery from pre-existing stale controls
+
+If Task A is already verified accepted/terminal but `CURRENT_STATUS.md` / `CURRENT_TASK.md` still describe an obsolete earlier planning boundary from an older lazy-reconciliation workflow:
 
 1. read the existing controls;
 2. verify fresh repository/lifecycle evidence for Task A;
 3. confirm there is no unresolved unique work, predecessor-writer conflict, authorization ambiguity, or other safety blocker;
-4. perform one control transition that reconciles Task A's accepted current state as needed and authorizes Task B.
+4. reconcile Task A's accepted current state before relying on those controls for new work;
+5. if the user has already selected Task B and the combined transition is clear, the same control transition may both close Task A and authorize Task B.
 
-This is the preferred normal sequence when safe:
+Do not require two cosmetic control commits when one safe reconciliation is enough. This recovery path exists for stale legacy state; intentional post-task staleness is no longer the normal sequence.
+
+The preferred normal sequence is:
 
 ```text
 authorize
 -> implement
 -> verify
--> audit
--> merge
--> next-task reconciliation
+-> audit / host gate as required
+-> merge / handoff / terminal decision as applicable
+-> reconcile changed controls
+-> final closeout receipt
 ```
 
-Control records remain authoritative for the new authorization once written; their delayed reconciliation does not make their commit SHA application-code identity.
+Control-only reconciliation advances literal Repository HEAD but does not by itself change Delivery / Semantic HEAD.
 
 ## Incident Doctor is on demand
 
