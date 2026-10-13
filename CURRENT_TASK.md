@@ -6,7 +6,7 @@ Repository: `Lost0rz/Engineering-Governance`
 
 Task ID: `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058`
 
-State: `WAITING_FOR_INDEPENDENT_AUDIT`
+State: `AUDIT_PASS_WAITING_MERGE_DECISION`
 
 Mode: governed Project Governance contract update
 
@@ -77,24 +77,41 @@ Fresh V0 evidence:
   - F: status/task-only closeout remains `CONTROL_ONLY_DRIFT` and does not restart semantic verification;
   - G: cross-session recovery order is `AGENTS -> STATUS -> TASK -> Related document`.
 
+## Independent Web audit
+
+Independent audit of PR #22 and the full diff against `main` found no design-level blocker.
+
+Verified boundaries:
+
+- `main` remained at `72042f4157389520c7acd754cab5272a3cfdab85` during the audit;
+- PR source semantics are frozen at `eed269cab32ecdfb52da87627386bcc77a9e42c6`;
+- all later branch movement from that semantic head is limited to `CURRENT_STATUS.md` and `CURRENT_TASK.md` and is therefore `CONTROL_ONLY_DRIFT`;
+- planning documents remain non-control delivery/governance content;
+- final alignment is mandatory while writes remain conditional;
+- routine external evidence still does not force evidence-only control commits;
+- repository-host gates remain separate live constraints;
+- PR #22 remains OPEN / DRAFT / UNMERGED.
+
+Audit result: `PASS` for the Task 058 source contract.
+
 ## Acceptance criteria
 
-Source construction satisfies the Task 058 acceptance criteria. Independent Web audit is still required before merge or any Plugin `0.5.5` distribution task begins.
+Task 058 source construction and independent source audit satisfy the accepted design and V0 verification contract. Merge has not been performed.
 
 ## Stop conditions
 
-- Do not merge PR #22 before independent audit accepts the source contract.
+- Do not merge PR #22 without an explicit merge decision.
 - Do not bump or publish Plugin `0.5.5` under Task 058.
-- Stop if audit finds that planning documents become competing authorization/progress authority, conditional writes became unconditional, planning documents are treated as control-only, or v0.5.4 host/identity semantics were weakened.
+- Stop if new evidence shows that planning documents become competing authorization/progress authority, conditional writes became unconditional, planning documents are treated as control-only, or v0.5.4 host/identity semantics were weakened.
 
 ## Handoff / current stop point
 
-PR #22 is OPEN / DRAFT / UNMERGED and ready for independent Web audit.
+PR #22 is OPEN / DRAFT / UNMERGED. Source audit is PASS; next action is an explicit merge decision.
 
-Control Alignment Gate for this source-construction handoff:
+Control Alignment Gate after independent audit:
 
 - `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED` — implementation follows the accepted durable design; no durable assumption was invalidated.
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED` — project state advanced from active source construction to independent-audit handoff.
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED` — task state advanced to `WAITING_FOR_INDEPENDENT_AUDIT` and records PR #22 / frozen semantic source.
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED` — audit found no durable-plan correction.
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED` — current project state now records audit PASS and merge-decision boundary.
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED` — task state advanced from waiting for audit to audit-pass waiting merge decision.
 - `CONTROL_ALIGNMENT`: `PASS`
