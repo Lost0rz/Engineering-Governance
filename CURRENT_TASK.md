@@ -1,84 +1,79 @@
-# CURRENT TASK — Planning Documents and Control Alignment
+# CURRENT TASK — Engineering Governance Plugin v0.5.5 Release and Web Update
 
 Date: 2026-10-13
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058`
+Task ID: `EG-PLUGIN-V0.5.5-RELEASE-WEB-059`
 
-State: `COMPLETE`
+State: `ACTIVE_RELEASE_PREPARATION`
 
-Mode: governed Project Governance contract update
+Mode: bounded Plugin distribution and release
 
 ## Objective
 
-Add the durable planning-document layer and a mandatory end-of-execution Control Alignment Gate so long-lived design, current task authorization, and current project status remain distinct while cross-session/cross-machine handoffs do not inherit silently stale `CURRENT_STATUS.md` / `CURRENT_TASK.md` semantics.
+Publish the already accepted Task 058 governance source as formal Plugin version `0.5.5`, then update the existing ChatGPT Web Plugin to the same `0.5.5` payload while preserving Plugin identity, scope, audience, and exactly three top-level Skills.
 
 ## Planning context
 
 - Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
-- Document section / work package: `Implementation scope for Task 058`
-- Document revision basis: `290c112710aa3a078b60ef4d43e59c9d2de0086b` as provenance.
-- Relationship to plan: Task 058 implemented the reusable Project Governance source/template contract only; Plugin 0.5.5 distribution/release remains a separate task.
+- Document section / work package: accepted v0.5.5 design and release boundary
+- Document revision basis: accepted repository source at `58f06da1d4e5d0e86d2cb17bd13aa786d7a22cc6`; subsequent `6dbf83ea24b0322669bb384b9ed7c78474dcb860` is control-only closeout.
+- Relationship to plan: this task distributes the accepted design; it does not change governance semantics.
 
-## Completed result
+## Start baseline
 
-- Independently audited Delivery / Semantic HEAD: `eed269cab32ecdfb52da87627386bcc77a9e42c6`.
-- PR #22: `feat: add durable planning and control alignment gate`.
-- PR #22 final head before merge: `ac857f0fe80f406dff4001532e6dc2b424c06124`.
-- Movement from the audited semantic head to the final PR head was limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` and classified as `CONTROL_ONLY_DRIFT`.
-- Final merge method: squash.
-- Merge commit: `58f06da1d4e5d0e86d2cb17bd13aa786d7a22cc6`.
-- GitHub merge result: successful.
+- Literal `main`: `6dbf83ea24b0322669bb384b9ed7c78474dcb860`.
+- Accepted source merge: `58f06da1d4e5d0e86d2cb17bd13aa786d7a22cc6`.
+- Independently audited semantic source: `eed269cab32ecdfb52da87627386bcc77a9e42c6`.
+- Current portable Plugin version: `0.5.4`.
+- Current formal release: `plugin-v0.5.4`.
+- Current ChatGPT Web Plugin: `0.5.4`.
+- `plugin-v0.5.5` tag and release were verified absent before mutation.
+- Task branch: `codex/plugin-v0.5.5-release-web`.
 
-The merged source establishes:
+## In scope
 
-- durable planning-document ownership without creating a fourth control file;
-- optional Task-to-document work-package linkage;
-- Status as current planning/project-position snapshot rather than detailed plan/history;
-- mandatory final Control Alignment Gate for governed state-changing handoff;
-- mandatory alignment checking with conditional writes;
-- explicit alignment results in successful state-changing receipts;
-- strict read-only stale-control reporting;
-- preserved v0.5.4 control-only identity and live repository-host-gate semantics.
+1. Bump root `plugin.json` from `0.5.4` to `0.5.5` only.
+2. Add one-shot formal release workflow for `plugin-v0.5.5`.
+3. Verify the exact release package contains only `plugin.json` and `skills/**`, exactly three top-level Skills, and the accepted v0.5.5 planning/control-alignment semantics.
+4. Merge release preparation to `main` after source audit and live host gates pass.
+5. Verify formal tag, GitHub Release, asset digest/size/file count, and publication source.
+6. Update the existing ChatGPT Web Plugin to version `0.5.5` using the released/accepted payload while preserving existing Plugin ID, USER/PRIVATE scope/audience, and three-Skill boundary.
 
-## Verification and audit
+## Out of scope
 
-`V0 — control/documentation/layout`.
+- Mac mini or MacBook Air Plugin convergence.
+- Any governance semantic/source correction.
+- New Skill, runtime, daemon, service, database, installer, or automatic remediation.
+- Moving or replacing historical release tags.
 
-Verified before merge:
+## Verification contract
 
-- Task 058 changed paths stayed within authorized governance/design/template scope;
-- `plugin.json` remained `0.5.4`;
-- exactly three top-level Skills remained;
-- acceptance scenarios A–G passed by direct rule inspection;
-- independent Web source audit passed with no design-level blocker;
-- immediately before merge, `main` remained at the authorized base `72042f4157389520c7acd754cab5272a3cfdab85`;
-- PR #22 was mergeable;
-- repository branch protection reported no required status checks, and the PR head had no recorded commit statuses;
-- merge was executed with expected-head lock `ac857f0fe80f406dff4001532e6dc2b424c06124`.
+`V0/V1 distribution verification`:
 
-## Scope integrity
+- manifest name/version exact;
+- exactly three top-level Skills;
+- package boundary only `plugin.json` and `skills/**`;
+- package file-entry count derived from current source, expected `30`;
+- required v0.5.5 semantics include durable planning linkage, mandatory Control Alignment Gate, `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and separate repository-host gate boundary;
+- release tag is immutable and points to the frozen publication source;
+- Web Plugin update retains the same backend Plugin identity and private audience.
 
-Task 058 did not:
+## Stop conditions
 
-- bump `plugin.json` to `0.5.5`;
-- update ChatGPT Web Plugin;
-- update Mac mini or MacBook Air installed Plugin versions;
-- publish `plugin-v0.5.5`;
-- add a fourth Skill or any daemon/service/database/installer/runtime enforcement machinery;
-- bulk-migrate historical `docs/superpowers/**` records.
+- Stop if `main` gains non-control delivery changes before merge.
+- Stop if `plugin-v0.5.5` tag/release appears unexpectedly.
+- Stop if package contents escape `plugin.json` + `skills/**`, top-level Skill count differs from three, or required semantics are absent.
+- Stop if the existing Web Plugin identity/scope/audience cannot be preserved.
+- Do not update Mini/Air under this task phase.
 
-## Terminal state
+## Required order
 
-Task `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058` is complete.
+1. Formal GitHub release `plugin-v0.5.5`.
+2. ChatGPT Web Plugin update to `0.5.5`.
+3. Control Alignment Gate and receipt.
 
-The next milestone is a separately authorized Plugin `0.5.5` distribution/release task; it is not authorized by this completed task.
+## Handoff / current stop point
 
-## Control Alignment Gate — merge closeout
-
-- `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED` — merge did not invalidate or alter the accepted durable plan.
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED` — current project state now records merged/accepted source.
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED` — task lifecycle advanced to terminal `COMPLETE`.
-- `CONTROL_ALIGNMENT`: `PASS`
+Task authorized. Release preparation may begin on `codex/plugin-v0.5.5-release-web`.
