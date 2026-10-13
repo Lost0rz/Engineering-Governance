@@ -1,71 +1,60 @@
-# CURRENT TASK — Engineering Governance Plugin v0.5.4 Distribution
+# CURRENT TASK — Engineering Governance Plugin v0.5.4 Formal Release
 
 Date: 2026-10-13
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-PLUGIN-V0.5.4-DISTRIBUTION-056`
+Task ID: `EG-PLUGIN-V0.5.4-FORMAL-RELEASE-057`
 
-State: `COMPLETE`
+State: `AUTHORIZED`
 
-Mode: governed plugin distribution
+Mode: formal GitHub Plugin release
 
 ## Objective
 
-Distribute the accepted control-vs-delivery identity semantics merged by PR #18 to ChatGPT Web and converge the canonical local Codex installations to plugin version `0.5.4`.
+Publish the already accepted Engineering Governance Plugin `0.5.4` payload as a formal GitHub release with immutable tag `plugin-v0.5.4` and release asset `engineering-governance-plugin.zip`.
 
 ## Accepted baseline
 
-- Accepted PR #18 source semantics: `999c649e499f69bffe7bf870f38e953a0abd59af`.
+- Current repository main before task authorization: `4a4611cd4f0b9302b79bd151bb2b4bd2a70ae377`.
+- Accepted PR #18 governance semantics: `999c649e499f69bffe7bf870f38e953a0abd59af`.
 - Portable manifest 0.5.4 integration: `9a4025c69fdfc42ba8f35df28f638f89dbe96c51`.
 - Repo-backed marketplace integration: `6185a1be962956422b7e4eeb56727ccb9a9386fa`.
-- Formal historical GitHub Plugin release remains `plugin-v0.5.3`; this task does not claim a formal `plugin-v0.5.4` tag/release exists.
+- ChatGPT Web, Mac mini, and MacBook Air are already verified on Plugin version `0.5.4`.
+- Formal historical GitHub Plugin release is currently `plugin-v0.5.3`.
 
-## Completed outcomes
+## Authorized scope
 
-- ChatGPT Web Plugin `engineering-governance` updated to `0.5.4` with plugin identity, USER scope, and PRIVATE discoverability preserved.
-- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
-- Web payload contains the accepted Delivery / Semantic HEAD, `CONTROL_ONLY_DRIFT`, and separate repository-host gate semantics.
-- Added a repo-backed `engineering-governance-personal` marketplace catalog pointing to `Lost0rz/Engineering-Governance@main`.
-- Mac mini converged to one active authority: `engineering-governance@engineering-governance-personal / 0.5.4`.
-- MacBook Air converged to one active authority: `engineering-governance@engineering-governance-personal / 0.5.4`.
-- Both hosts verified the three-Skill boundary and the three key 0.5.4 governance semantics.
-- No manual active-cache mutation, plugin-source directory mutation, business-project repository mutation, fourth Skill, or new governance runtime was introduced.
+- Add one one-shot workflow at `.github/workflows/release-plugin-v0.5.4.yml`.
+- Verify root `plugin.json` name/version are `engineering-governance` / `0.5.4`.
+- Verify exactly three top-level Skills: `project-governance`, `domain-navigation`, `incident-doctor`.
+- Verify the 0.5.4 control/delivery identity semantics are present.
+- Build an exact Plugin ZIP from `plugin.json` plus files under `skills/**` only.
+- Require exactly `29` package file entries.
+- Create tag `plugin-v0.5.4` at the frozen publication workflow commit without moving any existing tag.
+- Create GitHub release `Engineering Governance Plugin v0.5.4` and upload `engineering-governance-plugin.zip`.
+- Record release asset size and SHA-256 in release notes.
+- Verify the resulting workflow run, tag, release, and release asset.
 
-## Verification summary
+## Out of scope
 
-### ChatGPT Web
+- Any new Skill semantics or behavior.
+- Fourth Skill or new runtime/daemon/service/database/installer/remediation machinery.
+- Manifest version beyond `0.5.4`.
+- ChatGPT Web Plugin mutation.
+- Local Codex marketplace/cache/source mutation.
+- Moving/replacing any existing release tag.
+- Packaging repository controls, docs, marketplace catalogs, or workflows into the Plugin ZIP.
 
-- Version: `0.5.4`
-- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`
-- Release ID: `pluginrel_6acda259f9ec8191b09ba5cff8742633`
-- Scope: `USER`
-- Discoverability: `PRIVATE`
+## Stop conditions
 
-### Mac mini
+- `plugin-v0.5.4` tag or release already exists unexpectedly.
+- Root manifest is not `engineering-governance` version `0.5.4`.
+- Top-level Skill set differs from the expected three.
+- Required 0.5.4 governance semantics are missing.
+- Package entry count is not exactly `29` or contains files outside `plugin.json` / `skills/**`.
+- GitHub Actions release job fails or publishes an asset whose identity cannot be verified.
 
-- Codex CLI: `0.162.1`
-- Active authority count: `1`
-- Active authority: `engineering-governance@engineering-governance-personal / 0.5.4`
-- Manifest: PASS
-- Top-level Skill count: `3`
-- `CONTROL_ONLY_DRIFT`: PASS
-- Delivery / Semantic HEAD: PASS
-- Repository-host gate boundary: PASS
+## Completion criteria
 
-### MacBook Air
-
-- Codex CLI: `0.160.0`
-- Active authority count: `1`
-- Active authority: `engineering-governance@engineering-governance-personal / 0.5.4`
-- Manifest: PASS
-- Top-level Skill count: `3`
-- `CONTROL_ONLY_DRIFT`: PASS
-- Delivery / Semantic HEAD: PASS
-- Repository-host gate boundary: PASS
-
-## Handoff / terminal state
-
-`EG-PLUGIN-V0.5.4-DISTRIBUTION-056` is complete. No additional v0.5.4 distribution action is required.
-
-This terminal control reconciliation is control-only and does not change the accepted Plugin Delivery / Semantic identity. The next meaningful Engineering-Governance task should authorize its own objective from the current accepted state; no separate closeout-only task is required.
+Task 057 is complete only after the formal GitHub release exists, tag identity is verified, the release asset is present, release notes report the source SHA / size / SHA-256 / entry count, and no Plugin payload or local distribution authority was changed by the publication operation.
