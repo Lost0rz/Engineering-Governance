@@ -24,7 +24,7 @@ Last verified: [date/time, inspected sources or revisions, and freshness basis]
 
 ## Active development state
 
-[Concise current task or delivery state, if verified; refer to the task contract instead of copying it. If this snapshot reveals a fact that changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, explicit head lock, or authorization boundary, stop state-changing work and reconcile `CURRENT_TASK.md`; this status file does not override the task. A Follow-up does not authorize repair; selected work must enter `CURRENT_TASK.md` scope before mutation.]
+[Concise current task or delivery state, if verified; refer to the task contract instead of copying it. Keep this aligned with the actual active, blocked, handoff, or terminal state rather than leaving an earlier execution phase after the task has moved on. If this snapshot reveals a fact that changes or invalidates a task-owned prerequisite, acceptance criterion, STOP condition, allowed side effect, explicit head lock, or authorization boundary, stop state-changing work and reconcile `CURRENT_TASK.md`; this status file does not override the task. A Follow-up does not authorize repair; selected work must enter `CURRENT_TASK.md` scope before mutation.]
 
 ## Next intended milestone
 
@@ -32,4 +32,4 @@ Last verified: [date/time, inspected sources or revisions, and freshness basis]
 
 ## Freshness and verification basis
 
-[For material facts, state what was inspected, when, and what remains stale, unknown, or unresolved. A recorded SHA is provenance/audit evidence by default unless an explicit semantic or literal equality lock says otherwise. This is a current snapshot, not a history log or backlog database; update it in place rather than appending past states. Do not require an immediate status write merely because CI, review, audit, mergeability, merge, or another external lifecycle event changed; batch reconciliation when future reasoning materially needs it.]
+[For material facts, state what was inspected, when, and what remains stale, unknown, or unresolved. A recorded SHA is provenance/audit evidence by default unless an explicit semantic or literal equality lock says otherwise. This is a current snapshot, not a history log or backlog database; update it in place rather than appending past states. At governed task closeout, reconcile this snapshot when verified control-owned current-state facts materially changed. CI, review, audit, mergeability, merge, or other external lifecycle events are evidence; do not copy them here merely as an event log. Record only the durable/current-state consequence this control owns. A reconciliation commit limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` remains control-only and does not by itself change Delivery / Semantic HEAD.]
