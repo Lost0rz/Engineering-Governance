@@ -60,7 +60,7 @@ The prior Project Governance contract explicitly allowed routine lifecycle recon
 
 `V0` — governance/documentation semantics only.
 
-Fresh self-audit result before this control-only handoff reconciliation:
+Fresh self-audit result before control-only handoff reconciliation:
 
 - Source/governance candidate: `608038451c0554d493fa1bff239e1582d5eb0b45`.
 - Authorization/main baseline: `72042f4157389520c7acd754cab5272a3cfdab85`.
@@ -81,11 +81,12 @@ Fresh self-audit result before this control-only handoff reconciliation:
 - Concise final receipt contract: implemented.
 - Global routing anti-duplication boundary: preserved.
 - Delivery / Semantic HEAD separation: preserved.
+- Draft PR: `#21` — open, draft, unmerged.
 - Independent audit: pending.
 
 ## Stop conditions
 
-- Do not merge before independent audit of the exact source/governance candidate and its later control-only drift.
+- Do not merge PR #21 before independent audit of the exact source/governance candidate and its later control-only drift.
 - Do not bump/publish a Plugin version or mutate local installed authorities in this task.
 - If `main` advances with non-control changes before merge, re-evaluate the branch relationship before integration.
 
@@ -93,4 +94,6 @@ Fresh self-audit result before this control-only handoff reconciliation:
 
 Reusable/governance source construction is complete for this bounded correction at Delivery / Semantic candidate `608038451c0554d493fa1bff239e1582d5eb0b45`.
 
-This control update is the required handoff reconciliation and is control-only. The next authorized milestone is an independent audit on the Draft PR. Merge, Plugin versioning/publication, ChatGPT Web update, and Mac mini/MacBook Air deployment remain unapproved.
+Draft PR #21 is the independent-audit handoff. Subsequent branch movement after the frozen candidate is restricted to `CURRENT_STATUS.md` / `CURRENT_TASK.md` closeout reconciliation and must remain proven `CONTROL_ONLY_DRIFT`.
+
+Merge, Plugin versioning/publication, ChatGPT Web update, and Mac mini/MacBook Air deployment remain unapproved.
