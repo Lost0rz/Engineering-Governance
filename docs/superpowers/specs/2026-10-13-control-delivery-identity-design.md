@@ -12,7 +12,7 @@ Reduce governance noise across all governed projects by separating control-recor
 
 The current Project Governance contracts distinguish several Git identity roles, but the final-head freeze text still describes any post-freeze `status`, `task`, or documentation commit as changing the identity being verified. That is correct for literal repository HEAD, but it is too coarse for implementation freshness: a commit that changes only `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` does not change product/source/runtime/test/workflow/schema/dependency implementation.
 
-The result can be unnecessary HEAD-drift stops, CI/audit restarts, merge-readiness resets, lifecycle closeout loops, and extra control commits whose only purpose is to keep controls synchronized with evidence that already exists elsewhere.
+The result can be unnecessary HEAD-drift stops, CI/audit restarts, semantic merge-readiness resets, lifecycle closeout loops, and extra control commits whose only purpose is to keep controls synchronized with evidence that already exists elsewhere.
 
 ## Identity model
 
@@ -27,7 +27,9 @@ The implementation identity after excluding exactly these two repository-control
 - `CURRENT_STATUS.md`
 - `CURRENT_TASK.md`
 
-For implementation freshness, exact-code-tree verification, CI identity, code-review identity, merge-readiness identity, and accepted implementation-tree equivalence, use Delivery / Semantic HEAD.
+For implementation freshness, exact-code-tree verification, CI/test identity, code-review identity, independent-audit identity, and accepted implementation-tree equivalence, use Delivery / Semantic HEAD.
+
+Repository-host gates are separate. A host may require status checks, reviews, mergeability/conflict state, merge queue eligibility, current-base conditions, or latest-head conditions on a literal PR/repository identity even when Delivery / Semantic HEAD is unchanged.
 
 ### Change classes
 
@@ -62,19 +64,25 @@ When a lock exists, the control must make clear whether it locks:
 
 Default implementation-oriented locks to Delivery / Semantic HEAD unless literal repository equality is explicitly required.
 
-## Exact-head and CI semantics
+This default does not rewrite repository-host rules. Host gates still apply to the literal identity the host says they govern.
+
+## Exact-head, CI, and repository-host semantics
 
 At PR, merge, and release boundaries, the implementation candidate is frozen by Delivery / Semantic HEAD (or an equivalent semantic-tree identity) unless the task explicitly requires literal repository equality.
 
-CI, review, independent audit, mergeability, and repository-host evidence remain bound to the implementation identity they actually observed. A later control-only Repository HEAD advance does not invalidate that evidence when semantic implementation equivalence is proven and no task requirement invalidates the tested implementation.
+Semantic CI/test results, code-review conclusions, and independent-audit conclusions remain bound to the implementation identity they actually observed. A later control-only Repository HEAD advance does not invalidate those semantic conclusions when semantic implementation equivalence is proven and no task requirement invalidates the tested implementation.
+
+Repository-host gate state is a separate live constraint. Required status checks, required reviews, mergeability/conflicts, merge queue, branch-protection/ruleset requirements, current-base rules, and latest-head rules must be read from the host for the current literal identity they govern. Semantic equivalence does not by itself make those gates pass, and older host-gate state must not be reported as current unless the host accepts it for the current gate.
+
+If the host requires a check or review on the latest literal PR head, satisfy that host requirement even when implementation content is semantically unchanged. That obligation does not mean the implementation itself changed or that unrelated semantic verification must be repeated.
 
 Do not create additional control commits solely to write transient evidence states such as `CI PASS`, `audit PASS`, `merge-ready`, `merged`, or `closeout complete`. Prefer live GitHub/CI evidence for those facts.
 
-Fresh CI is required when implementation-relevant content changes or when another existing verification rule independently requires it. Real source/config/test/workflow/schema/migration/dependency/runtime-authority changes remain implementation changes.
+Fresh semantic CI/test/audit evidence is required when implementation-relevant content changes or when another existing verification rule independently requires it. Real source/config/test/workflow/schema/migration/dependency/runtime-authority changes remain implementation changes.
 
 ## Merge-readiness and lazy control reconciliation
 
-After implementation gates pass, merge the already verified implementation. Do not make a post-audit or post-CI control-only commit a prerequisite for merge.
+After semantic implementation gates pass, merge only when the current repository-host gates also pass. Do not make a post-audit or post-CI control-only commit a prerequisite for merge.
 
 Post-merge control updates are lazy/batched by default. A merge does not require an immediate `CURRENT_STATUS.md` or `CURRENT_TASK.md` commit merely to memorialize the lifecycle event.
 
@@ -83,7 +91,7 @@ At the next meaningful planning boundary, one control transition may both:
 - reconcile the accepted state of the previous task; and
 - authorize the next task.
 
-This reduces sequences such as `implementation -> status commit -> CI -> status commit -> audit -> task commit -> merge -> closeout commit -> next task commit` to `authorize -> implement -> verify -> audit -> merge -> next-task reconciliation`.
+This reduces sequences such as `implementation -> status commit -> CI -> status commit -> audit -> task commit -> merge -> closeout commit -> next task commit` to `authorize -> implement -> verify -> audit -> live host-gate check -> merge -> next-task reconciliation`.
 
 ## Workspace lifecycle
 
@@ -130,7 +138,7 @@ The task-start source at Repository HEAD `1a450aacb301e7c5a25dd88d17749911536d98
 
 ### Scenario A — post-audit status update: RED
 
-Current `verification-tiers.md` says a post-freeze source/status/task/documentation commit changes the identity being verified. Therefore a `CURRENT_STATUS.md`-only commit after CI/audit can force a new exact-head cycle even when implementation is unchanged. Required result: `CONTROL_ONLY_DRIFT`, no CI/audit restart.
+Current `verification-tiers.md` says a post-freeze source/status/task/documentation commit changes the identity being verified. Therefore a `CURRENT_STATUS.md`-only commit after CI/audit can force a new exact-head cycle even when implementation is unchanged. Required result: `CONTROL_ONLY_DRIFT`, no semantic CI/audit restart. Repository-host gates remain separately live if the host keys them to the later literal head.
 
 ### Scenario B — post-merge closeout record: RED / ambiguous
 
@@ -142,7 +150,7 @@ Current control-plane language requires material lifecycle events to be reconcil
 
 ### Scenario D — real source drift: existing guard to preserve
 
-A source/config/test/schema/workflow change after audit remains a real delivery change. Required result: `DELIVERY_HEAD_CHANGE`; exact-head evidence invalidated; fresh verification required.
+A source/config/test/schema/workflow change after audit remains a real delivery change. Required result: `DELIVERY_HEAD_CHANGE`; exact implementation evidence invalidated; fresh verification required.
 
 ### Scenario E — material task authorization change: existing guard to preserve
 
@@ -171,12 +179,13 @@ The change is accepted only if all of the following hold consistently across the
 
 1. `CURRENT_STATUS.md` / `CURRENT_TASK.md` remain available and authoritative controls.
 2. Their commit SHAs are not implementation identity by default.
-3. Control-only commits do not by themselves invalidate CI.
-4. Control-only commits do not by themselves invalidate independent audit.
+3. Control-only commits do not by themselves invalidate semantic CI/test conclusions.
+4. Control-only commits do not by themselves invalidate independent audit conclusions.
 5. Control-only commits do not reopen lifecycle closeout.
 6. Control-only commits do not trigger HEAD-drift STOP.
 7. Semantic tree equivalence excludes exactly the two control paths.
-8. Real implementation-relevant changes still invalidate exact-head evidence when appropriate.
+8. Real implementation-relevant changes still invalidate exact implementation evidence when appropriate.
 9. Material task-authorization changes remain enforced.
 10. `AGENTS.md` and other implementation/governance-relevant paths are not silently excluded.
-11. No new governance runtime/infrastructure is introduced merely for this rule.
+11. Repository-host gates remain live literal constraints for the identity the host governs, and `HOST_GATE_PASS` is never inferred solely from semantic-tree equivalence.
+12. No new governance runtime/infrastructure is introduced merely for this rule.
