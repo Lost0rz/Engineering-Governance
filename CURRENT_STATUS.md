@@ -4,9 +4,21 @@ Last verified: 2026-10-13.
 
 ## Published release baseline
 
-Formal GitHub Plugin release remains `plugin-v0.5.3` at source `255bd32b1414a9555a7280d6e7562411ed3c7d96` until Task 057 completes.
+Formal GitHub Plugin release is now `plugin-v0.5.4`.
 
-## Accepted v0.5.4 distribution state
+- Release title: `Engineering Governance Plugin v0.5.4`
+- Frozen publication source: `3e028cdbe21e9637cbf7bf9b00a5664d44c272c0`
+- GitHub Actions run: `38346638985` — `success`
+- Release asset: `engineering-governance-plugin.zip`
+- Asset size: `64200` bytes
+- SHA-256: `2a39d1bf705b56b53f2514b5bb8012380606278989afabdc4f3c7424dd0f0367`
+- Package file entries: `29`
+- Included top-level Skills: `project-governance`, `domain-navigation`, `incident-doctor`
+- The release ZIP contains only `plugin.json` and `skills/**`; repository controls, docs, marketplace catalogs, and workflows are not packaged.
+
+Historical `plugin-v0.5.3` remains immutable publication evidence and is not moved or replaced.
+
+## Accepted v0.5.4 governance and distribution state
 
 - Accepted governance semantics from PR #18 are merged at `999c649e499f69bffe7bf870f38e953a0abd59af`.
 - Portable root `plugin.json` version `0.5.4` was integrated by PR #19 at `9a4025c69fdfc42ba8f35df28f638f89dbe96c51`.
@@ -17,21 +29,18 @@ Formal GitHub Plugin release remains `plugin-v0.5.3` at source `255bd32b1414a955
 
 ## Active development state
 
-Active authorized task: `EG-PLUGIN-V0.5.4-FORMAL-RELEASE-057`.
+Task `EG-PLUGIN-V0.5.4-FORMAL-RELEASE-057` is complete.
 
-Current phase: formal GitHub release publication authorized.
+The formal release operation added the one-shot release workflow and published the already accepted payload; it did not change Plugin semantics, add a fourth Skill, change Web/local authority, or mutate local caches/sources.
 
-The task may add only the one-shot release workflow needed to verify and publish the already accepted 0.5.4 payload. It does not authorize new Skill semantics, a fourth Skill, Plugin manifest version change, marketplace behavior change, or local cache/source mutation.
+## Current v0.5.4 alignment
 
-## Release target
-
-- Tag: `plugin-v0.5.4`
-- Release title: `Engineering Governance Plugin v0.5.4`
-- Asset: `engineering-governance-plugin.zip`
-- Package contents: `plugin.json` plus `skills/**` files only
-- Expected top-level Skills: `project-governance`, `domain-navigation`, `incident-doctor`
-- Expected package file entries: `29`
+- Repository portable manifest: `0.5.4`
+- Formal GitHub release: `plugin-v0.5.4`
+- ChatGPT Web Plugin: `0.5.4`
+- Mac mini canonical Codex authority: `0.5.4`
+- MacBook Air canonical Codex authority: `0.5.4`
 
 ## Next intended milestone
 
-Publish `plugin-v0.5.4` through the repository one-shot release workflow, verify the GitHub Actions run, immutable tag identity, release asset size/digest/entry count, and then reconcile Task 057 complete.
+No further v0.5.4 publication or distribution work is required. The next meaningful Engineering-Governance task should start from this accepted baseline.
