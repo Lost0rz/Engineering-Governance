@@ -19,7 +19,8 @@ The project-local `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` have d
 - Keep the active authorization in `CURRENT_TASK.md`. If the objective or scope materially changes, stop the affected work, update the task contract, and obtain re-authorization before continuing. Ordinary evidence discovery inside the accepted objective does not by itself change the task.
 - A newly verified status fact does not itself modify task authorization. If that fact changes or invalidates a `CURRENT_TASK.md` prerequisite, acceptance criterion, STOP condition, allowed side effect, explicit head lock, or authorization boundary, stop state-changing work and reconcile and re-authorize `CURRENT_TASK.md` before continuing. If the task-owned conditions are unaffected, the status refresh does not require a task rewrite.
 - Update only the control whose owned information changed. Reading the controls at task start does not imply they must be rewritten. A handoff may update task state and the status snapshot when their respective owned facts materially need durable reconciliation; it does not grant the executor independent acceptance authority.
-- CI, review, independent audit, mergeability, and repository-host checks are external evidence, not control-owned facts that must always be written back. Do not create control commits solely to memorialize `CI PASS`, `audit PASS`, `merge-ready`, `merged`, or `closeout complete`. Report those from live evidence unless a genuinely durable owned fact needs reconciliation.
+- CI/test results, code review, independent audit, mergeability, required status checks, required reviews, and other repository-host checks are external evidence, not control-owned facts that must always be written back. Do not create control commits solely to memorialize `CI PASS`, `audit PASS`, `merge-ready`, `merged`, or `closeout complete`. Report those from live evidence unless a genuinely durable owned fact needs reconciliation.
+- Keep semantic verification evidence separate from repository-host gate state. Semantic evidence may remain valid across proven `CONTROL_ONLY_DRIFT`; host gates such as required checks/reviews, current mergeability/conflicts, merge queue, current-base, or latest-head requirements must be read from the live repository host for the literal identity the host governs.
 
 ## Control-only drift and delivery identity
 
@@ -32,7 +33,9 @@ CHANGE_CLASS: CONTROL_ONLY_DRIFT
 DELIVERY_IDENTITY_CHANGED: NO
 ```
 
-That classification must not by itself trigger `STOP_HEAD_DRIFT`, task restart, new construction branch, fresh CI, fresh independent audit, exact-head invalidation, merge-readiness reset, source re-verification, or workspace-closeout reopen.
+That classification must not by itself trigger `STOP_HEAD_DRIFT`, task restart, new construction branch, fresh semantic CI/test run, fresh independent audit, semantic exact-head invalidation, source re-verification, or workspace-closeout reopen.
+
+It also must not be used to infer that current repository-host merge gates remain satisfied. If the host binds a required check, review, conflict state, mergeability decision, merge-queue condition, current-base condition, or latest-head rule to the later literal identity, re-read and satisfy that live gate.
 
 If a control-file content change materially changes authorization or another task-owned condition, obey that new content before further mutation. This is an authorization effect, not a claim that application/delivery identity changed.
 
@@ -45,7 +48,7 @@ Any mixed control+implementation commit, material `AGENTS.md` durable-rule chang
 - Post-merge control reconciliation is lazy/batched by default. Do not automatically create a status/task commit merely to record that a merge or closeout occurred. When the next meaningful planning boundary arrives, one control transition may both reconcile the accepted state of Task A and authorize Task B, provided fresh evidence establishes Task A's terminal/accepted state and the new Task B authorization is otherwise valid.
 - Therefore a healthy sequence may be `authorize -> implement -> verify -> audit -> merge -> next-task reconciliation`, rather than inserting control-only commits between each external lifecycle event.
 - When task branches/worktrees or equivalent workspaces are used, the terminal task event and physical workspace disposition remain separate facts. Apply [Workspace lifecycle and closeout](workspace-lifecycle.md) for safe removal, explicit retention, write-capability boundaries, unique-work preservation, and closeout evidence. A later control-only main advance after verified physical closeout does not reopen that closeout.
-- At a final implementation merge gate, control reconciliation must not create an evidence loop. Freeze Delivery / Semantic HEAD (or an explicitly required literal Repository HEAD), run the required live evidence, and merge the already verified implementation. A later control-only Repository HEAD advance is non-invalidating when semantic-tree equivalence passes and no task-owned condition invalidates the evidence.
+- At a final implementation merge gate, control reconciliation must not create an evidence loop. Freeze Delivery / Semantic HEAD (or an explicitly required literal Repository HEAD), establish the required semantic evidence, then read the current repository-host gate state separately. A later control-only Repository HEAD advance is non-invalidating for semantic implementation evidence when semantic-tree equivalence passes and no task-owned condition invalidates that evidence; any host requirement bound to the current literal PR/head/base still must pass before merge.
 
 ## Next-task reconciliation pattern
 
