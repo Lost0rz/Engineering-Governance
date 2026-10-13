@@ -12,21 +12,15 @@ Formal GitHub Plugin release remains `plugin-v0.5.5`.
 - Mac mini Codex accepted Plugin baseline: `0.5.5`.
 - MacBook Air Codex accepted Plugin baseline: `0.5.5`.
 
-No v0.6.0 release or installed-Plugin acceptance has been performed yet.
+No v0.6.0 release or installed-Plugin acceptance has been performed.
 
-## v0.6.0 capability-model source — REMOTE SOURCE COMPLETE
+## v0.6.0 architecture — ACTIVE COMPLETION
 
-Task `EG-CAPABILITY-MODEL-V060-061` completed the remote reusable-source construction and audit on branch `codex/capability-model-v0.6.0`.
+Task `EG-CAPABILITY-ARCHITECTURE-COMPLETION-062` is active on branch `codex/capability-model-v0.6.0` and PR #26 remains OPEN / DRAFT / UNMERGED.
 
-- Start Repository HEAD: `3b8d99c3dba13ca01098abade5c6e696454ddd10`.
-- Delivery / Semantic HEAD for the completed source framework: `c97d3cef13ac5546bf00d9d1eb4d620c88ffad57`.
-- Pull request: `#26` — OPEN / DRAFT / UNMERGED.
-- PR host mergeability observed at source-audit time: `mergeable=true`.
-- CI/check statuses on source head: none reported; **do not classify this as CI PASS**.
+Task 061 established the initial seven-Skill source skeleton and basic routing. The current task completes the internal architecture before any installed Plugin/runtime acceptance.
 
-## Accepted v0.6.0 source capability model
-
-Exactly seven top-level Skills are present on the task branch:
+Exactly seven top-level Skills remain the target model:
 
 1. `project-governance`
 2. `solution-design`
@@ -38,54 +32,34 @@ Exactly seven top-level Skills are present on the task branch:
 
 Global routing remains policy, not an eighth Skill.
 
-Accepted source semantics:
+## Architecture gap found after Task 061
 
-- Project Governance remains the normal project/repository authority/lifecycle entry.
-- Solution Design is conditional for materially ambiguous/cross-boundary design decisions and does not authorize implementation.
-- Execution Orchestrator controls already-authorized execution topology, prefers one executor/parallel readers, requires proven-disjoint authority for multiple writers, and forbids silent model escalation.
-- Agent Handoff defines `authority references + fresh delta + action boundary + return contract`; handoff requests/receipts do not become task/status authority and should not copy full controls/rules by default.
-- Evidence Audit binds findings to explicit target/range/identity, distinguishes `BLOCKING / IMPORTANT / MINOR / UNKNOWN`, and keeps semantic evidence separate from live repository-host gates.
-- Domain Navigation ownership remains conditional semantic/source/test routing.
-- Incident Doctor keeps its evidence-gap entry gate while adding bounded systematic diagnosis techniques; it is not expanded to every ordinary bug.
-- Universal mandatory TDD, unconditional subagent-per-task dispatch, mandatory worktree creation, and automatic high-model escalation are explicitly not part of Engineering Governance.
+The outer routing/source skeleton is present, but some reusable internal Project Governance references still reflect the former three-Skill lifecycle. In particular, the normal development flow does not yet explicitly compose Solution Design, Execution Orchestrator, Agent Handoff, and Evidence Audit through the task lifecycle.
 
-## External-reference audit
+Task 062 therefore owns cross-Skill integration rather than local acceptance.
 
-Durable design/research authority: `documents/engineering-governance-capability-model-v0.6.0.md`.
+## Accepted sequencing decision
 
-Conceptual references recorded in `references/UPSTREAMS.md` include Superpowers, GitHub Spec Kit, OpenAI Agents SDK, LangGraph supervisor patterns, OpenHands, SWE-agent, reviewdog, OpenSSF Scorecard, and SLSA. No external runtime dependency or copied upstream implementation was introduced.
+The current v0.6.0 sequence is:
 
-## Remote verification result
+`complete full architecture -> freeze source architecture -> integrated remote audit -> consolidated installed Plugin/Web/Codex acceptance -> merge/release preparation`
 
-`V2 source/routing audit: PASS` for the remote reusable-source framework.
+Do not create separate acceptance milestones for each new Skill while architecture remains in motion. Bounded static consistency checks during construction are allowed; installed Plugin/runtime acceptance is deferred until architecture freeze.
 
-Verified:
+## Current architecture work packages
 
-- exact seven-Skill directory set;
-- new Skill frontmatter/trigger/authority boundaries;
-- managed global routing and adoption contract updated for seven Skills;
-- root repository rules and README updated from the former three-Skill model;
-- handoff non-authority and anti-duplication contract present;
-- execution model/parallelism boundaries and no-silent-escalation rule present;
-- evidence identity/host-gate separation present;
-- Incident Doctor evidence gate preserved;
-- no new runtime/daemon/database/automatic enforcement surface;
-- historical `release-plugin-v0.5.5.yml` unchanged.
+- WP6 — end-to-end capability composition and Project Governance lifecycle integration.
+- WP7 — execution/orchestration and handoff operational contracts.
+- WP8 — evidence-audit, design convergence, and artifact-authority integration.
+- WP9 — Skill Engineering quality/routing discipline without a new top-level Skill.
+- WP10 — one integrated acceptance matrix for the frozen architecture; define now, execute later.
 
 ## Active problems and blockers
 
-No blocking remote source defect is known from Task 061 audit.
+No blocking source defect is currently known. The known gap is architectural completeness, not Plugin runtime failure.
 
-Remaining acceptance gap: installed Plugin discovery/routing/runtime behavior for v0.6.0 has not yet been verified on local Codex/Web surfaces. PR #26 should remain Draft until that separate acceptance work is completed or the user explicitly chooses another integration boundary.
+PR #26 must remain Draft until Task 062 finishes and the later consolidated acceptance task verifies the frozen architecture.
 
 ## Next intended milestone
 
-Run a separate local Plugin/runtime acceptance task against PR #26 / source semantic head `c97d3cef13ac5546bf00d9d1eb4d620c88ffad57`, verify all seven Skills are discoverable and the new routing/handoff behavior works as intended, then return defects to the remote source flow or proceed to final merge/release preparation.
-
-## Task 061 control alignment
-
-- Related document: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Document alignment: `UNCHANGED` — implementation matches the accepted durable capability design; the design document is not a live progress log.
-- `CURRENT_STATUS.md`: `UPDATED` — remote source completion, PR state, audit result, and remaining local-acceptance gap are now current.
-- `CURRENT_TASK.md`: `UPDATED` — Task 061 is terminal as a remote reusable-source construction task.
-- Control alignment: `PASS`.
+Finish WP6–WP10, perform one final remote source-architecture audit, freeze the resulting Delivery / Semantic HEAD, then hand off a single consolidated v0.6.0 acceptance task.
