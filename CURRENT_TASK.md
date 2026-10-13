@@ -6,7 +6,7 @@ Repository: `Lost0rz/Engineering-Governance`
 
 Task ID: `EG-MANDATORY-CONTROL-CLOSEOUT-058`
 
-State: `ACTIVE_IMPLEMENTATION`
+State: `READY_FOR_INDEPENDENT_AUDIT`
 
 Mode: bounded governance-contract correction
 
@@ -21,23 +21,23 @@ Prevent governed tasks from leaving `CURRENT_STATUS.md` and `CURRENT_TASK.md` ma
 - Existing `CONTROL_ONLY_DRIFT` semantics remain accepted: changes limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` do not change Delivery / Semantic HEAD.
 - Existing repository-host gates remain separate live constraints for the literal identity the host governs.
 
-## Problem being corrected
+## Problem corrected
 
-The current Project Governance contract explicitly allows routine lifecycle reconciliation to be lazy/batched and tells agents not to write controls merely because merge/closeout/lifecycle evidence changed. In repeated real project use this permits completed work to leave `CURRENT_STATUS.md` / `CURRENT_TASK.md` stale, causing repeated execution cards, obsolete task state, and incorrect next-step reasoning.
+The prior Project Governance contract explicitly allowed routine lifecycle reconciliation to be lazy/batched and told agents not to write controls merely because merge/closeout/lifecycle evidence changed. In repeated real project use this permitted completed work to leave `CURRENT_STATUS.md` / `CURRENT_TASK.md` stale, causing repeated execution cards, obsolete task state, and incorrect next-step reasoning.
 
-## Required semantics
+## Implemented semantics
 
-1. Every governed task closeout must perform a control-reconciliation check before reporting the task fully closed.
+1. Every governed handoff/closeout performs a control-reconciliation check before reporting the task fully closed.
 2. For state-changing work, if verified control-owned facts changed, reconcile the affected controls before the final closeout receipt:
    - `CURRENT_STATUS.md` reflects the verified current project/delivery state and next milestone;
-   - `CURRENT_TASK.md` reflects the actual active, handoff, blocked, or terminal task state.
-3. Do not copy raw CI/review/merge event history into controls. Write only the durable/current-state consequence owned by the control.
-4. A control-only reconciliation commit remains `CONTROL_ONLY_CHANGE` / `CONTROL_ONLY_DRIFT`; it must not by itself invalidate already-valid semantic implementation evidence or reopen verified workspace closeout.
-5. Strict read-only work remains non-mutating. It must still perform the closeout check and explicitly report any required control reconciliation rather than silently leaving stale controls.
-6. Final governed receipts must expose whether the closeout reconciliation was completed, not required, or blocked, and whether `CURRENT_STATUS.md` / `CURRENT_TASK.md` were updated.
-7. Global routing remains selection-only: it should make task closeout a Project Governance trigger without duplicating the closeout procedure.
+   - `CURRENT_TASK.md` reflects the actual active, handoff, blocked, or terminal task state/current stop point.
+3. Raw CI/review/merge event history is not copied into controls. Only the durable/current-state consequence owned by the control is written.
+4. A control-only reconciliation commit remains `CONTROL_ONLY_CHANGE` / `CONTROL_ONLY_DRIFT`; it does not by itself invalidate already-valid semantic implementation evidence or reopen verified workspace closeout.
+5. Strict read-only work remains non-mutating, but it still performs the closeout check and reports required reconciliation explicitly when controls are stale.
+6. Final governed receipts expose the control-reconciliation result and whether `CURRENT_STATUS.md` / `CURRENT_TASK.md` were updated, not required, or blocked.
+7. Global routing remains selection-only, while `project-governance` remains active through governed handoff/closeout.
 
-## In scope
+## In scope completed
 
 - Root `AGENTS.md` durable repository rule.
 - `skills/project-governance/SKILL.md` lifecycle behavior.
@@ -45,36 +45,52 @@ The current Project Governance contract explicitly allows routine lifecycle reco
 - `skills/project-governance/references/development-flow.md` normal closeout sequence.
 - `skills/project-governance/assets/templates/CURRENT_STATUS.md`.
 - `skills/project-governance/assets/templates/CURRENT_TASK.md`.
-- `skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md` only for concise closeout routing/triggering.
+- `skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md` concise closeout routing/triggering.
 - Root control-plane reconciliation for this task.
 
-## Out of scope
+## Out of scope preserved
 
-- Plugin version bump or formal release.
-- ChatGPT Web Plugin publication/update.
-- Mac mini / MacBook Air installation or cache/source mutation.
-- Automatic file-mutating runtime, hook, daemon, service, database, installer, or fourth Skill.
-- Changes to Gift, Merloom, InvestDesk, or other target-project repositories.
+- No Plugin version bump or formal release.
+- No ChatGPT Web Plugin publication/update.
+- No Mac mini / MacBook Air installation or cache/source mutation.
+- No automatic file-mutating runtime, hook, daemon, service, database, installer, or fourth Skill.
+- No changes to Gift, Merloom, InvestDesk, or other target-project repositories.
 
-## Verification level, cadence, and rationale
+## Verification level, cadence, and result
 
-`V0` — governance/documentation semantics only. Verify exact changed paths, removal of conflicting lazy/batched closeout language, preservation of control-only Delivery/Semantic HEAD semantics, consistency across Skill/reference/templates/routing, and no release/runtime scope expansion.
+`V0` — governance/documentation semantics only.
 
-## Acceptance criteria
+Fresh self-audit result before this control-only handoff reconciliation:
 
-- The normal governed flow cannot report a state-changing task fully closed while materially stale controls remain unreconciled and writable.
-- `CURRENT_STATUS.md` / `CURRENT_TASK.md` remain synchronization/control surfaces rather than application delivery identity.
-- External event logs are not copied into controls merely for history.
-- Read-only work has an explicit non-mutating exception with a visible reconciliation result.
-- Global routing remains concise and delegates closeout procedure to `project-governance`.
-- No fourth Skill or runtime enforcement subsystem is introduced.
+- Source/governance candidate: `608038451c0554d493fa1bff239e1582d5eb0b45`.
+- Authorization/main baseline: `72042f4157389520c7acd754cab5272a3cfdab85`.
+- Branch was `ahead 9 / behind 0` at the source candidate.
+- Exact changed paths were limited to the nine authorized governance/control surfaces.
+- `plugin.json` remained exactly version `0.5.4`.
+- No `domain-navigation` or `incident-doctor` source changed.
+- No fourth Skill or runtime enforcement subsystem was introduced.
+- Conflicting normal lazy/batched closeout semantics were replaced by mandatory handoff/closeout reconciliation; legacy delayed reconciliation remains only as an explicit recovery case.
+- `CONTROL_ONLY_DRIFT` / Delivery-Semantic-HEAD separation remains intact.
+
+## Acceptance status
+
+- Mandatory closeout check: implemented.
+- State-changing control reconciliation: implemented.
+- Current-state-not-history boundary: preserved.
+- Strict read-only exception: implemented.
+- Concise final receipt contract: implemented.
+- Global routing anti-duplication boundary: preserved.
+- Delivery / Semantic HEAD separation: preserved.
+- Independent audit: pending.
 
 ## Stop conditions
 
-- Any change would require automatic global-file mutation or a new runtime enforcement subsystem.
-- The proposed closeout rule would invalidate `CONTROL_ONLY_DRIFT` / Delivery-Semantic-HEAD separation.
-- Main advances with non-control changes before source integration and the branch cannot be safely reconciled.
+- Do not merge before independent audit of the exact source/governance candidate and its later control-only drift.
+- Do not bump/publish a Plugin version or mutate local installed authorities in this task.
+- If `main` advances with non-control changes before merge, re-evaluate the branch relationship before integration.
 
 ## Handoff / current stop point
 
-Implement and self-audit the source-only governance correction on `codex/mandatory-control-closeout-058`. Do not publish a new Plugin version or mutate local installed authorities in this task.
+Reusable/governance source construction is complete for this bounded correction at Delivery / Semantic candidate `608038451c0554d493fa1bff239e1582d5eb0b45`.
+
+This control update is the required handoff reconciliation and is control-only. The next authorized milestone is an independent audit on the Draft PR. Merge, Plugin versioning/publication, ChatGPT Web update, and Mac mini/MacBook Air deployment remain unapproved.
