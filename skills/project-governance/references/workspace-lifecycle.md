@@ -110,7 +110,7 @@ A safe closeout establishes, in order:
 7. repository/worktree metadata pruning or equivalent maintenance when applicable;
 8. post-closeout verification of the remaining relevant workspace set.
 
-Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made.
+Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made. Before the overall state-changing execution claims a final successful handoff, also complete the Control Alignment Gate from [Control plane roles, updates, and lifecycle reconciliation](control-plane.md); workspace closeout and control alignment are separate required claims.
 
 ## Control-only main advance after closeout
 
@@ -164,7 +164,7 @@ A remote/Web auditor may determine the expected lifecycle outcome; the local exe
 
 ## Handoff evidence
 
-Keep closeout output concise. When workspace lifecycle is material, report the verified equivalents of:
+Keep closeout output concise. When workspace lifecycle is material, report the verified equivalents of the workspace fields below. For every final successful **state-changing** governed handoff, also report the control-alignment fields even when some workspace fields are not applicable.
 
 ```text
 TASK_ID: <id>
@@ -177,10 +177,17 @@ LOCAL_BRANCH_DISPOSITION: <removed | retained | not applicable | unresolved>
 REMOTE_BRANCH_DISPOSITION: <removed | retained | not applicable | unresolved>
 RETAIN_UNTIL: <event/decision, if retained>
 UNCLASSIFIED_RELEVANT_WORKSPACES: <count or unresolved>
+RELATED_DOCUMENT: <path | NONE>
+DOCUMENT_ALIGNMENT: <UPDATED | UNCHANGED | NOT_APPLICABLE>
+CURRENT_STATUS_RECONCILIATION: <UPDATED | UNCHANGED>
+CURRENT_TASK_RECONCILIATION: <UPDATED | UNCHANGED>
+CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION>
 FINAL_STATE: <project-specific result>
 ```
 
-Do not require fields that the project does not use. The purpose is to make the next task able to distinguish a clean baseline from retained, write-capable, frozen/read-only, or unresolved lifecycle state without reconstructing history.
+Do not require workspace fields that the project does not use. The purpose of the workspace fields is to make the next task able to distinguish a clean baseline from retained, write-capable, frozen/read-only, or unresolved lifecycle state without reconstructing history. The control-alignment fields serve a different purpose: they prove the executor checked whether durable planning/status/task semantics still match reality rather than silently omitting that check.
+
+Strict read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` with stale/match detail and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY` instead of modifying controls.
 
 ## Stop conditions
 

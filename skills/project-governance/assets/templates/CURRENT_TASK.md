@@ -10,6 +10,10 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 [One concrete outcome with an observable boundary. Do not combine unrelated objectives.]
 
+## Planning context
+
+[When this task implements part of a durable plan/design, record: `Related document`, `Document section / work package`, `Document revision basis`, and `Relationship to plan`. The revision basis is provenance by default, not an implicit Repository HEAD or Delivery / Semantic HEAD equality lock. When no durable document is justified, state `Related document: NONE — standalone task`. A planning document supplies durable rationale/design; it does not authorize execution or own live task progress.]
+
 ## Affected domains
 
 [Use accepted business/product/domain/capability authorities and any useful derived navigation projection. State `unknown` or `not established` when ownership cannot be verified. Do not require a literal `DOMAIN_MAP.md`.]
@@ -32,7 +36,7 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Known evidence
 
-[Relevant sources, identities/revisions, observations, and freshness basis. Keep inference separate from verified facts.]
+[Relevant sources, identities/revisions, observations, planning basis, and freshness basis. Keep inference separate from verified facts.]
 
 ## Risk and rationale
 
@@ -48,10 +52,10 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Stop conditions
 
-- [Baseline, evidence, authority, scope, workspace, or safety conditions that halt this task. In source-controlled projects, include a failed explicit semantic/literal head lock, task-relevant baseline/control relationship failure, a predecessor that remains able to write an overlapping authority, and unknown unique work when they cannot be resolved without destructive assumptions or parallel writers. A historical transition parent differing from a verified current control head is not by itself a stop condition. A Repository HEAD advance limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` is `CONTROL_ONLY_DRIFT` and is not by itself a delivery-identity stop; material changes to the task content remain authoritative and must be obeyed.]
+- [Baseline, evidence, authority, scope, planning-context, workspace, or safety conditions that halt this task. In source-controlled projects, include a failed explicit semantic/literal head lock, task-relevant baseline/control relationship failure, a predecessor that remains able to write an overlapping authority, and unknown unique work when they cannot be resolved without destructive assumptions or parallel writers. A historical transition parent or planning-document revision basis differing from a later verified revision is not by itself a stop condition. A Repository HEAD advance limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` is `CONTROL_ONLY_DRIFT` and is not by itself a delivery-identity stop; material changes to task content or linked-plan semantics remain authoritative and must be obeyed.]
 
 ## Handoff / current stop point
 
-[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition, current write capability if retained, explicit retention reason/release condition, and whether the latest lifecycle event is terminal for this task/phase. A merge or similarly named event does not itself prove terminal status or local closeout. A handoff does not itself mean independent review accepted the work.]
+[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition, current write capability if retained, explicit retention reason/release condition, and whether the latest lifecycle event is terminal for this task/phase. A merge or similarly named event does not itself prove terminal status or local closeout. A handoff does not itself mean independent review accepted the work. Before a final successful state-changing handoff, the Control Alignment Gate must reread and reconcile owned document/status/task semantics as needed and the receipt must report the alignment result.]
 
-Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues. Routine CI/review/audit/mergeability/lifecycle observations do not require a task-file write unless they materially change task-owned semantics.
+Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues. Routine CI/review/audit/mergeability/lifecycle observations do not require a task-file write unless they materially change task-owned semantics. Final state-changing handoff is different: it must explicitly check whether task-owned handoff/lifecycle semantics remain accurate and report `CURRENT_TASK_RECONCILIATION: UPDATED | UNCHANGED`.
