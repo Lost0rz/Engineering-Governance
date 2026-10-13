@@ -4,7 +4,7 @@ Last verified: [date/time, inspected sources or revisions, and freshness basis]
 
 ## Accepted baseline
 
-[Verified repository, branch/revision, or accepted project baseline. If a parent/transition revision is recorded for provenance, label that role explicitly rather than presenting it as the current baseline. Mark unavailable or stale values explicitly.]
+[Verified repository, branch/revision, and accepted project baseline. Distinguish literal Repository HEAD from Delivery / Semantic HEAD when that difference matters. A `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only Repository HEAD advance may leave delivery identity unchanged; record that explicitly rather than presenting every later repository SHA as a new implementation baseline. If a parent/transition revision is recorded for provenance, label that role explicitly rather than presenting it as the current baseline. Mark unavailable or stale values explicitly.]
 
 ## Current business or product milestone
 
@@ -32,4 +32,4 @@ Last verified: [date/time, inspected sources or revisions, and freshness basis]
 
 ## Freshness and verification basis
 
-[For material facts, state what was inspected, when, and what remains stale, unknown, or unresolved. This is a current snapshot, not a history log or backlog database; update it in place rather than appending past states.]
+[For material facts, state what was inspected, when, and what remains stale, unknown, or unresolved. A recorded SHA is provenance/audit evidence by default unless an explicit semantic or literal equality lock says otherwise. This is a current snapshot, not a history log or backlog database; update it in place rather than appending past states. Do not require an immediate status write merely because CI, review, audit, mergeability, merge, or another external lifecycle event changed; batch reconciliation when future reasoning materially needs it.]
