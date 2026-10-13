@@ -25,23 +25,43 @@ Historical `plugin-v0.5.3` and `plugin-v0.5.4` publication evidence remain immut
 
 ## Active development state
 
-Task `EG-MANDATORY-CONTROL-CLOSEOUT-058` is active on branch `codex/mandatory-control-closeout-058`, authorized from `main` at `72042f4157389520c7acd754cab5272a3cfdab85`.
+Task `EG-MANDATORY-CONTROL-CLOSEOUT-058` is `READY_FOR_INDEPENDENT_AUDIT` on branch `codex/mandatory-control-closeout-058`, authorized from `main` at `72042f4157389520c7acd754cab5272a3cfdab85`.
 
-The task corrects a control-lifecycle weakness introduced by the current lazy/batched reconciliation policy: completed governed work can leave `CURRENT_STATUS.md` / `CURRENT_TASK.md` materially stale until a later planning boundary.
+Reusable/governance source construction is complete at Delivery / Semantic candidate `608038451c0554d493fa1bff239e1582d5eb0b45`.
 
-Target behavior is mandatory closeout reconciliation after governed execution when control-owned facts changed, while preserving control-only delivery-identity semantics and avoiding raw lifecycle-event logging.
+The correction replaces the prior normal lazy/batched closeout behavior with a mandatory handoff/closeout reconciliation check:
+
+- reconcile `CURRENT_TASK.md` when the actual task state/current stop point materially changed;
+- reconcile `CURRENT_STATUS.md` when its project-state facts materially changed;
+- keep raw CI/review/merge events as evidence rather than chronological control history;
+- keep strict read-only work non-mutating while requiring visible stale-control reporting;
+- expose closeout reconciliation in the final receipt;
+- preserve `CONTROL_ONLY_DRIFT` so control-only reconciliation does not become application delivery identity or force semantic re-verification.
+
+## V0 self-audit basis
+
+Fresh source audit at `608038451c0554d493fa1bff239e1582d5eb0b45` established:
+
+- branch relationship: `ahead 9 / behind 0` from authorization main;
+- exactly nine changed governance/control paths;
+- root `plugin.json` unchanged at `0.5.4`;
+- no `domain-navigation` or `incident-doctor` source changes;
+- no fourth Skill, automatic mutation runtime, hook, daemon, service, database, or installer;
+- global managed routing remains selection-only and delegates procedure to `project-governance`;
+- control-only Delivery / Semantic HEAD separation remains intact.
+
+The subsequent handoff updates to `CURRENT_STATUS.md` / `CURRENT_TASK.md` are control-only and must be verified as such against the frozen source candidate before independent audit.
 
 ## Current scope boundary
 
-This is source-only governance work. It does not yet:
+This remains source-only governance work. It has not:
 
-- bump the Plugin version;
-- publish a new GitHub Plugin release;
-- mutate the ChatGPT Web Plugin;
-- mutate Mac mini or MacBook Air installed Plugin authorities;
-- modify target-project repositories;
-- add a fourth Skill, daemon, hook, installer, database, or automatic remediation runtime.
+- bumped the Plugin version;
+- published a new GitHub Plugin release;
+- mutated the ChatGPT Web Plugin;
+- mutated Mac mini or MacBook Air installed Plugin authorities;
+- modified target-project repositories.
 
 ## Next intended milestone
 
-Complete the V0 source correction and self-audit on `codex/mandatory-control-closeout-058`, then stop for independent audit before any merge, version bump, publication, or local deployment decision.
+Open a Draft PR for independent audit of `EG-MANDATORY-CONTROL-CLOSEOUT-058`. Merge, version bump, publication, global/local adoption, and target-project rollout remain later decisions after audit.
