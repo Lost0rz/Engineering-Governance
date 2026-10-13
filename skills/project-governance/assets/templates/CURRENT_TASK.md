@@ -2,7 +2,7 @@
 
 Task ID: [from the active authorization]
 
-State: [current authorized, execution, or handoff state]
+State: [current authorized, execution, handoff, blocked, or terminal state]
 
 Mode: [bounded execution, investigation, or other authorized mode]
 
@@ -52,6 +52,10 @@ Mode: [bounded execution, investigation, or other authorized mode]
 
 ## Handoff / current stop point
 
-[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition, current write capability if retained, explicit retention reason/release condition, and whether the latest lifecycle event is terminal for this task/phase. A merge or similarly named event does not itself prove terminal status or local closeout. A handoff does not itself mean independent review accepted the work.]
+[Required evidence, recipient or review state, next authorized milestone, and—when workspace lifecycle is material—the actual workspace disposition, current write capability if retained, explicit retention reason/release condition, and whether the latest lifecycle event is terminal for this task/phase. Keep this aligned with the actual current state: when execution reaches a verified handoff, blocked, or terminal boundary, do not leave the task recorded as an earlier active phase. A merge or similarly named event does not itself prove terminal status or local closeout. A handoff does not itself mean independent review accepted the work.]
 
-Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues. Routine CI/review/audit/mergeability/lifecycle observations do not require a task-file write unless they materially change task-owned semantics.
+## Closeout reconciliation
+
+[Before reporting this governed task fully closed, re-read the task-relevant repository/lifecycle state and reconcile this file if its owned state, handoff, authorization, workspace disposition, acceptance boundary, or stop point materially changed. Reconcile `CURRENT_STATUS.md` separately when its owned current-state facts changed. Do not copy routine CI/review/audit/merge events here merely as a history log; record only the task-owned consequence. If strict read-only mode prohibits control mutation, report the required reconciliation explicitly instead of silently treating stale controls as current.]
+
+Ordinary evidence discovery within the accepted objective does not expand scope or create a new task. A material objective or scope change requires updated task authorization before the affected work continues. Control-only reconciliation after execution does not by itself change Delivery / Semantic HEAD or invalidate already-valid semantic implementation evidence.
