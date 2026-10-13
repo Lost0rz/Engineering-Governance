@@ -26,7 +26,7 @@ Reduce governance noise globally by separating repository control-record changes
 
 Task branch: `codex/control-delivery-identity-055`.
 
-`FROZEN_IMPLEMENTATION_HEAD = 04a20a5ce05e28307ccf7a249acf83866493ffe0`
+`FROZEN_IMPLEMENTATION_HEAD = c8a9a4cc1ae99ca1e51f5422a8b2c1afa64c72e4`
 
 Lock type: **Delivery / Semantic HEAD**.
 
@@ -108,6 +108,6 @@ Required close verification:
 
 ## Handoff / current stop point
 
-The first independent audit found one Important repository-host-gate boundary defect; the bounded corrective is complete at semantic implementation candidate `04a20a5ce05e28307ccf7a249acf83866493ffe0`.
+The first independent audit found one Important repository-host-gate boundary defect; the bounded corrective is complete at semantic implementation candidate `c8a9a4cc1ae99ca1e51f5422a8b2c1afa64c72e4`.
 
 This `CURRENT_TASK.md` reconciliation intentionally advances literal Repository HEAD without changing that Delivery / Semantic HEAD. Verify the post-candidate diff is control-only, perform independent re-audit of the corrected contracts, and merge only if required semantic evidence remains valid **and** current repository-host gates pass. Do not publish a new Plugin release under this task and do not create later control commits solely to memorialize CI/review/audit/host-gate outcomes.
