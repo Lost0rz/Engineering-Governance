@@ -6,7 +6,7 @@ Repository: `Lost0rz/Engineering-Governance`
 
 Task ID: `EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060`
 
-State: `MINI_PASS_AIR_AUTHORIZED`
+State: `COMPLETE`
 
 Mode: bounded local Plugin convergence and global routing verification
 
@@ -26,12 +26,12 @@ Converge Mac mini and MacBook Air from local Plugin `0.5.4` to `0.5.5`, preservi
 - Current global routing template blob: `c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`.
 - v0.5.4 and v0.5.5 global routing templates are byte-identical.
 
-## Execution state
+## Completed execution
 
 1. Mac mini — `PASS_LOCAL_PLUGIN_055`.
 2. Mini receipt audit — `PASS`.
-3. MacBook Air — authorized now.
-4. Final dual-machine closeout — pending Air receipt.
+3. MacBook Air — `PASS_LOCAL_PLUGIN_055`.
+4. Final dual-machine convergence audit — `PASS`.
 
 ## Accepted Mac mini result
 
@@ -39,7 +39,6 @@ Converge Mac mini and MacBook Air from local Plugin `0.5.4` to `0.5.5`, preservi
 - Active authority count: `1`.
 - Active authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
 - Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
-- Installed payload matches frozen publication source.
 - Exactly three top-level Skills.
 - Planning-document linkage: `PASS`.
 - Control Alignment Gate: `PASS`.
@@ -54,33 +53,50 @@ Converge Mac mini and MacBook Air from local Plugin `0.5.4` to `0.5.5`, preservi
 - Manual cache mutation: `NO`.
 - Plugin source-directory mutation: `NO`.
 
-## Current authorized scope — MacBook Air only
+## Accepted MacBook Air result
 
-- Verify Air machine identity and Codex version.
-- Verify canonical personal marketplace source and active authority before mutation.
-- Upgrade through the supported Codex Plugin path only.
-- Verify Plugin `0.5.5`, exactly three top-level Skills, planning-document linkage, Control Alignment Gate, control-only drift semantics, Delivery / Semantic HEAD semantics, and separate repository-host gates.
-- Establish the authoritative global `AGENTS.md`.
-- Verify exactly one current managed routing block.
-- If the marker-bounded region already matches the current template, leave the global file unchanged.
-- If one older compatible block exists, replace only that managed region and preserve unrelated global guidance.
+- Plugin: `0.5.4 -> 0.5.5`.
+- Active authority count: `1`.
+- Active authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
+- Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
+- Exactly three top-level Skills.
+- Planning-document linkage: `PASS`.
+- Control Alignment Gate: `PASS`.
+- `CONTROL_ONLY_DRIFT`: `PASS`.
+- Delivery / Semantic HEAD: `PASS`.
+- Repository-host gate boundary: `PASS`.
+- Global agent authority: `/Users/jack7788/.codex/AGENTS.md`.
+- Managed routing markers: exactly one BEGIN and one END.
+- Managed routing template match: `PASS`.
+- Global routing reconciliation: `UNCHANGED`.
+- Unrelated global rules preserved: `PASS`.
+- Manual cache mutation: `NO`.
+- Plugin source-directory mutation: `NO`.
 
-## Out of scope
+## Scope integrity
 
-- Further Mini mutation unless later evidence requires explicit reconciliation.
-- Copying full Project Governance procedures into global `AGENTS.md`.
-- Editing project-local `AGENTS.md` solely for this local Plugin upgrade.
-- Adding a fourth Skill.
-- Manual active cache/source mutation.
-- Removing the personal marketplace.
-- Changing formal release or governance semantics.
+No full Project Governance procedures were copied into either global `AGENTS.md`. No project-local `AGENTS.md` was changed solely for this Plugin update. No fourth Skill was added. No manual active Plugin cache/source mutation was used. Formal release and governance semantics were not changed by this task.
 
-## Stop conditions
+## Verification result
 
-Stop Air if machine identity, global guidance authority, Plugin authority, marketplace source, or routing-marker state is ambiguous; if multiple/conflicting routing blocks exist; if supported Plugin update requires manual cache/source mutation; or if the installed payload does not contain exactly the expected three Skills.
+`V1 local distribution/configuration verification: PASS`.
 
-Do not stop merely because old 0.5.4 cache material disappears after the supported CLI update.
+Both machines now converge on the same canonical local Plugin authority and version, and both authoritative global routing blocks are singular and current.
 
-## Handoff / current stop point
+## Acceptance criteria
 
-Air is the only authorized local mutation target. After Air returns `PASS_LOCAL_PLUGIN_055`, perform final cross-machine audit and Control Alignment Gate.
+All Task 060 acceptance criteria are satisfied.
+
+## Handoff / terminal state
+
+Task 060 is complete. No further v0.5.5 local distribution or global-routing mutation is authorized or required under this task.
+
+Control Alignment Gate:
+
+- `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `CONTROL_ALIGNMENT`: `PASS`
+
+Next work must receive separate task authorization.
