@@ -42,7 +42,7 @@ Establish workspace facts independently; do not infer one dimension from another
 - **Worktree registration** — whether Git currently registers the worktree. Registration does not by itself prove the filesystem path is present and usable.
 - **Filesystem path identity** — whether the expected checkout path exists and resolves to the intended repository/worktree. A directory name alone does not prove Git registration or task authority.
 - **Storage authority** — when durable placement matters, whether the selected project-controlled workspace/state is on the canonical project's storage authority or on an explicitly declared project-local override.
-- **HEAD/revision** — the commit actually checked out in the selected workspace.
+- **HEAD/revision** — the commit actually checked out in the selected workspace. When freshness matters, distinguish literal Repository HEAD from Delivery / Semantic HEAD under [Control identity and freshness](control-identity.md).
 - **Working-tree state** — staged, unstaged, untracked, and local-only commit state. A clean remote PR does not prove local cleanliness.
 - **Write capability** — whether the retained workspace can resume writes under its current authorization without a new boundary.
 - **Overlapping authority** — which fact/state/policy/behavior authority the workspace can write relative to another current/proposed writer.
@@ -80,6 +80,8 @@ If a relevant predecessor writer is unresolved, its unique-work state is unknown
 
 A stale-looking path, old branch name, detached checkout, or merged remote PR alone is not enough evidence to delete, bypass, or treat a local workspace as non-writing.
 
+A Repository HEAD mismatch caused only by `CURRENT_STATUS.md` / `CURRENT_TASK.md` is different: classify it as `CONTROL_ONLY_DRIFT` when the changed path set proves that classification. It does not by itself make an otherwise accepted workspace stale, require a new construction workspace, or block selection. Material task-content changes remain authoritative and must still be obeyed.
+
 ## Lifecycle dispositions
 
 Use project-specific lifecycle names if they exist. At minimum, the evidence must distinguish these meanings:
@@ -109,6 +111,19 @@ A safe closeout establishes, in order:
 8. post-closeout verification of the remaining relevant workspace set.
 
 Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made.
+
+## Control-only main advance after closeout
+
+Once terminal authorization and physical workspace closeout have both been verified, a later canonical-main Repository HEAD advance limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is non-blocking lifecycle evidence:
+
+```text
+LIFECYCLE_STATE = CLOSED
+CONTROL_ONLY_MAIN_ADVANCE = NON_BLOCKING
+```
+
+Do not reopen the closed task, require a second worktree/branch cleanup, or classify the already-closed workspace as stale merely because those control records advanced main. This remains true only when the difference is proven control-only and the changed control content does not establish a new material obligation for that workspace.
+
+Any source/config/test/workflow/schema/migration/dependency/runtime-relevant change or other non-excluded path remains `DELIVERY_HEAD_CHANGE` and must be evaluated normally. This rule does not weaken unique-work preservation, predecessor-writer checks, storage authority, local/remote evidence, or explicit literal Repository HEAD locks.
 
 ## Explicit retention
 
@@ -143,7 +158,7 @@ After that baseline is established, normal tasks should use the bounded lifecycl
 
 ## Remote and local evidence
 
-Remote repository evidence can establish PR, remote branch/ref, commit, merge, and remote-ref state. It cannot by itself prove local branch existence, worktree registration/path existence, working-tree cleanliness, untracked files, local-only commits, or that a retained local workspace cannot resume writes under some separate local authorization. Local evidence is required for those claims.
+Remote repository evidence can establish PR, remote branch/ref, commit, merge, changed-path, semantic-tree, and remote-ref state. It cannot by itself prove local branch existence, worktree registration/path existence, working-tree cleanliness, untracked files, local-only commits, or that a retained local workspace cannot resume writes under some separate local authorization. Local evidence is required for those claims.
 
 A remote/Web auditor may determine the expected lifecycle outcome; the local executor establishes local workspace/unique-work facts. Claim a fully clean closeout only when the evidence covers both sides needed by that claim.
 
@@ -179,3 +194,5 @@ Stop destructive or conflicting state-changing work when any of these materially
 - closeout would leave the only durable/unique project state in unrelated temporary or convenience storage without an authorized retention rule;
 - remote and local evidence disagree on an identity needed for the cleanup decision;
 - cleanup would require force, overwrite, reset, or another destructive assumption not explicitly authorized by the project.
+
+A proven `CONTROL_ONLY_DRIFT` difference is not itself a workspace stop condition. If changed control content materially changes authorization, treat that content change under the control-plane contract rather than misclassifying the commit as delivery drift.
