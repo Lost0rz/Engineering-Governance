@@ -6,7 +6,7 @@ Repository: `Lost0rz/Engineering-Governance`
 
 Task ID: `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058`
 
-State: `AUDIT_PASS_WAITING_MERGE_DECISION`
+State: `COMPLETE`
 
 Mode: governed Project Governance contract update
 
@@ -18,100 +18,67 @@ Add the durable planning-document layer and a mandatory end-of-execution Control
 
 - Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
 - Document section / work package: `Implementation scope for Task 058`
-- Document revision basis: branch commit `290c112710aa3a078b60ef4d43e59c9d2de0086b`
-- Relationship to plan: Task 058 implements the reusable Project Governance source/template contract only. Plugin version bump, Web/local distribution, and formal `plugin-v0.5.5` release remain outside this task.
+- Document revision basis: `290c112710aa3a078b60ef4d43e59c9d2de0086b` as provenance.
+- Relationship to plan: Task 058 implemented the reusable Project Governance source/template contract only; Plugin 0.5.5 distribution/release remains a separate task.
 
-## Start baseline
+## Completed result
 
-- Literal repository baseline: `main` at `72042f4157389520c7acd754cab5272a3cfdab85`.
-- Accepted formal release baseline: `plugin-v0.5.4` published from frozen source `3e028cdbe21e9637cbf7bf9b00a5664d44c272c0`.
-- Accepted v0.5.4 semantics remain authoritative: `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD separation, and separate live repository-host gates.
-- Task branch: `codex/planning-doc-control-alignment-v055`.
+- Independently audited Delivery / Semantic HEAD: `eed269cab32ecdfb52da87627386bcc77a9e42c6`.
+- PR #22: `feat: add durable planning and control alignment gate`.
+- PR #22 final head before merge: `ac857f0fe80f406dff4001532e6dc2b424c06124`.
+- Movement from the audited semantic head to the final PR head was limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` and classified as `CONTROL_ONLY_DRIFT`.
+- Final merge method: squash.
+- Merge commit: `58f06da1d4e5d0e86d2cb17bd13aa786d7a22cc6`.
+- GitHub merge result: successful.
 
-## In scope
+The merged source establishes:
 
-- Define durable planning-document ownership and its relation to `AGENTS.md`, `CURRENT_TASK.md`, and `CURRENT_STATUS.md`.
-- Add optional Task-to-document planning context without requiring a planning document for standalone work.
-- Add a mandatory Control Alignment Gate for governed state-changing handoff/closeout.
-- Keep control writes conditional: update only when owned semantics changed; otherwise report `UNCHANGED`.
-- Require final receipts to report document/status/task alignment results.
-- Define strict read-only stale-control reporting without unauthorized mutation.
-- Update the Project Governance Skill, supporting references, root durable rule, and reusable templates needed to encode the design.
-- Verify acceptance scenarios A–G from the planning document at V0 documentation/governance level.
+- durable planning-document ownership without creating a fourth control file;
+- optional Task-to-document work-package linkage;
+- Status as current planning/project-position snapshot rather than detailed plan/history;
+- mandatory final Control Alignment Gate for governed state-changing handoff;
+- mandatory alignment checking with conditional writes;
+- explicit alignment results in successful state-changing receipts;
+- strict read-only stale-control reporting;
+- preserved v0.5.4 control-only identity and live repository-host-gate semantics.
 
-## Out of scope
-
-- Plugin manifest/version bump to `0.5.5`.
-- ChatGPT Web Plugin update.
-- Mac mini or MacBook Air Plugin update.
-- Formal `plugin-v0.5.5` GitHub release.
-- New fourth Skill, daemon, hook, service, database, installer, enforcement runtime, or automatic remediation.
-- Bulk migration of historical `docs/superpowers/**` records.
-- Forcing `documents/` into target projects that already have a verified durable planning authority elsewhere.
-
-## Source result
-
-- Draft PR: `#22` — `feat: add durable planning and control alignment gate`.
-- Final Delivery / Semantic HEAD for source audit: `eed269cab32ecdfb52da87627386bcc77a9e42c6`.
-- The branch adds the accepted durable design document and `planning-documents.md` reusable contract.
-- Project Governance Skill, control-plane, development-flow, workspace lifecycle receipt, root durable rule, and AGENTS/STATUS/TASK templates are updated.
-- `plugin.json` remains version `0.5.4`.
-- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
-
-## Verification level, cadence, and result
+## Verification and audit
 
 `V0 — control/documentation/layout`.
 
-Fresh V0 evidence:
+Verified before merge:
 
-- base `72042f4157389520c7acd754cab5272a3cfdab85` to branch source candidate changes only Task 058-authorized paths;
-- no Plugin version/distribution/release path changed;
-- top-level Skill count remains exactly `3`;
-- `plugin.json` remains `0.5.4`;
-- scenario audit A–G from the planning document passes by direct rule inspection:
-  - A: terminal/task-state change requires final alignment and owned control reconciliation;
-  - B: external evidence alone can remain `UNCHANGED` without evidence-only commits;
-  - C: multiple tasks may share one durable plan without using it as a progress tracker;
-  - D: durable-plan drift updates the plan and re-authorizes the task when authorization is affected;
-  - E: strict read-only stale controls are reported without mutation;
-  - F: status/task-only closeout remains `CONTROL_ONLY_DRIFT` and does not restart semantic verification;
-  - G: cross-session recovery order is `AGENTS -> STATUS -> TASK -> Related document`.
+- Task 058 changed paths stayed within authorized governance/design/template scope;
+- `plugin.json` remained `0.5.4`;
+- exactly three top-level Skills remained;
+- acceptance scenarios A–G passed by direct rule inspection;
+- independent Web source audit passed with no design-level blocker;
+- immediately before merge, `main` remained at the authorized base `72042f4157389520c7acd754cab5272a3cfdab85`;
+- PR #22 was mergeable;
+- repository branch protection reported no required status checks, and the PR head had no recorded commit statuses;
+- merge was executed with expected-head lock `ac857f0fe80f406dff4001532e6dc2b424c06124`.
 
-## Independent Web audit
+## Scope integrity
 
-Independent audit of PR #22 and the full diff against `main` found no design-level blocker.
+Task 058 did not:
 
-Verified boundaries:
+- bump `plugin.json` to `0.5.5`;
+- update ChatGPT Web Plugin;
+- update Mac mini or MacBook Air installed Plugin versions;
+- publish `plugin-v0.5.5`;
+- add a fourth Skill or any daemon/service/database/installer/runtime enforcement machinery;
+- bulk-migrate historical `docs/superpowers/**` records.
 
-- `main` remained at `72042f4157389520c7acd754cab5272a3cfdab85` during the audit;
-- PR source semantics are frozen at `eed269cab32ecdfb52da87627386bcc77a9e42c6`;
-- all later branch movement from that semantic head is limited to `CURRENT_STATUS.md` and `CURRENT_TASK.md` and is therefore `CONTROL_ONLY_DRIFT`;
-- planning documents remain non-control delivery/governance content;
-- final alignment is mandatory while writes remain conditional;
-- routine external evidence still does not force evidence-only control commits;
-- repository-host gates remain separate live constraints;
-- PR #22 remains OPEN / DRAFT / UNMERGED.
+## Terminal state
 
-Audit result: `PASS` for the Task 058 source contract.
+Task `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058` is complete.
 
-## Acceptance criteria
+The next milestone is a separately authorized Plugin `0.5.5` distribution/release task; it is not authorized by this completed task.
 
-Task 058 source construction and independent source audit satisfy the accepted design and V0 verification contract. Merge has not been performed.
-
-## Stop conditions
-
-- Do not merge PR #22 without an explicit merge decision.
-- Do not bump or publish Plugin `0.5.5` under Task 058.
-- Stop if new evidence shows that planning documents become competing authorization/progress authority, conditional writes became unconditional, planning documents are treated as control-only, or v0.5.4 host/identity semantics were weakened.
-
-## Handoff / current stop point
-
-PR #22 is OPEN / DRAFT / UNMERGED. Source audit is PASS; next action is an explicit merge decision.
-
-Control Alignment Gate after independent audit:
+## Control Alignment Gate — merge closeout
 
 - `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED` — audit found no durable-plan correction.
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED` — current project state now records audit PASS and merge-decision boundary.
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED` — task state advanced from waiting for audit to audit-pass waiting merge decision.
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED` — merge did not invalidate or alter the accepted durable plan.
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED` — current project state now records merged/accepted source.
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED` — task lifecycle advanced to terminal `COMPLETE`.
 - `CONTROL_ALIGNMENT`: `PASS`
