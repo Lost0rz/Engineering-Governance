@@ -25,7 +25,7 @@ Historical `plugin-v0.5.3` and `plugin-v0.5.4` publication evidence remain immut
 
 ## Active development state
 
-Task `EG-MANDATORY-CONTROL-CLOSEOUT-058` is `READY_FOR_INDEPENDENT_AUDIT` on branch `codex/mandatory-control-closeout-058`, authorized from `main` at `72042f4157389520c7acd754cab5272a3cfdab85`.
+Task `EG-MANDATORY-CONTROL-CLOSEOUT-058` is `READY_FOR_INDEPENDENT_AUDIT` on Draft PR #21, branch `codex/mandatory-control-closeout-058`, authorized from `main` at `72042f4157389520c7acd754cab5272a3cfdab85`.
 
 Reusable/governance source construction is complete at Delivery / Semantic candidate `608038451c0554d493fa1bff239e1582d5eb0b45`.
 
@@ -50,7 +50,7 @@ Fresh source audit at `608038451c0554d493fa1bff239e1582d5eb0b45` established:
 - global managed routing remains selection-only and delegates procedure to `project-governance`;
 - control-only Delivery / Semantic HEAD separation remains intact.
 
-The subsequent handoff updates to `CURRENT_STATUS.md` / `CURRENT_TASK.md` are control-only and must be verified as such against the frozen source candidate before independent audit.
+All branch movement after the frozen source candidate is intended to remain limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` handoff reconciliation and is re-verified before final reporting.
 
 ## Current scope boundary
 
@@ -64,4 +64,4 @@ This remains source-only governance work. It has not:
 
 ## Next intended milestone
 
-Open a Draft PR for independent audit of `EG-MANDATORY-CONTROL-CLOSEOUT-058`. Merge, version bump, publication, global/local adoption, and target-project rollout remain later decisions after audit.
+Independent audit of Draft PR #21. Merge, version bump, publication, global/local adoption, and target-project rollout remain later decisions after audit.
