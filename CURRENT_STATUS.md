@@ -34,9 +34,9 @@ Formal GitHub Plugin release is `plugin-v0.5.4`.
 
 ## Active development state
 
-Task `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058` has completed source construction and V0 scenario verification and is waiting for independent Web audit.
+Task `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058` has completed source construction, V0 scenario verification, and independent Web source audit.
 
-Final source Delivery / Semantic HEAD for the audit is:
+Final source Delivery / Semantic HEAD for the accepted audit is:
 
 `eed269cab32ecdfb52da87627386bcc77a9e42c6`
 
@@ -50,26 +50,29 @@ The source candidate establishes:
 - strict read-only stale-control reporting without unauthorized mutation;
 - preservation of v0.5.4 control-only drift, semantic evidence reuse, and separate live repository-host-gate semantics.
 
-## V0 verification state
+## V0 verification and audit state
 
 - Changed paths are limited to Task 058 controls, durable design, repository rule, Project Governance Skill/reference/template sources.
 - `plugin.json` remains `0.5.4`.
 - Exactly three top-level Skills remain.
 - Acceptance scenarios A–G in the durable design document pass by direct rule inspection.
+- `main` remained at `72042f4157389520c7acd754cab5272a3cfdab85` during independent audit.
+- Movement after semantic head `eed269cab32ecdfb52da87627386bcc77a9e42c6` is limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` and is `CONTROL_ONLY_DRIFT`.
+- Independent Web source audit: `PASS` with no design-level blocker found.
 - No Plugin distribution/release mutation has occurred under Task 058.
 
 ## Active problems and blockers
 
-No source-construction blocker is currently known. PR #22 must remain unmerged until independent Web audit accepts the source contract.
+No source or audit blocker is currently known. PR #22 remains DRAFT / UNMERGED; merging requires an explicit merge decision.
 
 ## Next intended milestone
 
-Perform independent Web audit of PR #22. If accepted, merge Task 058 source first; only then authorize a separate Plugin `0.5.5` version/distribution/release task.
+If PR #22 is approved for merge, merge Task 058 source first. Only after the source merge should a separate Plugin `0.5.5` version/distribution/release task be authorized.
 
 ## Control alignment at current handoff
 
 - Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
 - Document alignment: `UNCHANGED`
-- `CURRENT_STATUS.md`: `UPDATED` for the audit handoff/current milestone.
-- `CURRENT_TASK.md`: `UPDATED` to `WAITING_FOR_INDEPENDENT_AUDIT` with PR #22 and frozen semantic source.
+- `CURRENT_STATUS.md`: `UPDATED` for audit PASS / merge-decision state.
+- `CURRENT_TASK.md`: `UPDATED` to `AUDIT_PASS_WAITING_MERGE_DECISION`.
 - Control alignment: `PASS`
