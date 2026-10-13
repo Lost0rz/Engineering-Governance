@@ -6,9 +6,11 @@ Choose the lightest verification that can safely establish the result for the ch
 
 When identity matters to a claim, name the relevant identity: literal Repository HEAD, Delivery / Semantic HEAD, PR head, merge commit or tree, build/package artifact, installed application/package, running runtime/process, deployed revision, or release artifact. Evidence proves the identity it actually observed; history or matching names alone do not transfer a result to another identity. For example, CI on implementation X does not prove a later implementation Y unless relevant semantic tree/content equivalence or sufficient provenance is established. Acceptance of installed build B applies to B; it applies to source A only when provenance or equivalence linking B to A is established.
 
-Use [Control identity and freshness](control-identity.md) when repository revisions differ. A later Repository HEAD that differs only in `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is `CONTROL_ONLY_DRIFT`: reuse implementation evidence when `SEMANTIC_TREE_EQUIVALENCE = PASS`, no implementation-relevant authority changed, and no task-owned requirement invalidates the tested implementation. Do not require CI, review, or audit to rerun solely because those two control records changed.
+Use [Control identity and freshness](control-identity.md) when repository revisions differ. A later Repository HEAD that differs only in `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is `CONTROL_ONLY_DRIFT`: semantic implementation evidence such as test/CI conclusions, code-review conclusions, and independent-audit conclusions may be reused when `SEMANTIC_TREE_EQUIVALENCE = PASS`, no implementation-relevant authority changed, and no task-owned requirement invalidates the tested implementation. Do not require those semantic checks to rerun solely because those two control records changed.
 
-Reuse evidence without rerunning a check when the relevant equivalence is proven, such as semantic tree/content identity, an immutable artifact hash, or a sufficient provenance chain for the decision. Keep automated verification, human acceptance, and runtime/incident observation distinct and state what each proves; a task may require one or more of these evidence classes, not all of them. Apply identity checks in proportion to the claim and affected system rather than imposing build/runtime evidence on documentation-only or low-risk work.
+**Repository-host gates are a separate live constraint.** Required status checks, required reviews, current mergeability/conflicts, merge-queue eligibility, branch-protection/ruleset requirements, latest-head requirements, and current-base requirements may be keyed to the literal current PR/repository identity rather than only to semantic implementation content. Re-read those gates from the repository host at the merge/release decision. Semantic equivalence does not by itself make a current repository-host gate pass, and an earlier head's host-gate state must not be reported as the current head's state unless the host itself accepts that evidence for the current gate.
+
+Reuse semantic evidence without rerunning a check when the relevant equivalence is proven, such as semantic tree/content identity, an immutable artifact hash, or a sufficient provenance chain for the decision. Keep semantic verification, repository-host gate state, human acceptance, and runtime/incident observation distinct and state what each proves. A task may require one or more of these evidence classes, not all of them. Apply identity checks in proportion to the claim and affected system rather than imposing build/runtime evidence on documentation-only or low-risk work.
 
 ## Risk/scope tiers
 
@@ -47,15 +49,17 @@ When exact-head CI, independent audit, review, or another merge-gate check must 
 
 After the implementation candidate is frozen:
 
-- CI, review, independent audit, mergeability, and repository-host checks are live external evidence for the implementation identity they actually observed.
-- A later `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only commit may advance literal Repository HEAD while leaving Delivery / Semantic HEAD unchanged. When `SEMANTIC_TREE_EQUIVALENCE = PASS` and no task-owned condition invalidates the evidence, keep the existing CI/review/audit/merge-readiness evidence valid; do not restart the exact-head cycle merely because the control records moved.
+- Semantic CI/test results, code-review conclusions, and independent-audit conclusions are external evidence for the implementation identity they actually observed.
+- A later `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only commit may advance literal Repository HEAD while leaving Delivery / Semantic HEAD unchanged. When `SEMANTIC_TREE_EQUIVALENCE = PASS` and no task-owned condition invalidates the evidence, keep the existing semantic CI/review/audit evidence valid; do not restart those semantic checks merely because the control records moved.
+- Repository-host gate state remains live and literal where the host defines it that way. Before merge/release, re-read current required status checks, required reviews, mergeability/conflicts, merge-queue state, current-base/latest-head requirements, and other applicable host rules. Do not infer `HOST_GATE_PASS` from semantic-tree equivalence or from an older commit's host state.
+- If the repository host requires a check or approval on the latest literal PR head, satisfy that host requirement even when the underlying implementation tree is semantically unchanged. This is a host-gate obligation, not evidence that the implementation itself changed.
 - Do **not** create a status/task/handoff commit solely to record that external checks passed, failed, started, completed, or changed state. Such a write is unnecessary governance churn even though a control-only commit no longer changes delivery identity.
-- Any source/config/test/workflow/schema/migration/dependency/runtime-relevant change, material `AGENTS.md` rule change, or mixed control+implementation change is `DELIVERY_HEAD_CHANGE`. If it affects the frozen implementation, obtain fresh evidence as required by the accepted verification contract.
+- Any source/config/test/workflow/schema/migration/dependency/runtime-relevant change, material `AGENTS.md` rule change, or mixed control+implementation change is `DELIVERY_HEAD_CHANGE`. If it affects the frozen implementation, obtain fresh semantic evidence as required by the accepted verification contract.
 - If external evidence reveals an actual implementation/control defect or materially changes scope, authorization, acceptance, or a stop condition, reconcile the task as required. A material task-content change remains authoritative even though its commit is excluded from delivery identity.
-- If the frozen implementation passes its gates, merge the already verified implementation. Do not add a final “audit passed”, “CI passed”, “ready to merge”, or similar control commit as a prerequisite for merge.
+- Merge only when both conditions are true: the semantic implementation candidate has the required valid evidence, **and** the current repository-host merge gates are satisfied. Do not add a final “audit passed”, “CI passed”, “ready to merge”, or similar control commit as a prerequisite for merge.
 - Post-merge CI may verify the merge commit or delivered tree. Treat that result as live evidence for the identity it observed; do not create another commit solely to write the post-merge result back into controls.
 
-A control may state the durable rule or point to the external evidence authority, for example “the final Delivery / Semantic HEAD must have required CI success.” Transient run numbers and pass/fail observations may be reported in the audit/closure response without becoming a new commit unless the project has a separate, non-self-invalidating release record that explicitly owns those facts.
+A control may state the durable rule or point to the external evidence authority, for example “the final Delivery / Semantic HEAD must have the required semantic verification, and current repository-host gates must also be satisfied at merge time.” Transient run numbers and pass/fail observations may be reported in the audit/closure response without becoming a new commit unless the project has a separate, non-self-invalidating release record that explicitly owns those facts.
 
 ## Human acceptance loops
 
@@ -68,8 +72,10 @@ related findings
 -> targeted user/browser/runtime acceptance as needed
 -> broader affected regression once the corrective stabilizes
 -> freeze final Delivery / Semantic HEAD when exact implementation evidence is required
--> CI / independent audit on that implementation identity
--> merge the already verified implementation
+-> semantic CI / independent audit on that implementation identity
+-> read current repository-host merge gates
+-> satisfy any literal latest-head/current-base host requirement
+-> merge when semantic evidence and host gates both pass
 -> post-merge verification as required, without evidence-only control churn
 ```
 
@@ -77,4 +83,4 @@ If an edit raises the actual risk tier—for example a visual fix becomes an API
 
 ## Recording the decision
 
-Record the chosen `V0`–`V3` tier and a short rationale in `CURRENT_TASK.md`, plus any material cadence expectations such as checks deferred to corrective close, task close, or merge/release. Do not inherit a full historical suite solely because it exists. Report a check as passing only when current evidence supports that claim, and state material limits or checks not run. Once the final implementation identity is frozen for exact-head verification, report later CI/review/audit outcomes from live evidence rather than mutating controls merely to record those outcomes.
+Record the chosen `V0`–`V3` tier and a short rationale in `CURRENT_TASK.md`, plus any material cadence expectations such as checks deferred to corrective close, task close, or merge/release. Do not inherit a full historical suite solely because one exists. Report a semantic check as passing only when current evidence supports that claim, and report a repository-host gate as passing only from current host evidence for the applicable identity. State material limits or checks not run. Once the final implementation identity is frozen for semantic verification, report later CI/review/audit outcomes and host-gate state from live evidence rather than mutating controls merely to record those outcomes.
