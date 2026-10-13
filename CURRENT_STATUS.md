@@ -6,7 +6,7 @@ Last verified: 2026-10-13.
 
 Formal GitHub Plugin release remains `plugin-v0.5.3` at source `255bd32b1414a9555a7280d6e7562411ed3c7d96`.
 
-That immutable release is retained as historical publication evidence; this status does not claim that a formal `plugin-v0.5.4` GitHub tag/release exists.
+That immutable release remains historical publication evidence; no formal `plugin-v0.5.4` GitHub tag/release is claimed by this status.
 
 ## Accepted governance source
 
@@ -18,13 +18,12 @@ PR #18 squash merge commit:
 
 ## Repository distribution state
 
-Portable root `plugin.json` is version `0.5.4` on `main` after PR #19.
+Portable root `plugin.json` is version `0.5.4`.
 
-Distribution source commit:
-
-`9a4025c69fdfc42ba8f35df28f638f89dbe96c51`
-
-PR #19 changed only the portable manifest version from `0.5.3` to `0.5.4`; it did not introduce new Skill semantics.
+- PR #19 integrated the portable manifest version at `9a4025c69fdfc42ba8f35df28f638f89dbe96c51`.
+- PR #20 added the repo-backed personal marketplace catalog and is merged at `6185a1be962956422b7e4eeb56727ccb9a9386fa`.
+- Canonical marketplace entry: `engineering-governance-personal`.
+- Plugin source is Git-backed from `Lost0rz/Engineering-Governance@main`, avoiding per-machine fixed-version local sources for future upgrades.
 
 ## ChatGPT Web Plugin state
 
@@ -34,23 +33,48 @@ Owned private ChatGPT Plugin `engineering-governance` is version `0.5.4`.
 - Current release ID: `pluginrel_6acda259f9ec8191b09ba5cff8742633`
 - Scope: `USER`
 - Discoverability: `PRIVATE`
-- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
-- Web `project-governance` contains the accepted `CONTROL_ONLY_DRIFT` / Delivery-Semantic HEAD model and the separate repository-host gate boundary.
+- Exactly three top-level Skills: `project-governance`, `domain-navigation`, `incident-doctor`.
+- Web `project-governance` contains the accepted `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and separate repository-host gate semantics.
 
 ## Local Codex installation state
 
-The last verified machine-local canonical authority was `engineering-governance-personal / 0.5.3` on the Mac mini and MacBook Air workflow. Local 0.5.4 convergence has not yet been verified in this repository task.
+Both canonical local Codex hosts have been independently verified on `engineering-governance-personal / engineering-governance / 0.5.4` with exactly one active Engineering Governance authority per host.
 
-Do not manually edit active Codex plugin cache directories. Refresh/update through the configured marketplace/plugin mechanisms and verify the resulting installed identity.
+### Mac mini
+
+- Machine class: `MAC_MINI`
+- Codex CLI: `0.162.1`
+- Active authority count: `1`
+- Active authority: `engineering-governance@engineering-governance-personal / 0.5.4`
+- Exactly three top-level Skills verified.
+- `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and repository-host gate boundary checks: PASS.
+- `created-by-me-remote / 0.5.4` may exist as a non-active cache copy; it is not an active authority.
+
+### MacBook Air
+
+- Machine class: `MACBOOK_AIR`
+- Codex CLI: `0.160.0`
+- Active authority count: `1`
+- Active authority: `engineering-governance@engineering-governance-personal / 0.5.4`
+- Exactly three top-level Skills verified.
+- `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and repository-host gate boundary checks: PASS.
+- `created-by-me-remote / 0.5.4` may exist as a non-active cache copy; it is not an active authority.
+
+Neither local convergence used manual active-cache mutation or business-project repository mutation.
 
 ## Active development state
 
-Active authorized repository task: `EG-PLUGIN-V0.5.4-DISTRIBUTION-056`.
+Task `EG-PLUGIN-V0.5.4-DISTRIBUTION-056` is complete.
 
-Current phase: Web Plugin 0.5.4 complete; local Codex 0.5.4 convergence pending user execution/receipts.
+Accepted distribution state is aligned across:
 
-No new governance semantics or fourth Skill are authorized by this task.
+- repository portable manifest: `0.5.4`;
+- ChatGPT Web Plugin: `0.5.4`;
+- Mac mini canonical Codex authority: `0.5.4`;
+- MacBook Air canonical Codex authority: `0.5.4`.
+
+No fourth Skill or new governance runtime/machinery was introduced.
 
 ## Next intended milestone
 
-Run the canonical marketplace refresh/update on both Mac mini and MacBook Air, verify `engineering-governance-personal / 0.5.4` as the single active authority with the three expected Skills, and retain any historical differing copies as non-active unless separately reconciled.
+No further action is required for v0.5.4 distribution. The next meaningful Engineering-Governance task should reconcile from this accepted state in one task transition rather than creating a standalone evidence-only closeout cycle.
