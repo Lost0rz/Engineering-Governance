@@ -19,30 +19,54 @@ Accepted semantics include durable planning-document linkage, a mandatory final 
 
 ## Active local convergence
 
-Task `EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060` is authorized.
+Task `EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060` is active.
 
-Scope:
+### Mac mini — PASS
 
-- Mac mini: upgrade `engineering-governance@engineering-governance-personal` from `0.5.4` to `0.5.5`.
-- MacBook Air: upgrade the same canonical authority from `0.5.4` to `0.5.5`.
-- On each machine, verify the authoritative global `AGENTS.md` Engineering Governance managed routing block after the Plugin payload is upgraded.
+Mac mini has completed local convergence successfully.
 
-The v0.5.4 and v0.5.5 `GLOBAL_AGENTS_ROUTING.md` templates are byte-identical (`blob c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`). Therefore no semantic global-routing edit is expected when the existing managed block is already current. The global file must not absorb full Project Governance procedures merely because v0.5.5 added planning-document and Control Alignment semantics; those remain Skill-owned.
+- Host: `Ox-Miless-Mac-mini.local`.
+- Codex CLI: `0.162.1`.
+- Canonical Plugin authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
+- Active authority count: `1`.
+- Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
+- Installed payload matches frozen source `8871327915396b8de458f3e5709e3f67e36eff8f`.
+- Exactly three top-level Skills are present.
+- Planning-document linkage, Control Alignment Gate, `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and repository-host gate separation all verify `PASS`.
+- Authoritative global guidance: `/Users/ox_miles/.codex/AGENTS.md`.
+- Global routing markers: one BEGIN and one END.
+- Managed routing block exactly matches template blob `c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`.
+- Global routing reconciliation: `UNCHANGED`.
+- Unrelated global rules preserved: `PASS`.
+- Manual cache mutation: `NO`.
+- Plugin source-directory mutation: `NO`.
+
+Mini final state: `PASS_LOCAL_PLUGIN_055`.
+
+### MacBook Air — pending / authorized
+
+MacBook Air is now the next authorized machine under Task 060. Its local Plugin and authoritative global routing state must be freshly verified before mutation.
+
+## Global routing conclusion
+
+The v0.5.4 and v0.5.5 `GLOBAL_AGENTS_ROUTING.md` templates are byte-identical (`blob c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`). Therefore 0.5.5 does not require copying planning-document, Control Alignment Gate, workspace-lifecycle, Delivery / Semantic HEAD, or other full Project Governance procedures into global `AGENTS.md`.
+
+Global `AGENTS.md` remains a Skill-routing authority; detailed governance behavior remains Skill-owned and project-local where applicable.
 
 ## Active problems and blockers
 
-No known remote release/Web blocker exists.
+No Mini blocker remains and no remote release/Web blocker exists.
 
-Local machine state must be verified independently before mutation. Stop on duplicate/conflicting managed routing markers, unknown competing Plugin authority, marketplace/source ambiguity, or any destructive-cache requirement.
+Air must stop on duplicate/conflicting managed routing markers, competing active Plugin authority, marketplace/source ambiguity, or any update path that requires manual active cache/source mutation.
 
 ## Next intended milestone
 
-Complete Mac mini first, audit its receipt, then perform the same bounded convergence on MacBook Air.
+Complete MacBook Air convergence from `0.5.4` to `0.5.5`, verify its global routing block, then perform final dual-machine convergence closeout.
 
-## Control alignment at Task 060 authorization
+## Control alignment after Mini convergence
 
 - Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`.
-- Document alignment: `UNCHANGED` — local distribution does not change durable design.
-- `CURRENT_STATUS.md`: `UPDATED` — local convergence is now active.
-- `CURRENT_TASK.md`: `UPDATED` — Task 060 is authorized.
+- Document alignment: `UNCHANGED`.
+- `CURRENT_STATUS.md`: `UPDATED` — Mini is now accepted at 0.5.5; Air remains pending.
+- `CURRENT_TASK.md`: `UPDATED` — execution advances to Air.
 - Control alignment: `PASS`.
