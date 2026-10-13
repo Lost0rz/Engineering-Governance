@@ -1,93 +1,88 @@
-# CURRENT TASK — Capability Model v0.6.0
+# CURRENT TASK — Capability Architecture Completion v0.6.0
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-CAPABILITY-MODEL-V060-061`
+Task ID: `EG-CAPABILITY-ARCHITECTURE-COMPLETION-062`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
-Mode: remote source design, external-reference audit, capability-model expansion, routing integration, and source evidence audit
+Mode: remote reusable-source architecture completion before integrated Plugin/runtime acceptance
 
 ## Objective
 
-Expand Engineering Governance from three top-level Skills to a seven-Skill capability model that preserves the existing three-file authority/control semantics while adding distinct reusable capabilities for solution design, execution orchestration, agent handoff, and evidence audit.
-
-The expansion must reduce duplicated execution-card content, prevent handoff prompts from becoming second task authorities, make subagent/model/parallel behavior explicit and bounded, and keep audit claims tied to concrete evidence identity.
+Complete the full seven-Skill Engineering Governance v0.6.0 architecture before running local Plugin/runtime acceptance. Integrate the new Skills into one end-to-end governed engineering lifecycle, complete their composition and artifact-authority contracts, define the final integrated acceptance matrix, then freeze the architecture for one consolidated acceptance pass.
 
 ## Planning context
 
 - Related document: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Relationship to plan: Task 061 implements the initial v0.6.0 capability-model source framework and routing described by that document.
+- Document section / work packages: `WP6` through `WP10`.
+- Relationship to plan: Task 061 established the seven-Skill source skeleton. Task 062 completes cross-Skill architecture and acceptance specification; it does not run installed Plugin/runtime acceptance.
 
 ## Accepted baseline
 
-- Start Repository HEAD: `3b8d99c3dba13ca01098abade5c6e696454ddd10`.
-- Published/installed release baseline remains `plugin-v0.5.5`; release/distribution was not changed by this task.
-- Source branch: `codex/capability-model-v0.6.0`.
+- Latest literal branch HEAD at task start: `b70f2b7cd76c199229989a287c83ea3bea0081e3`.
+- Task 061 Delivery / Semantic HEAD: `c97d3cef13ac5546bf00d9d1eb4d620c88ffad57`.
+- The `c97d3... -> b70f2...` advance is limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` and is therefore control-only for delivery identity.
+- Branch: `codex/capability-model-v0.6.0`.
+- PR: `#26` — OPEN / DRAFT / UNMERGED.
+- Published/installed baseline remains Plugin `0.5.5`.
 
-## Completed execution
+## In scope
 
-1. Audited Superpowers and selected external high-signal engineering/agent projects.
-2. Created durable design authority `documents/engineering-governance-capability-model-v0.6.0.md` with explicit adopt/adapt/reject decisions.
-3. Added four top-level Skills:
-   - `solution-design`
-   - `execution-orchestrator`
-   - `agent-handoff`
-   - `evidence-audit`
-4. Preserved and re-integrated:
-   - `project-governance`
-   - `domain-navigation`
-   - `incident-doctor`
-5. Updated global routing/adoption/template semantics from three to seven Skills.
-6. Updated root `AGENTS.md`, README, plugin metadata (`0.6.0`), upstream conceptual references, and Incident Doctor systematic-technique references.
-7. Created PR `#26` as OPEN / DRAFT / UNMERGED.
-8. Performed final remote source/routing evidence audit.
+1. Add a central capability-composition contract for the seven Skills and their return paths.
+2. Integrate Solution Design, Execution Orchestrator, Agent Handoff, and Evidence Audit into Project Governance's normal development lifecycle rather than only its outer routing layer.
+3. Classify handoff requests/receipts, execution ledgers, design records, audit reports, and reviewer findings explicitly as non-control artifacts unless a project authority separately owns a durable record.
+4. Complete execution model tiers, writer/parallel gates, review gates, context packaging, recovery and integration semantics.
+5. Complete mode-specific handoff request/receipt semantics for `EXECUTE`, `AUDIT`, `DIAGNOSE`, `REVIEW`, and `VERIFY`.
+6. Complete evidence-audit profiles and evidence-identity rules for code/diff, PR/merge, CI, release/provenance, and post-change verification.
+7. Connect Solution Design to durable planning/task reconciliation and implementation convergence.
+8. Add a repository-wide Skill Engineering quality contract for trigger design, progressive disclosure, composition boundaries, and over-trigger prevention without creating an eighth Skill.
+9. Define one integrated acceptance matrix covering positive routes, negative/over-trigger cases, composition, handoff anti-duplication, model escalation, writer authority, and evidence identity.
+10. Keep PR #26 Draft until the architecture is complete and the later integrated acceptance pass succeeds.
 
-## Accepted design constraints
+## Out of scope
 
-- `CURRENT_TASK.md` remains the single active execution authorization; handoff requests never authorize work independently.
-- `CURRENT_STATUS.md` remains current-state authority; handoff/receipt/ledger/audit artifacts do not become second status stores.
-- `AGENTS.md` and Skills own durable engineering rules; execution/audit cards reference them rather than copy them.
-- Agent Handoff carries authority references, fresh delta, action boundary, and return contract.
-- Execution Orchestrator prefers one executor/parallel readers, requires proven-disjoint write scopes/workspaces for multiple writers, and forbids silent model escalation.
-- Evidence Audit owns independent evidence verdicts but does not authorize corrective mutation.
-- Solution Design is conditional; clear small changes do not acquire mandatory design/spec ceremony.
-- Incident Doctor retains its blocking evidence-gap trigger.
-- Universal mandatory TDD and unconditional subagent dispatch are not adopted.
-- External projects remain conceptual references only; no runtime dependency was introduced.
+- Running local installed Plugin discovery/routing/runtime acceptance before architecture freeze.
+- Testing one new Skill at a time as a separate acceptance milestone.
+- Publishing/tagging/releasing v0.6.0.
+- Merging PR #26.
+- Adding daemons, model-router executables, databases, enforcement runtimes, or a fourth project control file.
 
-## Verification result
+## Verification level, cadence, and rationale
 
-`V2 remote source/routing audit: PASS`.
+`V2` source architecture change.
 
-Evidence:
+Construction cadence for this task:
 
-- Delivery / Semantic HEAD: `c97d3cef13ac5546bf00d9d1eb4d620c88ffad57`.
-- Exactly seven intended top-level Skill directories observed.
-- Four new `SKILL.md` files reread from the task branch with distinct trigger/authority boundaries.
-- PR #26 diff: 23 changed paths at source-audit head; reusable-source changes are Markdown/JSON only and do not add runtime/daemon/workflow code.
-- PR #26 host state at source-audit time: OPEN / DRAFT / UNMERGED / `mergeable=true`.
-- Source-head commit statuses: none reported; CI PASS is **not** claimed.
-- Historical `.github/workflows/release-plugin-v0.5.5.yml` is outside the changed-path set and remains a frozen v0.5.5 artifact.
+- during architecture construction, use only bounded static sanity checks needed to avoid broken paths/frontmatter/internal contradictions;
+- do **not** perform per-Skill installed Plugin/runtime acceptance;
+- after WP6–WP10 are complete, perform one integrated remote source-architecture audit on the frozen architecture;
+- installed Plugin/Web/Codex routing/runtime acceptance is a later consolidated task against that frozen source identity.
+
+This intentionally follows `architecture complete -> freeze -> integrated acceptance`, not `build one -> test one`.
 
 ## Acceptance criteria
 
-Remote-source acceptance criteria for Task 061 are satisfied.
+- Project Governance internal lifecycle explicitly composes all six narrower Skills where applicable.
+- No new artifact competes with `AGENTS.md`, `CURRENT_STATUS.md`, or `CURRENT_TASK.md` authority.
+- The new Skills have complete operational contracts, not only trigger skeletons.
+- Model/concurrency/writer decisions are bounded and no silent escalation path remains.
+- Handoff request/receipt profiles are sufficient for Web/local and controller/worker transfers without duplicating controls.
+- Evidence Audit has explicit audit profiles and identity semantics.
+- Durable planning and Solution Design converge cleanly into authorized execution.
+- Skill Engineering quality rules exist without adding a top-level Skill.
+- A single integrated acceptance matrix is defined and no installed Plugin/runtime acceptance has been run prematurely.
+- PR #26 remains Draft at Task 062 close.
 
-Local installed Plugin discovery/routing/runtime behavior and release publication are explicitly outside this task and remain unverified.
+## Stop conditions
 
-## Handoff / terminal state
+- A proposed architecture change creates a second task/status/control authority.
+- A new Skill would overlap an existing owner's core responsibility without a distinct trigger/return contract.
+- The branch acquires implementation unrelated to v0.6.0 architecture completion.
+- A runtime/installed acceptance result is required to decide architecture but cannot be separated from source design; record it as an explicit later acceptance dependency rather than silently testing one Skill early.
 
-Task 061 is complete as remote reusable-source construction.
+## Handoff / current stop point
 
-PR #26 remains Draft pending a separate local Plugin/runtime acceptance task. If local acceptance reveals reusable-source defects, return them to the Web/remote source flow; local acceptance must not patch reusable source directly.
-
-Control Alignment Gate:
-
-- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-model-v0.6.0.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+Task 062 is authorized for remote source architecture completion. The next successful terminal handoff is **architecture frozen and ready for consolidated integrated acceptance**, not release/merge.
