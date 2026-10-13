@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make Project Governance distinguish control-only Repository HEAD movement from Delivery / Semantic HEAD changes so control records remain authoritative without causing CI/audit/merge/closeout churn.
+**Goal:** Make Project Governance distinguish control-only Repository HEAD movement from Delivery / Semantic HEAD changes so control records remain authoritative without causing unnecessary semantic CI/audit/lifecycle churn, while preserving repository-host gates as live literal constraints when the host defines them that way.
 
-**Architecture:** Keep the existing three-Skill architecture and modify only the declarative Project Governance contracts/templates plus this repository's dogfooding rule. `control-identity.md` becomes the semantic authority for Repository HEAD vs Delivery / Semantic HEAD and change classification; verification, control-plane, development-flow, workspace-lifecycle, and templates consume that distinction consistently. No new runtime, daemon, hook, database, installer, or fourth Skill is added.
+**Architecture:** Keep the existing three-Skill architecture and modify only the declarative Project Governance contracts/templates plus this repository's dogfooding rule. `control-identity.md` becomes the semantic authority for Repository HEAD vs Delivery / Semantic HEAD and change classification; verification, control-plane, development-flow, workspace-lifecycle, and templates consume that distinction consistently. Repository-host required checks/reviews, mergeability/conflicts, merge queue, current-base/latest-head rules, and similar gates remain a separate live evidence class. No new runtime, daemon, hook, database, installer, or fourth Skill is added.
 
 **Tech Stack:** Markdown Agent Skills, Git/GitHub evidence, repository control files.
 
@@ -18,6 +18,7 @@
 - A mixed commit containing any non-control path is `DELIVERY_HEAD_CHANGE`.
 - `AGENTS.md` is not excluded.
 - Real source/config/test/schema/workflow/dependency/migration/runtime-relevant changes still invalidate implementation evidence when appropriate.
+- Semantic-tree equivalence may preserve semantic implementation evidence but must never be used alone to infer current repository-host gate PASS.
 - Do not add governance runtime machinery merely for this rule.
 - Do not republish or mutate `plugin-v0.5.3` as part of this source task.
 
@@ -28,6 +29,7 @@
 3. **Explicit literal lock:** a task that explicitly declares literal Repository HEAD equality must still enforce that lock; semantic equivalence must not silently override it.
 4. **Exclusion creep:** `AGENTS.md`, workflow, tests, schemas, migrations, manifests, runtime config, source, and governance implementation must remain delivery/governance-relevant.
 5. **Closeout reuse:** a task workspace already proven terminal/closed must not be reopened solely because main advanced via control-only records.
+6. **Host-gate boundary:** required checks/reviews, mergeability/conflicts, merge queue, current-base/latest-head requirements, or equivalent repository-host gates must be read live for the literal identity the host governs; semantic equivalence alone cannot produce `HOST_GATE_PASS`.
 
 ---
 
@@ -103,19 +105,19 @@ State that control-only classification never weakens `CURRENT_TASK.md` content a
 
 - [ ] **Step 5: Update `SKILL.md` to consume the classification**
 
-Replace wording that treats every control commit as an exact-head identity change. Route implementation freshness and exact-head decisions through `control-identity.md` semantic equivalence while preserving material task reconciliation.
+Replace wording that treats every control commit as an exact-head identity change. Route implementation freshness and exact-head decisions through `control-identity.md` semantic equivalence while preserving material task reconciliation and separate repository-host gates.
 
 - [ ] **Step 6: Dogfood the rule in root `AGENTS.md`**
 
-Add the durable repository rule that status/task-only drift is non-blocking for delivery identity while `AGENTS.md` itself remains governance-relevant. Do not add `AGENTS.md` to the excluded set.
+Add the durable repository rule that status/task-only drift is non-blocking for delivery identity while `AGENTS.md` itself remains governance-relevant. Do not add `AGENTS.md` to the excluded set. Explicitly preserve current repository-host gates as literal constraints where applicable.
 
 - [ ] **Step 7: Update templates**
 
-Make `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` templates avoid implying that recorded control SHAs are current implementation equality locks. Add concise guidance for semantic-vs-literal locks where useful; do not duplicate the full reference contract.
+Make `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` templates avoid implying that recorded control SHAs are current implementation equality locks. Add concise guidance for semantic-vs-literal locks and repository-host gates where useful; do not duplicate the full reference contract.
 
 - [ ] **Step 8: Focused consistency check**
 
-Verify all preferred terms are used consistently and no file claims control-only commits leave literal Git HEAD unchanged.
+Verify all preferred terms are used consistently and no file claims control-only commits leave literal Git HEAD unchanged or automatically satisfy current host gates.
 
 - [ ] **Step 9: Commit the identity authority slice**
 
@@ -123,7 +125,7 @@ Commit message: `feat: separate control records from delivery identity`
 
 ---
 
-### Task 3: Make exact-head, CI, review, and merge evidence semantic-tree aware
+### Task 3: Make exact-head, CI, review, and merge evidence semantic-tree aware without bypassing host gates
 
 **Files:**
 - Modify: `skills/project-governance/references/verification-tiers.md`
@@ -131,33 +133,37 @@ Commit message: `feat: separate control records from delivery identity`
 
 **Interfaces:**
 - Consumes: `control-identity.md` classifications from Task 2.
-- Produces: verification and merge-readiness behavior that reuses evidence across control-only Repository HEAD advances.
+- Produces: semantic verification behavior that reuses evidence across control-only Repository HEAD advances, plus a separate live repository-host gate boundary.
 
 - [ ] **Step 1: Change final-head freeze semantics in `verification-tiers.md`**
 
 Define the frozen implementation candidate using Delivery / Semantic HEAD or semantic-tree equivalence unless the task explicitly requires literal Repository HEAD equality.
 
-- [ ] **Step 2: Preserve evidence across control-only advances**
+- [ ] **Step 2: Preserve semantic evidence across control-only advances**
 
-State that CI/review/audit/mergeability evidence remains valid when only status/task changed later, semantic tree equivalence passes, no implementation-relevant authority changed, and no task requirement invalidates the tested implementation.
+State that semantic CI/test, code-review, and independent-audit conclusions remain valid when only status/task changed later, semantic tree equivalence passes, no implementation-relevant authority changed, and no task requirement invalidates the tested implementation.
 
-- [ ] **Step 3: Keep real drift invalidating**
+- [ ] **Step 3: Keep repository-host gates live and literal**
 
-Explicitly state that source/config/test/workflow/schema/migration/dependency/runtime-relevant changes are `DELIVERY_HEAD_CHANGE` and require fresh evidence when the existing verification contract says so.
+State that required status checks, required reviews, mergeability/conflicts, merge queue, rulesets/branch protection, current-base rules, latest-head rules, and similar host requirements must be re-read from current host state for the literal identity the host governs. Semantic equivalence alone must never infer `HOST_GATE_PASS`.
 
-- [ ] **Step 4: Remove evidence-only control-loop implications**
+- [ ] **Step 4: Keep real drift invalidating**
+
+Explicitly state that source/config/test/workflow/schema/migration/dependency/runtime-relevant changes are `DELIVERY_HEAD_CHANGE` and require fresh semantic evidence when the existing verification contract says so.
+
+- [ ] **Step 5: Remove evidence-only control-loop implications**
 
 Retain the prohibition on commits created solely to write `CI PASS`, `audit PASS`, `ready to merge`, or equivalent evidence states, but stop describing all status/task commits as necessarily invalidating the implementation identity.
 
-- [ ] **Step 5: Update `control-plane.md` ownership/cadence**
+- [ ] **Step 6: Update `control-plane.md` ownership/cadence**
 
-State that controls remain authoritative for owned semantics but external evidence does not require immediate writeback. Add lazy/batched post-merge reconciliation and the safe next-task single-transition pattern.
+State that controls remain authoritative for owned semantics but external evidence does not require immediate writeback. Add lazy/batched post-merge reconciliation and the safe next-task single-transition pattern. Keep semantic evidence and host-gate state as separate claims.
 
-- [ ] **Step 6: Focused scenario check**
+- [ ] **Step 7: Focused scenario check**
 
-A must now classify as `CONTROL_ONLY_DRIFT`; D must still classify as `DELIVERY_HEAD_CHANGE`; E must still require reading/obeying changed authorization.
+A must now classify as `CONTROL_ONLY_DRIFT`; D must still classify as `DELIVERY_HEAD_CHANGE`; E must still require reading/obeying changed authorization; host-gate PASS must remain dependent on live host state.
 
-- [ ] **Step 7: Commit the verification slice**
+- [ ] **Step 8: Commit the verification slice**
 
 Commit message: `feat: preserve verification across control-only drift`
 
@@ -193,11 +199,15 @@ Allow one control transition at the next meaningful planning boundary to reconci
 
 State that if the content of `CURRENT_TASK.md` materially changes the active contract, the new authorization must be obeyed even though semantic implementation identity is unchanged.
 
-- [ ] **Step 6: Focused scenario check**
+- [ ] **Step 6: Preserve merge-host boundaries**
 
-B must keep lifecycle closed; C must allow one next-task reconciliation; D/E must remain safe.
+At merge/release decisions, reuse semantic evidence as allowed but separately read current repository-host gates before asserting merge readiness.
 
-- [ ] **Step 7: Commit the lifecycle slice**
+- [ ] **Step 7: Focused scenario check**
+
+B must keep lifecycle closed; C must allow one next-task reconciliation; D/E must remain safe; host-gate state must stay independent.
+
+- [ ] **Step 8: Commit the lifecycle slice**
 
 Commit message: `feat: avoid lifecycle loops from control-only commits`
 
@@ -207,7 +217,7 @@ Commit message: `feat: avoid lifecycle loops from control-only commits`
 
 **Files:**
 - Review all files modified in Tasks 2-4.
-- Update root `CURRENT_STATUS.md` / `CURRENT_TASK.md` only if their owned semantics materially require a pre-freeze task handoff update; do not write external CI/audit outcomes merely to record them.
+- Update root `CURRENT_STATUS.md` / `CURRENT_TASK.md` only if their owned semantics materially require a pre-freeze task handoff update; do not write external CI/audit/host-gate outcomes merely to record them.
 
 **Interfaces:**
 - Consumes: completed semantic, verification, and lifecycle slices.
@@ -218,10 +228,10 @@ Commit message: `feat: avoid lifecycle loops from control-only commits`
 Expected outcomes:
 
 ```text
-A: CONTROL_ONLY_DRIFT -> no CI/audit restart
+A: CONTROL_ONLY_DRIFT -> no semantic CI/audit restart; host gates still read live
 B: LIFECYCLE_STATE remains closed -> no second cleanup
 C: prior-task reconciliation + next-task authorization may be one control transition
-D: DELIVERY_HEAD_CHANGE -> exact-head evidence invalidated when appropriate
+D: DELIVERY_HEAD_CHANGE -> exact implementation evidence invalidated when appropriate
 E: changed task content remains authoritative -> read/obey before mutation
 ```
 
@@ -233,30 +243,38 @@ Verify only `CURRENT_STATUS.md` and `CURRENT_TASK.md` receive the default delive
 
 Confirm mixed control+implementation commits are delivery changes and explicit literal Repository HEAD locks remain enforceable.
 
-- [ ] **Step 4: Audit terminology**
+- [ ] **Step 4: Audit repository-host gate separation**
+
+Confirm semantic-tree equivalence can preserve semantic implementation evidence but cannot by itself establish current required checks/reviews, mergeability/conflict state, merge queue, current-base/latest-head conditions, or another live host gate.
+
+- [ ] **Step 5: Audit terminology**
 
 Confirm the reusable source consistently uses the preferred terms: `Repository HEAD`, `Delivery / Semantic HEAD`, `CONTROL_ONLY_CHANGE`, `CONTROL_ONLY_DRIFT`, `DELIVERY_HEAD_CHANGE`, `SEMANTIC_TREE_EQUIVALENCE`.
 
-- [ ] **Step 5: Inspect the complete diff**
+- [ ] **Step 6: Inspect the complete diff**
 
 Ensure there is no fourth Skill, runtime service, hook, daemon, database, installer, remediation mechanism, or unrelated governance expansion.
 
-- [ ] **Step 6: Reconcile controls before exact-head freeze only if materially required**
+- [ ] **Step 7: Reconcile controls before exact-head freeze only if materially required**
 
-If task-owned semantics need a final pre-freeze update, make it before choosing the final implementation candidate. Do not create a later commit merely to memorialize CI/review/audit results.
+If task-owned semantics need a final pre-freeze update, make it before choosing the final implementation candidate. Do not create a later commit merely to memorialize CI/review/audit/host-gate results.
 
-- [ ] **Step 7: Freeze the implementation candidate and open/update a Draft PR**
+- [ ] **Step 8: Freeze the implementation candidate and open/update a Draft PR**
 
-The PR must identify the exact implementation candidate and summarize RED evidence, changed contracts, acceptance scenarios, and any remaining limits. External CI/review/audit evidence should bind to the semantic implementation candidate; later control-only Repository HEAD movement must be classified rather than automatically invalidating it.
+The PR must identify the exact semantic implementation candidate and summarize RED evidence, changed contracts, acceptance scenarios, and any remaining limits. Later control-only Repository HEAD movement must be classified rather than automatically invalidating semantic evidence. Repository-host gates must still be read live for the literal identity they govern before merge/release.
 
-- [ ] **Step 8: Stop for independent Web audit before merge/release**
+- [ ] **Step 9: Stop for independent Web audit before merge/release**
 
 No new Plugin release is authorized by this task. Release publication requires separate authorization after source acceptance.
 
+## Post-audit corrective
+
+The first independent audit found one Important issue: the initial implementation wording treated `mergeability` / repository-host checks as if they were automatically reusable across semantic equivalence. The corrective narrows reuse to semantic implementation evidence and establishes current repository-host gates as a separate live literal constraint. This does not reintroduce control-file CI/audit churn; it prevents a false merge-ready PASS when the repository host requires evidence on a newer literal head/base.
+
 ## Self-review result
 
-- Spec coverage: all 12 source-rule sections and five required scenarios are mapped to Tasks 1-5.
+- Spec coverage: all source-rule sections and five required scenarios are mapped to Tasks 1-5, plus the independent host-gate boundary corrective.
 - Step scan: each task produces one reviewable semantic slice; no new runtime subsystem is introduced.
 - Type/term consistency: the plan uses one classification vocabulary throughout.
-- Review focus: mixed commits, material task changes, literal locks, exclusion creep, and lifecycle closeout are each explicitly checked.
+- Review focus: mixed commits, material task changes, literal locks, exclusion creep, lifecycle closeout, and host-gate separation are each explicitly checked.
 - Proportion: source changes remain limited to existing Project Governance contracts/templates plus root dogfooding controls.
