@@ -6,7 +6,7 @@ Repository: `Lost0rz/Engineering-Governance`
 
 Task ID: `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058`
 
-State: `ACTIVE_SOURCE_CONSTRUCTION`
+State: `WAITING_FOR_INDEPENDENT_AUDIT`
 
 Mode: governed Project Governance contract update
 
@@ -49,53 +49,52 @@ Add the durable planning-document layer and a mandatory end-of-execution Control
 - Bulk migration of historical `docs/superpowers/**` records.
 - Forcing `documents/` into target projects that already have a verified durable planning authority elsewhere.
 
-## Known evidence
+## Source result
 
-- Current `control-plane.md` explicitly permits post-merge reconciliation to remain lazy/batched until a next-task boundary.
-- Current `development-flow.md` does not contain a mandatory final status/task alignment result before successful handoff.
-- Current Task and Status templates do not provide a durable planning-document linkage contract.
-- Current workspace receipt template does not require `CURRENT_STATUS_RECONCILIATION` / `CURRENT_TASK_RECONCILIATION` fields.
-- The accepted design is recorded in the related durable planning document above.
+- Draft PR: `#22` — `feat: add durable planning and control alignment gate`.
+- Final Delivery / Semantic HEAD for source audit: `eed269cab32ecdfb52da87627386bcc77a9e42c6`.
+- The branch adds the accepted durable design document and `planning-documents.md` reusable contract.
+- Project Governance Skill, control-plane, development-flow, workspace lifecycle receipt, root durable rule, and AGENTS/STATUS/TASK templates are updated.
+- `plugin.json` remains version `0.5.4`.
+- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
 
-## Risk and rationale
-
-This is a governance-contract/documentation change with cross-project behavioral impact but no runtime code. Primary risk is semantic ambiguity or reintroducing control-file churn. The design explicitly preserves conditional writes and v0.5.4 delivery-identity exclusions while making the alignment check mandatory.
-
-## Verification level, cadence, and rationale
+## Verification level, cadence, and result
 
 `V0 — control/documentation/layout`.
 
-Required checks:
+Fresh V0 evidence:
 
-- changed-path scope matches Task 058;
-- cross-reference consistency between Skill, references, templates, and root durable rule;
-- acceptance scenarios A–G are representable without contradiction;
-- lazy/batched external-evidence language cannot be read as permission to leave control-owned semantics stale past final governed handoff;
-- `CURRENT_STATUS.md` / `CURRENT_TASK.md` remain the only default Delivery / Semantic identity exclusions;
-- planning-document changes are not accidentally classified as control-only;
-- no version/distribution/release mutation in this task.
-
-No runtime/full-suite test is required for a pure V0 governance-source change.
+- base `72042f4157389520c7acd754cab5272a3cfdab85` to branch source candidate changes only Task 058-authorized paths;
+- no Plugin version/distribution/release path changed;
+- top-level Skill count remains exactly `3`;
+- `plugin.json` remains `0.5.4`;
+- scenario audit A–G from the planning document passes by direct rule inspection:
+  - A: terminal/task-state change requires final alignment and owned control reconciliation;
+  - B: external evidence alone can remain `UNCHANGED` without evidence-only commits;
+  - C: multiple tasks may share one durable plan without using it as a progress tracker;
+  - D: durable-plan drift updates the plan and re-authorizes the task when authorization is affected;
+  - E: strict read-only stale controls are reported without mutation;
+  - F: status/task-only closeout remains `CONTROL_ONLY_DRIFT` and does not restart semantic verification;
+  - G: cross-session recovery order is `AGENTS -> STATUS -> TASK -> Related document`.
 
 ## Acceptance criteria
 
-- Durable planning documents have a clear optional authority role and do not become a fourth control file.
-- `CURRENT_TASK.md` template can link to a planning document/work package/revision basis or declare standalone work.
-- `CURRENT_STATUS.md` template can summarize current planning context without duplicating the plan.
-- Every governed state-changing successful final handoff is required to run and report the Control Alignment Gate.
-- The gate requires checking document/status/task alignment but writing only sources whose owned semantics changed.
-- Strict read-only work reports stale alignment without mutating controls.
-- Existing v0.5.4 control-only drift and repository-host-gate semantics remain intact.
-- Scenario audit A–G passes.
+Source construction satisfies the Task 058 acceptance criteria. Independent Web audit is still required before merge or any Plugin `0.5.5` distribution task begins.
 
 ## Stop conditions
 
-- Any proposed rule would make planning documents a competing execution authorization or live progress authority.
-- Any proposed rule would require writing both status and task after every external event regardless of ownership changes.
-- Any proposed rule would classify planning-document changes as `CONTROL_ONLY_DRIFT` by default.
-- Any proposed rule weakens repository-host live gates or v0.5.4 delivery-identity semantics.
-- Scope expands into Plugin distribution/release or runtime machinery.
+- Do not merge PR #22 before independent audit accepts the source contract.
+- Do not bump or publish Plugin `0.5.5` under Task 058.
+- Stop if audit finds that planning documents become competing authorization/progress authority, conditional writes became unconditional, planning documents are treated as control-only, or v0.5.4 host/identity semantics were weakened.
 
 ## Handoff / current stop point
 
-Construct the Project Governance source contract on the authorized task branch, run V0 consistency/scenario audit, and open a Draft PR for independent Web audit. Do not bump/publish v0.5.5 under Task 058.
+PR #22 is OPEN / DRAFT / UNMERGED and ready for independent Web audit.
+
+Control Alignment Gate for this source-construction handoff:
+
+- `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED` — implementation follows the accepted durable design; no durable assumption was invalidated.
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED` — project state advanced from active source construction to independent-audit handoff.
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED` — task state advanced to `WAITING_FOR_INDEPENDENT_AUDIT` and records PR #22 / frozen semantic source.
+- `CONTROL_ALIGNMENT`: `PASS`
