@@ -37,7 +37,7 @@ jobs:
 
           required = {
               'skills/project-governance/SKILL.md': 'Control Alignment Gate',
-              'skills/project-governance/references/planning-documents.md': 'not a fourth control file',
+              'skills/project-governance/references/planning-documents.md': 'fourth control file',
               'skills/project-governance/references/control-plane.md': 'check is mandatory; writes are conditional',
               'skills/project-governance/references/control-identity.md': 'CONTROL_ONLY_DRIFT',
               'skills/project-governance/references/verification-tiers.md': 'Repository-host gates are a separate live constraint.',
