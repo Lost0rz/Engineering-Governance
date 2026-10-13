@@ -1,106 +1,122 @@
-# CURRENT TASK — Engineering Governance Plugin v0.5.5 Release and Web Update
+# CURRENT TASK — Plugin v0.5.5 Local Convergence
 
 Date: 2026-10-13
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-PLUGIN-V0.5.5-RELEASE-WEB-059`
+Task ID: `EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060`
 
-State: `COMPLETE`
+State: `AUTHORIZED_MINI_FIRST`
 
-Mode: bounded Plugin distribution and release
+Mode: bounded local Plugin convergence and global routing verification
 
 ## Objective
 
-Publish the accepted Task 058 governance source as formal Plugin version `0.5.5`, then update the existing ChatGPT Web Plugin to the same `0.5.5` payload while preserving Plugin identity, scope, audience, and exactly three top-level Skills.
+Converge Mac mini and MacBook Air from the accepted local `engineering-governance` Plugin version `0.5.4` to `0.5.5`, preserving exactly one active canonical Plugin authority on each machine, then verify that the authoritative global `AGENTS.md` contains exactly one current Engineering Governance managed routing block without duplicating Skill procedures.
 
 ## Planning context
 
 - Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`.
-- Document section / work package: accepted v0.5.5 design and release boundary.
-- Document revision basis: accepted repository source at `58f06da1d4e5d0e86d2cb17bd13aa786d7a22cc6`; subsequent source movement before publication was distribution/workflow only.
-- Relationship to plan: Task 059 distributes the accepted design; it does not change governance semantics.
+- Relationship to plan: distribute the accepted v0.5.5 governance semantics to local Codex installations; do not change the durable design.
 
 ## Start baseline
 
-- Literal repository start baseline: `6dbf83ea24b0322669bb384b9ed7c78474dcb860`.
-- Accepted source merge: `58f06da1d4e5d0e86d2cb17bd13aa786d7a22cc6`.
-- Independently audited semantic source: `eed269cab32ecdfb52da87627386bcc77a9e42c6`.
-- Starting portable Plugin version: `0.5.4`.
-- Starting formal release: `plugin-v0.5.4`.
-- Starting ChatGPT Web Plugin: `0.5.4`.
+Remote distribution baseline:
 
-## Completed release
+- formal tag/release: `plugin-v0.5.5`;
+- frozen publication source: `8871327915396b8de458f3e5709e3f67e36eff8f`;
+- current repository control head at authorization: `221c30957fc997f0722d352542d072a1c1255705`;
+- expected local canonical authority before upgrade: `engineering-governance@engineering-governance-personal / 0.5.4` on both machines, subject to fresh local verification.
 
-- Root portable manifest is `0.5.5`.
-- PR #24 integrated the v0.5.5 manifest and one-shot release workflow.
-- Initial release run `38395340941` failed at the workflow semantic assertion before package/tag/release creation; no partial `plugin-v0.5.5` publication occurred.
-- PR #25 corrected only the release workflow assertion; Plugin payload content remained unchanged.
-- Frozen publication source: `8871327915396b8de458f3e5709e3f67e36eff8f`.
-- Successful release run: `38395556087` — `success`.
-- Immutable tag: `plugin-v0.5.5` -> `8871327915396b8de458f3e5709e3f67e36eff8f`.
-- Release title: `Engineering Governance Plugin v0.5.5`.
-- Asset: `engineering-governance-plugin.zip`.
-- Asset size: `70649` bytes.
-- SHA-256: `5a207ccd7f0a1c1449aa977f3fd2aa9cbf51512783a5abfeff106404855a0365`.
-- Package file entries: `30`.
-- Package boundary: only `plugin.json` and `skills/**`.
-- Included top-level Skills: `project-governance`, `domain-navigation`, `incident-doctor`.
+Global routing evidence:
 
-## Completed ChatGPT Web update
+- v0.5.4 `GLOBAL_AGENTS_ROUTING.md` blob: `c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`;
+- v0.5.5 `GLOBAL_AGENTS_ROUTING.md` blob: `c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`;
+- therefore the managed global routing template has no v0.5.5 semantic delta.
 
-The existing Web Plugin was updated in place after formal release verification.
+## Execution order
 
-- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517` — preserved.
-- Previous Web release ID: `pluginrel_6acda259f9ec8191b09ba5cff8742633`.
-- Current Web release ID: `pluginrel_6ace21fad9688191b0da844efcb6992e`.
-- Version: `0.5.5`.
-- Scope: `USER` — preserved.
-- Discoverability: `PRIVATE` — preserved.
-- Both Web manifests report `0.5.5`.
-- Exactly three top-level Skills remain.
-- New durable planning reference is present.
-- Project Governance contains the accepted Control Alignment Gate and v0.5.5 planning/task/status semantics.
+1. Mac mini only.
+2. Return and audit Mini receipt.
+3. MacBook Air only after Mini passes.
+4. Final cross-machine convergence audit.
 
-## Out of scope / deferred
+## In scope
 
-- Mac mini Plugin convergence.
-- MacBook Air Plugin convergence.
-- Any new governance semantic/source correction.
-- Any fourth Skill or runtime/daemon/service/database/installer/remediation machinery.
+- Verify machine identity and Codex version.
+- Verify the existing `engineering-governance-personal` marketplace source and active Plugin authority.
+- Upgrade through the supported Codex Plugin/marketplace path; do not manually edit active Plugin cache/source payload.
+- Verify installed version `0.5.5` and exactly three top-level Skills.
+- Verify v0.5.5 Project Governance payload contains durable planning-document linkage and the mandatory Control Alignment Gate.
+- Locate the environment's authoritative global `AGENTS.md` rather than guessing a path.
+- Verify exactly one BEGIN and one END Engineering Governance routing marker.
+- Compare the complete managed region with the current shipped `GLOBAL_AGENTS_ROUTING.md` template.
+- If identical, leave the global file unchanged and report `GLOBAL_ROUTING_RECONCILIATION: UNCHANGED`.
+- If one older compatible managed region exists, replace only that marker-bounded region and preserve unrelated global guidance.
 
-## Verification result
+## Out of scope
 
-`V0/V1 distribution verification: PASS`.
+- Copying Project Governance procedures, planning-document rules, Control Alignment Gate details, or project-specific governance into the global `AGENTS.md`.
+- Editing project-local `AGENTS.md` files merely because Plugin 0.5.5 is installed.
+- Adding a fourth Skill.
+- Manual deletion/modification under active Plugin cache/source directories.
+- `codex plugin marketplace remove engineering-governance-personal`.
+- Changing repository governance semantics or the formal release.
 
-Verified:
+## Verification level and cadence
 
-- formal release source/tag identity;
-- release workflow final success;
-- package size, digest, entry count, package boundary, and Skill boundary;
-- Web Plugin identity/version/scope/discoverability;
-- Web manifests and new planning reference;
-- mandatory Control Alignment Gate semantics;
-- local Codex distribution was not mutated under this task.
+`V1` local distribution/configuration verification.
 
-## Acceptance criteria
+For each machine verify:
 
-All Task 059 acceptance criteria are satisfied: formal `plugin-v0.5.5` exists and is verified, and the existing ChatGPT Web Plugin is updated to `0.5.5` with preserved identity/audience and accepted semantics.
+- canonical Plugin authority count = 1;
+- active authority = `engineering-governance@engineering-governance-personal / 0.5.5`;
+- exactly three top-level Skills;
+- required v0.5.5 Project Governance references/semantics present;
+- authoritative global guidance identified;
+- exactly one current managed routing block;
+- unrelated global guidance materially unchanged;
+- no full Skill workflow duplicated into the global file;
+- no manual cache/source payload mutation.
 
 ## Stop conditions
 
-Task is terminal. Do not perform Mac mini or MacBook Air convergence under Task 059. A separate local convergence task must authorize that work.
+Stop the affected machine before mutation if:
 
-## Handoff / terminal state
+- machine identity is not the intended Mini/Air;
+- the authoritative global guidance file cannot be established;
+- multiple managed routing blocks or conflicting partial markers exist;
+- another active Engineering Governance Plugin authority competes with the canonical personal marketplace authority;
+- the marketplace source cannot be safely tied to the accepted Git-backed authority;
+- the supported Plugin update path is unavailable and continuation would require manual active-cache/source mutation;
+- installed 0.5.5 payload does not contain exactly the expected three Skills.
 
-Task 059 is complete.
+Do not stop merely because historical 0.5.4 cache/source material is absent after a supported CLI update.
 
-Control Alignment Gate:
+## Handoff / current stop point
 
-- `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+Task is authorized for Mac mini first. Do not mutate Air in parallel.
 
-Next intended milestone: separate local Codex convergence from 0.5.4 to 0.5.5 on Mac mini and MacBook Air.
+Expected Mini receipt fields:
+
+```text
+TASK_ID: EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060
+MACHINE_CLASS: MAC_MINI
+PLUGIN_BEFORE: <version>
+PLUGIN_AFTER: <version>
+ACTIVE_AUTHORITY_COUNT: <count>
+ACTIVE_AUTHORITY: <name / version>
+TOP_LEVEL_SKILLS: <list>
+PLANNING_DOCUMENT_LINKAGE: PASS|FAIL
+CONTROL_ALIGNMENT_GATE: PASS|FAIL
+GLOBAL_AGENT_AUTHORITY: <path>
+GLOBAL_ROUTING_MARKERS: PASS|FAIL
+GLOBAL_ROUTING_TEMPLATE_MATCH: PASS|FAIL
+GLOBAL_ROUTING_RECONCILIATION: UPDATED|UNCHANGED
+UNRELATED_GLOBAL_RULES_PRESERVED: PASS|FAIL
+MANUAL_CACHE_MUTATION: NO
+PLUGIN_SOURCE_DIRECTORY_MUTATION: NO
+FINAL_STATE: PASS_LOCAL_PLUGIN_055|STOP_<reason>
+```
+
+Final task closeout after both machines pass must run the Project Governance Control Alignment Gate and reconcile controls only if owned semantics changed.
