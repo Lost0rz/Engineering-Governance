@@ -4,9 +4,11 @@ Choose the lightest verification that can safely establish the result for the ch
 
 ## Bind evidence to the identity it observes
 
-When identity matters to a claim, name the relevant identity: source/commit HEAD, PR HEAD, merge commit or tree, build/package artifact, installed application/package, running runtime/process, deployed revision, or release artifact. Evidence proves the identity it actually observed; history or matching names alone do not transfer a result to another identity. For example, CI on PR HEAD X does not prove exact merge commit Y was tested unless relevant tree/content equivalence or sufficient provenance is established. Acceptance of installed build B applies to B; it applies to source A only when provenance or equivalence linking B to A is established.
+When identity matters to a claim, name the relevant identity: literal Repository HEAD, Delivery / Semantic HEAD, PR head, merge commit or tree, build/package artifact, installed application/package, running runtime/process, deployed revision, or release artifact. Evidence proves the identity it actually observed; history or matching names alone do not transfer a result to another identity. For example, CI on implementation X does not prove a later implementation Y unless relevant semantic tree/content equivalence or sufficient provenance is established. Acceptance of installed build B applies to B; it applies to source A only when provenance or equivalence linking B to A is established.
 
-Reuse evidence without rerunning a check when the relevant equivalence is proven, such as exact tree/content identity, an immutable artifact hash, or a sufficient provenance chain for the decision. Keep automated verification, human acceptance, and runtime/incident observation distinct and state what each proves; a task may require one or more of these evidence classes, not all of them. Apply identity checks in proportion to the claim and affected system rather than imposing build/runtime evidence on documentation-only or low-risk work.
+Use [Control identity and freshness](control-identity.md) when repository revisions differ. A later Repository HEAD that differs only in `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is `CONTROL_ONLY_DRIFT`: reuse implementation evidence when `SEMANTIC_TREE_EQUIVALENCE = PASS`, no implementation-relevant authority changed, and no task-owned requirement invalidates the tested implementation. Do not require CI, review, or audit to rerun solely because those two control records changed.
+
+Reuse evidence without rerunning a check when the relevant equivalence is proven, such as semantic tree/content identity, an immutable artifact hash, or a sufficient provenance chain for the decision. Keep automated verification, human acceptance, and runtime/incident observation distinct and state what each proves; a task may require one or more of these evidence classes, not all of them. Apply identity checks in proportion to the claim and affected system rather than imposing build/runtime evidence on documentation-only or low-risk work.
 
 ## Risk/scope tiers
 
@@ -41,17 +43,19 @@ When integration or release consequences require it, add exact-head/provenance c
 
 #### Final PR-head freeze
 
-When exact-head CI, independent audit, review, or another merge-gate check must bind to the final PR head, finish all intended source and control-file edits first, then designate that current PR head as the **frozen candidate**.
+When exact-head CI, independent audit, review, or another merge-gate check must bind to the final implementation, finish all intended implementation-relevant source/rule edits first, then designate the current **Delivery / Semantic HEAD** or equivalent semantic tree as the frozen implementation candidate. If the active task explicitly requires literal Repository HEAD equality, honor that stronger lock instead.
 
-After the candidate is frozen:
+After the implementation candidate is frozen:
 
-- CI, review, independent audit, mergeability, and repository-host checks are live external evidence for that exact immutable head.
-- Do **not** create a source, status, task, handoff, or documentation commit solely to record that those external checks passed, failed, started, completed, or changed state. Such a commit changes the identity being verified and can create an endless `CI → evidence-only commit → new HEAD → CI` loop.
-- If external evidence reveals an actual source/control defect or materially changes scope, authorization, acceptance, or a stop condition, explicitly unfreeze the candidate, make the authorized correction, and begin a new exact-head cycle on the new head.
-- If the frozen candidate passes its gates, perform the independent audit and merge that same head. Do not add a final “audit passed”, “CI passed”, “ready to merge”, or similar commit after the last required exact-head evidence.
-- Post-merge CI may verify the merge commit. Treat that result as live evidence for the merge identity; do not create another commit solely to write the post-merge result back into controls.
+- CI, review, independent audit, mergeability, and repository-host checks are live external evidence for the implementation identity they actually observed.
+- A later `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only commit may advance literal Repository HEAD while leaving Delivery / Semantic HEAD unchanged. When `SEMANTIC_TREE_EQUIVALENCE = PASS` and no task-owned condition invalidates the evidence, keep the existing CI/review/audit/merge-readiness evidence valid; do not restart the exact-head cycle merely because the control records moved.
+- Do **not** create a status/task/handoff commit solely to record that external checks passed, failed, started, completed, or changed state. Such a write is unnecessary governance churn even though a control-only commit no longer changes delivery identity.
+- Any source/config/test/workflow/schema/migration/dependency/runtime-relevant change, material `AGENTS.md` rule change, or mixed control+implementation change is `DELIVERY_HEAD_CHANGE`. If it affects the frozen implementation, obtain fresh evidence as required by the accepted verification contract.
+- If external evidence reveals an actual implementation/control defect or materially changes scope, authorization, acceptance, or a stop condition, reconcile the task as required. A material task-content change remains authoritative even though its commit is excluded from delivery identity.
+- If the frozen implementation passes its gates, merge the already verified implementation. Do not add a final “audit passed”, “CI passed”, “ready to merge”, or similar control commit as a prerequisite for merge.
+- Post-merge CI may verify the merge commit or delivered tree. Treat that result as live evidence for the identity it observed; do not create another commit solely to write the post-merge result back into controls.
 
-A control may state the durable rule or point to the external evidence authority, for example “the latest pushed PR head must have required CI success.” Transient run numbers and pass/fail observations may be reported in the audit/closure response without becoming a new commit unless the project has a separate, non-self-invalidating release record that explicitly owns those facts.
+A control may state the durable rule or point to the external evidence authority, for example “the final Delivery / Semantic HEAD must have required CI success.” Transient run numbers and pass/fail observations may be reported in the audit/closure response without becoming a new commit unless the project has a separate, non-self-invalidating release record that explicitly owns those facts.
 
 ## Human acceptance loops
 
@@ -63,14 +67,14 @@ related findings
 -> focused verification after each material edit
 -> targeted user/browser/runtime acceptance as needed
 -> broader affected regression once the corrective stabilizes
--> freeze final PR head when exact-head evidence is required
--> exact-head CI / independent audit on that frozen head
--> merge the same frozen head
--> post-merge verification as required, without evidence-only head churn
+-> freeze final Delivery / Semantic HEAD when exact implementation evidence is required
+-> CI / independent audit on that implementation identity
+-> merge the already verified implementation
+-> post-merge verification as required, without evidence-only control churn
 ```
 
 If an edit raises the actual risk tier—for example a visual fix becomes an API, persistence, security, lifecycle, or cross-Domain change—upgrade the tier immediately and add the checks that higher risk requires. If the higher risk also changes business scope or authorization, stop and reconcile the task before continuing.
 
 ## Recording the decision
 
-Record the chosen `V0`–`V3` tier and a short rationale in `CURRENT_TASK.md`, plus any material cadence expectations such as checks deferred to corrective close, task close, or merge/release. Do not inherit a full historical suite solely because it exists. Report a check as passing only when current evidence supports that claim, and state material limits or checks not run. Once the final PR head is frozen for exact-head verification, report later CI/review/audit outcomes from live evidence rather than mutating controls merely to record those outcomes.
+Record the chosen `V0`–`V3` tier and a short rationale in `CURRENT_TASK.md`, plus any material cadence expectations such as checks deferred to corrective close, task close, or merge/release. Do not inherit a full historical suite solely because it exists. Report a check as passing only when current evidence supports that claim, and state material limits or checks not run. Once the final implementation identity is frozen for exact-head verification, report later CI/review/audit outcomes from live evidence rather than mutating controls merely to record those outcomes.
