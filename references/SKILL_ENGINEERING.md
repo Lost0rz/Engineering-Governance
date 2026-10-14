@@ -36,7 +36,9 @@ Every materially changed routing/trigger contract should define both:
 - positive scenarios where the capability should apply because its semantic trigger is met and it materially helps the task;
 - negative/near-miss scenarios where it must **not** apply.
 
-Over-triggering is a defect. Material under-use can also be a defect—for example, serializing clearly independent work solely to minimize Sub Agents, or rejecting a justified HIGH-capability model merely because it is strong/expensive.
+Over-triggering is a defect. Material under-use can also be a defect—for example, serializing clearly independent work solely to minimize Sub Agents when safe parallelism would materially help.
+
+A deliberate environment/project capability policy is not under-use merely because stronger capability exists. During v0.6.0 `DEFAULT_ONLY` stabilization, not escalating Sub Agents to stronger models is an intentional policy constraint, not a routing defect.
 
 Do not convert this into universal ceremony: the positive route still requires the Skill's actual semantic trigger and useful decision/execution value.
 
@@ -57,6 +59,6 @@ Final acceptance should exercise:
 - cross-Skill composition;
 - task-purpose vs execution-context separation;
 - authority preservation;
-- model/agent behavior where those semantics changed.
+- delegated-model/agent behavior where those semantics changed.
 
 Do not prove only that each Skill file can be loaded in isolation.
