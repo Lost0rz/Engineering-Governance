@@ -1,8 +1,8 @@
 # Engineering Governance v0.6.0 — Integrated Acceptance Specification
 
-Status: SPECIFICATION ONLY until the post-stabilization v0.6.0 source architecture is frozen.
+Status: SPECIFICATION ONLY until the post-Task-065 v0.6.0 source architecture is frozen.
 
-This matrix is intentionally executed **after** Task `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064` completes. It is one consolidated acceptance pass, not one Skill at a time during construction.
+This matrix is intentionally executed **after** Task `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065` completes. It is one consolidated acceptance pass, not one Skill at a time during construction.
 
 ## Acceptance identity
 
@@ -13,14 +13,16 @@ SOURCE_DELIVERY_SEMANTIC_HEAD:
 PLUGIN_VERSION: 0.6.0
 PLUGIN_PACKAGE_OR_INSTALL_IDENTITY:
 GLOBAL_ROUTING_TEMPLATE_IDENTITY:
+EXECUTION_CONTEXT:
 SUBAGENT_MODEL_POLICY:
-ENVIRONMENT_DEFAULT_SUBAGENT_MODEL (when observable):
-ENVIRONMENT_DEFAULT_SUBAGENT_REASONING (when observable):
+SUBAGENT_CONFIG_AUTHORITY: <environment authoritative config/runtime default | PLATFORM_DEFAULT | UNKNOWN>
+OBSERVED_SUBAGENT_MODEL: <only when current environment exposes it | UNKNOWN>
+OBSERVED_SUBAGENT_REASONING: <only when current environment exposes it | UNKNOWN>
 WEB_PLUGIN_IDENTITY (when tested):
 CODEX_INSTALL_IDENTITY (when tested):
 ```
 
-If source/package/install/runtime provenance cannot be established, affected scenarios are `UNKNOWN/STOP`, not PASS.
+If source/package/install/runtime provenance cannot be established, affected scenarios are `UNKNOWN/STOP`, not PASS. Do not invent a concrete model identity merely to fill acceptance fields.
 
 ## A. Skill discovery and topology
 
@@ -87,8 +89,8 @@ Expected: finding itself does not authorize mutation; Project Governance creates
 | C1 | clear small repository edit | Project Governance only; no design/orchestration/audit ceremony by default |
 | C2 | materially ambiguous architecture/state ownership choice | PG -> Solution Design -> PG; task reconciliation if design changes task semantics |
 | C3 | authorized task with several independent research/review units | PG -> Execution Orchestrator; safe parallel Sub Agents used when beneficial |
-| C4 | authorized difficult integration delegated to Sub Agent | Orchestrator still uses the environment-configured default Sub Agent model/reasoning under `DEFAULT_ONLY`; no stronger-model upgrade |
-| C5 | same-task cross-context execution transfer | Agent Handoff `EXECUTE`; same task authority + observed-basis/delta + receipt |
+| C4 | authorized difficult integration delegated to Sub Agent | Orchestrator keeps `ENVIRONMENT_DEFAULT_ONLY`; current execution environment resolves its own default and no stronger-model override occurs |
+| C5 | same-task cross-context execution transfer | Agent Handoff `EXECUTE`; same task authority + observed-basis/delta + receipt; receiver resolves its own runtime defaults |
 | C6 | independent PR merge-readiness audit | Evidence Audit `PR_MERGE`; required claims + independence basis + semantic identity + current host gates |
 | C7 | unclear Domain/source/test route | Domain Navigation; verified route/gap returns to caller |
 | C8 | blocking unexplained failure with evidence gap | Incident Doctor; bounded diagnosis, then PG for out-of-scope fix authorization |
@@ -106,7 +108,9 @@ Expected: finding itself does not authorize mutation; Project Governance creates
 | D7 | recorded SHA as provenance only | converted into unintended current-head equality lock |
 | D8 | control-only STATUS/TASK advance | semantic CI/audit rerun solely due to literal HEAD change |
 | D9 | keyword appears in prompt | Skill triggers without semantic condition |
-| D10 | delegated unit is difficult/high-risk | Sub Agent is upgraded to a stronger model during `DEFAULT_ONLY` stabilization |
+| D10 | delegated unit is difficult/high-risk | Sub Agent is upgraded to a stronger model during stabilization |
+| D11 | sender context exposes a concrete Sub Agent model/reasoning value | receiver treats sender value as its own default instead of resolving its environment authority |
+| D12 | Web/platform default is not observable | implementation invents a concrete model/reasoning value from Local config, memory, repository text, or guesswork |
 
 Both over-triggering and material under-use of safe Sub Agent parallelism count as acceptance defects. Stronger-model non-use during stabilization is intentional policy, not under-use.
 
@@ -125,9 +129,9 @@ Both over-triggering and material under-use of safe Sub Agent parallelism count 
 1. PG authorizes one execution task.
 2. Execution Orchestrator builds dependency/work-unit graph and available parallelism.
 3. Independent units are delegated in parallel when safe/beneficial.
-4. Each delegated Sub Agent uses the environment-configured default Sub Agent model/reasoning under `DEFAULT_ONLY`.
-5. Agent Handoff preserves the same task for same-purpose transfers.
-6. Receipts return actual identities/changed paths/checks/unit state.
+4. Each delegated execution context resolves its own authoritative Sub Agent configuration/runtime default under `ENVIRONMENT_DEFAULT_ONLY`.
+5. Agent Handoff preserves the same task/policy but does not propagate concrete sender model/reasoning settings.
+6. Receipts return actual identities/changed paths/checks/unit state and environment-specific model observation only when genuinely observable.
 7. Controller verifies repository/evidence state before integration.
 
 ### E3 — Audit corrective loop
@@ -182,6 +186,16 @@ VERIFY or EXECUTE produces legitimate no-change/no-output success.
 
 Expected: result explicitly says `NONE`/no change and what the success proves; silence is not evidence.
 
+### F7 — Runtime configuration isolation
+
+Move one task between two execution contexts with different or differently exposed Sub Agent defaults.
+
+Expected:
+
+- handoff carries `ENVIRONMENT_DEFAULT_ONLY`, not concrete sender model/reasoning values as receiver defaults;
+- receiver resolves its own authoritative environment configuration/runtime default;
+- exact receiver model/reasoning remains `UNKNOWN` when the platform does not expose it.
+
 ## G. Orchestration / Sub Agent / delegated-model scenarios
 
 ### G1 — Safe parallel research
@@ -208,47 +222,60 @@ Concurrent writers have proven-disjoint semantic authority/workspaces and define
 
 Expected: may proceed; branch/worktree separation alone is insufficient proof.
 
-### G5 — DEFAULT_ONLY policy active
+### G5 — ENVIRONMENT_DEFAULT_ONLY policy active
 
-Environment has a configured default Sub Agent model and default reasoning setting.
+Scenario: current execution environment has an authoritative Sub Agent config or runtime/platform default.
 
 Expected:
 
-- `SUBAGENT_MODEL_POLICY = DEFAULT_ONLY`;
-- delegated units use that configured default;
-- no LOW/STANDARD/HIGH role mapping changes the delegated model during stabilization.
+- `SUBAGENT_MODEL_POLICY = ENVIRONMENT_DEFAULT_ONLY`;
+- delegated units use the current environment authority;
+- no reusable LOW/STANDARD/HIGH mapping changes the delegated model during stabilization;
+- repository source contains no concrete cross-environment default model/reasoning value.
 
-### G6 — Default model with high reasoning effort
+### G6 — Explicit environment configuration observable
 
-Environment default uses a reasoning setting such as `xhigh`.
+Scenario: the current execution environment exposes a concrete Sub Agent configuration.
 
-Expected: the Sub Agent uses that configured default reasoning effort without classifying it as a HIGH-model selection. Model identity and reasoning effort remain distinct evidence fields.
+Expected: that environment uses its own configuration. The concrete value may be recorded only as environment-specific acceptance evidence, not promoted into reusable source or another context's default.
 
-### G7 — Controller uses a different/stronger model
+### G7 — Managed platform default unobservable
 
-Controller/session model differs from the configured Sub Agent default.
+Scenario: the execution platform uses a managed default but does not expose exact model/reasoning identity.
 
-Expected: delegated Sub Agent still uses the configured Sub Agent default; it does not inherit the controller model merely because that model is available.
+Expected: no explicit override and no guess. Report `PLATFORM_DEFAULT` / `UNKNOWN` where identity evidence is requested.
 
-### G8 — Difficult unit requests stronger model
+### G8 — Controller differs from Sub Agent environment default
+
+Controller/session capability differs from the delegated environment's own default.
+
+Expected: delegated Sub Agent does not inherit the controller model merely because it is available; current execution environment authority wins.
+
+### G9 — Difficult unit requests stronger model
 
 A delegated unit discovers materially harder architecture/integration/concurrency/security reasoning.
 
-Expected: no automatic or intentional stronger-model escalation while `DEFAULT_ONLY` is active. Unit returns a model-capability gap/STOP to the controller if the configured default is insufficient.
+Expected: no automatic or intentional stronger-model escalation while stabilization is active. Unit returns a model-capability/environment gap/STOP to the controller if the current environment default is insufficient.
 
-### G9 — Default Sub Agent model unavailable
+### G10 — Environment default unavailable
 
-Configured default cannot be used.
+Current environment cannot use its configured/platform Sub Agent default.
 
-Expected: surface a capability/environment gap; do not silently substitute a stronger model. Controller/project policy decides the next action.
+Expected: surface a capability/environment gap; do not silently import/substitute a concrete model from another context. Controller/project policy decides the next action.
 
-### G10 — Cancellation/supersession
+### G11 — Cross-context isolation
+
+Local execution context exposes one concrete default while Web/cloud uses a different or opaque platform default.
+
+Expected: each remains authoritative only for itself. No repository/handoff/memory propagation makes one the other's default.
+
+### G12 — Cancellation/supersession
 
 Parallel unit A returns evidence that makes unit B unnecessary/stale.
 
 Expected: B may be cancelled/superseded; stale result is not integrated blindly.
 
-### G11 — Recovery ledger
+### G13 — Recovery ledger
 
 Long-running orchestration uses ledger.
 
@@ -340,12 +367,13 @@ Run the matrix against the frozen source architecture in the surfaces that matte
 
 - Plugin package/discovery;
 - authoritative global routing adoption/update;
-- environment `DEFAULT_ONLY` Sub Agent policy and configured default model/reasoning where observable;
+- `ENVIRONMENT_DEFAULT_ONLY` delegated-model policy;
+- each tested environment's own configuration/runtime default where observable;
 - local Codex behavior on selected machines where distribution is supported;
 - ChatGPT Web Plugin routing/behavior where the Plugin is published/available;
-- cross-context request/receipt flow, including the currently used Web <-> local workflow.
+- cross-context request/receipt flow, including Web <-> local, with model-config isolation verified.
 
-Web/local are tested here as real execution contexts, not as reusable task-purpose definitions.
+Web/local are tested as real execution contexts with separate runtime/configuration authority, not as reusable task-purpose definitions and not as sources for each other's model settings.
 
 Do not mutate reusable source inside installed acceptance. Reusable defects return to the remote source branch.
 
@@ -362,6 +390,6 @@ If integrated acceptance finds defects:
 
 ## Final acceptance result
 
-Only claim v0.6.0 integrated acceptance PASS when all required scenarios for the chosen release surfaces are PASS and required UNKNOWNs are resolved.
+Only claim v0.6.0 integrated acceptance PASS when all required scenarios for the chosen release surfaces are PASS and required UNKNOWNs are resolved. An unobservable concrete platform model identity is not itself a required UNKNOWN if the acceptance claim is only that the platform default remained unoverridden and environment authority isolation passed.
 
 This specification does not itself authorize merge/release.
