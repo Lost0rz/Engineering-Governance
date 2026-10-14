@@ -8,72 +8,83 @@ Task ID: `EG-V066-RELEASE-078`
 
 Task class: `RELEASE`
 
-State: `ACTIVE`
+State: `WAITING_LOCAL_ACCEPTANCE`
 
 ## Objective
 
-Publish the accepted Web candidate as formal GitHub Plugin release `plugin-v0.6.6`, then hand off the immutable release identity and local update commands for Local Codex acceptance.
+Publish the accepted Web candidate as formal GitHub Plugin release `plugin-v0.6.6`, then converge Local Codex onto that released Plugin and complete the remaining local integrated acceptance.
 
-## Release candidate
+## Published release
 
-- PR: `#26`
-- branch: `codex/capability-model-v0.6.0`
-- current Web Plugin version: `0.6.6`
-- current Web release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`
-- current Delivery / Semantic candidate: `edf20c44a5ec32b49d2494b7a1c9511af8ca32cd`
-- exact eight top-level Skills are the v0.6.x capability model.
+- PR #26: `MERGED`;
+- merge/release source SHA: `7866e13cb6a82d59eb9c27ee4e536062ab357b1b`;
+- release workflow run: `38549662373` — `success`;
+- tag: `plugin-v0.6.6` -> release source SHA;
+- release asset: `engineering-governance-plugin.zip`;
+- size: `90618` bytes;
+- SHA-256: `433831130c2f85358ba75c4f07ef5063318a8ef00b255a8fa5966b2e7f16b93b`;
+- package entries: `47`;
+- package scope: `plugin.json` + `skills/**` only;
+- package version: `0.6.6`;
+- top-level Skills: exactly `8`.
 
-## Accepted prerequisite
+## Accepted Web prerequisite
 
-Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is closed for the Web boundary:
+Web candidate acceptance is PASS for the release boundary, including Gift, Merloom, MemoX and FloatTabs Project Profile regressions.
 
-- Project Profile regressions PASS across Gift, Merloom, MemoX and FloatTabs;
-- previously established Web routing/discovery behavior remains valid and later Profile-only correctives did not change non-Profile routing Skills;
-- no material Web blocker remains for publication.
+Full Web+Local integrated acceptance is not yet claimed.
 
-This does **not** claim full cross-environment integrated acceptance. Local Codex acceptance follows installation from the formal release asset.
+## Remaining authorized work
 
-## Authorized mutation
+Local Codex only:
 
-1. add a dedicated `0.6.6` release workflow on this branch;
-2. verify release workflow/package scope and current PR host state;
-3. update PR release evidence;
-4. make PR #26 ready and merge only if release-readiness evidence is PASS;
-5. verify the main-triggered release workflow, immutable tag, GitHub Release asset and package provenance;
-6. reconcile `CURRENT_STATUS.md` / `CURRENT_TASK.md` after publication.
+1. refresh the configured `engineering-governance-personal` marketplace from repository `main`;
+2. update/refresh the installed `engineering-governance` Plugin to `0.6.6` through the supported plugin/marketplace mechanism; do not manually patch active cache/source files;
+3. verify one active canonical Plugin authority, version `0.6.6`, and exactly eight top-level Skills;
+4. verify the current Engineering Governance routing surface is singular/current where the local environment uses authoritative global guidance;
+5. exercise bounded routing/continuation/profile/handoff evidence needed by `references/V060_INTEGRATED_ACCEPTANCE.md` for the Local surface;
+6. return the local receipt for Web audit and final Control Alignment.
 
-## Release contract
+## Local update source
 
-The GitHub release asset contains only:
+Marketplace:
 
-- `plugin.json`;
-- `skills/**`.
+`engineering-governance-personal`
 
-It must report version `0.6.6`, contain exactly the eight accepted top-level Skills, and publish as:
+Repository source:
+
+`https://github.com/Lost0rz/Engineering-Governance.git`
+
+Repository ref:
+
+`main`
+
+Formal release identity:
 
 `plugin-v0.6.6`
 
-with asset:
-
-`engineering-governance-plugin.zip`
-
 ## Stop conditions
 
-STOP before merge/release if:
+STOP local acceptance if:
 
-- PR #26 is no longer mergeable or main moved unexpectedly;
-- manifest/version/Skill set differs from the accepted candidate;
-- package workflow would include repository controls/docs/workflows in the Plugin ZIP;
-- required release provenance cannot be established;
-- another material source defect appears.
+- marketplace refresh does not resolve repository `main` containing `plugin-v0.6.6` source;
+- installed Plugin does not report `0.6.6`;
+- more than one active Engineering Governance Plugin authority exists;
+- the installed Plugin does not expose exactly the eight accepted Skills;
+- local update requires manual mutation of active Plugin cache/source rather than the supported marketplace/plugin mechanism;
+- authoritative global routing contains conflicting/duplicate managed regions that cannot be safely reconciled;
+- a material reusable defect appears.
 
-## Post-release boundary
+## Terminal boundary
 
-After formal publication, Local Codex is updated from the immutable `plugin-v0.6.6` release asset and receives the remaining local integrated acceptance. Full integrated acceptance is not claimed until that succeeds.
+Task 078 closes only after the formal release provenance is accepted **and** Local Codex `0.6.6` acceptance succeeds. Any reusable local defect returns to Engineering-Governance source through a separately authorized corrective before final integrated PASS.
 
 Control Alignment:
 
 - `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
 - `WEB_ACCEPTANCE`: `PASS`
-- `LOCAL_ACCEPTANCE`: `PENDING_POST_RELEASE_UPDATE`
+- `FORMAL_RELEASE`: `PASS`
+- `LOCAL_ACCEPTANCE`: `PENDING`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
 - `CONTROL_ALIGNMENT`: `PASS`
