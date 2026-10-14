@@ -8,108 +8,119 @@ Task ID: `EG-DESIGN-MULTI-MODULE-CLOSED-LOOP-082`
 
 Task class: `CAPABILITY_EXTENSION`
 
-State: `ACTIVE`
+State: `COMPLETE`
 
 ## Objective
 
 Extend the stable routed `design` capability from the Anthropic-only baseline into one coherent internal design pipeline that uses project context first and then applies specialized internal modules without exposing them as peer top-level Skills.
 
-Required sequence for qualifying UI/UX/frontend design or redesign work:
+Published sequence for qualifying UI/UX/frontend design or redesign work:
 
 `project/profile context intake → actual interface audit → Anthropic design reasoning → admin pattern composition when applicable → DESIGN.md visual-system synthesis → implementation/prototype → Microsoft final design review → corrective pass/re-review → rendered visual acceptance when supported`.
 
-## Required behavior
+## Completed behavior
 
 ### Project context intake
 
-- Use an available Project Profile / project instructions as compact derived context for product purpose, audience, constraints and authority pointers.
-- Preserve the Project Profile as derived context, not canonical authority.
-- Verify only the project-specific authorities materially needed by the bounded design problem.
-- Do not route to unrelated Skills merely to reacquire already-known design context.
+- Available Project Profile / Project Instructions are consumed as compact derived context for product purpose, audience, constraints and authority pointers.
+- The Profile remains derived context, not canonical authority.
+- Only project-specific authorities materially needed by the bounded design problem are verified.
+- Reading an existing Profile does not itself route through `project-profile`.
+- Design does not cross unrelated Skills merely to reacquire already-known context.
 
 ### Anthropic reasoning layer
 
-- Preserve the accepted Anthropic `frontend-design` source identity/provenance/license.
-- Use Anthropic for subject grounding, visual direction, hierarchy, typography/composition, anti-template reasoning and pre-build critique.
+- Accepted Anthropic `frontend-design` source identity/provenance/license is preserved.
+- Anthropic owns subject grounding, visual direction, hierarchy, typography/composition, anti-template reasoning and pre-build critique.
 
 ### Admin pattern layer
 
-- Integrate a curated `satnaing/shadcn-admin`-informed admin pattern module behind `design`.
-- Apply it for admin/back-office/productivity surfaces where page composition, workflow/action hierarchy, forms, tables, settings, sidebars, dialogs, toolbars, detail/edit patterns or state presentation materially apply.
-- Do not turn its implementation or visual defaults into project authority and do not force admin patterns onto storefront/landing/marketing surfaces.
+- A curated `satnaing/shadcn-admin`-informed admin pattern module is active behind `design`.
+- It applies conditionally to admin/back-office/productivity surfaces.
+- It does not make Shadcn styling project authority and is not forced onto storefront/landing/marketing surfaces.
 
 ### DESIGN.md synthesis layer
 
-- Integrate a curated `VoltAgent/awesome-design-md`-informed visual-system synthesis module behind `design`.
-- Produce or update an explicit bounded design specification for the page/project when useful: visual theme, semantic color roles, typography, layout/spacing, component treatment, elevation/surfaces, responsive behavior, Do/Don't rules and agent implementation guidance.
-- Existing project design-system/brand authority wins over external style references.
-- External brand DESIGN.md examples are inspiration/reference, not authority and not instructions to clone another brand.
+- A curated `VoltAgent/awesome-design-md`-informed visual-system synthesis module is active behind `design`.
+- It produces bounded implementation-ready design guidance covering visual character, semantic color roles, typography, layout/spacing, component/state treatment, surfaces/elevation, responsive behavior, Do/Don't rules and implementation mapping as applicable.
+- Existing project design-system/brand authority wins.
+- External brand DESIGN.md examples remain optional reference/inspiration, not authority or cloning instructions.
+- Durable project `DESIGN.md` is created/updated only when project-wide design authority is explicitly in scope; bounded task-level specification remains the default.
 
 ### Microsoft final review layer
 
-- Integrate Microsoft `frontend-design-review` as the final internal Design review module.
-- Use its review mode for design-system compliance, frictionless insight-to-action, quality craft, trustworthy building, accessibility/responsive review and blocking/major/minor prioritization.
-- Do not re-run Microsoft creative-design mode as a competing upstream design direction after Anthropic/Admin/Awesome have established the design.
-- Material Microsoft findings trigger a bounded corrective pass and re-review before Design completion.
+- Microsoft `frontend-design-review` is active as the final internal Design review module.
+- Review covers design-system/project-authority compliance, frictionless insight-to-action, quality craft, trustworthy building, accessibility/responsive evidence and severity-prioritized findings.
+- Creative Frontend Design mode is intentionally not rerun as a competing downstream aesthetic direction.
+- `Blocking / Major / Minor` severity is used.
+- Open Blocking/Major findings require a bounded corrective pass and re-review before Design completion.
+- Missing Figma/Storybook/token/render evidence may not be fabricated.
 
 ## Routing boundary
 
 - External route remains the single top-level `design` Skill.
-- Do not create new top-level Skills for Anthropic, shadcn-admin, awesome-design-md or Microsoft.
+- No top-level Skills were created for Anthropic, shadcn-admin, awesome-design-md or Microsoft.
 - Project Governance remains task/lifecycle authority.
 - Design owns its internal module sequence and visual acceptance loop.
-- `domain-navigation`, `solution-design`, `evidence-audit`, and `execution-orchestrator` are not automatic stages; use them only for distinct material triggers.
+- `project-profile`, `domain-navigation`, `solution-design`, `evidence-audit`, and `execution-orchestrator` are not automatic stages; they remain separately triggered capabilities.
 
 ## Source / provenance
 
-Audit and preserve the relevant upstream license/provenance boundaries for:
+Published source/license boundaries:
 
 - `anthropics/skills` frontend-design — existing bundled Apache-2.0 source;
-- `satnaing/shadcn-admin` — MIT;
-- `VoltAgent/awesome-design-md` — MIT;
-- `microsoft/skills` frontend-design-review — MIT.
+- `satnaing/shadcn-admin` — MIT-informed compact adaptation;
+- `VoltAgent/awesome-design-md` — MIT-informed compact adaptation;
+- `microsoft/skills` frontend-design-review — MIT-informed compact adaptation.
 
-Prefer compact adapted reference modules over vendoring entire upstream repositories.
+The whole upstream repositories were not vendored. Local provenance/license records are retained adjacent to the adapted modules.
 
-## Acceptance
+## Acceptance and release evidence
 
-The change is complete only when:
+- source PR: `#31 — feat: complete multi-module Design closed loop` — `MERGED`;
+- start main HEAD: `366989b63e3c12707b3535eff89d306bf21b48c8`;
+- pre-merge semantic candidate: `8ced8f3ddc455da1228887867c94e5c8c2f01cda`;
+- pre-merge workflow: `Release Plugin v0.7.0` run `38655255661` — `PASS`;
+- merge / released semantic source SHA: `8284f0f138427dd329cd50983046baf78ec110ce`;
+- main release workflow: `Release Plugin v0.7.0` run `38655371941` / run #6 — `PASS`;
+- GitHub tag: `plugin-v0.7.0`;
+- GitHub Release ID: `413275429`;
+- asset: `engineering-governance-plugin.zip`;
+- asset size: `130963` bytes;
+- asset SHA-256: `7cd695bc8b7f8302de06a8b36c1e5f5d8afabb8b874416a40ca42b6481fcf06b`;
+- package entries: `61`;
+- package scope: `plugin.json + skills/**` only;
+- top-level Skills: exactly `9`.
 
-- the Design Skill documents the ordered internal module pipeline and conditional Admin branch;
-- Project Profile/context intake is explicit and authority-safe;
-- all three new modules have local provenance/license notes and bounded responsibility;
-- Microsoft final review produces severity-prioritized findings and a corrective/re-review loop;
-- existing Anthropic identity and prior routing/receipt gates remain intact;
-- exactly nine top-level Skills remain;
-- Plugin payload remains `plugin.json + skills/**` only;
-- versioned acceptance evidence covers the new pipeline and regressions;
-- source PR is reviewed/merged and release/Web Plugin synchronization is completed if release gates pass.
+## Web Plugin synchronization
 
-## Current progress
+Existing Web Plugin updated in place:
 
-Source implementation and self-review are complete through the pre-merge acceptance boundary.
+- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.7.0`;
+- Web release ID: `pluginrel_6ad01392fbec81919fb25c380af12954`;
+- scope/discoverability: `USER / PRIVATE` — unchanged;
+- root/platform manifests: `0.7.0` read back;
+- Design closed-loop source, all three new adapted modules/provenance records and Project Profile → Design routing rule: read back.
 
-- PR: `#31 — feat: complete multi-module Design closed loop`;
-- accepted semantic candidate HEAD: `8ced8f3ddc455da1228887867c94e5c8c2f01cda`;
-- PR pre-release workflow: `Release Plugin v0.7.0`;
-- successful PR run: `38655255661` / run #3;
-- result: `V070_PREMERGE_ACCEPTANCE: PASS`;
-- release publication: not yet performed;
-- Web Plugin v0.7.0 synchronization: not yet performed.
+`WEB_PLUGIN_SYNC_070`: `PASS`.
 
-The current branch HEAD may be newer than the accepted semantic candidate because STATUS/TASK alignment commits are control-only. Do not confuse control HEAD movement with semantic Plugin change.
+## Local distribution note
+
+Last directly observed Local Codex runtime remains `0.6.8`. Task 082 does not claim local refresh to `0.7.0` without a fresh local runtime readback.
+
+`LOCAL_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
 
 ## Control Alignment
 
 - `PREDECESSOR_TASK`: `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081` (`COMPLETE`)
-- `START_MAIN_HEAD`: `366989b63e3c12707b3535eff89d306bf21b48c8`
 - `TASK_BRANCH`: `codex/design-multi-module-closed-loop-v070`
-- `PR`: `#31`
+- `PR`: `#31` (`MERGED`)
 - `TARGET_VERSION`: `0.7.0`
-- `TOP_LEVEL_SKILLS_TARGET`: `9`
+- `TOP_LEVEL_SKILLS`: `9`
 - `DESIGN_EXTERNAL_ROUTE`: `design`
-- `PREMERGE_SEMANTIC_HEAD`: `8ced8f3ddc455da1228887867c94e5c8c2f01cda`
-- `PREMERGE_CI_RUN`: `38655255661`
 - `PREMERGE_CI`: `PASS`
-- `FORMAL_RELEASE_070`: `PENDING`
-- `WEB_PLUGIN_SYNC_070`: `PENDING`
+- `FORMAL_RELEASE_070`: `PASS`
+- `WEB_PLUGIN_SYNC_070`: `PASS`
+- `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`
+- `TASK_STATE`: `COMPLETE`
