@@ -12,17 +12,20 @@ No formal GitHub v0.6.x release has been created yet.
 
 The eight-Skill architecture remains accepted.
 
-Current corrected Delivery / Semantic candidate before Task 077:
+Current corrected Delivery / Semantic candidate:
 
-`1a38f87a31016cad356f9f51c34ef2e4b53a13a8`
+`edf20c44a5ec32b49d2494b7a1c9511af8ca32cd`
 
-Current personal Web Plugin candidate before Task 077:
+Current personal Web Plugin candidate:
 
 - Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.5`;
-- release: `pluginrel_6acf3fdcd9308191b75415893bfa0d35`;
+- version: `0.6.6`;
+- release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`;
 - scope/discoverability: `USER / PRIVATE`;
-- Task-076 installed readback: PASS.
+- root/platform manifests read back as `0.6.6`;
+- Task-077 Skill/template/contract installed readback: PASS;
+- Task-077 overlay ZIP SHA-256: `bc714a64fde1b273e346db6632728b338329ef1953bffb404360b5a078a1af64`;
+- packaged Git-blob identities matched repository source for `plugin.json` and all three shipped Project Profile files before upload.
 
 PR #26 remains OPEN / DRAFT / UNMERGED. CI/check PASS is not claimed without fresh evidence.
 
@@ -33,35 +36,68 @@ PR #26 remains OPEN / DRAFT / UNMERGED. CI/check PASS is not claimed without fre
 - Task 074 — fact grounding, Memory/history isolation, old-Profile revalidation and authority-class preservation.
 - Task 075 — durability gate; `verified != durable`.
 - Task 076 — mandatory pre-return adherence gate for stage-only anti-goals, code/source maps, Domain mini-maps and expanded Skill routing prose.
+- Task 077 — structural Domain-pointer corrective: when detailed Domain/navigation authority exists, Profile `Authority map` is pointer-only; `Environment` is role/pointer-only.
 
-## Fresh Web 0.6.5 result that triggered Task 077
+## Task 077 source verification
 
-Merloom: PASS for the Task-076 target.
+Focused compare from Task-077 control checkpoint `15be4b538affccec34480dc053e820abe212b90e` to semantic candidate `edf20c44a5ec32b49d2494b7a1c9511af8ca32cd` changed only:
 
-Gift: PARTIAL FAIL only on remaining Domain/classification adherence:
-
-- `Authority map` still reconstructed detailed upstream/Gift ownership lists although `docs/storefront/DOMAIN_MAP.md` already owns that detailed source-class/ownership navigation;
-- `Environment` included a grounded fail-closed/no-fixture behavioral rule rather than only platform/environment roles.
-
-Memory contamination, temporary machine/port leakage, stage-only `storefront CMS` anti-goal promotion, code-map leakage and per-Skill routing expansion were not observed in that Gift draft.
-
-## Active corrective
-
-`EG-V060-PROFILE-DOMAIN-POINTER-CORRECTIVE-077` is ACTIVE under parent Task 070.
-
-Authorized semantic scope:
-
-- `skills/project-profile/SKILL.md`;
-- `skills/project-profile/references/profile-contract.md`;
-- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `plugin.json`;
 - `references/V060_INTEGRATED_ACCEPTANCE.md`;
-- `plugin.json` patch version.
+- `skills/project-profile/SKILL.md`;
+- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `skills/project-profile/references/profile-contract.md`.
 
-Task 077 will make Domain-dedup structural rather than advisory:
+No other Skill or capability architecture changed.
 
-- when a detailed Domain/navigation authority exists, `Authority map` is pointer-oriented and does not contain Domain ownership subcatalogs;
-- at most one short broad ownership invariant may remain elsewhere when necessary for project identity;
-- `Environment` contains only durable platform/environment/data-role context and pointers, not behavioral fail-closed/fallback/verification rules;
-- candidate patch version becomes `0.6.6` and is installed on the existing Web Plugin identity before fresh Gift + Merloom regressions.
+Task 077 hardens the Profile structure:
 
-Formal release/merge and Local Codex integrated acceptance remain deferred.
+```text
+Detailed Domain/navigation authority exists
+→ Authority map = authority pointers only
+→ no X-owns/Y-owns subsections or upstream/downstream/runtime ownership catalogs
+→ at most one broad ownership invariant elsewhere when essential
+```
+
+`Environment` now accepts only durable platform/environment/data-role context and authority pointers; behavioral fail-closed/fallback/no-fixture/verification/execution rules are rejected from that section.
+
+## Web 0.6.6 regression result
+
+After installed readback, neutral in-session Gift and Merloom Profile generations were exercised against the corrected contract.
+
+### Gift — PASS for Task-077 target
+
+Observed:
+
+- `Authority map` contains authority pointers only, including `docs/storefront/DOMAIN_MAP.md`;
+- no separate `Merloom owns / Gift owns` ownership subcatalog is emitted under `Authority map`;
+- one broad upstream-vs-serving invariant is sufficient for project identity;
+- `Environment` contains storefront/platform/data-flow role only and no fail-closed/no-fixture behavioral rule;
+- no Memory-only merchandise/visual preferences, Mac mini/Air, `:3000`, current task/PR/CI or stage-only `storefront CMS` anti-goal;
+- durable B2B/Product-first/Inquiry/RFQ identity remains;
+- Engineering Governance uses the compact hook.
+
+### Merloom — PASS for Task-077 target
+
+Observed:
+
+- `Authority map` remains pointer-oriented and does not expand into domain ownership subsections;
+- no source/code directory responsibility map appears in `Environment`;
+- `Environment` keeps only durable Merloom/Gift platform relationship and Business/Analytics data-role context;
+- durable greenfield/single-Authority/Evidence-vs-Business/Publication/AI-candidate/recapture/RFQ/Analytics identity remains;
+- Engineering Governance uses the compact hook.
+
+These are same-session neutral Web regressions after installing `0.6.6`; they demonstrate the corrected generation shape but do not substitute for a separate fresh-session independence check if final integrated acceptance requires one.
+
+## Next milestone
+
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` resumes.
+
+Remaining Web acceptance:
+
+1. fresh/independent MemoX Profile regression: current MVP/wave/viewer shape excluded while `V1 SQLite`, `long-term Rust Core` and authority-class distinctions remain;
+2. fresh/independent FloatTabs Profile regression: old Project Instructions do not self-bootstrap, established Domain Map remains a pointer, current/runtime state stays out;
+3. optional independent fresh-session Gift/Merloom confirmation before claiming the complete Web Profile boundary PASS;
+4. then continue remaining Task-070 routing scenarios and Local Codex integrated acceptance.
+
+Formal GitHub release/merge remains deferred until the integrated acceptance boundary is supported.
