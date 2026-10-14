@@ -29,6 +29,8 @@ A Skill may call another Skill only for a bounded dependency. It must preserve t
 
 Task purpose and execution context remain separate. Moving work to another agent/session/machine does not create a new task merely to satisfy composition mechanics.
 
+Execution-context runtime configuration also remains environment-owned unless an accepted project authority explicitly defines a portable configuration artifact. A Skill or handoff must not turn one environment's runtime defaults into another environment's defaults by copying them into reusable policy.
+
 ## Route-quality scenarios
 
 Every materially changed routing/trigger contract should define both:
@@ -38,7 +40,7 @@ Every materially changed routing/trigger contract should define both:
 
 Over-triggering is a defect. Material under-use can also be a defect—for example, serializing clearly independent work solely to minimize Sub Agents when safe parallelism would materially help.
 
-A deliberate environment/project capability policy is not under-use merely because stronger capability exists. During v0.6.0 `DEFAULT_ONLY` stabilization, not escalating Sub Agents to stronger models is an intentional policy constraint, not a routing defect.
+A deliberate environment/project capability policy is not under-use merely because stronger capability exists. During v0.6.0 `ENVIRONMENT_DEFAULT_ONLY` stabilization, not escalating Sub Agents to stronger models and keeping concrete model/reasoning defaults isolated to the execution environment that owns them are intentional policy constraints, not routing defects.
 
 Do not convert this into universal ceremony: the positive route still requires the Skill's actual semantic trigger and useful decision/execution value.
 
@@ -47,6 +49,8 @@ Do not convert this into universal ceremony: the positive route still requires t
 No Skill may create a hidden replacement for `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, accepted durable planning authority, product/domain truth or repository/runtime evidence sources.
 
 Transport/evidence artifacts such as handoff cards, ledgers, audit reports or reviewer packages remain non-authoritative unless the target project's accepted authority explicitly promotes a durable record.
+
+Environment-specific runtime configuration observations remain evidence about that environment. They do not become reusable Plugin defaults or another execution context's configuration authority merely because an agent observed or reported them.
 
 ## Verification of Skill changes
 
@@ -59,6 +63,6 @@ Final acceptance should exercise:
 - cross-Skill composition;
 - task-purpose vs execution-context separation;
 - authority preservation;
-- delegated-model/agent behavior where those semantics changed.
+- delegated-model/agent behavior and execution-environment configuration isolation where those semantics changed.
 
 Do not prove only that each Skill file can be loaded in isolation.
