@@ -19,7 +19,7 @@ No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has been p
 Task `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065` completed the environment-model-authority corrective on branch `codex/capability-model-v0.6.0`.
 
 - Architecture Delivery / Semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
-- Prior Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance because reusable model-authority semantics changed after that freeze.
+- Prior Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance.
 - PR #26 remains OPEN / DRAFT / UNMERGED.
 - PR host mergeability observed during Task 065 source audit: `mergeable=true`.
 - Commit/check statuses on the semantic head: none reported; **CI PASS is not claimed**.
@@ -41,14 +41,13 @@ Global routing remains policy, not an eighth Skill.
 
 ## Accepted delegated-model authority semantics
 
-- Sub Agents remain a positive throughput/context-isolation capability; safe useful parallelism remains encouraged.
+- Safe useful Sub Agent parallelism remains encouraged.
 - Active stabilization policy is `ENVIRONMENT_DEFAULT_ONLY`.
 - Reusable Engineering Governance does not define a concrete provider/model/reasoning value for delegated Sub Agents.
 - Each execution context resolves its own authoritative Sub Agent configuration/runtime default.
-- A local runtime may use/read its own local configuration locally without promoting that configuration into reusable Plugin truth.
-- Web/cloud/managed runtimes use their own platform/runtime defaults and do not inherit Local settings through repository source, handoff, memory, or another machine.
+- Local configuration remains local runtime truth; Web/cloud/managed defaults remain authority for those environments.
 - If an environment does not expose exact model/reasoning identity, keep it `PLATFORM_DEFAULT` / `UNKNOWN`; do not guess or override it.
-- Agent Handoff may carry the model **policy**, but concrete sender model/reasoning values do not become receiver defaults.
+- Agent Handoff carries policy/task authority, not concrete sender model/reasoning values as receiver defaults.
 - Stronger-model override/escalation remains disabled until a later explicit user/project policy change.
 - `LOW / STANDARD / HIGH` remain inactive future vocabulary only and do not route delegated Sub Agents during stabilization.
 
@@ -64,19 +63,7 @@ Global routing remains policy, not an eighth Skill.
 
 ## Integrated acceptance specification
 
-`references/V060_INTEGRATED_ACCEPTANCE.md` tests:
-
-- exact seven-Skill discovery and normal Project Governance entry;
-- positive and negative routing;
-- same-task continuation across contexts;
-- positive safe parallel Sub Agent use;
-- `ENVIRONMENT_DEFAULT_ONLY` behavior;
-- environment-specific configuration authority and Local/Web/cloud isolation;
-- observable current-environment configuration without promoting it into reusable source;
-- `PLATFORM_DEFAULT` / `UNKNOWN` behavior when managed defaults are opaque;
-- no cross-context concrete model/reasoning propagation;
-- no stronger-model escalation during stabilization;
-- handoff, audit, control, CI/PR/release/post-change, Domain Navigation, and Incident Doctor scenarios.
+`references/V060_INTEGRATED_ACCEPTANCE.md` tests environment-specific configuration authority, Local/Web/cloud isolation, observable current-environment configuration, opaque platform defaults, no cross-context model/reasoning propagation, no stronger-model escalation, positive parallelism, handoff/audit/control/CI/PR/release/post-change behavior, Domain Navigation, and Incident Doctor.
 
 The consolidated acceptance matrix has **not** been executed under Task 065.
 
@@ -86,23 +73,22 @@ The consolidated acceptance matrix has **not** been executed under Task 065.
 
 Verified:
 
-- exact seven-Skill directory set and no eighth Router Skill;
+- exact seven-Skill directory set;
 - Plugin metadata remains `0.6.0`;
 - Task 065 changes are governance/Skill/design/acceptance Markdown/control only;
 - no runtime, daemon, database, release workflow, model-router, or automatic model-selection implementation was added;
-- active reusable model semantics use `ENVIRONMENT_DEFAULT_ONLY` rather than a concrete model/reasoning default;
-- concrete sender settings do not propagate across Web/local/cloud handoff boundaries;
-- unobservable platform defaults stay `PLATFORM_DEFAULT` / `UNKNOWN` rather than guessed;
+- active reusable model semantics use `ENVIRONMENT_DEFAULT_ONLY`;
+- concrete sender settings do not propagate across contexts;
+- opaque platform defaults remain `PLATFORM_DEFAULT` / `UNKNOWN` rather than guessed;
 - stronger-model escalation remains disabled;
 - positive safe parallelism remains intact;
-- PR #26 remained Draft and mergeable during the audit;
 - no commit/check status exists on the semantic head, so CI PASS is not claimed.
 
 ## Active problems and blockers
 
 No blocking remote source defect is known from Task 065 audit.
 
-Remaining acceptance dependency: run one consolidated installed Plugin/Web/Codex acceptance pass against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` or a proven semantic-tree-equivalent descendant. Reusable-source defects discovered there return to the remote source flow.
+Remaining acceptance dependency: run one consolidated installed Plugin/Web/Codex acceptance pass against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` or a proven semantic-tree-equivalent descendant.
 
 ## Next intended milestone
 
