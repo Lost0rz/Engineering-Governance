@@ -106,7 +106,18 @@ Before returning a Profile, remove content that merely restates reusable governa
 
 If such material is useful for orientation, replace it with one short pointer or stable invariant. Preserve only grounded **and durable** project-specific facts that materially help an agent understand this project.
 
-When a detailed Domain/navigation authority exists, do not create multiple ownership subsections that catalog upstream/downstream/runtime/domain responsibilities. Keep only the few broad distinctions required to understand the product, then point to the Domain/navigation authority for detail.
+## Authority-map structural rule
+
+When a detailed Domain/navigation authority exists, the Profile's `Authority map` is a **pointer section**, not a summarized ownership model.
+
+Required behavior:
+
+- include the Domain/navigation authority pointer;
+- keep other authority entries as concise pointers to their owning surfaces;
+- do **not** append Domain-specific ownership prose, `X owns / Y owns` subsections, upstream/downstream/runtime ownership lists, source-class catalogs, route catalogs, or canonical-source inventories under `Authority map`;
+- if one broad ownership distinction is essential to understand project identity, express at most one short invariant in `Purpose` or `Stable concepts`, then point to the Domain/navigation authority for detail.
+
+An established Domain/navigation authority means the Profile should become **less** descriptive about ownership, not produce a smaller copy of the map.
 
 ## Surface-role evidence
 
@@ -132,9 +143,9 @@ Start from `assets/templates/PROJECT_PROFILE.md` and preserve its fixed metadata
 
 - Prefer the template's existing top-level sections; add another section only when stable **project-specific** context cannot fit cleanly into them.
 - Prefer concise bullets and authority pointers over explanatory procedure.
-- If a detailed Domain/navigation authority exists, point to it; keep only the few broad Domain concepts needed for orientation and do not add a separate `Domain Model`/mini-map section or ownership subcatalog by default.
+- If a detailed Domain/navigation authority exists, `Authority map` remains pointer-only. Do not add Domain ownership subsections or catalogs there. Keep at most one broad ownership invariant elsewhere only when essential to orientation.
 - `Planning & navigation` contains durable pointers, not current delivery progress or a numbered engineering startup sequence.
-- `Environment` contains stable project environment/platform roles only. Do not list repository directories, module paths, source files, symbols, code owners, temporary machines/ports/endpoints, or acceptance-only runtime values there.
+- `Environment` contains stable project platform/environment/data-role context and authority pointers only. Do not list repository directories, module paths, source files, symbols, code owners, temporary machines/ports/endpoints, acceptance-only runtime values, or behavioral fail-closed/fallback/verification/execution rules there.
 - Do not add a `Project Profile Rule`, maintenance guide, classification guide, freshness procedure, provenance ledger, durability report, or similar meta-section to the generated Profile.
 - `Priorities / constraints` may contain compact grounded durable priorities, anti-goals, and risk cues; current-stage delivery priorities/non-goals and detailed normative execution rules remain in their owning authorities.
 - The `Engineering Governance` section uses the shipped compact hook. Do not append per-Skill triggers, Skill catalogs, Handoff/verification/incident/PR/worktree procedure, or routing explanations unless the user explicitly requested routing documentation rather than a Project Profile.
@@ -151,7 +162,9 @@ For the complete draft, verify:
 GROUNDED: YES
 DURABILITY_QUALIFIED: YES
 CORRECTLY_CLASSIFIED: YES
+AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS: YES
 DOMAIN_AND_CODE_MAP_DEDUPED: YES
+ENVIRONMENT_ROLE_ONLY: YES
 ENGINEERING_GOVERNANCE_HOOK_COMPACT: YES
 TEMPLATE_FIELDS_PRESERVED: YES
 ```
@@ -161,8 +174,9 @@ If any item is `NO` or uncertain, revise/remove the offending content in the sam
 Mandatory rejection checks:
 
 - a stage/current/MVP/phase/wave-only non-goal appears as a permanent constraint without separate durable authority -> REMOVE;
-- `Environment` contains repository-relative source/module paths, symbols or code-responsibility lists -> REMOVE and point to Domain/navigation authority if useful;
-- an established Domain map exists but the Profile contains ownership catalogs/subsections that recreate it -> COMPRESS to broad distinctions + pointer;
+- `Environment` contains repository-relative source/module paths, symbols, code-responsibility lists, or behavioral fail-closed/fallback/verification/execution rules -> REMOVE or reclassify only if the underlying idea is a genuinely durable Profile constraint;
+- an established Domain/navigation authority exists but `Authority map` contains Domain-specific ownership prose, `X owns / Y owns` subsections, upstream/downstream/runtime ownership lists, source-class catalogs, route catalogs, or canonical-source inventories -> REMOVE all such detail; keep pointers only;
+- more than one broad ownership distinction remains elsewhere despite an established detailed Domain/navigation authority -> COMPRESS to at most one short orientation invariant plus pointer;
 - `Engineering Governance` contains per-Skill trigger prose or enumerates conditional Skills beyond the shipped compact hook -> REPLACE with the template hook;
 - fixed metadata fields were renamed or omitted -> CORRECT before return.
 
