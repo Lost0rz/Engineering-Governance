@@ -4,7 +4,7 @@ Last verified: 2026-10-14.
 
 ## Published baseline
 
-Formal GitHub Plugin release is now `plugin-v0.6.8`.
+Formal GitHub Plugin release remains `plugin-v0.6.8`.
 
 Release provenance:
 
@@ -14,70 +14,59 @@ Release provenance:
 - workflow run: `38572736330` — `success`;
 - tag: `plugin-v0.6.8`;
 - GitHub Release ID: `412755933`;
-- asset: `engineering-governance-plugin.zip`;
-- asset size: `106408` bytes;
 - asset SHA-256: `79f19bfec117d6f6c914f72f1504949f7158bbddf888c223ed41b1bf92ccba39`;
-- package entries: `52`;
 - package scope: `plugin.json` + `skills/**` only;
-- package version: `0.6.8`;
 - top-level Skills: exactly `9`.
 
-The ninth Skill is `design`. Its active baseline bundles Anthropic `frontend-design` internally, with Apache-2.0 license/provenance preserved. Microsoft design-review/adaptation and UX heuristic/audit modules remain planned and inactive.
+The ninth Skill is `design`. Anthropic `frontend-design` is the only active internal design-source module; Microsoft design-review/adaptation and UX heuristic/audit modules remain planned and inactive.
 
-## Routing result
+## Verified v0.6.8 runtime observation
 
-Current routed boundaries:
+A real Merloom Product Detail redesign trial confirmed that local routing can load:
 
-- `project-governance` — task/control authority, lifecycle, verification and closeout;
-- `solution-design` — material engineering requirements/architecture/state-ownership/API/data-flow/implementation-boundary ambiguity;
-- `design` — bounded UI/UX/frontend visual design and redesign, including aesthetic direction, typography, layout, hierarchy, density, composition, interface copy and visual critique.
+- `project-governance`;
+- `design`;
+- bundled Anthropic `frontend-design`;
+- `domain-navigation`.
 
-A keyword alone does not select Design. Project Governance remains task/lifecycle owner when a governed implementation composes Solution Design and Design.
+The route therefore reaches Design, but the observed output exposed two follow-on gaps:
 
-## Web Plugin distribution
+1. Design can be read without a sufficiently explicit bounded design deliverable/closed-loop process before implementation, allowing the result to collapse into ordinary UI correction.
+2. The user-facing engineering receipt can omit the actual `Skills used` even though Project Governance already defines that field, reducing routing observability.
 
-The existing private personal ChatGPT Web Plugin was updated in place:
+These are capability-contract/acceptance issues, not evidence that Design routing itself failed.
 
-- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.8`;
-- Web release: `pluginrel_6acf859bece081918fb21009caec1fa2`;
-- scope/discoverability: `USER / PRIVATE` — unchanged;
-- root `plugin.json`: `0.6.8` read back;
-- platform `.codex-plugin/plugin.json`: `0.6.8` read back;
-- `skills/design/**`: present and readable;
-- Project Governance Design routing: read back from the installed Web release.
+## Current corrective task
 
-`WEB_PLUGIN_SYNC`: `PASS`.
+Task `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081` is `ACTIVE` on branch:
 
-## Regression preservation
+`codex/design-anthropic-loop-receipt-enforcement`
 
-The v0.6.8 release gate preserves the previously accepted v0.6.7 Project Profile and Agent Handoff checks in addition to the new Design checks.
+Objective:
 
-- Project Profile pre-return gate: `PASS`;
-- Handoff pre-return/request/receipt gates: `PASS`;
-- v0.6.7 Handoff regression markers: `PASS`;
-- Design source/routing/package checks: `PASS`.
+- make the active Anthropic Design baseline execute a bounded design pass before implementation;
+- require rendered visual critique/correction when supported by the environment;
+- prevent shotgun routing to unrelated Skills;
+- strengthen pre-return enforcement for `Governance route` + actual `Skills used`.
 
-## Local distribution state
+Microsoft and UX-audit integration remain explicitly out of scope for this task.
 
-No Local Codex cache/source was manually patched.
+## Distribution state
 
-The supported marketplace source remains this repository `main`, which now publishes `0.6.8`. A fresh Local installed/runtime `0.6.8` readback is still observational follow-up and is not claimed here.
+Published/Web baseline remains `0.6.8` until Task 081 source changes pass acceptance, merge and formal release.
 
-`LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`.
-`LOCAL_CACHE_MUTATION`: `NONE`.
-`LOCAL_068_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
+The user has locally installed `0.6.8` on Air at:
 
-## Current task
+`/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.6.8`
 
-Task `EG-DESIGN-ANTHROPIC-BASELINE-080` is `COMPLETE`.
-
-Source integration, merge, formal release, Web Plugin update/readback, and control reconciliation are complete. Future Microsoft review/adaptation or UX-audit integration should be authorized as a separate follow-on task behind the stable `design` route.
+Do not claim the Task 081 corrective behavior is locally or Web-installed before a follow-on release/update is completed and read back.
 
 ## Control identity
 
-Released Delivery / Semantic Plugin identity:
+Task 081 start main:
+
+`e0ddabbf265225b42365234880a8b650efb16632`
+
+Current semantic released Plugin identity remains:
 
 `7ac2d6262dd280df2b940fa75e9316db8a3615e7`
-
-Any subsequent commit limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is control-only Repository HEAD movement and does not alter the released Plugin payload or semantic release identity.

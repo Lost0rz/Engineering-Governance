@@ -39,6 +39,8 @@ Reusable source defines what environment capability must be resolved, not concre
 - Preserve unknown/unique work and existing project authorities.
 - Keep changes proportional; no extra Skill/document/test ceremony without material value.
 - Do not add runtime/daemon/database/model-router/automatic-enforcement behavior unless repository purpose explicitly changes.
+- A routed capability must execute the bounded workflow it owns when materially triggered; merely reading a source/reference file is not sufficient evidence of capability use.
+- Governed user-facing receipts must make the actual routing/Skill composition observable and must not claim Skills that were not actually used.
 - No-op reconciliation means no write and no commit.
 
 ## Release / acceptance boundary

@@ -1,99 +1,58 @@
-# CURRENT TASK — Design Skill Anthropic Baseline Integration
+# CURRENT TASK — Design Anthropic Closed-Loop + Receipt Enforcement
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-DESIGN-ANTHROPIC-BASELINE-080`
+Task ID: `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081`
 
-Task class: `CAPABILITY_EXPANSION`
+Task class: `CAPABILITY_CORRECTIVE`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
 ## Objective
 
-Add a routed top-level `design` capability to Engineering Governance and bundle Anthropic's `frontend-design` Skill as the first complete design-source module, so UI/frontend design work is selected through the existing Governance routing layer instead of requiring a separate external Plugin.
+Strengthen the existing routed `design` capability so Anthropic `frontend-design` is not merely read as reference material but is executed as a bounded design workflow before implementation, with an explicit visual critique/corrective loop when the environment supports rendered-page evidence.
 
-## Result
+At the same time, strengthen the governed user-facing receipt so routed/used Skills are always explicitly reported and auditable as the capability graph grows.
 
-Completed.
+## Required outcomes
 
-The repository now has exactly nine top-level Skills, including stable external route `design`.
+1. `design` remains the single stable external design route; Anthropic remains the only active source module for this task.
+2. A qualifying redesign task must complete a bounded Design pass before implementation: understand/diagnose → design plan → brief/genericity review → implementation handoff → rendered visual critique/corrective pass when supported.
+3. Do not route every UI task through every Skill. Once Design owns the bounded design problem, unrelated Skills are not invoked unless a materially separate capability boundary is actually present.
+4. Preserve project/business/data authority. Design decisions must not silently redefine canonical state, API/schema, persistence ownership, or lifecycle semantics.
+5. Project Governance remains task/lifecycle authority.
+6. Compact Engineering Status Receipt must expose both `Governance route` and `Skills used`; omission or inferred/non-used Skill names must fail the pre-return compliance check.
+7. Existing Project Profile, Agent Handoff, routing, release/package, provenance and nine-Skill regressions must remain preserved.
 
-Design v0.6.8 currently provides:
+## Scope
 
-- Anthropic `frontend-design` as the active internal visual-design baseline;
-- preserved Apache-2.0 license and source provenance;
-- explicit routing separation between UI/frontend visual design (`design`) and engineering architecture/state ownership (`solution-design`);
-- Project Governance task/lifecycle authority preserved;
-- Microsoft design-review/adaptation and UX heuristic/audit modules reserved as planned, not active.
+Expected source areas include:
 
-## Source / release evidence
+- `skills/design/**`;
+- `skills/project-governance/**` routing/receipt contracts where needed;
+- release/acceptance evidence for the follow-on Plugin version;
+- Plugin manifests/versioning and distribution after source acceptance.
 
-- PR #28: `MERGED`;
-- merge/release source SHA: `7ac2d6262dd280df2b940fa75e9316db8a3615e7`;
-- Plugin version: `0.6.8`;
-- release workflow run: `38572736330` — `success`;
-- tag: `plugin-v0.6.8`;
-- GitHub Release ID: `412755933`;
-- release asset size: `106408` bytes;
-- release asset SHA-256: `79f19bfec117d6f6c914f72f1504949f7158bbddf888c223ed41b1bf92ccba39`;
-- package entries: `52`;
-- exact top-level Skills: `9`.
-
-Anthropic upstream source identity:
-
-- repository: `anthropics/skills`;
-- path: `skills/frontend-design`;
-- upstream `SKILL.md` blob: `a5333457c414d20d625f307df945842c0952ecc3`;
-- local bundled `frontend-design.md` Git blob matches that source identity.
-
-## Web Plugin synchronization
-
-Existing private personal Plugin updated in place:
-
-- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.8`;
-- release ID: `pluginrel_6acf859bece081918fb21009caec1fa2`;
-- scope/discoverability remains `USER / PRIVATE`;
-- root and platform manifests read back as `0.6.8`;
-- Design source module and Project Governance routing files read back from the installed release.
-
-`WEB_PLUGIN_SYNC`: `PASS`.
+Microsoft review/adaptation and the planned UX-audit module remain out of scope and inactive.
 
 ## Verification
 
-- exact nine-Skill capability model: `PASS`;
-- Anthropic source body identity: `PASS`;
-- Apache-2.0 license/provenance packaging: `PASS`;
-- UI/frontend Design vs Solution Design routing separation: `PASS`;
-- no separate Anthropic Plugin dependency: `PASS`;
-- no premature Microsoft/Audit behavior claim: `PASS`;
-- v0.6.7 Project Profile/Handoff release gates preserved: `PASS`;
-- formal merged-source release/package validation: `PASS`;
-- Web Plugin version/content readback: `PASS`;
-- Local installed/runtime v0.6.8 behavior: `PENDING_USER_TRIAL`, not claimed.
+Acceptance must demonstrate at minimum:
 
-## Terminal state
+- a Merloom-like admin authoring redesign routes to `design` and produces an explicit bounded design deliverable before implementation;
+- a simple understood frontend bug is not inflated into a design workflow;
+- Design does not shotgun-route to unrelated Skills;
+- rendered/screenshot critique is required when the execution environment actually supports it, otherwise the limitation is stated without fabricating evidence;
+- final governed receipt explicitly reports the actual route and actual Skills used;
+- previous release gates remain green.
 
-Task 080 terminal conditions are satisfied:
+## Control Alignment
 
-- source integration complete;
-- PR merged;
-- formal v0.6.8 release succeeded for the exact merged source;
-- existing Web Plugin updated/read back at `0.6.8`;
-- status/task controls reconciled;
-- Local can consume the published version without manual cache mutation.
-
-Future integration of Microsoft frontend design review/adaptation or UX heuristic/audit behavior should be authorized as a new follow-on task behind the existing stable `design` route.
-
-Control Alignment:
-
-- `PREDECESSOR_TASK`: `EG-HANDOFF-CARD-GENERATION-CORRECTIVE-079`
-- `SOURCE_INTEGRATION`: `PASS`
-- `FORMAL_RELEASE`: `PASS`
-- `WEB_PLUGIN_SYNC`: `PASS`
-- `LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`
-- `LOCAL_CACHE_MUTATION`: `NONE`
-- `LOCAL_068_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`
+- `PREDECESSOR_TASK`: `EG-DESIGN-ANTHROPIC-BASELINE-080` (`COMPLETE`)
+- `START_MAIN`: `e0ddabbf265225b42365234880a8b650efb16632`
+- `BRANCH`: `codex/design-anthropic-loop-receipt-enforcement`
+- `MICROSOFT_MODULE`: `OUT_OF_SCOPE / INACTIVE`
+- `UX_AUDIT_MODULE`: `OUT_OF_SCOPE / INACTIVE`
 - `CONTROL_ALIGNMENT`: `PASS`
