@@ -1,55 +1,36 @@
-# CURRENT TASK — Routing & Environment Hardening v0.6.0
+# CURRENT TASK — v0.6.0 Integrated Acceptance
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-CAPABILITY-ROUTING-ENVIRONMENT-HARDENING-066`
+Task ID: `EG-V060-INTEGRATED-ACCEPTANCE-067`
 
-Task class: `CORRECTIVE`
+Task class: `AUDIT`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
 ## Objective
 
-Finish the v0.6.0 architecture with lightweight routing, rule-authority, environment-capability, cross-repository, and bounded safety hardening before consolidated installed acceptance.
+Run one consolidated installed/runtime acceptance against frozen semantic head `f3d47b00cac41ebd19408cef18563c91be67ae53`, covering Web and supported Local Codex environments without modifying reusable source during acceptance.
 
-## Completed
+## Gate 0 — candidate identity / environment readiness
 
-- Routing surfaces made environment-neutral; Local-style global guidance is no longer a universal requirement.
-- Routing metadata hardened toward requested outcome/condition rather than keywords.
-- Root repository guidance reduced; portable workflow remains in Skills/references with progressive-disclosure links.
-- Added generic environment capability resolution without hardcoded runtime values.
-- Added bounded cross-repository control/navigation semantics without a new Skill/control plane.
-- Clarified read-only `DIAGNOSE` vs state-changing diagnostic probe handoff.
-- Added material-only design reversibility and diagnostic probe observer-effect/cleanup rules.
-- Condensed integrated acceptance and added no-op control-write checks.
+Before behavior scenarios, each tested environment must prove it is actually running the v0.6.0 candidate or a package/install proven from the frozen semantic identity.
 
-## Architecture freeze
+- Web: current observed Engineering Governance install exposes only the legacy three Skills (`project-governance`, `domain-navigation`, `incident-doctor`), so the v0.6.0 seven-Skill candidate is **NOT YET PRESENT** in this Web runtime.
+- Mac mini Codex: fresh v0.6.0 candidate install/runtime identity not yet observed in Task 067.
+- MacBook Air Codex: fresh v0.6.0 candidate install/runtime identity not yet observed in Task 067.
 
-Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
+An environment that is not on the candidate is `NOT_READY`, not a v0.6.0 routing PASS/FAIL.
 
-`f3d47b00cac41ebd19408cef18563c91be67ae53`
+## Acceptance authority
 
-## Verification
+- Source semantic head: `f3d47b00cac41ebd19408cef18563c91be67ae53`.
+- Specification: `references/V060_INTEGRATED_ACCEPTANCE.md`.
+- Published/accepted baseline remains `0.5.5` until v0.6.0 acceptance and later release work complete.
+- No installed cache/source patching is authorized. Reusable defects return to a remote corrective task.
 
-`V2 remote source-architecture audit: PASS`.
+## Current stop point
 
-- exactly seven top-level Skills;
-- Plugin metadata `0.6.0`;
-- only governance/Skill/design/acceptance Markdown/control changes;
-- no runtime/daemon/database/workflow/model-router/automatic enforcement added;
-- PR #26 OPEN / DRAFT / UNMERGED and mergeable/clean at audit time;
-- no commit/check status on semantic head, so CI PASS is not claimed.
-
-## Terminal state
-
-Task 066 is complete. Next authorized milestone is one consolidated v0.6.0 installed Plugin/Web/Codex acceptance against the frozen semantic identity (or a proven semantic-tree-equivalent closeout descendant).
-
-Control Alignment Gate:
-
-- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-hardening-v0.6.0.md`
-- `DOCUMENT_ALIGNMENT`: `UPDATED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+Complete candidate packaging/install identity for each intended acceptance environment, then run the consolidated matrix. Do not interpret the current Web 0.5.5 behavior as evidence about v0.6.0.
