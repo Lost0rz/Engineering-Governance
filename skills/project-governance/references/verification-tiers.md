@@ -45,17 +45,38 @@ Run every check required by the task's accepted verification contract and risk t
 
 Add exact-head/provenance, broad build/integration/runtime/packaging/remote CI evidence only as required by the integration/release claim. Do not inherit every historical suite automatically.
 
-## Evidence Audit integration
+## Implementation verification vs independent audit
 
-Normal implementation verification and independent Evidence Audit are related but distinct:
+Keep task purpose and evidence role distinct:
 
-- implementation/self-check establishes behavior evidence required by the task;
-- `evidence-audit` is used when a separate acceptance/readiness verdict is requested or justified;
+- implementation/self-check establishes behavior evidence required by the active execution/corrective task;
+- calling `evidence-audit` from the same implementation context does not automatically create independence;
+- when formal independent acceptance/readiness is a distinct engineering boundary, Project Governance authorizes the appropriate AUDIT/VERIFY task purpose and its required independence level;
 - not every V0/V1 change needs an independent audit;
-- V2 generally benefits from independent audit at the integrated task/PR boundary rather than after every unit;
+- V2 often benefits from independent audit at the integrated task/PR boundary rather than after every unit;
 - V3 requires explicit independent evidence/review appropriate to the high-consequence boundary.
 
+When independence matters, report one of:
+
+```text
+AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
+```
+
+`SELF_CHECK` is useful verification but is not independent acceptance.
+
 Evidence Audit profiles include `CODE_DIFF`, `PR_MERGE`, `CI`, `RELEASE_PROVENANCE`, and `POST_CHANGE`. A PASS for one profile does not automatically prove another.
+
+## Required-claim coverage
+
+For a material audit/acceptance boundary, identify the claims that must be established before verdict:
+
+```text
+REQUIRED_CLAIMS
+OBSERVED_EVIDENCE
+UNVERIFIED_REQUIRED_CLAIMS
+```
+
+A required claim without adequate evidence remains `UNKNOWN` and cannot be silently omitted from the verdict.
 
 ## Final implementation freeze
 
@@ -80,14 +101,14 @@ complete bounded architecture/implementation
 -> focused construction evidence
 -> freeze semantic candidate when ready
 -> required integrated verification
--> independent audit where required
+-> independent audit/acceptance task where required
 -> read current host gates
--> bounded corrective if findings occur
+-> bounded corrective task if findings create a distinct objective
 -> rerun affected integrated scenarios/evidence
 -> merge/release only when semantic evidence + live host gates satisfy the boundary
 ```
 
-For multi-Skill architecture work, prefer testing composition and negative/over-trigger scenarios on the frozen architecture rather than proving only that each Skill file loads independently.
+For multi-Skill architecture work, prefer testing composition and positive/negative routing behavior on the frozen architecture rather than proving only that each Skill file loads independently.
 
 ## Recording the decision
 

@@ -10,9 +10,21 @@ Durable planning/design authorities may exist separately when justified, but the
 | --- | --- | --- |
 | `AGENTS.md` | durable operating rules, stable project/repository boundaries, durable workflow rules, pointers to authoritative sources | current task/progress log |
 | `CURRENT_STATUS.md` | concise verified current snapshot, active blockers/state, next milestone, small still-material non-blocking Follow-ups when useful | backlog DB, active authorization, delivery identity authority |
-| `CURRENT_TASK.md` | single active authorization: objective/scope/baseline/risk/verification/acceptance/STOP/workspace/handoff lifecycle | durable rules, long-term plan, implementation identity |
+| `CURRENT_TASK.md` | single active authorization: objective/scope/baseline/risk/verification/acceptance/STOP/workspace/handoff lifecycle plus optional task-purpose metadata such as `TASK_CLASS` | durable rules, long-term plan, implementation identity |
 
 Update only the source whose owned semantics materially changed.
+
+`TASK_CLASS` does not create another authority. It describes the engineering purpose of the one active task when that distinction helps: DESIGN, EXECUTION, AUDIT, VERIFY, DIAGNOSIS, CORRECTIVE, CLOSEOUT, or project-equivalent.
+
+## Task, execution unit, and execution context
+
+Do not conflate:
+
+- **task** — engineering objective/authorization owned by `CURRENT_TASK.md`;
+- **execution unit** — bounded work inside that task, potentially delegated to a Sub Agent;
+- **execution context** — Web/local/cloud/session/machine/agent/reviewer surface where work occurs.
+
+Changing execution context does not itself change task authority. Multiple Sub Agent units do not create multiple task authorities. A materially different engineering purpose/authorization requires Project Governance reconciliation or a distinct task.
 
 ## Non-control artifact taxonomy
 
@@ -20,7 +32,7 @@ The following are **not** project controls by default:
 
 - Solution Design result before its durable portion is written to an accepted planning/design authority;
 - Agent Handoff request/receipt;
-- execution/subagent brief;
+- execution/Sub Agent brief;
 - execution recovery ledger;
 - audit report/reviewer finding;
 - CI/test output;
@@ -43,9 +55,11 @@ A SHA in a control/design link is provenance by default. It is an equality lock 
 
 External evidence such as CI/test/review/audit/mergeability does not force a control write merely because it changed. Semantic evidence and live repository-host gates remain separate evidence classes.
 
-## Handoff conflict rule
+## Handoff conflict and continuity rule
 
-A handoff transports authority references + fresh delta. When the delta conflicts with the source that owns that semantic class, the handoff does not silently override the authority. Re-verify freshness and reconcile through Project Governance. A newer explicit user instruction may require updating task authorization.
+A handoff transports the current task/authority references + fresh delta across execution contexts. For same-purpose continuation, preserve the same `TASK_ID`.
+
+When freshness matters, sender/receiver may record and compare `AUTHORITY_OBSERVED_BASIS`. A handoff never silently overrides a materially changed current authority. Compatible current authority may continue; incompatible task drift returns to Project Governance. Required authority that is unavailable and cannot be safely represented by a bounded snapshot produces a STOP, not a guess.
 
 ## Mandatory Control Alignment Gate
 
@@ -103,7 +117,9 @@ If control content materially changes authorization or another task-owned condit
 
 ## Task lifecycle integrity
 
-- Reconcile immediately when an event changes authorization, prerequisites, acceptance, STOP conditions, allowed side effects, required workspace disposition or another task-owned fact needed for the next mutation.
+- Reconcile immediately when an event changes engineering purpose, authorization, prerequisites, acceptance, STOP conditions, allowed side effects, writer authority, required workspace disposition or another task-owned fact needed for the next mutation.
+- Do **not** create a new task merely because work moves to another agent/session/machine or is decomposed into Sub Agent units.
+- When a design phase, execution phase, independent acceptance audit, corrective objective, or final verification is a materially distinct engineering purpose/authority boundary, represent that distinction through Project Governance task authorization rather than hiding it inside a handoff card.
 - A task that reached its defined terminal outcome no longer authorizes work under an earlier state.
 - Routine external evidence may remain external during execution; final Control Alignment may not leave material control-owned state stale.
 - Task terminal state and physical branch/worktree disposition are separate; use `workspace-lifecycle.md`.
