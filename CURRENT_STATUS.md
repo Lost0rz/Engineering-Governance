@@ -12,42 +12,86 @@ No formal GitHub v0.6.x release has been created yet.
 
 The eight-Skill architecture remains accepted.
 
-Current corrected Delivery / Semantic candidate before Task 076 source mutation:
+Current corrected Delivery / Semantic candidate:
 
-`1b46159acfda4ec2c36af46b6da58ad26c1b5482`
+`1a38f87a31016cad356f9f51c34ef2e4b53a13a8`
 
-Current personal Web Plugin before Task 076 update:
+Current personal Web Plugin candidate:
 
 - Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.4`;
-- release: `pluginrel_6acf306eeacc8191814073d8973b3e39`;
-- scope/discoverability: `USER / PRIVATE`.
+- version: `0.6.5`;
+- release: `pluginrel_6acf3fdcd9308191b75415893bfa0d35`;
+- scope/discoverability: `USER / PRIVATE`;
+- root/platform manifests read back as `0.6.5`;
+- Task-076 Skill/template/contract installed readback: PASS;
+- Task-076 overlay ZIP SHA-256: `3a0ffa3efe29ba363e11a933659395ba05201d29899485c119f3b7a6475db369`;
+- overlay Git-blob identities matched repository source before upload.
 
 PR #26 remains OPEN / DRAFT / UNMERGED. CI/check PASS is not claimed without fresh evidence.
 
-## Fresh Web 0.6.4 finding
+## Completed Profile corrective chain
 
-Grounding and most durability behavior improved, but fresh Gift/Merloom generation still reproduced already-forbidden Profile content:
+- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — compactness / generic-workflow deduplication.
+- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — surface-role evidence, Domain deduplication, meta-procedure exclusion and normative-rule compression.
+- `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074` — fact grounding, Memory/history isolation, old-Profile revalidation and authority-class preservation.
+- `EG-V060-PROFILE-DURABILITY-CORRECTIVE-075` — separate durability gate after grounding; `verified != durable`; temporary delivery/runtime facts stay out by default; explicit durable/version-scoped architecture remains eligible; fixed metadata fields enforced.
+- `EG-V060-PROFILE-ADHERENCE-CORRECTIVE-076` — mandatory pre-return compliance gate and exact rejection of stage-only anti-goals, code/source maps, Domain ownership mini-maps and expanded per-Skill routing prose.
 
-- Gift promoted stage-only/current-work `storefront CMS` non-goal into durable constraints;
-- Gift retained more detailed Domain ownership than needed despite an established Domain map;
-- Merloom placed source/code responsibility paths into `Environment`;
-- Merloom repeated per-Skill trigger prose in `Engineering Governance`.
+## Task 076 source verification
 
-The previous plan to rerun the unchanged `0.6.4` candidate is superseded by Owner direction. Because the same candidate cannot demonstrate a corrective that was never implemented, a bounded source corrective is now authorized.
+Focused compare from the Task-076 control checkpoint changed only:
 
-## Active corrective
-
-`EG-V060-PROFILE-ADHERENCE-CORRECTIVE-076` is ACTIVE.
-
-Goal: turn the existing Grounding / Durability / Classification / Compression requirements into a mandatory pre-return compliance gate and add exact rejection rules for the repeated leakage classes, without changing the eight-Skill architecture.
-
-Authorized source scope:
-
-- `skills/project-profile/SKILL.md`;
-- `skills/project-profile/references/profile-contract.md`;
-- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `plugin.json`;
 - `references/V060_INTEGRATED_ACCEPTANCE.md`;
-- `plugin.json` patch version.
+- `skills/project-profile/SKILL.md`;
+- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `skills/project-profile/references/profile-contract.md`.
 
-After source/package/readback verification, update the same Web Plugin identity and restore parent Task 070 to fresh Web regression state.
+No other Skill or capability architecture changed.
+
+Task 076 converts the existing rules from advisory prose into a required generation boundary:
+
+```text
+Grounding Gate
+→ Durability Gate
+→ Classification / authority placement
+→ Compression / deduplication
+→ Mandatory Pre-return Compliance Gate
+→ Project Profile
+```
+
+The pre-return gate requires the draft to be corrected before return when any of these are present:
+
+- a current/MVP/phase/wave/deferred non-goal promoted to permanent identity without separate durable authority;
+- repository directories/module/source paths/symbols/code-responsibility lists in `Environment`;
+- detailed ownership catalogs that reconstruct an established Domain map;
+- per-Skill trigger prose or conditional Skill enumeration in ordinary Project Profile `Engineering Governance`;
+- fixed metadata-field drift.
+
+The shipped `Engineering Governance` Profile hook is now intentionally compact:
+
+`Engineering work uses Engineering Governance. Default entry: project-governance. Conditional capabilities follow the reusable routing contract.`
+
+## Acceptance additions
+
+Integrated acceptance now explicitly covers:
+
+- Gift-like stage-only `storefront CMS` non-goal leakage;
+- Gift-like reduced Domain ownership catalog leakage;
+- Merloom-like source-directory/code-responsibility leakage into `Environment`;
+- Merloom-like per-Skill trigger expansion;
+- mandatory pre-return correction rather than returning a known-bad draft plus caveats.
+
+## Next milestone
+
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` resumes on Web `0.6.5`.
+
+Run fresh neutral cross-project Profile regressions:
+
+1. Gift: no Memory-only preferences, no stage-only `storefront CMS` anti-goal, no detailed Domain ownership catalog, durable B2B/Product-first/RFQ identity retained.
+2. Merloom: no code-directory responsibility map in `Environment`; compact Engineering Governance hook only; durable greenfield/single-Authority/Save-Publish boundaries retained.
+3. MemoX: current MVP/wave/viewer shape excluded while `V1 SQLite`, `long-term Rust Core` and authority-class distinctions remain.
+4. FloatTabs: old Project Instructions do not self-bootstrap, established Domain Map remains a pointer, current/runtime state stays out.
+5. fixed metadata fields remain `Profile surface` + `Primary/mirror role`.
+
+Formal GitHub release/merge and Local Codex integrated acceptance remain deferred until the Web boundary passes.
