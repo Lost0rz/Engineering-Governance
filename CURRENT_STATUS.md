@@ -6,13 +6,13 @@ Last verified: 2026-10-14.
 
 Formal immutable GitHub release remains `plugin-v0.5.5`; previously accepted Web/Mac mini/MacBook Air baseline remains `0.5.5`.
 
-No formal GitHub v0.6.0 release has been created yet.
+No formal GitHub v0.6.x release has been created yet.
 
-## v0.6.0 source architecture / current semantic candidate
+## v0.6.x source architecture / current semantic candidate
 
-The eight-Skill architecture remains accepted. Current acceptance-driven source candidate:
+The eight-Skill architecture remains accepted. Current corrected Delivery / Semantic candidate:
 
-`e08c77aaaeaadc95ab79d4bbd492d1beb1ec3df8`
+`ca64841b141888675c2670eeaf4c6cbccb8a5395`
 
 Completed bounded correctives:
 
@@ -21,21 +21,33 @@ Completed bounded correctives:
 
 Task 072 focused source audit: PASS.
 
+After the Web Plugin refresh automatically advanced the installed candidate to `0.6.1`, repository `plugin.json` was aligned from `0.6.0` to `0.6.1`. This version-alignment commit changes package identity only; no Skill behavior changed after the Task 072 semantic corrective.
+
 PR #26 remains OPEN / DRAFT / UNMERGED. Host facts are reread at their own boundary; CI/check PASS is not claimed without current evidence.
 
 ## Web Plugin candidate acceptance
 
-Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is ACTIVE.
+Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is `WAITING_FRESH_WEB_SESSION`.
 
-Evidence already established in a fresh Web conversation:
+Current candidate installation evidence:
+
+- personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- Web Plugin current version: `0.6.1`;
+- current Web release: `pluginrel_6acf006fb68c81918d269b6ee46719e6`;
+- scope/discoverability remain `USER / PRIVATE`;
+- root `plugin.json` and platform-managed `.codex-plugin/plugin.json` both report `0.6.1`;
+- the refresh overlaid only the manifest plus the three corrected `project-profile` shipped files;
+- installed `project-profile` Skill, template and contract contain the compression gate, anti-content/dedup rules, template-first output discipline, and explicit Profile surface/role rule.
+
+Evidence already established in a previous fresh Web conversation:
 
 - exact eight top-level Skill discovery: PASS;
 - ordinary status/progress inspection -> `project-governance`: PASS;
 - advisory inspection does not over-route to formal Audit/Navigation/Doctor: PASS;
 - Project Profile request -> Project Profile capability: PASS for routing/authority/freshness boundary;
-- first generated Profile excluded live PR/HEAD/CI/current-task state but duplicated reusable governance procedure: FAIL, corrected in Task 072 source.
+- first generated Profile excluded live PR/HEAD/CI/current-task state but duplicated reusable governance procedure: FAIL, corrected by Task 072 source.
 
-The currently installed Web 0.6.0 candidate predates Task 072 and must be refreshed from Semantic candidate `e08c77aa...` before the Profile retest result can be accepted.
+The previous fresh conversation may still hold the pre-refresh 0.6.0 Skill snapshot. The corrected Profile regression must therefore be rerun in a new fresh Web conversation/session against candidate `0.6.1`.
 
 ## Project Profile corrected contract
 
@@ -49,4 +61,4 @@ The currently installed Web 0.6.0 candidate predates Task 072 and must be refres
 
 ## Next milestone
 
-Refresh the personal Web Plugin 0.6.0 candidate from Semantic candidate `e08c77aa...`, then rerun the Project Profile generation negative case plus remaining Web routing scenarios. If Web passes, continue Local Codex integrated acceptance. Formal GitHub release/merge remains deferred.
+Open a new fresh Web conversation against Plugin `0.6.1` and rerun the same Engineering-Governance Project Profile generation case. If compactness/dedup regression passes, continue the remaining Web routing scenarios; then continue Local Codex integrated acceptance. Formal GitHub release/merge remains deferred.
