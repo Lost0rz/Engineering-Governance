@@ -1,64 +1,73 @@
-# CURRENT TASK — Project Profile Compactness Corrective v0.6.0
+# CURRENT TASK — Web Candidate Acceptance v0.6.0
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072`
+Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
-Task class: `CORRECTIVE`
+Task class: `VERIFY`
 
 State: `ACTIVE`
 
 ## Objective
 
-Correct the reusable `project-profile` output contract exposed by fresh-Web acceptance: generated Profiles understand the authority boundary but still tend to duplicate generic Engineering Governance workflow/protocol detail and grow into a second governance manual.
+Validate the installed v0.6.0 Engineering Governance Plugin across fresh Web discovery/routing behavior before formal GitHub release or PR merge, using bounded source correctives only when real reusable defects are exposed.
 
-## Acceptance finding basis
+## Corrective history / current source identity
 
-Fresh Web v0.6.0 evidence established:
+Completed acceptance-driven correctives:
 
-- exact eight-Skill discovery: PASS;
-- ordinary project status/progress routing -> `project-governance`: PASS;
-- Project Profile request -> `project-profile` semantic boundary: PASS;
-- generated Profile freshness design / exclusion of live PR/HEAD/CI/task state: PASS;
-- Profile compactness / generic-workflow deduplication: FAIL / reusable corrective required.
+- `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff request/receipt templates aligned with the accepted Card/Receipt contract.
+- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile output contract hardened so Profiles remain compact landing indexes and do not duplicate generic Engineering Governance procedure.
 
-Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` remains the parent acceptance purpose and resumes after this bounded corrective.
+Current v0.6.0 Architecture Delivery / Semantic candidate:
 
-## In scope
+`e08c77aaaeaadc95ab79d4bbd492d1beb1ec3df8`
 
-- strengthen `skills/project-profile/SKILL.md` so a Profile is a compact landing index, not a governance handbook;
-- make generic Skill procedures/routing tables/Card schemas/verification tiers/Doctor workflows/artifact mechanics explicit Profile anti-content;
-- require template-first output with no extra top-level sections unless project-specific stable context cannot fit the template;
-- prefer authority/capability pointers over summarized reusable procedures;
-- require explicit Profile surface and PRIMARY/MIRROR/single-surface role when the target surface is known;
-- update `profile-contract.md`, template guidance only if needed, and integrated acceptance scenarios;
-- preserve Project Profile as `DERIVED_PROJECT_CONTEXT` and preserve all existing mutation/authority boundaries.
+Task 072 focused source audit: PASS.
+
+## Web acceptance evidence already established
+
+- fresh Web session discovers the exact eight top-level Skills: PASS;
+- ordinary project status/progress inspection -> `project-governance`: PASS;
+- advisory inspection did not over-route to Evidence Audit / Domain Navigation / Incident Doctor: PASS;
+- Project Profile request reached the Project Profile capability and excluded live PR/HEAD/CI/current-task content: PASS for routing/authority/freshness boundary;
+- first Project Profile output duplicated reusable routing/handoff/verification/incident/artifact procedure and was too long: reusable finding corrected by Task 072.
+
+## Remaining Web boundary
+
+Refresh the Web Plugin candidate from Semantic candidate `e08c77aa...`, then rerun the Project Profile generation case and remaining routing positive/negative scenarios from `references/V060_INTEGRATED_ACCEPTANCE.md`.
+
+Project Profile retest must establish:
+
+- explicit known Profile surface + PRIMARY/MIRROR/single-surface role;
+- template-first compact output;
+- stable project-specific facts/pointers retained;
+- live STATUS/TASK/PR/CI content excluded;
+- reusable routing/Handoff/verification/Doctor/artifact/control procedure not duplicated;
+- no extra top-level procedure sections unless genuinely project-specific.
 
 ## Out of scope
 
-- adding/removing/renaming top-level Skills;
-- changing Project Governance task authority;
-- changing Handoff schema, verification tiers, Doctor semantics, or Domain Navigation behavior;
-- formal GitHub release/merge;
-- Local Codex installation/acceptance;
-- editing installed Plugin cache as the source of truth.
-
-## Verification
-
-V0/V2 bounded contract review:
-
-- Profile Skill/contract/template are mutually consistent;
-- generated-output guidance rejects duplicated reusable workflow while allowing project-specific stable facts and pointers;
-- no conflict with AGENTS / STATUS / TASK / Domain / planning ownership;
-- integrated acceptance contains a realistic overlong-profile negative case;
-- no unrelated files change.
+- formal immutable GitHub `plugin-v0.6.0` release/tag;
+- PR #26 merge;
+- Local Codex / Mac mini / MacBook Air acceptance until Web surface is ready;
+- patching installed caches as source authority;
+- further source architecture expansion without a new real acceptance finding.
 
 ## Stop conditions
 
-Stop if the corrective would require a new authority layer, a fourth control file, a new Skill, or broad changes outside Project Profile/acceptance semantics.
+Stop before formal release/merge/local acceptance if refreshed Web candidate provenance differs from `e08c77aa...`, eight-Skill discovery regresses, Project Profile retest still reproduces generic-workflow duplication, or another reusable source defect appears.
 
-## Handoff / current stop point
+## Terminal boundary
 
-Implement the bounded source corrective on PR #26, run a focused source audit, freeze the corrected semantic candidate, reconcile controls, then resume Task 070 Web acceptance against an updated candidate release.
+Task 070 closes only after required Web routing/Profile acceptance evidence is recorded. Formal GitHub release remains a later integrated-acceptance boundary.
+
+Control Alignment:
+
+- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
+- `DOCUMENT_ALIGNMENT`: `UPDATED`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `CONTROL_ALIGNMENT`: `PASS`
