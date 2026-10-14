@@ -21,6 +21,14 @@ Use a narrower Skill only for the bounded capability it owns, then return here w
 
 A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal acceptance/readiness verdict is requested. See `references/global-routing.md` and `references/capability-composition.md`.
 
+### Mandatory cross-context handoff boundary
+
+When the requested output itself is an execution/audit/review/verify/diagnose card, construction card, instructions, or structured receipt intended for **another agent, session, machine, reviewer, or execution context**, route the transfer artifact through `agent-handoff` before returning it.
+
+This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten `CURRENT_TASK.md`.
+
+Do not substitute an informal/legacy execution-card schema merely because the underlying task is corrective, implementation-heavy, or already has a detailed plan. Action adjectives such as `CORRECTIVE` describe purpose/delta; Handoff `MODE` remains the receiver side-effect class defined by Agent Handoff.
+
 ## Governed development
 
 1. Read applicable project authority and only bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
