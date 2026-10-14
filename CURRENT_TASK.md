@@ -1,36 +1,50 @@
-# CURRENT TASK — v0.6.0 Integrated Acceptance
+# CURRENT TASK — Project Profile & Transfer Contracts v0.6.0
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-V060-INTEGRATED-ACCEPTANCE-067`
+Task ID: `EG-CAPABILITY-PROFILE-HANDOFF-LIFECYCLE-068`
 
-Task class: `AUDIT`
+Task class: `CORRECTIVE`
 
 State: `ACTIVE`
 
 ## Objective
 
-Run one consolidated installed/runtime acceptance against frozen semantic head `f3d47b00cac41ebd19408cef18563c91be67ae53`, covering Web and supported Local Codex environments without modifying reusable source during acceptance.
+Complete the reusable v0.6.0 source architecture before installed acceptance by adding a lightweight Project Profile capability, standardizing handoff cards/receipts and compact engineering status receipts, and unifying project-artifact refresh/lifecycle rules without creating a second control plane.
 
-## Gate 0 — candidate identity / environment readiness
+## Superseded task
 
-Before behavior scenarios, each tested environment must prove it is actually running the v0.6.0 candidate or a package/install proven from the frozen semantic identity.
+`EG-V060-INTEGRATED-ACCEPTANCE-067` is superseded before installed/runtime acceptance. Its Web readiness observation remains historical evidence only; no v0.6.0 runtime verdict was produced.
 
-- Web: current observed Engineering Governance install exposes only the legacy three Skills (`project-governance`, `domain-navigation`, `incident-doctor`), so the v0.6.0 seven-Skill candidate is **NOT YET PRESENT** in this Web runtime.
-- Mac mini Codex: fresh v0.6.0 candidate install/runtime identity not yet observed in Task 067.
-- MacBook Air Codex: fresh v0.6.0 candidate install/runtime identity not yet observed in Task 067.
+## In scope
 
-An environment that is not on the candidate is `NOT_READY`, not a v0.6.0 routing PASS/FAIL.
+- add one bounded top-level `project-profile` Skill for derived project context/index generation and refresh;
+- distinguish Profile vs `AGENTS.md` vs Domain/navigation vs STATUS/TASK vs durable planning;
+- standardize Handoff Card + Receipt envelopes and EXECUTE/AUDIT/VERIFY profiles, including test-run mapping;
+- add compact Engineering Status Receipt guidance for governance responses;
+- add lightweight artifact/authority lifecycle and affected-owner reconciliation rules;
+- add explicit continuation anti-churn and same-task PR/workspace reuse rules;
+- reduce project `AGENTS.md` template duplication of reusable workflow;
+- update routing/composition/plugin docs/acceptance for the new capability.
 
-## Acceptance authority
+## Out of scope
 
-- Source semantic head: `f3d47b00cac41ebd19408cef18563c91be67ae53`.
-- Specification: `references/V060_INTEGRATED_ACCEPTANCE.md`.
-- Published/accepted baseline remains `0.5.5` until v0.6.0 acceptance and later release work complete.
-- No installed cache/source patching is authorized. Reusable defects return to a remote corrective task.
+- installed Plugin/Web/Codex acceptance;
+- runtime/daemon/database/model-router/automatic enforcement;
+- project-specific Profile generation for InvestDesk/Gift/Merloom;
+- release/merge of PR #26.
 
-## Current stop point
+## Verification
 
-Complete candidate packaging/install identity for each intended acceptance environment, then run the consolidated matrix. Do not interpret the current Web 0.5.5 behavior as evidence about v0.6.0.
+- source/tree/frontmatter/reference consistency;
+- exact intended top-level Skill set;
+- no duplicate task/status/domain/planning authority introduced;
+- no hardcoded environment-specific runtime values;
+- read-only remote source audit on the final semantic candidate;
+- PR remains Draft until later integrated acceptance.
+
+## STOP
+
+Stop if the new Profile would become a fourth control file, duplicate Domain Map authority, or if Card/Receipt templates redefine task authority instead of transporting it.

@@ -6,38 +6,27 @@ Last verified: 2026-10-14.
 
 Formal release remains `plugin-v0.5.5`; accepted Web/Mac mini/MacBook Air baseline remains `0.5.5`.
 
-No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has run yet.
+No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has run.
 
-## v0.6.0 architecture — FROZEN FOR CONSOLIDATED ACCEPTANCE
+## v0.6.0 source architecture — REOPENED FOR BOUNDED HARDENING
 
-Task `EG-CAPABILITY-ROUTING-ENVIRONMENT-HARDENING-066` is complete.
+Task `EG-CAPABILITY-PROFILE-HANDOFF-LIFECYCLE-068` is ACTIVE on PR #26.
 
-- Frozen Architecture Delivery / Semantic HEAD: `f3d47b00cac41ebd19408cef18563c91be67ae53`.
-- Prior Task 065 freeze `b7fb0051b8c51b5c846a507fad9037518dcf18db` is superseded for final v0.6.0 acceptance.
-- PR #26 remains OPEN / DRAFT / UNMERGED; source audit observed `mergeable=true`, `mergeable_state=clean`.
-- Semantic head commit statuses: none reported; **CI PASS is not claimed**.
-- Installed integrated acceptance: `NOT_RUN_BY_DESIGN`.
+- Prior source freeze: `f3d47b00cac41ebd19408cef18563c91be67ae53`.
+- Task 067 installed-acceptance start was superseded before acceptance because additional reusable-source gaps were identified.
+- Current work is source/governance hardening only; installed/runtime acceptance remains deferred.
+- PR #26 remains OPEN / DRAFT / UNMERGED.
+- No CI PASS is claimed where commit/check status is absent.
 
-## Accepted architecture
+## Bounded hardening goals
 
-- Exactly seven top-level Skills; no Router Skill.
-- Routing surfaces are environment-neutral: explicit selection, Skill metadata/platform discovery, project guidance, and authoritative global guidance where supported.
-- Portable workflow lives in Skills/references; root `AGENTS.md` is source-repository maintenance guidance.
-- `ENVIRONMENT_DEFAULT_ONLY` remains active for delegated models; stronger-model escalation remains disabled.
-- Environment-specific model/reasoning, parallel capacity, delegation limits, material tools, workspace/runtime constraints are resolved from the current environment only when decision-relevant.
-- Same-purpose work can cross Web/local/session/machine/Sub Agent contexts without changing task purpose.
-- Cross-repository work keeps per-repository control/write authority; a primary task does not automatically authorize another repository.
-- Evidence Audit routes on requested verdict/outcome, not CI/PR keywords.
-- `DIAGNOSE` handoff is read-only; state-changing diagnostic probes use `EXECUTE` + `PURPOSE: DIAGNOSTIC_PROBE`.
-- Solution Design and Incident Doctor retain lightweight reversibility/probe-safety rules only when material.
-- No-op control reconciliation means no write/commit.
-
-## Task 066 source audit
-
-`V2 remote source-architecture audit: PASS` for semantic head `f3d47b00cac41ebd19408cef18563c91be67ae53`.
-
-Verified: only governance/Skill/design/acceptance Markdown/control changes; Plugin version remains `0.6.0`; no runtime/daemon/database/workflow/model-router/automatic enforcement was added; exact seven-Skill directory set remains.
+- introduce a lightweight `project-profile` derived-context capability without making it an authority;
+- keep `AGENTS.md` normative, Profile descriptive/indexing, Domain Map navigational, STATUS/TASK current-control, and planning long-lived design;
+- standardize handoff Card/Receipt transport contracts and a compact human-facing engineering status receipt;
+- reconcile only affected semantic owners when project artifacts become stale;
+- reduce repeated workflow prose in project-local guidance;
+- preserve environment-owned runtime/config values and existing lightweight governance principles.
 
 ## Next milestone
 
-Run one consolidated v0.6.0 installed Plugin/Web/Codex acceptance using `references/V060_INTEGRATED_ACCEPTANCE.md`. Do not split it into one Skill at a time and do not patch reusable source inside installed Plugin caches.
+Finish Task 068 source implementation, run a complete remote source audit, freeze the new semantic candidate, then reconsider the deferred consolidated installed Plugin/Web/Codex acceptance.
