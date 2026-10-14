@@ -1,6 +1,6 @@
 # Engineering Governance Capability Model v0.6.0
 
-Status: ACTIVE DESIGN AUTHORITY for v0.6.0; current model-policy amendment `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064`
+Status: ACTIVE DESIGN AUTHORITY for v0.6.0; current model-authority amendment `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065`
 
 Date: 2026-10-14
 
@@ -46,6 +46,8 @@ Keep three concepts separate:
 
 Changing context does not create a new task by itself. Same-purpose work can continue across contexts and Sub Agent units under one `TASK_ID`.
 
+Execution context also owns its runtime-specific configuration unless a project explicitly defines a portable configuration artifact. A local runtime configuration is local truth; a managed Web/cloud runtime default is truth for that managed execution context.
+
 Use Project Governance reconciliation or a distinct task when engineering purpose/authorization materially changes, such as a separately commissioned independent audit, a distinct corrective objective, or a new design decision that changes scope/interfaces/side effects/writer authority.
 
 ## 4. Capability ownership
@@ -55,7 +57,7 @@ Use Project Governance reconciliation or a distinct task when engineering purpos
 | `project-governance` | normal project/repository engineering work | control plane, task purpose/scope/authorization, workspace/writer lifecycle, verification tier/cadence, composition, closeout | governing flow; does not absorb specialist procedures |
 | `solution-design` | material intent/architecture/state-ownership ambiguity or durable design decision | design question, constraints, options/tradeoffs, accepted design, convergence | returns accepted design/reconciliation need; never authorizes implementation |
 | `execution-orchestrator` | authorized work benefits from decomposition, agents, parallelism, delegated-model policy, recovery, or controlled integration | execution topology, role/write boundaries, sequencing, delegated-model policy, recovery ledger, integration checkpoints | does not expand task scope or independently declare acceptance |
-| `agent-handoff` | responsibility crosses agent/session/machine/context | bounded request envelope and structured receipt | transports task/authority references + fresh delta; never becomes authority |
+| `agent-handoff` | responsibility crosses agent/session/machine/context | bounded request envelope and structured receipt | transports task/authority references + fresh delta; never becomes authority or runtime-config authority |
 | `evidence-audit` | explicit or independent implementation/PR/CI/release/readiness verdict is needed | audit identity/range, required claims, evidence evaluation, independence basis, findings/disposition/verdict | read-only by default; does not authorize fixes |
 | `domain-navigation` | semantic/source/test/runtime route is unclear | bounded evidence-backed route discovery | returns verified route/gap; does not own task or diagnosis |
 | `incident-doctor` | real failure/unsafe ambiguity blocks progress and current evidence is insufficient | diagnosis, hypotheses, probes, evidence-supported fix boundary | returns evidence/fix boundary; known bugs with sufficient evidence do not enter Doctor |
@@ -171,24 +173,33 @@ A role name never grants write permission by itself.
 
 ### 8.3 Delegated-model stabilization policy
 
-Task 064 establishes the current v0.6.0 delegated Sub Agent policy:
+Task 065 establishes the current v0.6.0 delegated Sub Agent authority model:
 
 ```text
-SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
-SUBAGENT_MODEL: environment configured default
-SUBAGENT_REASONING: environment configured default
+SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY
+SUBAGENT_MODEL_SOURCE: current execution environment authoritative Sub Agent configuration/runtime default
+MODEL_OVERRIDE: NONE
+CROSS_CONTEXT_MODEL_PROPAGATION: DISABLED
 STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-The execution environment owns the concrete default model and reasoning setting. Reusable governance does not hardcode one provider/model as universal truth.
+Reusable governance does not define a concrete provider, model, or reasoning setting. The execution environment that actually runs the Sub Agent owns those values.
 
-The current user Codex convention may configure a default such as `gpt-6-luna` with `xhigh` reasoning effort. Model identity and reasoning effort are separate dimensions: `xhigh` reasoning does not mean a stronger/HIGH model was selected.
+Resolution rules:
 
-`LOW / STANDARD / HIGH` remain only future portable capability vocabulary while `DEFAULT_ONLY` is active. They do not route delegated Sub Agents during stabilization.
+1. if the current execution environment exposes authoritative Sub Agent configuration, use it;
+2. if the platform/runtime manages its default internally, allow that default to apply without an explicit override;
+3. if exact model/reasoning identity is not observable, keep it `PLATFORM_DEFAULT` / `UNKNOWN` rather than infer a value;
+4. do not import concrete model/reasoning values from another machine, session, Web/local context, repository document, memory, or controller model;
+5. after cross-context handoff, the receiver resolves its own runtime/configuration authority again.
+
+Model identity and reasoning configuration are separate runtime evidence fields. Neither implies the other.
+
+`LOW / STANDARD / HIGH` remain only future portable capability vocabulary while `ENVIRONMENT_DEFAULT_ONLY` is active. They do not route delegated Sub Agents during stabilization.
 
 Do not downgrade or upgrade a delegated unit based on role complexity; do not inherit a different controller/session model merely because it is available; do not automatically or intentionally escalate a difficult Sub Agent to a stronger model.
 
-If the configured default model is unavailable or materially insufficient, return a capability/model gap to the controller. Re-enabling tier-based or stronger-model routing requires a later explicit user/project policy change and corresponding governance update.
+If the current environment default is unavailable or materially insufficient, return a capability/environment gap to the controller. Re-enabling tier-based or stronger-model routing requires a later explicit user/project policy change and corresponding governance update.
 
 ### 8.4 Review gates
 
@@ -227,9 +238,11 @@ Useful semantic fields:
 
 For same-purpose continuation, preserve the same `TASK_ID`. The receiver rereads current authority; compatible advance may continue, material conflict returns to Project Governance, and unavailable required authority produces STOP rather than reconstruction from stale chat/memory.
 
-Web/local/cloud/Sub Agent/reviewer/session/machine are context labels, not task-purpose definitions.
+Web/local/cloud/Sub Agent/reviewer/session/machine are context labels, not task-purpose definitions and not each other's runtime-config authority.
 
-Do not copy whole controls, plans, Domain maps, secrets, unrelated personal data, or generic Engineering Governance procedure into handoff cards by default.
+Under `ENVIRONMENT_DEFAULT_ONLY`, handoff may carry the policy but never a concrete sender-specific Sub Agent model/reasoning value as the receiver's default. The receiver resolves its own environment configuration/runtime default. Unobservable exact values remain `PLATFORM_DEFAULT` / `UNKNOWN`.
+
+Do not copy whole controls, plans, Domain maps, secrets, unrelated personal data, sender-specific runtime model settings, or generic Engineering Governance procedure into handoff cards by default.
 
 Modes:
 
@@ -305,6 +318,8 @@ Handoff requests/receipts, Sub Agent briefs, recovery ledgers, audit reports, re
 
 They may carry fresh evidence but cannot silently expand scope or replace an authority. When evidence conflicts with the source that owns the semantic class, re-verify freshness and reconcile through Project Governance.
 
+Environment-specific runtime configuration evidence remains evidence about that environment. It is not promoted into reusable Plugin authority or another context's runtime configuration by being included in a receipt.
+
 ## 13. Skill Engineering quality contract
 
 This is repository-maintainer guidance, not an eighth Skill.
@@ -319,7 +334,7 @@ Every top-level Skill has:
 6. progressive disclosure;
 7. no hidden task/control authority.
 
-Over-triggering is a defect. Material under-use of safe Sub Agent parallelism can also be a defect. A deliberate environment/project capability restriction is not under-use; during `DEFAULT_ONLY`, stronger-model non-use is intentional policy.
+Over-triggering is a defect. Material under-use of safe Sub Agent parallelism can also be a defect. A deliberate environment/project capability restriction is not under-use; during `ENVIRONMENT_DEFAULT_ONLY`, stronger-model non-use and cross-context model isolation are intentional policy.
 
 ## 14. Work packages and amendments
 
@@ -348,11 +363,16 @@ Over-triggering is a defect. Material under-use of safe Sub Agent parallelism ca
 
 ### Task 064 — model-policy stabilization
 
-- WP15 — delegated policy `DEFAULT_ONLY`;
-- use environment-configured default Sub Agent model/reasoning;
-- distinguish reasoning effort such as `xhigh` from model tier;
-- disable automatic and intentional stronger-model escalation during stabilization;
-- retain LOW/STANDARD/HIGH only as inactive future vocabulary;
+- WP15 — disable automatic and intentional stronger-model escalation during stabilization;
+- retain LOW/STANDARD/HIGH only as inactive future vocabulary.
+
+### Task 065 — environment model authority
+
+- WP16 — delegated policy `ENVIRONMENT_DEFAULT_ONLY`;
+- concrete model/reasoning authority belongs to the current execution environment;
+- remove concrete Local model/reasoning examples from reusable source;
+- prohibit cross-context propagation of concrete model/reasoning defaults;
+- keep unobservable platform defaults `PLATFORM_DEFAULT` / `UNKNOWN`;
 - update integrated acceptance accordingly.
 
 ## 15. Integrated acceptance contract
@@ -365,9 +385,11 @@ It must exercise, at minimum:
 - positive and negative/near-miss routing;
 - same-task continuation across contexts and Sub Agent units;
 - useful safe parallel Sub Agent execution;
-- `DEFAULT_ONLY` environment model/reasoning behavior;
+- `ENVIRONMENT_DEFAULT_ONLY` delegated-model behavior;
+- each execution environment resolving its own authoritative config/runtime default;
+- no concrete model/reasoning propagation from Local to Web/cloud or the reverse;
+- unobservable managed-platform defaults remaining `PLATFORM_DEFAULT` / `UNKNOWN` without override or guesswork;
 - no stronger-model inheritance or escalation during stabilization;
-- `xhigh` reasoning distinguished from stronger-model selection;
 - handoff authority freshness/conflict/unavailable behavior;
 - independent audit classification and required-claim coverage;
 - severity/disposition mapping;
