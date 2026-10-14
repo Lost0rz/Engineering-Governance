@@ -20,7 +20,7 @@ When freshness/drift matters, record `AUTHORITY_OBSERVED_BASIS` such as a contro
 - current cross-repository dependency fact;
 - transfer-specific STOP/output condition.
 
-Do not put durable engineering principles, full control-file text, stale chat history, speculative facts, unrelated secrets/credentials, or unnecessary personal data into DELTA.
+Do not put durable engineering principles, full control-file text, stale chat history, speculative facts, unrelated secrets/credentials, unnecessary personal data, or sender-specific runtime model configuration into `DELTA`.
 
 ## 2. Common request envelope
 
@@ -55,7 +55,21 @@ Do not manufacture a new task merely because a different agent/machine/session a
 
 If the receiver is being asked to perform a materially different engineering purpose, such as a separately commissioned independent acceptance audit or distinct corrective objective, Project Governance establishes/reconciles that task purpose first. Agent Handoff transports it; Agent Handoff does not invent it.
 
-## 4. Mode profiles
+## 4. Execution-environment configuration isolation
+
+Runtime/tool/model configuration belongs to the execution environment that owns it unless the active task explicitly authorizes a portable configuration artifact.
+
+For delegated-model policy `ENVIRONMENT_DEFAULT_ONLY`:
+
+1. the sender may state the policy but does not transmit a concrete Sub Agent model/reasoning value as the receiver's default;
+2. the receiver resolves its own authoritative Sub Agent configuration/runtime default after the handoff;
+3. Local/Web/cloud/other environments do not inherit each other's model or reasoning settings;
+4. if the receiver cannot observe its concrete default, use `PLATFORM_DEFAULT` / `UNKNOWN` rather than infer it from sender text, memory, repository docs, or another machine;
+5. a concrete model/reasoning observation may appear in a receipt only as evidence about the environment that actually exposed it, never as reusable cross-context authority.
+
+This prevents a portable handoff from accidentally turning one environment's local configuration into a global Plugin default.
+
+## 5. Mode profiles
 
 ### EXECUTE
 
@@ -101,7 +115,7 @@ Confirm a named claim, identity or check. Request states exactly what propositio
 
 Return the observation, identity/freshness, `PASS | FAIL | UNKNOWN`, what that result proves and what it does not prove. If success means no change/no output, say that explicitly.
 
-## 5. Receipt profiles
+## 6. Receipt profiles
 
 ### State-changing compact receipt
 
@@ -148,7 +162,7 @@ NEXT_SAFE_ACTION:
 
 Fields may be omitted only when genuinely not applicable and the decision signal remains unambiguous. Absence is not evidence of `UNCHANGED`.
 
-## 6. Context-package economy
+## 7. Context-package economy
 
 Prefer references + bounded fresh delta. Include exact excerpts only when the receiver cannot access the source or exact wording is necessary. Avoid full chat history and repeated generic governance rules.
 
