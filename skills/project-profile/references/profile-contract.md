@@ -164,7 +164,33 @@ After grounding and durability checks, classify candidates by semantic owner:
 - long-lived design rationale/work packages -> durable planning authority;
 - stable project identity, broad product loop, durable authority boundary, durable/version-scoped architecture, stable environment/platform role, durable priorities/anti-goals/risk cues, or authority pointers -> Profile.
 
-A repository-relative path can appear as an authority pointer (for example `docs/architecture/DOMAIN_MAP.md`). It must not become an `Environment` item or a code-responsibility catalog merely because it is stable in the repository.
+A repository-relative path can appear as an authority pointer. It must not become an `Environment` item or a code-responsibility catalog merely because it is stable in the repository.
+
+## Authority map structural boundary
+
+`Authority map` is an **authority-pointer section**.
+
+When no detailed Domain/navigation authority exists, it may contain the minimal broad authority distinctions needed to orient the project.
+
+When a detailed Domain/navigation authority **does** exist, apply the stricter structural rule:
+
+```text
+Authority map
+= authority pointers only
+```
+
+Required behavior:
+
+- include the Domain/navigation pointer;
+- include other top-level authority pointers only as needed;
+- do not add Domain-specific ownership prose beneath the pointer list;
+- do not add `X owns / Y owns` subsections;
+- do not add upstream/downstream/runtime ownership lists;
+- do not add source-class catalogs, route catalogs, canonical-source inventories, Domain summaries, or reduced ownership tables.
+
+If a broad ownership distinction is essential to understand project identity, keep **at most one short invariant** in `Purpose` or `Stable concepts`, for example `Merloom owns published business facts; Gift is the serving/presentation plane.` Then stop and point to the detailed Domain/navigation authority.
+
+The presence of a detailed Domain/navigation authority therefore reduces how much ownership detail belongs in the Profile. It is not a source from which to generate a smaller ownership map.
 
 ## Current projection surface
 
@@ -200,9 +226,9 @@ Keep only grounded, durability-qualified context that materially reduces orienta
 
 - purpose and core business/product loop;
 - a few stable project concepts;
-- authority map/pointers;
+- authority pointers;
 - durable planning/navigation pointers;
-- stable project environment/platform roles;
+- stable project environment/platform/data roles;
 - durable project-specific priorities, anti-goals or risk cues;
 - explicit durable/version-scoped architecture context when useful;
 - the shipped compact Engineering Governance hook.
@@ -223,6 +249,7 @@ Normally remove or replace with a short pointer:
 - continuation, branch/worktree/PR lifecycle procedure;
 - detailed Control Alignment / semantic-head / `CONTROL_ONLY_DRIFT` procedure;
 - detailed Domain lists and Domain-to-source/symbol/test/runtime maps when an established Domain/navigation authority exists;
+- Domain ownership subsections/catalogs beneath `Authority map` when detailed navigation authority exists;
 - repository directory/module/source responsibility lists when navigation authority exists;
 - ordered startup/read/check/navigation sequences already owned by Project Governance or project rules;
 - instructions explaining how future agents should maintain, classify, ground, durability-test or refresh the Profile;
@@ -232,23 +259,27 @@ Normally remove or replace with a short pointer:
 - unverified project claims inherited from Memory, prior chat, old Profile/Project Instructions, or other historical derived artifacts;
 - verified but non-durable current-stage delivery/runtime/acceptance facts.
 
-A short stable invariant is allowed when it materially helps orientation. Example: `Detailed Domain ownership and source/test routes live in docs/architecture/DOMAIN_MAP.md.` Do not reproduce the underlying map/procedure.
-
-### Established Domain authority rule
-
-If an established Domain/navigation authority already maps ownership/source/test/runtime routes:
-
-1. point to that authority;
-2. retain at most the few broad product/authority distinctions required to understand the project;
-3. do not create multiple ownership subsections, reduced ownership catalogs, symbol lists, source-path lists or a separate `Domain Model` unless the user explicitly requested a Domain summary rather than a Project Profile.
-
-A Profile that recreates upstream/downstream/runtime ownership catalogs from an existing Domain Map fails deduplication even if each fact is correct and durable.
+A short stable invariant is allowed when it materially helps orientation. Do not reproduce the underlying map/procedure.
 
 ### Normative-rule boundary
 
 `Priorities / constraints` may keep concise grounded **durable** project-specific priorities, anti-goals and risk cues. It should not restate a detailed set of operational MUST/MUST-NOT rules from `AGENTS.md` or current-stage non-goals from a delivery overlay.
 
 When a rule is needed only to govern execution, point to normative authority. Keep the Profile statement only when the underlying idea is a stable project identity/risk cue that materially helps orientation.
+
+### Environment boundary
+
+`Environment` is for durable platform/environment/data-role context and authority pointers.
+
+It must not contain:
+
+- repository directory/module/source responsibility maps;
+- temporary machines, ports, endpoints or acceptance runtime details;
+- behavioral fail-closed/fallback/no-fixture rules;
+- verification, testing or execution rules;
+- lifecycle procedure.
+
+A behavioral rule that is genuinely a durable project risk/constraint may appear in `Priorities / constraints` only when it passes grounding and durability. Otherwise point to its owning authority.
 
 ### Engineering Governance hook boundary
 
@@ -273,16 +304,17 @@ Use the shipped Profile template as the default shape and preserve its metadata 
 - Priorities / constraints
 - Engineering Governance
 
-Add another top-level section only when stable project-specific context cannot fit cleanly into these sections. Do not add a section merely because a reusable Skill, Domain Map, grounding/durability contract, or Profile contract has its own concept/procedure.
+Add another top-level section only when stable project-specific context cannot fit cleanly into these sections.
 
-In particular, generated Profiles normally do **not** add sections named or serving as:
+Generated Profiles normally do **not** add sections named or serving as:
 
 - `Domain Model` when an established Domain Map already exists;
 - `Project Profile Rule` / `Profile Maintenance` / `How to use this Profile`;
 - `Grounding Report` / `Provenance Ledger` / `Durability Report`;
 - `Workflow` / `Startup` / numbered read-order instructions;
 - `Current Delivery` / `Current Runtime` / `Current Acceptance` summaries;
-- source-directory/code-responsibility maps.
+- source-directory/code-responsibility maps;
+- Domain ownership catalogs beneath `Authority map`.
 
 ## Mandatory pre-return compliance gate
 
@@ -295,7 +327,9 @@ GROUNDED: YES
 DURABILITY_QUALIFIED: YES
 CORRECTLY_CLASSIFIED: YES
 AUTHORITY_CLASSES_PRESERVED: YES
+AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS: YES
 DOMAIN_AND_CODE_MAP_DEDUPED: YES
+ENVIRONMENT_ROLE_ONLY: YES
 ENGINEERING_GOVERNANCE_HOOK_COMPACT: YES
 TEMPLATE_FIELDS_PRESERVED: YES
 ```
@@ -311,13 +345,16 @@ Mandatory rejection checks:
 2. **Code-map leak**
    - `Environment` or another section lists repository-relative implementation directories/modules/source files/symbols as responsibility mapping;
    - action: remove and point to Domain/navigation authority.
-3. **Domain mini-map leak**
-   - detailed Domain authority exists and draft recreates ownership catalogs/subsections;
-   - action: keep only broad distinctions required for orientation plus one pointer.
-4. **Engineering Governance expansion**
+3. **Domain ownership leak**
+   - detailed Domain/navigation authority exists and `Authority map` contains Domain-specific ownership prose, `X owns / Y owns` subsections, upstream/downstream/runtime ownership lists, source-class catalogs, route catalogs or reduced Domain summaries;
+   - action: remove the ownership detail from `Authority map`; keep pointers only; retain at most one broad orientation invariant elsewhere if essential.
+4. **Environment behavior leak**
+   - `Environment` contains fail-closed/fallback/no-fixture/verification/execution rules rather than environment/platform/data roles;
+   - action: remove or reclassify only if genuinely durable and Profile-worthy.
+5. **Engineering Governance expansion**
    - draft adds per-Skill triggers or enumerates conditional Skills beyond the compact hook;
    - action: replace the section with the shipped hook.
-5. **Template drift**
+6. **Template drift**
    - fixed metadata fields missing/renamed;
    - action: correct before return.
 
