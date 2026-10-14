@@ -17,7 +17,7 @@ Project Governance remains lightweight for simple clear work: entering it does n
 | --- | --- | --- |
 | Establishing/using project authority, starting/reconciling authorized work, verification-tier choice, workspace lifecycle, final alignment/closeout | `project-governance` | Remain here unless a narrower capability is needed. |
 | Materially ambiguous requirements, cross-boundary architecture/state ownership, competing options, or durable design decisions must be resolved before implementation | `solution-design` | Return accepted design and reconciliation need to Project Governance. |
-| Authorized work needs decomposition, multi-agent/role scheduling, parallelism, model-tier policy, or resumable execution | `execution-orchestrator` | Return execution evidence/result to Project Governance. |
+| Authorized work needs decomposition, multi-agent/role scheduling, parallelism, delegated-model policy, or resumable execution | `execution-orchestrator` | Return execution evidence/result to Project Governance. |
 | Responsibility crosses agents/sessions/machines/contexts and needs a bounded request/receipt | `agent-handoff` | Return to the caller/receiver workflow; handoff never becomes task authority. |
 | Independent implementation/code/PR/CI/release/merge-readiness evidence verdict is requested | `evidence-audit` | Return verdict/findings to Project Governance or the requesting read-only caller. |
 | Domain/capability/authority/source/symbol/runtime/dependency/test route is unclear | `domain-navigation` | Return verified route/unresolved gap to caller. |
@@ -38,7 +38,7 @@ A handoff/delegation never creates a second task authority. Narrow Skills do not
 
 ## Anti-duplication boundary
 
-The global managed block contains only route-selection semantics. Do not copy into it control-plane procedures, design workflows, orchestration/model rules, handoff templates, audit procedures, workspace lifecycle, V0–V3 details, Doctor probe methods, or current project facts.
+The global managed block contains only route-selection semantics. Do not copy into it control-plane procedures, design workflows, orchestration/delegated-model rules, handoff templates, audit procedures, workspace lifecycle, V0–V3 details, Doctor probe methods, or current project facts.
 
 ## Ambiguity rule
 
