@@ -1,0 +1,387 @@
+name: Release Plugin v0.7.0
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - plugin.json
+      - skills/**
+      - references/V070_DESIGN_MULTI_MODULE_ACCEPTANCE.md
+      - references/LICENSE_NOTES.md
+      - references/UPSTREAMS.md
+      - .github/workflows/release-plugin-v0.7.0.yml
+  push:
+    branches:
+      - main
+    paths:
+      - plugin.json
+      - skills/**
+      - references/V070_DESIGN_MULTI_MODULE_ACCEPTANCE.md
+      - references/LICENSE_NOTES.md
+      - references/UPSTREAMS.md
+      - .github/workflows/release-plugin-v0.7.0.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          manifest = json.loads(Path('plugin.json').read_text())
+          assert manifest['name'] == 'engineering-governance'
+          assert manifest['version'] == '0.7.0'
+
+          expected = {
+              'project-governance',
+              'project-profile',
+              'solution-design',
+              'design',
+              'execution-orchestrator',
+              'agent-handoff',
+              'evidence-audit',
+              'domain-navigation',
+              'incident-doctor',
+          }
+          actual = {p.name for p in Path('skills').iterdir() if p.is_dir()}
+          assert actual == expected, (actual, expected)
+
+          for skill in sorted(expected):
+              path = Path('skills') / skill / 'SKILL.md'
+              assert path.is_file(), path
+
+          # Preserve prior Project Profile / Handoff / governance gates.
+          profile = Path('skills/project-profile/SKILL.md').read_text()
+          assert 'Mandatory pre-return compliance gate' in profile
+          assert 'AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS' in profile
+
+          project_governance = Path('skills/project-governance/SKILL.md').read_text()
+          for marker in (
+              'Mandatory cross-context handoff boundary',
+              '## Compact Engineering Status Receipt',
+              'Governance route:',
+              'Skills used:',
+              'Capability modules:',
+              '### Mandatory pre-return receipt compliance gate',
+              'GOVERNANCE_ROUTE_REPORTED: YES',
+              'SKILLS_USED_REPORTED: YES',
+              'SKILLS_USED_ACTUAL_ONLY: YES',
+              'ROUTE_AND_SKILLS_CONSISTENT: YES',
+          ):
+              assert marker in project_governance, marker
+
+          handoff_skill = Path('skills/agent-handoff/SKILL.md').read_text()
+          assert 'Mandatory pre-return compliance gate' in handoff_skill
+          for marker in (
+              'HANDOFF_ROUTE_APPLIED: YES',
+              'REQUIRED_CORE_COMPLETE: YES',
+              'MODE_VALID: YES',
+              'AUTHORITY_REFERENCED_NOT_DUPLICATED: YES',
+              'OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES',
+              'RETURN_CONTRACT_OUTCOME_NEUTRAL: YES',
+          ):
+              assert marker in handoff_skill, marker
+
+          handoff_request = Path('skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md').read_text()
+          for field in ('CARD_ID', 'TASK_ID', 'MODE', 'CAPABILITY', 'TARGET', 'AUTHORITY', 'DELTA', 'BOUNDARY', 'RETURN_CONTRACT'):
+              assert field in handoff_request, field
+          assert 'MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE' in handoff_request
+
+          handoff_receipt = Path('skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md').read_text()
+          for field in ('CARD_ID', 'TASK_ID', 'MODE', 'CAPABILITY', 'TARGET', 'OUTCOME'):
+              assert field in handoff_receipt, field
+          assert 'OUTCOME_IS_OBSERVED: YES' in handoff_receipt
+
+          # Preserve exact Anthropic source identity.
+          anthropic_source = Path('skills/design/references/anthropic/frontend-design.md')
+          assert anthropic_source.is_file()
+          source_blob = subprocess.check_output(['git', 'hash-object', str(anthropic_source)], text=True).strip()
+          assert source_blob == 'a5333457c414d20d625f307df945842c0952ecc3', source_blob
+
+          anthropic_license = Path('skills/design/references/anthropic/LICENSE.txt').read_text()
+          assert 'Apache License' in anthropic_license
+          assert 'Version 2.0, January 2004' in anthropic_license
+          anthropic_provenance = Path('skills/design/references/anthropic/PROVENANCE.md').read_text()
+          for marker in (
+              'anthropics/skills',
+              'a5333457c414d20d625f307df945842c0952ecc3',
+              'f433b1a53f5b830a205fd2df78e2b34974656c7b',
+          ):
+              assert marker in anthropic_provenance, marker
+
+          # Verify new Design closed-loop contract.
+          design = Path('skills/design/SKILL.md').read_text()
+          for marker in (
+              'stable routed design capability',
+              'The external capability route remains `design`',
+              'Project context and authority intake',
+              'Mandatory Design closed loop',
+              'Anthropic design analysis',
+              'Admin page-pattern composition when applicable',
+              'Synthesize the bounded design specification',
+              'Microsoft final Design review',
+              'Rendered visual acceptance',
+              'PROFILE_DERIVED_NOT_AUTHORITY',
+              'ADMIN_PATTERN_LAYER: APPLIED | NOT_APPLICABLE',
+              'MICROSOFT_FINAL_REVIEW: PASS | LIMITED_BY_EVIDENCE',
+              'MICROSOFT_BLOCKING_FINDINGS_OPEN: NO',
+              'MICROSOFT_MAJOR_FINDINGS_OPEN: NO',
+              'SHOTGUN_ROUTING_AVOIDED: YES',
+              'A functional browser regression alone is not visual acceptance',
+          ):
+              assert marker in design, marker
+
+          module_map = Path('skills/design/references/module-map.md').read_text()
+          for marker in (
+              'Anthropic `frontend-design` — design reasoning',
+              'shadcn-admin-informed patterns — conditional admin composition',
+              'awesome-design-md-informed synthesis — bounded visual-system specification',
+              'Microsoft `frontend-design-review`-informed review — final Design audit',
+              'This is an **internal Design pipeline**, not a global all-Skill pipeline.',
+              'External brand design documents are inspiration/reference only.',
+          ):
+              assert marker in module_map, marker
+
+          # Verify adapted upstream modules, pinned provenance, and licenses.
+          module_checks = {
+              'skills/design/references/shadcn-admin/admin-patterns.md': (
+                  'Admin / back-office page-pattern composition',
+                  'ADMIN_PATTERN_LAYER',
+                  'A long page of nested or repeated equal-weight cards is usually a composition failure',
+              ),
+              'skills/design/references/awesome-design-md/design-spec-synthesis.md': (
+                  'Bounded DESIGN.md / visual-system synthesis',
+                  'External brand DESIGN.md examples never outrank the target project',
+                  'Do / Don\'t',
+              ),
+              'skills/design/references/microsoft/final-review.md': (
+                  'Final frontend Design review',
+                  'Blocking — must fix before Design completion',
+                  'Major — fix in the current Design pass',
+                  'Creative Frontend Design mode',
+              ),
+          }
+          for rel, markers in module_checks.items():
+              text = Path(rel).read_text()
+              for marker in markers:
+                  assert marker in text, (rel, marker)
+
+          shadcn_prov = Path('skills/design/references/shadcn-admin/PROVENANCE.md').read_text()
+          assert 'satnaing/shadcn-admin' in shadcn_prov
+          assert 'e16c87f213a5ba5e45964e9b67c792105ec74d26' in shadcn_prov
+          shadcn_license = Path('skills/design/references/shadcn-admin/LICENSE.txt').read_text()
+          assert 'MIT License' in shadcn_license
+          assert 'Copyright (c) 2024 Sat Naing' in shadcn_license
+
+          awesome_prov = Path('skills/design/references/awesome-design-md/PROVENANCE.md').read_text()
+          assert 'VoltAgent/awesome-design-md' in awesome_prov
+          assert '3b605329240ce735b510037cca322f1831fdd7f8' in awesome_prov
+          awesome_license = Path('skills/design/references/awesome-design-md/LICENSE.txt').read_text()
+          assert 'MIT License' in awesome_license
+          assert 'Copyright (c) 2026 VoltAgent' in awesome_license
+
+          microsoft_prov = Path('skills/design/references/microsoft/PROVENANCE.md').read_text()
+          for marker in (
+              'microsoft/skills',
+              'd2f769fd9d7ee81b4d768301bcd2eae14ddcfd0a',
+              '6fd8fe378026252e3810eae36844704f3c684fe3',
+              '065f3cef3e43ea5ac2b1727a9ffcbcaa4639216b',
+              '7c29054b2f307d76b71ac54a2da81edcf3014d09',
+          ):
+              assert marker in microsoft_prov, marker
+          microsoft_license = Path('skills/design/references/microsoft/LICENSE.txt').read_text()
+          assert 'MIT License' in microsoft_license
+          assert 'Copyright (c) Microsoft Corporation.' in microsoft_license
+
+          # Routing remains selective and Design-owned after entry.
+          global_routing = Path('skills/project-governance/references/global-routing.md').read_text()
+          assert 'Routing is **selective rather than cumulative**' in global_routing
+          assert 'already-understood frontend redesign may route `project-governance → design`' in global_routing
+          assert 'does not additionally require Domain Navigation' in global_routing
+          assert 'Reading that existing context does not route through `project-profile`' in global_routing
+          assert 'The underlying project authorities still outrank the Profile.' in global_routing
+
+          composition = Path('skills/project-governance/references/capability-composition.md').read_text()
+          assert '## Composition is selective, not a pipeline' in composition
+          assert 'Do **not** walk the Skill catalog from top to bottom' in composition
+          assert 'Branches are gates, not stages. More branches are not better.' in composition
+
+          # Historical acceptance files remain present; v0.7.0 supersedes only the old
+          # Microsoft-planned/inactive state while preserving all non-conflicting gates.
+          assert Path('references/V068_DESIGN_ANTHROPIC_ACCEPTANCE.md').is_file()
+          assert Path('references/V069_DESIGN_CLOSED_LOOP_RECEIPT_ACCEPTANCE.md').is_file()
+
+          v070 = Path('references/V070_DESIGN_MULTI_MODULE_ACCEPTANCE.md').read_text()
+          for marker in (
+              'TOP_LEVEL_SKILL_COUNT: 9',
+              'DESIGN_EXTERNAL_ROUTE_ONLY: YES',
+              'PROJECT_PROFILE_CONTEXT_INTAKE: YES',
+              'PROFILE_DERIVED_NOT_AUTHORITY: YES',
+              'EXISTING_PROFILE_FORCES_PROJECT_PROFILE_SKILL: NO',
+              'DESIGN_INTERNAL_ORDER_EXPLICIT: YES',
+              'INTERNAL_MODULES_ARE_TOP_LEVEL_SKILLS: NO',
+              'ANTHROPIC_SOURCE_IDENTITY_PRESERVED: YES',
+              'ADMIN_PATTERN_CONDITIONAL: YES',
+              'ADMIN_PATTERN_FOR_STOREFRONT_BY_DEFAULT: NOT_APPLICABLE',
+              'EXISTING_PROJECT_DESIGN_AUTHORITY_WINS: YES',
+              'EXTERNAL_BRAND_REFERENCE_IS_AUTHORITY: NO',
+              'MICROSOFT_FINAL_REVIEW_MODULE_ACTIVE: YES',
+              'MICROSOFT_CREATIVE_MODE_COMPETES_WITH_ANTHROPIC: NO',
+              'MICROSOFT_SEVERITY_MODEL: BLOCKING_MAJOR_MINOR',
+              'MICROSOFT_BLOCKING_OR_MAJOR_REQUIRES_CORRECTIVE_REREVIEW: YES',
+              'MISSING_FIGMA_OR_STORYBOOK_CAN_BE_FABRICATED: NO',
+              'FUNCTIONAL_BROWSER_TEST_EQUALS_VISUAL_ACCEPTANCE: NO',
+              'SIMPLE_FRONTEND_BUG_FORCES_DESIGN: NO',
+              'MICROSOFT_INTERNAL_REVIEW_FORCES_EVIDENCE_AUDIT: NO',
+              'ADAPTED_MODULE_LICENSES_AND_PROVENANCE_PACKAGED: YES',
+              'PLUGIN_PAYLOAD_PLUGIN_JSON_PLUS_SKILLS_ONLY: YES',
+              'PROJECT_PROFILE_PRIOR_GATES_PRESERVED: YES',
+              'AGENT_HANDOFF_PRIOR_GATES_PRESERVED: YES',
+              'PRIOR_RELEASE_GATES_PRESERVED: YES',
+          ):
+              assert marker in v070, marker
+          PY
+
+      - name: Build exact Plugin payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          files = [Path('plugin.json')] + sorted(
+              p for p in Path('skills').rglob('*') if p.is_file()
+          )
+
+          with zipfile.ZipFile('engineering-governance-plugin.zip', 'w', compression=zipfile.ZIP_DEFLATED) as zf:
+              for path in files:
+                  zf.write(path, path.as_posix())
+
+          with zipfile.ZipFile('engineering-governance-plugin.zip') as zf:
+              names = zf.namelist()
+              assert len(names) == len(files), (len(names), len(files))
+              assert names[0] == 'plugin.json'
+              assert all(n == 'plugin.json' or n.startswith('skills/') for n in names)
+              required = {
+                  'skills/design/SKILL.md',
+                  'skills/design/references/anthropic/frontend-design.md',
+                  'skills/design/references/anthropic/LICENSE.txt',
+                  'skills/design/references/anthropic/PROVENANCE.md',
+                  'skills/design/references/shadcn-admin/admin-patterns.md',
+                  'skills/design/references/shadcn-admin/LICENSE.txt',
+                  'skills/design/references/shadcn-admin/PROVENANCE.md',
+                  'skills/design/references/awesome-design-md/design-spec-synthesis.md',
+                  'skills/design/references/awesome-design-md/LICENSE.txt',
+                  'skills/design/references/awesome-design-md/PROVENANCE.md',
+                  'skills/design/references/microsoft/final-review.md',
+                  'skills/design/references/microsoft/LICENSE.txt',
+                  'skills/design/references/microsoft/PROVENANCE.md',
+              }
+              missing = required.difference(names)
+              assert not missing, missing
+              assert not any(n.startswith('.codex-plugin/') for n in names)
+              assert not any(n.startswith('references/') for n in names)
+              assert not any(n.startswith('.github/') for n in names)
+
+          Path('release.entries').write_text(str(len(files)))
+          PY
+
+          sha256sum engineering-governance-plugin.zip | tee release.sha256
+          wc -c < engineering-governance-plugin.zip | tr -d ' ' | tee release.size
+
+      - name: Create immutable tag and GitHub release
+        if: github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG='plugin-v0.7.0'
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            REMOTE_TAG_SHA="$(git ls-remote --tags origin "refs/tags/${TAG}" | awk '{print $1}')"
+            if [ "${REMOTE_TAG_SHA}" != "${GITHUB_SHA}" ]; then
+              echo "Tag ${TAG} already exists at ${REMOTE_TAG_SHA}; refusing to move release identity from ${GITHUB_SHA}."
+              exit 1
+            fi
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git tag "${TAG}" "${GITHUB_SHA}"
+            git push origin "refs/tags/${TAG}"
+          fi
+
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists; refusing duplicate publication."
+            exit 1
+          fi
+
+          SIZE="$(cat release.size)"
+          SHA256="$(cut -d' ' -f1 release.sha256)"
+          ENTRIES="$(cat release.entries)"
+
+          cat > release-notes.txt <<EOF
+          Engineering Governance Plugin v0.7.0
+
+          Package version: 0.7.0
+
+          Source SHA:
+          ${GITHUB_SHA}
+
+          Asset:
+          engineering-governance-plugin.zip
+
+          Size (bytes):
+          ${SIZE}
+
+          SHA-256:
+          ${SHA256}
+
+          Package file entries:
+          ${ENTRIES}
+
+          Included Skills:
+          - project-governance
+          - project-profile
+          - solution-design
+          - design
+          - execution-orchestrator
+          - agent-handoff
+          - evidence-audit
+          - domain-navigation
+          - incident-doctor
+
+          v0.7.0 Design changes:
+          - keep a single external Design route while adding an ordered internal multi-module pipeline
+          - consume available Project Profile/Instructions as derived context without promoting them to authority
+          - preserve Anthropic frontend-design as the upstream reasoning/anti-template layer
+          - add conditional shadcn-admin-informed admin/back-office page-pattern composition
+          - add awesome-design-md-informed bounded DESIGN.md / visual-system synthesis
+          - add Microsoft frontend-design-review-informed downstream final review with Blocking/Major/Minor corrective re-review
+          - preserve rendered visual acceptance and evidence-limit handling
+          - preserve exactly nine top-level Skills, selective routing, prior Project Profile/Handoff/receipt gates and Anthropic source identity
+
+          The release asset contains only plugin.json and skills/**. Repository controls, root references, marketplace catalogs and workflows are not packaged into the Plugin ZIP.
+          EOF
+
+          gh release create "${TAG}" engineering-governance-plugin.zip \
+            --verify-tag \
+            --title 'Engineering Governance Plugin v0.7.0' \
+            --notes-file release-notes.txt
