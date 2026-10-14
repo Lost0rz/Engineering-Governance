@@ -16,7 +16,7 @@ Extend the stable routed `design` capability from the Anthropic-only baseline in
 
 Required sequence for qualifying UI/UX/frontend design or redesign work:
 
-`project/profile context intake → actual interface audit → Anthropic design reasoning → admin pattern composition when applicable → DESIGN.md visual-system synthesis → implementation/prototype → Microsoft final design review → corrective pass → rendered visual acceptance when supported`.
+`project/profile context intake → actual interface audit → Anthropic design reasoning → admin pattern composition when applicable → DESIGN.md visual-system synthesis → implementation/prototype → Microsoft final design review → corrective pass/re-review → rendered visual acceptance when supported`.
 
 ## Required behavior
 
@@ -85,11 +85,31 @@ The change is complete only when:
 - versioned acceptance evidence covers the new pipeline and regressions;
 - source PR is reviewed/merged and release/Web Plugin synchronization is completed if release gates pass.
 
+## Current progress
+
+Source implementation and self-review are complete through the pre-merge acceptance boundary.
+
+- PR: `#31 — feat: complete multi-module Design closed loop`;
+- accepted semantic candidate HEAD: `8ced8f3ddc455da1228887867c94e5c8c2f01cda`;
+- PR pre-release workflow: `Release Plugin v0.7.0`;
+- successful PR run: `38655255661` / run #3;
+- result: `V070_PREMERGE_ACCEPTANCE: PASS`;
+- release publication: not yet performed;
+- Web Plugin v0.7.0 synchronization: not yet performed.
+
+The current branch HEAD may be newer than the accepted semantic candidate because STATUS/TASK alignment commits are control-only. Do not confuse control HEAD movement with semantic Plugin change.
+
 ## Control Alignment
 
 - `PREDECESSOR_TASK`: `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081` (`COMPLETE`)
 - `START_MAIN_HEAD`: `366989b63e3c12707b3535eff89d306bf21b48c8`
 - `TASK_BRANCH`: `codex/design-multi-module-closed-loop-v070`
+- `PR`: `#31`
 - `TARGET_VERSION`: `0.7.0`
 - `TOP_LEVEL_SKILLS_TARGET`: `9`
 - `DESIGN_EXTERNAL_ROUTE`: `design`
+- `PREMERGE_SEMANTIC_HEAD`: `8ced8f3ddc455da1228887867c94e5c8c2f01cda`
+- `PREMERGE_CI_RUN`: `38655255661`
+- `PREMERGE_CI`: `PASS`
+- `FORMAL_RELEASE_070`: `PENDING`
+- `WEB_PLUGIN_SYNC_070`: `PENDING`
