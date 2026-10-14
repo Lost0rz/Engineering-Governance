@@ -14,26 +14,16 @@ Formal GitHub Plugin release remains `plugin-v0.5.5`.
 
 No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has been performed yet.
 
-## v0.6.0 architecture — ENVIRONMENT MODEL AUTHORITY CORRECTIVE ACTIVE
+## v0.6.0 architecture — FROZEN FOR CONSOLIDATED ACCEPTANCE
 
-Task `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065` is active on branch `codex/capability-model-v0.6.0`.
+Task `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065` completed the environment-model-authority corrective on branch `codex/capability-model-v0.6.0`.
 
-- Prior Task 064 semantic candidate: `31d9d94f1f59a3d5b49fb7c614f37ec752cff479`.
+- New Architecture Delivery / Semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
+- Prior Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance because reusable model-authority semantics changed after that freeze.
 - PR #26 remains OPEN / DRAFT / UNMERGED.
-- Installed v0.6.0 integrated acceptance remains `NOT_RUN_BY_DESIGN`.
-
-The Task 064 freeze is reopened only to remove environment-specific model/reasoning examples from reusable source and make the current execution environment the sole delegated-model configuration authority.
-
-## User-decided environment model policy
-
-- Sub Agents remain a positive throughput/context-isolation capability; safe useful parallelism remains encouraged.
-- Reusable governance must never hardcode or recommend one concrete Sub Agent model or reasoning setting as a cross-environment default.
-- Each execution context resolves delegated model behavior from **its own authoritative Sub Agent configuration/runtime default**.
-- Local Codex uses its own local configuration when that configuration is authoritative and observable.
-- Web/cloud/other contexts use their own environment/platform default; they must not inherit a Local model name or reasoning setting from repository source, handoff, memory, or another machine.
-- If an environment does not expose the concrete default model/reasoning identity, do not infer it. Record `PLATFORM_DEFAULT` / `UNKNOWN` as appropriate and do not override it.
-- Handoff may transfer the policy (`ENVIRONMENT_DEFAULT_ONLY`) but must not propagate concrete model/reasoning values across execution contexts.
-- Stronger-model override/escalation remains disabled until a later explicit policy change.
+- PR host mergeability observed during Task 065 source audit: `mergeable=true`.
+- Commit/check statuses on the new semantic head: none reported; **CI PASS is not claimed**.
+- Installed Plugin/Web/Codex integrated acceptance: `NOT_RUN_BY_DESIGN`.
 
 ## Seven-Skill model unchanged
 
@@ -49,18 +39,80 @@ Exactly seven top-level Skills remain:
 
 Global routing remains policy, not an eighth Skill.
 
-## Active corrective scope
+## Accepted delegated-model authority semantics
 
-Task 065 updates only model-configuration authority semantics:
+- Sub Agents remain a positive throughput/context-isolation capability; safe useful parallelism remains encouraged.
+- Active stabilization policy is `ENVIRONMENT_DEFAULT_ONLY`.
+- Reusable Engineering Governance does not define a concrete provider/model/reasoning value for delegated Sub Agents.
+- Each execution context resolves its own authoritative Sub Agent configuration/runtime default.
+- A local runtime may use/read its own local configuration locally without promoting that configuration into reusable Plugin truth.
+- Web/cloud/managed runtimes use their own platform/runtime defaults and do not inherit Local settings through repository source, handoff, memory, or another machine.
+- If an environment does not expose exact model/reasoning identity, keep it `PLATFORM_DEFAULT` / `UNKNOWN`; do not guess or override it.
+- Agent Handoff may carry the model **policy**, but concrete sender model/reasoning values do not become receiver defaults.
+- Stronger-model override/escalation remains disabled until a later explicit user/project policy change.
+- `LOW / STANDARD / HIGH` remain inactive future vocabulary only and do not route delegated Sub Agents during stabilization.
 
-- Execution Orchestrator Skill/contract;
-- root/reusable guidance that still names concrete model/reasoning examples;
-- handoff boundary for cross-context model propagation;
-- integrated acceptance scenarios;
-- durable v0.6.0 design records and PR metadata for consistency.
+## Other hardened v0.6.0 semantics preserved
 
-Task purpose/context, positive parallelism, audit, Domain Navigation, Incident Doctor and seven-Skill topology remain otherwise unchanged.
+- Task purpose, Sub Agent execution unit, and execution context remain distinct.
+- Same-purpose work may continue across Web/local/cloud/session/machine/Sub Agent contexts under the same `TASK_ID`.
+- Safe independent Sub Agent parallelism is positively used when beneficial.
+- Parallel writers require proven-disjoint semantic authority/workspaces and integration evidence.
+- Agent Handoff remains context-neutral and rereads current authority.
+- Evidence Audit distinguishes implementation self-check from independent acceptance and binds verdicts to required claims/evidence/independence basis.
+- Domain Navigation and Incident Doctor trigger boundaries remain unchanged.
 
-## Next milestone
+## Integrated acceptance specification
 
-Complete Task 065 source correction, run a bounded remote source audit, freeze a new v0.6.0 semantic candidate, then proceed to one consolidated integrated acceptance pass.
+`references/V060_INTEGRATED_ACCEPTANCE.md` now tests:
+
+- exact seven-Skill discovery and normal Project Governance entry;
+- positive and negative routing;
+- same-task continuation across contexts;
+- positive safe parallel Sub Agent use;
+- `ENVIRONMENT_DEFAULT_ONLY` behavior;
+- environment-specific configuration authority and Local/Web/cloud isolation;
+- observable current-environment configuration without promoting it into reusable source;
+- `PLATFORM_DEFAULT` / `UNKNOWN` behavior when managed defaults are opaque;
+- no cross-context concrete model/reasoning propagation;
+- no stronger-model escalation during stabilization;
+- handoff, audit, control, CI/PR/release/post-change, Domain Navigation, and Incident Doctor scenarios.
+
+The consolidated acceptance matrix has **not** been executed under Task 065.
+
+## Task 065 remote source audit
+
+`V2 remote source-architecture audit: PASS` for semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
+
+Verified:
+
+- exact seven-Skill directory set and no eighth Router Skill;
+- Plugin metadata remains `0.6.0`;
+- Task 065 changes are governance/Skill/design/acceptance Markdown/control only;
+- no runtime, daemon, database, release workflow, model-router, or automatic model-selection implementation was added;
+- active reusable model semantics use `ENVIRONMENT_DEFAULT_ONLY` rather than a concrete model/reasoning default;
+- concrete sender settings do not propagate across Web/local/cloud handoff boundaries;
+- unobservable platform defaults stay `PLATFORM_DEFAULT` / `UNKNOWN` rather than guessed;
+- stronger-model escalation remains disabled;
+- positive safe parallelism remains intact;
+- PR #26 remained Draft and mergeable during the audit;
+- no commit/check status exists on the semantic head, so CI PASS is not claimed.
+
+## Active problems and blockers
+
+No blocking remote source defect is known from Task 065 audit.
+
+Remaining acceptance dependency: run one consolidated installed Plugin/Web/Codex acceptance pass against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` (or a proven control-only descendant). Reusable-source defects discovered there return to the remote source flow.
+
+## Next intended milestone
+
+Authorize the consolidated v0.6.0 integrated acceptance task using `references/V060_INTEGRATED_ACCEPTANCE.md`. Do not split acceptance into one Skill at a time.
+
+## Task 065 control alignment
+
+- Related document: `documents/engineering-governance-capability-hardening-v0.6.0.md`.
+- Parent architecture: `documents/engineering-governance-capability-model-v0.6.0.md`.
+- Document alignment: `UPDATED` — both active design authorities now express environment-owned delegated-model configuration and cross-context isolation.
+- `CURRENT_STATUS.md`: `UPDATED`.
+- `CURRENT_TASK.md`: pending final closeout update in the same control-only closeout sequence.
+- Control alignment: `IN_PROGRESS` until task closeout commit is written.
