@@ -61,20 +61,26 @@ The goal is **effective safe execution**, not minimum agent count.
 
 ## Delegated model policy — stabilization period
 
-Current v0.6.0 Sub Agent policy is intentionally simple:
+Current v0.6.0 Sub Agent policy is environment-authoritative:
 
 ```text
-SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
-SUBAGENT_MODEL: environment configured default
-SUBAGENT_REASONING: environment configured default
+SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY
+SUBAGENT_MODEL_SOURCE: current execution environment authoritative Sub Agent configuration/runtime default
+MODEL_OVERRIDE: NONE
+CROSS_CONTEXT_MODEL_PROPAGATION: DISABLED
 STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-All delegated Sub Agents use the execution environment's configured default Sub Agent model and default reasoning setting. Reusable governance does not hardcode one provider/model name as universal truth.
+Reusable Engineering Governance does **not** define a concrete provider/model/reasoning value for Sub Agents.
 
-The current user Codex convention may configure a default such as `gpt-6-luna` with `xhigh` reasoning effort. Those are environment settings. `xhigh` is a reasoning-effort setting and is **not** the same thing as selecting a HIGH model tier.
+Each execution context resolves its own default from the environment that actually runs the Sub Agent:
 
-`LOW / STANDARD / HIGH` remain only future capability vocabulary during this stabilization period. They do not currently route delegated Sub Agents. Difficult work does not automatically or intentionally move a Sub Agent to a stronger model; if the configured default is insufficient, the unit returns a capability gap to the controller. Stronger-model routing can be re-enabled later only through an explicit user/project policy change.
+- local runtimes use their own authoritative local configuration when exposed;
+- Web/cloud/managed runtimes use their own platform/runtime default;
+- one context's concrete settings never become another context's defaults through repository text, memory, or handoff;
+- if exact model/reasoning identity is not observable, keep it `PLATFORM_DEFAULT` / `UNKNOWN` and do not infer a value.
+
+`LOW / STANDARD / HIGH` remain only future capability vocabulary during this stabilization period. They do not currently route delegated Sub Agents. Difficult work does not automatically or intentionally move a Sub Agent to a stronger model; if the current environment default is insufficient, the unit returns a capability/environment gap to the controller. Stronger-model routing can be re-enabled later only through an explicit user/project policy change.
 
 ## Handoff model
 
@@ -87,6 +93,8 @@ HANDOFF = task/authority references + fresh delta + action boundary + return con
 Same-purpose continuation preserves the same `TASK_ID`. Optional source/target context labels may identify Web/local/cloud/Sub Agent/reviewer/session/machine, but those contexts do not define task purpose.
 
 When authority freshness matters, the sender can state `AUTHORITY_OBSERVED_BASIS`; the receiver rereads current authority and continues only when current state is compatible with the handoff boundary.
+
+Handoff carries the delegated-model **policy**, not a concrete sender-specific model/reasoning configuration. The receiver resolves its own environment default.
 
 ## Evidence and audit
 
