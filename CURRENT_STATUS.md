@@ -4,69 +4,99 @@ Last verified: 2026-10-14.
 
 ## Published baseline
 
-Formal GitHub Plugin release remains `plugin-v0.6.8`.
+Formal GitHub Plugin release is now `plugin-v0.6.9`.
 
 Release provenance:
 
-- PR #28: `MERGED`;
-- merge/release source SHA: `7ac2d6262dd280df2b940fa75e9316db8a3615e7`;
-- release workflow: `Release Plugin v0.6.8`;
-- workflow run: `38572736330` — `success`;
-- tag: `plugin-v0.6.8`;
-- GitHub Release ID: `412755933`;
-- asset SHA-256: `79f19bfec117d6f6c914f72f1504949f7158bbddf888c223ed41b1bf92ccba39`;
+- Task: `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081`;
+- PR #29: `MERGED` — Design closed-loop / selective routing / receipt enforcement;
+- PR #30: `MERGED` — corrective release trigger inside the same Task 081;
+- released source SHA: `0f4fbba6b9344de4fb6f2c6fd659ec825333fdc8`;
+- release workflow: `Release Plugin v0.6.9`;
+- workflow run: `38586843709` — `success`;
+- tag: `plugin-v0.6.9`;
+- GitHub Release ID: `412857747`;
+- asset: `engineering-governance-plugin.zip`;
+- asset size: `110866` bytes;
+- asset SHA-256: `d157790b0c41eb3a9fd254c31319b9efe6936e357346eca9d20e19a373c857ff`;
+- package entries: `52`;
 - package scope: `plugin.json` + `skills/**` only;
 - top-level Skills: exactly `9`.
 
-The ninth Skill is `design`. Anthropic `frontend-design` is the only active internal design-source module; Microsoft design-review/adaptation and UX heuristic/audit modules remain planned and inactive.
+Anthropic `frontend-design` remains the only active internal Design source module. Its bundled source identity/provenance/license are preserved. Microsoft design-review/adaptation and UX heuristic/audit remain planned and inactive.
 
-## Verified v0.6.8 runtime observation
+## Design corrective result
 
-A real Merloom Product Detail redesign trial confirmed that local routing can load:
+The v0.6.9 Design contract now requires a qualifying design/redesign task to execute a bounded closed loop rather than merely read the Anthropic reference:
 
-- `project-governance`;
-- `design`;
-- bundled Anthropic `frontend-design`;
-- `domain-navigation`.
+`understand / diagnose → explicit Design deliverable → pre-build brief/genericity review → implementation → rendered visual critique / corrective pass when supported`.
 
-The route therefore reaches Design, but the observed output exposed two follow-on gaps:
+The Design deliverable explicitly covers design intent, page composition, hierarchy, visual-system decisions, interaction/state treatment, and protected business/data/lifecycle authority.
 
-1. Design can be read without a sufficiently explicit bounded design deliverable/closed-loop process before implementation, allowing the result to collapse into ordinary UI correction.
-2. The user-facing engineering receipt can omit the actual `Skills used` even though Project Governance already defines that field, reducing routing observability.
+Functional browser regression is no longer equivalent to visual acceptance. When rendered evidence is available, Design must inspect the implemented surface and correct material visual issues before completion; when unavailable, that limitation must be reported rather than fabricated.
 
-These are capability-contract/acceptance issues, not evidence that Design routing itself failed.
+## Routing / composition result
 
-## Current corrective task
+Capability composition is now selective rather than cumulative:
 
-Task `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081` is `ACTIVE` on branch:
+- ordinary engineering still enters `project-governance`;
+- narrow Skills are selected only for distinct material triggers;
+- an already-understood frontend redesign may remain `project-governance → design` through Design's own closed loop;
+- known project context does not by itself trigger `domain-navigation`;
+- Design's own rendered critique does not by itself trigger `evidence-audit`;
+- `solution-design` composes with Design only when a separate material engineering architecture/state-ownership ambiguity actually exists.
 
-`codex/design-anthropic-loop-receipt-enforcement`
+The goal is capability depth, not maximum Skill count.
 
-Objective:
+## Receipt observability
 
-- make the active Anthropic Design baseline execute a bounded design pass before implementation;
-- require rendered visual critique/correction when supported by the environment;
-- prevent shotgun routing to unrelated Skills;
-- strengthen pre-return enforcement for `Governance route` + actual `Skills used`.
+Project Governance now has a mandatory pre-return receipt compliance gate.
 
-Microsoft and UX-audit integration remain explicitly out of scope for this task.
+Every governed user-facing receipt must expose:
 
-## Distribution state
+- actual `Governance route`;
+- actual `Skills used`;
+- optional `Capability modules` when a used Skill materially applies a named internal source module;
+- task state, outcome, changes, control alignment, PR/workspace and next action as applicable.
 
-Published/Web baseline remains `0.6.8` until Task 081 source changes pass acceptance, merge and formal release.
+Installed/discovered/mentioned Skills that did not materially govern the work must not be reported as used.
 
-The user has locally installed `0.6.8` on Air at:
+## Web Plugin distribution
+
+The existing private personal Web Plugin was updated in place:
+
+- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.9`;
+- Web release ID: `pluginrel_6acf9be52a9c81919536fa9412ed1a67`;
+- scope/discoverability: `USER / PRIVATE` — unchanged;
+- root `plugin.json`: `0.6.9` read back;
+- platform `.codex-plugin/plugin.json`: `0.6.9` read back;
+- updated Design closed-loop Skill: read back;
+- updated Project Governance receipt gate: read back;
+- updated selective routing/composition: read back;
+- bundled Anthropic source/license/provenance remain present.
+
+`WEB_PLUGIN_SYNC`: `PASS`.
+
+## Local distribution state
+
+The last directly observed Local Codex installation on Air is still `0.6.8` at:
 
 `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.6.8`
 
-Do not claim the Task 081 corrective behavior is locally or Web-installed before a follow-on release/update is completed and read back.
+The supported marketplace source now publishes `0.6.9`. Local `0.6.9` installation/runtime acceptance is not claimed until a fresh local update/readback is observed.
+
+`LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`.
+`LOCAL_069_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
+
+## Current task
+
+Task `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081` is complete at the source/release/Web-distribution boundary. Local `0.6.9` runtime trial remains observational follow-up and does not change the released source identity.
 
 ## Control identity
 
-Task 081 start main:
+Released Delivery / Semantic Plugin identity:
 
-`e0ddabbf265225b42365234880a8b650efb16632`
+`0f4fbba6b9344de4fb6f2c6fd659ec825333fdc8`
 
-Current semantic released Plugin identity remains:
-
-`7ac2d6262dd280df2b940fa75e9316db8a3615e7`
+Any subsequent commit limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is control-only Repository HEAD movement and does not alter the released Plugin payload or semantic release identity.
