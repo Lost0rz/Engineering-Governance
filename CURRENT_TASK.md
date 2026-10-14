@@ -8,7 +8,7 @@ Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
 Task class: `VERIFY`
 
-State: `WAITING_FRESH_WEB_SESSION`
+State: `WAITING_FLOATTABS_PROFILE_REGRESSION`
 
 ## Objective
 
@@ -30,102 +30,105 @@ Current corrected Delivery / Semantic candidate:
 
 `edf20c44a5ec32b49d2494b7a1c9511af8ca32cd`
 
-Task 077 focused source/package/readback verification: PASS.
+Current Web candidate:
 
-## Current Web candidate
+- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.6`;
+- release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`;
+- scope/discoverability: `USER / PRIVATE`;
+- Task-077 source/package/readback verification: PASS.
 
-- existing personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- current Web candidate version: `0.6.6`;
-- current Web release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`;
-- scope/discoverability remain `USER / PRIVATE`;
-- platform-managed `.codex-plugin/plugin.json` and root `plugin.json` both report `0.6.6`;
-- Task-077 overlay ZIP SHA-256: `bc714a64fde1b273e346db6632728b338329ef1953bffb404360b5a078a1af64`;
-- overlay file Git-blob identities matched repository source before upload;
-- post-update installed-file readback confirms Task-077 Skill/template/contract content is active.
-
-## Task 077 behavior contract
-
-When a detailed Domain/navigation authority exists:
+## Current Profile contract under test
 
 ```text
-Authority map
-= authority pointers only
+Grounding Gate
+→ Durability Gate
+→ Classification / authority placement
+→ Compression / deduplication
+→ Mandatory Pre-return Compliance Gate
+→ Project Profile
 ```
 
-The Profile must not append Domain-specific ownership prose, `X owns / Y owns` subsections, upstream/downstream/runtime ownership lists, source-class catalogs, route catalogs or reduced Domain summaries under `Authority map`.
+When detailed Domain/navigation authority exists:
 
-At most one broad ownership invariant may appear elsewhere when essential to project identity.
+```text
+Authority map = authority pointers only
+```
 
-`Environment` contains durable platform/environment/data-role context and authority pointers only; code maps, temporary runtime detail and behavioral fail-closed/fallback/verification/execution rules remain outside that section.
+`Environment` is limited to durable platform/environment/data-role context and pointers. Engineering Governance uses the compact shipped hook.
 
-## Web 0.6.6 regression evidence
+## Fresh Web 0.6.6 evidence
 
-Same-session neutral regression after installed readback:
+### Gift — PASS for current target
 
-### Gift — PASS for Task-077 target
+- no Memory-derived preference leakage;
+- no current task/PR/CI or development-stage machine/port state;
+- no stage-only `storefront CMS` anti-goal;
+- Authority map is pointer-oriented with no ownership subcatalog;
+- one broad upstream-vs-Gift invariant remains for orientation;
+- Environment is role/data-flow oriented;
+- compact Engineering Governance hook;
+- durable B2B/Product-first/Inquiry/RFQ identity retained.
 
-- Authority map is pointer-only and includes `docs/storefront/DOMAIN_MAP.md`;
-- no Merloom/Gift ownership subcatalog is recreated under Authority map;
-- Environment contains storefront/platform/data-flow role only;
-- no stage-only/temporary/Memory-derived regressions returned;
-- durable B2B/Product-first/Inquiry/RFQ identity retained;
-- compact Engineering Governance hook preserved.
+Minor non-blocking compression note: generic `Keep project control lightweight` guidance is unnecessary Profile content.
 
-### Merloom — PASS for Task-077 target
+### Merloom — PASS for current target
 
-- Authority map remains pointer-oriented;
-- no source/code responsibility map in Environment;
-- durable Merloom/Gift platform and Business/Analytics data-role context retained;
-- durable greenfield/single-Authority/Publication/AI-candidate/recapture/RFQ/Analytics identity retained;
-- compact Engineering Governance hook preserved.
+- no current task/PR/CI/progress;
+- Authority map pointer-oriented;
+- no code/source responsibility map in Environment;
+- durable private-control-plane/Gift-serving and Business-vs-Analytics role distinctions retained;
+- durable greenfield/single-Authority/Publication/AI-candidate/recapture/Analytics boundaries retained;
+- compact Engineering Governance hook.
 
-These are valid current-session behavioral regressions for the corrected structure. They are not treated as an independent fresh-session proof of context isolation.
+### MemoX — PASS for required durability/authority-class target
 
-## Remaining Web boundary
+- current Codex MVP/wave/viewer/runtime delivery shape excluded;
+- `V1 SQLite` retained with scope;
+- `long-term Rust Core` retained with scope;
+- planned Swift Apple shell/UI retained with Rust/Swift boundary still unselected;
+- Raw Evidence / Canonical Memory / Provider and derived projections / MCP distinctions preserved;
+- DOMAIN_MAP remains navigation pointer rather than truth;
+- current Task/Status/runtime state excluded;
+- compact Engineering Governance hook.
 
-Required before claiming complete Web Profile acceptance:
+Minor non-blocking compression note: the twelve-item durable constraint list is more detailed than the ideal compact Profile.
 
-1. fresh/independent MemoX regression:
-   - current Codex MVP/wave/viewer/runtime shape excluded;
-   - `V1 SQLite`, `long-term Rust Core` and authority-class distinctions retained.
-2. fresh/independent FloatTabs regression:
-   - old Project Instructions do not self-bootstrap;
-   - established Domain Map remains a pointer;
-   - current/runtime state stays out.
-3. Prefer one independent fresh-session Gift or Merloom confirmation of the Task-077 structural behavior before final Web Profile PASS.
-4. Then continue remaining routing positive/negative scenarios from `references/V060_INTEGRATED_ACCEPTANCE.md`.
+## Decision
 
-## Previously established acceptance that remains valid
+Gift, Merloom and MemoX now materially pass the 0.6.6 grounding/durability/classification/Domain-pointer target. The remaining observations are compression-quality issues and do not justify another source corrective by themselves.
 
-- exact eight top-level Skill discovery: PASS;
-- ordinary project status/progress -> `project-governance`: PASS;
-- advisory inspection avoids over-routing: PASS;
-- Profile routing/live-state exclusion: PASS;
-- Memory/history grounding isolation: PASS;
-- authority-class preservation: PASS;
-- durability filtering: materially PASS;
-- Merloom/Gift Task-077 structural regression in current session: PASS.
+Do not open Task 078 from these observations alone.
+
+## Required next verification
+
+Run a fresh FloatTabs Profile regression:
+
+- old Project Instructions/Profile cannot bootstrap their own truth;
+- established Domain/navigation authority remains a pointer;
+- no current/runtime/acceptance detail enters the durable Profile;
+- no reduced ownership/code map appears;
+- fixed metadata fields remain correct;
+- Engineering Governance remains the compact hook.
+
+If FloatTabs passes, review the remaining Task-070 routing positive/negative scenarios and decide whether Web acceptance can close before Local Codex integrated acceptance.
 
 ## Out of scope
 
 - formal immutable GitHub v0.6.x release/tag;
 - PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web Profile/routing boundary passes;
+- Local Codex / Mac mini / MacBook Air acceptance until Web boundary closes;
 - changing ChatGPT Memory behavior;
-- further source expansion without new fresh acceptance evidence.
+- another Profile source corrective without new reusable failure evidence.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance if remaining fresh regressions reproduce prohibited Profile classes or expose another reusable source defect.
-
-## Terminal boundary
-
-Task 070 closes only after required Web routing/Profile acceptance evidence is recorded. Formal GitHub release remains a later integrated-acceptance boundary.
+Stop before formal release/merge/local acceptance if FloatTabs reproduces a prohibited Profile class or another reusable source defect appears.
 
 Control Alignment:
 
 - `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
-- `DOCUMENT_ALIGNMENT`: `UPDATED_BY_TASK_077`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED — current acceptance contract covers these cases`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED_WITH_GIFT_MERLOOM_MEMOX_EVIDENCE`
+- `CURRENT_TASK_RECONCILIATION`: `ADVANCED_TO_FLOATTABS_REGRESSION`
 - `CONTROL_ALIGNMENT`: `PASS`
