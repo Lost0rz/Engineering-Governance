@@ -1,0 +1,216 @@
+name: Release Plugin v0.6.8
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/release-plugin-v0.6.8.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          manifest = json.loads(Path('plugin.json').read_text())
+          assert manifest['name'] == 'engineering-governance'
+          assert manifest['version'] == '0.6.8'
+
+          expected = {
+              'project-governance',
+              'project-profile',
+              'solution-design',
+              'design',
+              'execution-orchestrator',
+              'agent-handoff',
+              'evidence-audit',
+              'domain-navigation',
+              'incident-doctor',
+          }
+          actual = {p.name for p in Path('skills').iterdir() if p.is_dir()}
+          assert actual == expected, (actual, expected)
+
+          for skill in sorted(expected):
+              path = Path('skills') / skill / 'SKILL.md'
+              assert path.is_file(), path
+
+          design = Path('skills/design/SKILL.md').read_text()
+          for marker in (
+              'stable routed design capability',
+              'references/anthropic/frontend-design.md',
+              'solution-design',
+              'Planned modules are not active behavior',
+          ):
+              assert marker in design, marker
+
+          anthropic_source = Path('skills/design/references/anthropic/frontend-design.md')
+          assert anthropic_source.is_file()
+          source_blob = subprocess.check_output(['git', 'hash-object', str(anthropic_source)], text=True).strip()
+          assert source_blob == 'a5333457c414d20d625f307df945842c0952ecc3', source_blob
+
+          license_text = Path('skills/design/references/anthropic/LICENSE.txt').read_text()
+          assert 'Apache License' in license_text
+          assert 'Version 2.0, January 2004' in license_text
+
+          provenance = Path('skills/design/references/anthropic/PROVENANCE.md').read_text()
+          for marker in (
+              'anthropics/skills',
+              'a5333457c414d20d625f307df945842c0952ecc3',
+              'f433b1a53f5b830a205fd2df78e2b34974656c7b',
+          ):
+              assert marker in provenance, marker
+
+          module_map = Path('skills/design/references/module-map.md').read_text()
+          assert 'Anthropic `frontend-design` — active baseline' in module_map
+          assert 'planned, not active' in module_map
+
+          project_governance = Path('skills/project-governance/SKILL.md').read_text()
+          assert '`design` — bounded UI/UX/frontend visual design' in project_governance
+          assert '`solution-design` remains the owner' in project_governance
+
+          global_routing = Path('skills/project-governance/references/global-routing.md').read_text()
+          assert '| create/redesign/critique bounded UI/UX or frontend visual design' in global_routing
+          assert '| `design` |' in global_routing
+
+          global_template = Path('skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md').read_text()
+          assert 'Use `design` for bounded UI/UX/frontend visual design or redesign' in global_template
+
+          composition = Path('skills/project-governance/references/capability-composition.md').read_text()
+          assert 'The nine Skills cooperate' in composition
+          assert '-> design?' in composition
+
+          acceptance = Path('references/V068_DESIGN_ANTHROPIC_ACCEPTANCE.md').read_text()
+          for marker in (
+              'TOP_LEVEL_SKILL_COUNT: `9`',
+              'LOCAL_FRONTEND_DESIGN_CONTENT_SHA_MATCH: `YES`',
+              'SEPARATE_ANTHROPIC_PLUGIN_REQUIRED: `NO`',
+              'SOLUTION_DESIGN_ARCHITECTURE_AUTHORITY_PRESERVED: `YES`',
+          ):
+              assert marker in acceptance, marker
+          PY
+
+      - name: Build exact Plugin payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          files = [Path('plugin.json')] + sorted(
+              p for p in Path('skills').rglob('*') if p.is_file()
+          )
+
+          with zipfile.ZipFile('engineering-governance-plugin.zip', 'w', compression=zipfile.ZIP_DEFLATED) as zf:
+              for path in files:
+                  zf.write(path, path.as_posix())
+
+          with zipfile.ZipFile('engineering-governance-plugin.zip') as zf:
+              names = zf.namelist()
+              assert len(names) == len(files), (len(names), len(files))
+              assert names[0] == 'plugin.json'
+              assert all(n == 'plugin.json' or n.startswith('skills/') for n in names)
+              assert 'skills/design/SKILL.md' in names
+              assert 'skills/design/references/anthropic/frontend-design.md' in names
+              assert 'skills/design/references/anthropic/LICENSE.txt' in names
+              assert 'skills/design/references/anthropic/PROVENANCE.md' in names
+              assert not any(n.startswith('.codex-plugin/') for n in names)
+
+          Path('release.entries').write_text(str(len(files)))
+          PY
+
+          sha256sum engineering-governance-plugin.zip | tee release.sha256
+          wc -c < engineering-governance-plugin.zip | tr -d ' ' | tee release.size
+
+      - name: Create immutable tag and GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG='plugin-v0.6.8'
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            REMOTE_TAG_SHA="$(git ls-remote --tags origin "refs/tags/${TAG}" | awk '{print $1}')"
+            if [ "${REMOTE_TAG_SHA}" != "${GITHUB_SHA}" ]; then
+              echo "Tag ${TAG} already exists at ${REMOTE_TAG_SHA}; refusing to move release identity from ${GITHUB_SHA}."
+              exit 1
+            fi
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git tag "${TAG}" "${GITHUB_SHA}"
+            git push origin "refs/tags/${TAG}"
+          fi
+
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists; refusing duplicate publication."
+            exit 1
+          fi
+
+          SIZE="$(cat release.size)"
+          SHA256="$(cut -d' ' -f1 release.sha256)"
+          ENTRIES="$(cat release.entries)"
+
+          cat > release-notes.txt <<EOF
+          Engineering Governance Plugin v0.6.8
+
+          Package version: 0.6.8
+
+          Source SHA:
+          ${GITHUB_SHA}
+
+          Asset:
+          engineering-governance-plugin.zip
+
+          Size (bytes):
+          ${SIZE}
+
+          SHA-256:
+          ${SHA256}
+
+          Package file entries:
+          ${ENTRIES}
+
+          Included Skills:
+          - project-governance
+          - project-profile
+          - solution-design
+          - design
+          - execution-orchestrator
+          - agent-handoff
+          - evidence-audit
+          - domain-navigation
+          - incident-doctor
+
+          v0.6.8 design baseline:
+          - add stable routed Design capability inside Engineering Governance
+          - bundle Anthropic frontend-design as the active internal visual-design baseline
+          - preserve Apache-2.0 license and source provenance
+          - distinguish UI/frontend visual design from Solution Design engineering architecture/state ownership
+          - keep Microsoft design-review/adaptation and UX heuristic/audit modules planned but inactive
+          - require no separate Anthropic design Plugin
+
+          The release asset contains only plugin.json and skills/**. Repository controls, documents, references, marketplace catalogs and workflows are not packaged into the Plugin ZIP.
+          EOF
+
+          gh release create "${TAG}" engineering-governance-plugin.zip \
+            --verify-tag \
+            --title 'Engineering Governance Plugin v0.6.8' \
+            --notes-file release-notes.txt

@@ -1,8 +1,8 @@
 # Capability composition
 
-The eight Skills cooperate without competing controllers.
+The nine Skills cooperate without competing controllers.
 
-`project-governance` owns task/control authority, lifecycle/reconciliation, writer/workspace boundaries, verification choice and closeout. A narrower Skill owns only its bounded capability.
+`project-governance` owns task/control authority, lifecycle/reconciliation, workspace boundaries, verification choice and closeout. A narrower Skill owns only its bounded capability.
 
 ## Typical composition
 
@@ -10,7 +10,8 @@ The eight Skills cooperate without competing controllers.
 request
 -> project-governance
 -> project-profile?         compact project context/index artifact only
--> solution-design?         material design ambiguity
+-> solution-design?         material engineering architecture/state-ownership ambiguity
+-> design?                  bounded UI/UX/frontend visual design or redesign
 -> domain-navigation?       unclear semantic/source/test/runtime route
 -> execution-orchestrator? useful decomposition/delegation/recovery
 -> agent-handoff?           responsibility crosses contexts
@@ -20,7 +21,9 @@ request
 -> project-governance       alignment / closeout
 ```
 
-Question marks are real gates. Installed capability is not a reason for ceremony. Advisory read-only inspection does not require a new formal audit boundary merely because evidence is being viewed.
+Question marks are real gates. Installed capability is not a reason for ceremony.
+
+`solution-design` and `design` may both participate in one governed task without competing: Solution Design resolves engineering requirements/architecture/state ownership; Design resolves bounded product-interface/frontend visual direction and execution. Project Governance remains the task/lifecycle owner.
 
 ## Handoff dimensions
 
@@ -33,8 +36,6 @@ A mode name never replaces Skill routing or grants mutation authority.
 
 ## Artifact roles
 
-- **Normative/current/design/implementation authorities:** sources that own project rules, current authorization/state, durable decisions, or implementation semantics for their class.
-- **Derived projections:** Project Profile and Domain/navigation maps; authority wins when they are stale.
-- **Observed evidence / transport:** handoffs, briefs, ledgers, audits, CI/test/runtime/review observations; these cannot expand scope or replace authority.
-
-Same-purpose work keeps one task across agents/contexts. One objective may span repositories, but each repository keeps its own control/write authority. Parallel writers require proven-disjoint semantic write authority and integration evidence.
+- Normative/current/design/implementation authorities own project rules, current authorization/state, durable decisions, project-specific design facts, or implementation semantics for their class.
+- Derived projections include Project Profile and Domain/navigation maps; authority wins when they are stale.
+- Observed evidence/transport includes handoffs, briefs, ledgers, audits, CI/test/runtime/review observations; these cannot expand scope or replace authority.
