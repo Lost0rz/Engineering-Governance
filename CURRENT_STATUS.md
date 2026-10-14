@@ -38,6 +38,8 @@ Candidate installation evidence:
 
 Current already-open Web conversation still exposes the pre-update three-Skill discovery snapshot. This is classified as `STALE_PRE_UPDATE_SNAPSHOT`, not a v0.6.0 routing failure. Fresh-session Web discovery/routing remains `UNKNOWN` until tested in a new Web conversation/session.
 
+Semantic HEAD `d8bdf9da...` to current branch control descendant changes only `CURRENT_STATUS.md` / `CURRENT_TASK.md`: `CONTROL_ONLY_DRIFT`; Delivery identity remains unchanged.
+
 Formal GitHub `plugin-v0.6.0` publication is intentionally deferred until the required installed/integrated acceptance boundary supports publication.
 
 ## Accepted architecture
