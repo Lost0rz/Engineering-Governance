@@ -8,7 +8,7 @@ Engineering Governance v0.6.0 has seven top-level Skills:
 
 - **Project Governance** — normal project/repository entry; three-file control plane, task-purpose/scope authority, workspace/writer lifecycle, proportional verification selection, final control alignment, and closeout.
 - **Solution Design** — conditional requirements/architecture/design resolution when implementation would otherwise require material guessing.
-- **Execution Orchestrator** — conditional decomposition, role/Sub-Agent scheduling, safe parallelism, model selection, recovery, cancellation/supersession, and integration strategy for already-authorized work.
+- **Execution Orchestrator** — conditional decomposition, role/Sub-Agent scheduling, safe parallelism, delegated-model policy, recovery, cancellation/supersession, and integration strategy for already-authorized work.
 - **Agent Handoff** — bounded cross-agent/session/machine/context request and receipt contracts using task/authority references + fresh delta rather than duplicated task/status/rules.
 - **Evidence Audit** — evidence-based implementation/code/PR/CI/release/merge-readiness evaluation bound to explicit identities, required claims, and independence basis.
 - **Domain Navigation** — conditional evidence-backed routing from task/domain authority to source, symbols, tests, dependencies, and runtime entry points.
@@ -39,7 +39,7 @@ For software/project/repository work, enter through **Project Governance**. Use 
 ```text
 project-governance
   -> solution-design (material design ambiguity)
-  -> execution-orchestrator (useful decomposition/parallelism/model/recovery policy)
+  -> execution-orchestrator (useful decomposition/parallelism/delegated-model/recovery policy)
        -> agent-handoff (responsibility crosses contexts)
   -> evidence-audit (explicit acceptance/readiness boundary)
   -> domain-navigation (semantic/source/test routing unclear)
@@ -59,24 +59,22 @@ The goal is **effective safe execution**, not minimum agent count.
 - A delegated unit remains under the same `TASK_ID` unless engineering purpose/authorization changes.
 - Cancel/supersede stale units rather than blindly integrating results whose premise changed.
 
-## Model policy
+## Delegated model policy — stabilization period
 
-Reusable governance uses `LOW / STANDARD / HIGH` capability tiers. Execution environments map those tiers to actual model + reasoning settings when model choice materially affects cost/correctness.
-
-- LOW — bounded lookup/extraction/mechanical work.
-- STANDARD — normal implementation/integration/review.
-- HIGH — architecture, difficult diagnosis, subtle concurrency/security/integration, or high-consequence judgment.
-
-HIGH is allowed and should be selected when justified.
-
-The rule is:
+Current v0.6.0 Sub Agent policy is intentionally simple:
 
 ```text
-USE THE STRONGEST JUSTIFIED MODEL,
-NOT AUTOMATICALLY THE STRONGEST AVAILABLE MODEL.
+SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
+SUBAGENT_MODEL: environment configured default
+SUBAGENT_REASONING: environment configured default
+STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-What is prohibited is silent/unreasoned inheritance or escalation, not intentional strong-model use.
+All delegated Sub Agents use the execution environment's configured default Sub Agent model and default reasoning setting. Reusable governance does not hardcode one provider/model name as universal truth.
+
+The current user Codex convention may configure a default such as `gpt-6-luna` with `xhigh` reasoning effort. Those are environment settings. `xhigh` is a reasoning-effort setting and is **not** the same thing as selecting a HIGH model tier.
+
+`LOW / STANDARD / HIGH` remain only future capability vocabulary during this stabilization period. They do not currently route delegated Sub Agents. Difficult work does not automatically or intentionally move a Sub Agent to a stronger model; if the configured default is insufficient, the unit returns a capability gap to the controller. Stronger-model routing can be re-enabled later only through an explicit user/project policy change.
 
 ## Handoff model
 
