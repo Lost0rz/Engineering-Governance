@@ -1,38 +1,25 @@
 # Routing adoption and upgrade
 
-Adoption makes the seven Skills discoverable through the routing surfaces supported by the current execution environment. It does not require an installer daemon, hook, MCP service, background process, or automatic file mutation.
+Adoption makes the eight Skills discoverable through routing surfaces supported by the current environment. It does not require a daemon, hook, MCP service, background process, or automatic file mutation.
 
 ## Completion contract
 
 Adoption is complete when:
 
-1. the intended Plugin payload/version is available and all seven Skills resolve; and
+1. the intended Plugin payload/version is available and all eight Skills resolve; and
 2. at least one supported authoritative routing surface can select them correctly.
 
-If the environment has an authoritative global guidance file, manage exactly one current Engineering Governance routing block using the shipped markers/template. If the environment does not expose such a file, do **not** invent one; rely on its supported Skill metadata/platform/explicit-selection routing surfaces and verify behavior there.
-
-## Global-guidance environments
-
-Use the exact markers in `assets/templates/GLOBAL_AGENTS_ROUTING.md`:
-
-```text
-<!-- BEGIN ENGINEERING-GOVERNANCE ROUTING -->
-<!-- END ENGINEERING-GOVERNANCE ROUTING -->
-```
-
-Manage only that region and preserve unrelated guidance. Multiple/conflicting marker regions require reconciliation rather than guessing.
+If the environment has authoritative global guidance, manage exactly one current Engineering Governance routing block with the shipped markers/template. If not, do not invent one; verify the environment's actual metadata/platform/explicit-selection route.
 
 ## Upgrade verification
 
-Verify only the surfaces relevant to the environment being upgraded:
+Verify only relevant surfaces:
 
-- intended Plugin identity/version;
-- exact seven-Skill availability;
-- Project Governance as normal engineering entry;
-- narrow Skills remain conditional;
-- routing is based on semantic outcome/condition rather than keywords;
-- no routing surface duplicates Skill procedure or project facts;
-- environments with managed global guidance have exactly one current routing block;
-- environments without it remain functional through their actual supported routing surface.
+- intended Plugin identity/version and exact eight-Skill availability;
+- Project Governance remains normal engineering entry;
+- Project Profile triggers for profile/context-index work, not normal development;
+- other narrow Skills remain conditional and semantic/outcome-based;
+- routing does not duplicate Skill procedure or project facts;
+- supported global-guidance environments have one current block; environments without it remain functional.
 
-Global routing adoption and target-project governance are separate operations.
+Global routing adoption and target-project governance/profile generation are separate operations.

@@ -1,89 +1,78 @@
 ---
 name: project-governance
-description: Use as the normal Engineering Governance entry for software/project/repository engineering work, especially task/control authority, scope reconciliation, proportional verification, workspace/writer lifecycle, cross-repository coordination, final alignment, and closeout.
+description: Use as the normal Engineering Governance entry for software/project/repository engineering work, especially task/control authority, continuation/scope reconciliation, proportional verification, workspace/writer lifecycle, cross-repository coordination, final alignment, and closeout.
 ---
 
 # Project Governance
 
-Use this Skill as the normal Engineering Governance entry. It owns task/control authority, lifecycle/composition, writer/workspace boundaries, proportional verification, and closeout. Keep clear work lightweight.
+Use this Skill as the normal engineering entry. It owns task/control authority, lifecycle, writer/workspace boundaries, proportional verification, and closeout. Keep clear work lightweight.
 
 ## Capability routing
 
 Use a narrower Skill only for the bounded capability it owns, then return here when task authority/lifecycle decisions are required:
 
-- `solution-design` — material design ambiguity.
-- `execution-orchestrator` — decomposition, agents, parallelism, environment-aware delegation, recovery/integration.
-- `agent-handoff` — cross-context request/receipt.
-- `evidence-audit` — explicit read-only acceptance/readiness verdict.
-- `domain-navigation` — unclear semantic/source/test/runtime route.
+- `project-profile` — create/rebuild/audit compact derived project context/index;
+- `solution-design` — material design ambiguity;
+- `execution-orchestrator` — decomposition, agents, parallelism, environment-aware delegation, recovery/integration;
+- `agent-handoff` — standardized cross-context cards/receipts;
+- `evidence-audit` — explicit read-only acceptance/readiness verdict;
+- `domain-navigation` — unclear semantic/source/test/runtime route;
 - `incident-doctor` — blocking evidence gap.
 
-See `references/capability-composition.md` and `references/global-routing.md`.
+See `references/global-routing.md` and `references/capability-composition.md`.
 
 ## Governed development
 
-1. Read applicable `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, and only the bounded planning authority needed. `CURRENT_TASK.md` remains the single active execution authorization.
-2. Keep **task purpose**, **execution unit**, and **execution context** distinct. Context changes or Sub Agent decomposition do not create a new task by themselves.
-3. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
-4. Confirm requested mutation remains inside the authorized objective/scope/side effects/verification/STOP boundary.
-5. Use Solution Design only when implementation would otherwise require material guessing. Reference accepted design later rather than re-derive it from chat history.
-6. Resolve one canonical writer/authority per semantic class. Use Domain Navigation when ownership/source/test/runtime route is unclear.
-7. Use Execution Orchestrator when topology/delegation materially improves execution. Environment-specific limits/defaults are resolved from the current execution environment, not hardcoded in reusable policy.
-8. Use Agent Handoff for cross-context transfer. Same-purpose continuation preserves task authority.
-9. Implement the smallest authorized outcome and select risk-proportional verification.
-10. Use Incident Doctor only for a real blocking evidence gap.
-11. Use Evidence Audit when an explicit acceptance/readiness verdict separate from implementation is needed. Findings do not authorize fixes.
-12. Before final successful state-changing handoff, run Control Alignment. If an owned control/document is already semantically current, do not rewrite or commit it.
-13. At merge/release boundaries, keep semantic evidence separate from live host gates for the literal host-governed identity.
+1. Read applicable project authority and only the bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
+2. If the user says continue/resume/start and the active task remains accurate, **continue it directly**. Do not create a new task, plan, handoff card, branch/worktree/PR, or execution contract solely because work resumed.
+3. Keep task purpose, execution unit and execution context distinct. Context/agent changes do not create tasks.
+4. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
+5. Confirm mutation remains inside authorized objective/scope/side effects/verification/STOP boundary; reconcile material changes before mutation.
+6. Keep one canonical writer/authority per semantic class. Use narrower Skills only when their trigger materially applies.
+7. If a correction remains inside the current task objective and the current PR/workspace remains safe and valid, **prefer continuing it**; do not create a successor merely because a defect/correction was discovered.
+8. Implement the smallest authorized outcome and choose risk-proportional verification.
+9. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
+10. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
 
 ## Cross-repository coordination
 
-When one engineering objective spans repositories, keep one governing objective and make only the material coordination facts explicit:
-
-```text
-PRIMARY_TASK_AUTHORITY
-PARTICIPATING_REPOSITORIES
-PER_REPO_WRITE_AUTHORITY
-CROSS_REPO_CONTRACT_AUTHORITY
-INTEGRATION_ORDER
-ACCEPTANCE_OWNER
-```
-
-The primary task does **not** automatically grant write authority in another governed repository. If a participating repository has its own control plane, its local authorization must be current and compatible before mutation there.
-
-Do not create a fourth control plane or mirror each repository's facts into one mega-task. Each repository remains authoritative for its own controls/source/runtime facts; shared contract/integration claims point to the source that owns them.
+A multi-repository objective may record only decision-relevant coordination facts: primary task authority, participating repositories, per-repo write authority, shared contract authority, integration order, acceptance owner. A task never automatically grants writes in another governed repository.
 
 ## Three-file boundary
 
-- `AGENTS.md` — durable project/repository rules.
-- `CURRENT_STATUS.md` — concise verified current state.
+- `AGENTS.md` — durable normative project/repository rules;
+- `CURRENT_STATUS.md` — concise verified current state;
 - `CURRENT_TASK.md` — active authorization.
 
-Planning/design, handoff cards, ledgers, audit reports, CI/test output, runtime observations, and Sub Agent briefs are evidence/transport unless an accepted authority explicitly gives them a durable role.
+Project Profile, planning, Domain maps, handoffs, audits, CI/test output and runtime observations do not become a fourth control source.
 
-## Final handoff
+## Compact Engineering Status Receipt
 
-A final successful state-changing handoff reports actual outcome/evidence plus semantic equivalents of:
+For engineering governance/execution/audit/CI/PR/merge/status responses, append a compact human-readable receipt when useful. Use only applicable fields:
 
 ```text
-RELATED_DOCUMENT: <path | NONE>
-DOCUMENT_ALIGNMENT: UPDATED | UNCHANGED | NOT_APPLICABLE
-CURRENT_STATUS_RECONCILIATION: UPDATED | UNCHANGED
-CURRENT_TASK_RECONCILIATION: UPDATED | UNCHANGED
-CONTROL_ALIGNMENT: PASS
+Governance route:
+Skills used:
+Task state:
+Outcome:
+Changes:
+Control alignment:
+PR / workspace:
+Next:
 ```
 
-Strict read-only work reports observed alignment without mutating controls solely to make them current.
+Only name Skills actually used. Keep it status-oriented; do not copy scope/history into the receipt. Detailed machine/context transfer receipts belong to `agent-handoff`.
 
 ## Supporting contracts
 
 Read only what the current decision needs:
 
-- `references/control-plane.md` — control roles/alignment.
-- `references/control-identity.md` — HEAD/provenance/control-only drift.
-- `references/development-flow.md` — full governed flow.
-- `references/code-structure.md` — canonical writer/authority.
-- `references/workspace-lifecycle.md` — workspace/branch closeout.
-- `references/verification-tiers.md` — proportional verification.
-- `references/planning-documents.md` — durable design linkage.
+- `references/control-plane.md` — control ownership/alignment;
+- `references/artifact-lifecycle.md` — authority/projection refresh lifecycle;
+- `references/control-identity.md` — HEAD/provenance/control-only drift;
+- `references/development-flow.md` — full governed flow;
+- `references/code-structure.md` — canonical writer/authority;
+- `references/workspace-lifecycle.md` — workspace/branch closeout;
+- `references/verification-tiers.md` — proportional verification;
+- `references/planning-documents.md` — durable design linkage;
 - `references/adoption.md` — environment-aware routing adoption.

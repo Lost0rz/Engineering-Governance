@@ -4,41 +4,27 @@ This contract answers one question: **which Engineering Governance capability sh
 
 ## Routing surfaces
 
-An execution environment may expose one or more routing surfaces:
-
-- explicit user/host Skill selection;
-- Skill frontmatter/metadata discovery;
-- project guidance such as repository `AGENTS.md`;
-- authoritative global guidance when that environment supports it;
-- platform/runtime routing behavior.
-
-Do not require a Local-style global guidance file in environments that do not have one. A routing surface selects capability; it does not create project task authority.
+An environment may expose explicit Skill selection, Skill metadata/platform discovery, project guidance, authoritative global guidance, or platform/runtime routing. Do not require a Local-style global file where none exists.
 
 ## Routing rule
 
-For software/project/repository engineering work, `project-governance` is the normal Engineering Governance entry unless a higher-priority instruction or explicit bounded Skill selection already determines the route. Narrow Skills are invoked only for the capability whose semantic trigger is met, then return to the governing caller.
+Ordinary software/project/repository engineering enters `project-governance` unless a higher-priority instruction or explicit bounded selection already determines the route.
 
 | Requested outcome / condition | Route |
 | --- | --- |
-| establish/reconcile task authority, scope, workspace/writer lifecycle, verification level, final alignment | `project-governance` |
-| resolve material intent/architecture/state-ownership ambiguity before implementation | `solution-design` |
-| improve execution through decomposition, agents, parallelism, environment-aware delegation, recovery, or controlled integration | `execution-orchestrator` |
-| transfer responsibility across agents/sessions/machines/contexts with a bounded request/receipt | `agent-handoff` |
-| produce a read-only evidence/acceptance/readiness verdict separate from implementation | `evidence-audit` |
-| establish an unclear Domain/authority/source/symbol/runtime/dependency/test route | `domain-navigation` |
-| investigate a real blocking failure/unsafe ambiguity when existing evidence cannot support the next safe decision | `incident-doctor` |
+| establish/reconcile task authority, scope, lifecycle, verification, final alignment | `project-governance` |
+| create/rebuild/shrink/audit compact project context/profile and authority pointers | `project-profile` |
+| resolve material intent/architecture/state-ownership ambiguity | `solution-design` |
+| improve execution through decomposition/agents/parallelism/delegation/recovery | `execution-orchestrator` |
+| transfer responsibility across agents/sessions/machines/contexts | `agent-handoff` |
+| produce a read-only evidence/acceptance/readiness verdict | `evidence-audit` |
+| establish unclear Domain/authority/source/symbol/runtime/dependency/test route | `domain-navigation` |
+| investigate a blocking failure/unsafe ambiguity with an evidence gap | `incident-doctor` |
 
-A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit when the requested outcome is implementation or corrective work. Mentioning a bug does not imply Incident Doctor when evidence already supports safe action.
+A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit during corrective work; mentioning a bug does not imply Doctor when evidence supports safe action.
+
+Project Profile is not the normal path for development and must not be invoked merely because a project exists. It is used when the requested outcome is the compact context/index itself.
 
 ## Composition
 
-Project Governance remains the authority/lifecycle owner when several capabilities apply. Typical bounded compositions include:
-
-- `project-governance -> solution-design -> project-governance`
-- `project-governance -> execution-orchestrator -> project-governance`
-- `execution-orchestrator -> agent-handoff -> delegated unit -> receipt -> execution-orchestrator`
-- `project-governance -> evidence-audit -> project-governance`
-- caller -> `domain-navigation` -> caller
-- `incident-doctor -> domain-navigation -> incident-doctor` when diagnosis only needs bounded evidence location
-
-Do not create a Router Skill, recursive peer mesh, or second task authority.
+Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns a derived context/index; it never becomes task authority. Other narrow Skills return to their caller after their bounded capability finishes. Do not create a Router Skill, peer-controller mesh, or second task authority.

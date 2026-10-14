@@ -1,54 +1,95 @@
-# Handoff contract
+# Handoff Card & Receipt contract
 
-## Authority and freshness
+## Authority
 
-Same-purpose continuation preserves `TASK_ID`. `AUTHORITY` names current truth; the receiver rereads it when accessible. When drift matters, `AUTHORITY_OBSERVED_BASIS` allows:
+A Card is transport, not a second task contract. Reference current authority and carry only fresh transfer-specific delta. The receiver rereads accessible authorities; material conflict returns to Project Governance.
 
-- `CURRENT_COMPATIBLE` — continue under current truth;
-- `CURRENT_CONFLICT` — stop for Project Governance reconciliation;
-- `AUTHORITY_UNAVAILABLE` — stop when required authority cannot be accessed and a bounded snapshot is insufficient.
-
-`DELTA` contains only recent transfer-specific facts/boundaries.
-
-## Request envelope
+## Common Card envelope
 
 ```text
-HANDOFF_ID
+CARD_ID
 TASK_ID
-MODE: EXECUTE | AUDIT | DIAGNOSE | REVIEW | VERIFY
+MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
 TARGET
 AUTHORITY
-AUTHORITY_OBSERVED_BASIS: <when material>
+OBSERVED_BASIS: <when freshness matters>
 SOURCE_CONTEXT / TARGET_CONTEXT: <when useful>
 DELTA
 BOUNDARY
+STOP
 RETURN_CONTRACT
 ```
 
+Do not duplicate full objective/scope/acceptance/STOP/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
+
+## Mode profiles
+
+### EXECUTE
+Focus the Card on mutation target, fresh delta, allowed mutation boundary, STOP conditions and return evidence. Use `PURPOSE: DIAGNOSTIC_PROBE` or `PURPOSE: TEST_IMPLEMENTATION` when those state changes are specifically authorized.
+
+### AUDIT / REVIEW
+Read-only. Add the target/range/observed identity and, when material, required claims or independence expectation. Findings do not authorize fixes.
+
+### VERIFY
+Read-only confirmation of a named proposition/check. A normal test-run card is:
+
+```text
+MODE: VERIFY
+PROFILE: TEST_RUN
+CLAIM
+EXPECTED_EVIDENCE
+```
+
+If the job changes test/source/config, it is EXECUTE instead.
+
+### DIAGNOSE
+Read-only diagnostic question/evidence/hypothesis transfer. State-changing probes use EXECUTE.
+
 ## Runtime/configuration isolation
 
-Runtime/model/tool/capacity configuration belongs to the receiving execution environment unless an accepted portable project artifact owns it. Sender observations may be evidence about the sender, not receiver defaults.
+Runtime/model/tool/capacity values belong to the receiving environment unless an accepted portable project artifact owns them. Sender observations never become receiver defaults merely through the Card.
 
-Under `ENVIRONMENT_DEFAULT_ONLY`, concrete Sub Agent model/reasoning values never propagate as receiver defaults. The same rule applies to concurrency/delegation/tool/runtime values unless a portable authority explicitly owns them.
+## Standard receipts
 
-## Mode side effects
+### EXECUTE receipt
 
-- `EXECUTE` — state change allowed only within active authorization.
-- `AUDIT`, `REVIEW`, `VERIFY` — read-only.
-- `DIAGNOSE` — read-only transfer of diagnostic question/evidence/hypothesis state.
+```text
+CARD_ID / TASK_ID
+OUTCOME
+START_IDENTITY
+FINAL_IDENTITY
+CHANGED_PATHS
+VERIFICATION
+LIFECYCLE
+UNRESOLVED
+CONTROL_ALIGNMENT
+NEXT_SAFE_ACTION
+```
 
-A state-changing diagnostic probe uses `MODE: EXECUTE` and `PURPOSE: DIAGNOSTIC_PROBE`, with its mutation/cleanup boundary explicitly authorized. This keeps diagnosis capability separate from handoff side-effect class.
+### AUDIT / REVIEW receipt
 
-## Same task vs new task
+```text
+CARD_ID / TASK_ID
+OUTCOME
+OBSERVED_IDENTITY / RANGE
+EVIDENCE / FINDINGS
+UNKNOWN
+VERDICT
+CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
+NEXT_SAFE_ACTION
+```
 
-Different agent/session/machine/context does not require a new task. A materially different engineering purpose (independent audit, distinct corrective, new design objective) returns to Project Governance for task reconciliation.
+### VERIFY receipt
 
-## Context economy
+```text
+CARD_ID / TASK_ID
+CLAIM
+OBSERVED_IDENTITY
+RESULT: PASS | FAIL | UNKNOWN
+EVIDENCE
+PROVES
+DOES_NOT_PROVE
+NEXT_SAFE_ACTION
+```
 
-Prefer authority references + bounded fresh delta. Exact excerpts are for inaccessible sources or exact-wording needs only. Do not send full chat history or repeated generic governance.
-
-## Receipts
-
-State-changing receipts report task/handoff identity, outcome, start/final identity, changed paths, verification, lifecycle effects, unresolved evidence, and final control alignment when applicable.
-
-Read-only receipts report target/range/identity, evidence/findings/unknowns, verdict/result, and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`.
+Keep receipts decision-oriented. Explicitly report legitimate no-change/no-output success. Human-facing conversational status receipts are a Project Governance concern and are not substitutes for cross-context receipts.
