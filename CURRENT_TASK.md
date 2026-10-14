@@ -8,7 +8,7 @@ Task ID: `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065`
 
 Task class: `CORRECTIVE`
 
-State: `ACTIVE`
+State: `COMPLETE`
 
 Mode: remote reusable-source model-authority correction before consolidated installed Plugin/runtime acceptance
 
@@ -22,17 +22,17 @@ The reusable Plugin must remain safe across Local Codex, ChatGPT Web, cloud agen
 
 - Related document: `documents/engineering-governance-capability-hardening-v0.6.0.md`.
 - Parent architecture authority: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Relationship to plan: narrow correction of Task 064 delegated-model authority semantics; seven-Skill architecture and positive safe Sub Agent parallelism remain unchanged.
+- Relationship to plan: bounded correction of Task 064 delegated-model authority semantics; seven-Skill architecture and positive safe Sub Agent parallelism remain unchanged.
 
 ## Accepted baseline
 
 - Task start literal branch HEAD: `4500698b81efccac9b358860c0ace90cc39602d3`.
 - Prior Task 064 Architecture Delivery / Semantic HEAD: `31d9d94f1f59a3d5b49fb7c614f37ec752cff479`.
 - Branch: `codex/capability-model-v0.6.0`.
-- PR #26 remains OPEN / DRAFT / UNMERGED.
-- Installed v0.6.0 integrated acceptance has not run.
+- PR #26 remained OPEN / DRAFT / UNMERGED.
+- Installed v0.6.0 integrated acceptance was not run.
 
-## User-decided operating policy
+## Accepted operating policy
 
 ```text
 SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY
@@ -42,55 +42,69 @@ CROSS_CONTEXT_MODEL_PROPAGATION: DISABLED
 STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-1. Reusable source must not contain a concrete provider/model/reasoning setting as the default for Sub Agents.
+1. Reusable source does not define a concrete provider/model/reasoning setting as the default for Sub Agents.
 2. Each execution environment resolves its own Sub Agent default from its authoritative runtime/configuration surface.
-3. Local Codex may read and use its own local Sub Agent configuration; this is local runtime truth, not reusable repository truth.
-4. Web/cloud contexts use their own platform/runtime defaults. They must not inherit Local settings through repository text, handoff, memory, or another machine.
-5. If exact model/reasoning identity is not exposed by the environment, do not infer it; use `PLATFORM_DEFAULT` / `UNKNOWN` evidence semantics and avoid explicit override.
+3. Local Codex may read and use its own local Sub Agent configuration locally; this is local runtime truth, not reusable repository truth.
+4. Web/cloud contexts use their own platform/runtime defaults and do not inherit Local settings through repository text, handoff, memory, or another machine.
+5. If exact model/reasoning identity is not exposed by the environment, it remains `PLATFORM_DEFAULT` / `UNKNOWN`; no inference or override is authorized.
 6. Handoff transports task/policy/authority context, not concrete delegated-model values across environments.
 7. Stronger-model override/escalation remains disabled during stabilization until a later explicit user/project policy change.
 
-## In scope
+## Completed work
 
-- Update `execution-orchestrator` Skill and execution contract from generic `DEFAULT_ONLY` wording to environment-authoritative `ENVIRONMENT_DEFAULT_ONLY` semantics.
-- Remove concrete model/reasoning examples from reusable source and durable active design documents.
-- Add explicit cross-context non-propagation of model/reasoning configuration to Agent Handoff where needed.
-- Update root guidance and integrated acceptance for Local-vs-Web environment separation and unknown/unobservable defaults.
-- Update PR metadata and controls after source audit.
+### WP16 — Environment model authority
 
-## Out of scope
+- Updated `execution-orchestrator` Skill and execution contract to `ENVIRONMENT_DEFAULT_ONLY`.
+- Removed concrete Local model/reasoning examples from active reusable guidance and durable v0.6.0 design authorities.
+- Added explicit environment-configuration isolation to Agent Handoff Skill/contract.
+- Updated root `AGENTS.md` and README to make runtime configuration environment-owned.
+- Updated Project Governance development flow and Skill Engineering quality contract to the same policy.
+- Updated integrated acceptance to test observable local configuration, opaque managed-platform defaults, cross-context isolation, no guessing, and no stronger-model escalation.
+- Preserved positive Sub Agent parallelism and all non-model seven-Skill semantics.
 
-- Reading or changing the user's actual Local Codex configuration from the remote source task.
-- Naming or selecting any concrete provider/model/reasoning value in reusable source.
-- Building a model router/runtime.
-- Re-enabling stronger-model escalation.
-- Changing positive Sub Agent parallelism, task/context semantics, Evidence Audit, Domain Navigation or Incident Doctor architecture.
-- Installed Plugin/Web/Codex integrated acceptance.
-- PR merge or v0.6.0 release.
+## New architecture freeze
 
-## Verification
+Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
 
-`V2` source-architecture corrective.
+`b7fb0051b8c51b5c846a507fad9037518dcf18db`
 
-Verify:
+The Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance because reusable model-authority semantics changed under Task 065.
 
-- no active reusable source names a concrete default Sub Agent model or reasoning value;
-- current delegated policy points to the current execution environment's authoritative configuration/runtime default;
-- Web/local/cloud model settings cannot be propagated across contexts by handoff/repository defaults;
-- unobservable exact defaults remain `PLATFORM_DEFAULT` / `UNKNOWN` rather than guessed;
+## Verification result
+
+`V2 remote source-architecture audit: PASS`.
+
+Evidence:
+
+- compare from Task 065 start `4500698b...` to semantic head `b7fb0051...` contains only governance/Skill/design/acceptance Markdown/control files;
+- exactly seven top-level Skill directories remain;
+- Plugin metadata remains `0.6.0`;
+- no runtime/daemon/database/release-workflow/model-router implementation was added;
+- active reusable policy is `ENVIRONMENT_DEFAULT_ONLY`;
+- concrete model/reasoning configuration belongs only to the execution environment that owns it;
+- cross-context handoff does not propagate concrete model/reasoning defaults;
+- managed/opaque defaults remain `PLATFORM_DEFAULT` / `UNKNOWN` rather than guessed;
 - stronger-model escalation remains disabled;
-- positive safe parallelism remains intact;
-- seven top-level Skills remain unchanged;
-- no runtime/model-router/workflow implementation is added.
+- safe positive Sub Agent parallelism remains intact;
+- PR #26 is OPEN / DRAFT / UNMERGED / `mergeable=true` at audit time;
+- semantic head has no reported commit/check statuses; CI PASS is not claimed.
 
 ## Acceptance criteria
 
-- Task 064 concrete-environment examples are removed from active reusable semantics.
-- `ENVIRONMENT_DEFAULT_ONLY` is the active delegated-model policy.
-- Local and Web are explicitly isolated configuration authorities for their own execution environments.
-- Handoff does not carry concrete model/reasoning configuration across environment boundaries.
-- Remote source audit passes and a new semantic head is frozen.
+All Task 065 source-corrective acceptance criteria are satisfied.
 
-## Stop conditions
+Installed Plugin/Web/Codex integrated acceptance remains explicitly outside this task and has not run. The accepted next sequence is one consolidated integrated acceptance task against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` (or a proven control-only descendant).
 
-Stop if satisfying this correction requires changing an actual runtime configuration, adding a model-selection runtime, or materially redesigning another Skill.
+## Handoff / terminal state
+
+Task 065 is complete. PR #26 remains Draft.
+
+Next authorized work should be the consolidated v0.6.0 integrated acceptance task using `references/V060_INTEGRATED_ACCEPTANCE.md`. Local and Web acceptance must each resolve their own execution-environment Sub Agent default; do not copy one environment's concrete settings into another. Reusable defects discovered during installed acceptance return to remote source; do not patch reusable source inside installed Plugin caches.
+
+Control Alignment Gate:
+
+- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-hardening-v0.6.0.md`
+- `DOCUMENT_ALIGNMENT`: `UPDATED`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `CONTROL_ALIGNMENT`: `PASS`
