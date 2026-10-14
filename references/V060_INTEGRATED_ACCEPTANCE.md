@@ -1,6 +1,6 @@
 # Engineering Governance v0.6.0 — Integrated Acceptance
 
-Run once after the current v0.6.0 source freeze. This is an integrated routing/authority/runtime acceptance, not eight isolated Skill tests.
+Run once after the current v0.6.x source freeze. This is an integrated routing/authority/runtime acceptance, not eight isolated Skill tests.
 
 ## 1. Identity
 
@@ -42,11 +42,18 @@ Also verify:
 - stale Profile never overrides authority;
 - Profile and Domain Map do not duplicate detailed ownership maps;
 - one current Profile projection surface exists, or one primary plus clearly derived mirror; two independently edited current Profiles are a defect;
-- when the target surface is known (for example ChatGPT Project Instructions), the generated Profile declares the surface and PRIMARY/MIRROR/single-surface role;
-- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities;
+- when the target surface is known, the generated Profile declares the surface and an evidence-supported role;
+- `MIRROR` is never emitted unless a specific primary Profile surface is verified/explicitly identified;
+- `PRIMARY` is not invented merely from surface type; it requires explicit project/user designation among multiple surfaces;
+- when only one current Profile surface is established and no competitor is verified, `single surface` is preferred; unresolved relationships remain `UNKNOWN` rather than guessed;
+- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities, Domain maps, or Profile-maintenance procedure;
 - generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer/invariant;
+- an existing Domain/navigation authority is pointed to rather than reproduced as a `Domain Model`, ownership table, canonical-source list, or reduced mini-map;
+- `Planning & navigation` contains durable pointers, not a numbered startup/read/check workflow;
+- generated Profile does not add `Project Profile Rule`, `Profile Maintenance`, classification/freshness instructions, or other meta-procedure explaining how to maintain the Profile;
+- detailed project-specific normative execution rules remain in `AGENTS.md`; Profile keeps only compact stable priorities/anti-goals/risk cues where useful;
 - project-specific stable facts/anti-goals/environment roles remain available even when procedure is removed;
-- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook.
+- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook, mini Domain Map, or maintenance guide.
 
 ### Overlong Profile negative case
 
@@ -58,13 +65,58 @@ Expected result:
 PROFILE_ROUTING: project-profile
 LIVE_STATUS_TASK_PR_CI_CONTENT: EXCLUDED
 GENERIC_WORKFLOW_DUPLICATION: NO
-PROFILE_SURFACE_ROLE: EXPLICIT_WHEN_KNOWN
+PROFILE_SURFACE_ROLE: EVIDENCE_SUPPORTED
 AUTHORITY_POINTERS: PRESENT
 EXTRA_TOP_LEVEL_PROCEDURE_SECTIONS: NONE_UNLESS_PROJECT_SPECIFICALLY_REQUIRED
 RESULT: PASS
 ```
 
 A semantically correct but handbook-sized output that re-explains reusable Skill procedure is a **Profile contract failure**, not merely a style preference.
+
+### Established Domain Map negative case
+
+Use a project with an established detailed Domain/navigation map (for example a map that already owns Domain names, source owners and tests).
+
+Expected result:
+
+```text
+DOMAIN_AUTHORITY_POINTER: PRESENT
+REDUCED_DOMAIN_MAP_RECREATED: NO
+CANONICAL_SOURCE_SYMBOL_LIST_RECREATED: NO
+BROAD_ORIENTATION_CONCEPTS: ALLOWED_WHEN_NEEDED
+RESULT: PASS
+```
+
+Correct Domain facts still fail this case if the Profile redundantly rebuilds the navigation authority.
+
+### Surface-role evidence negative case
+
+Use a target surface such as ChatGPT Project Instructions where no repository/user authority identifies another current primary Profile surface.
+
+Expected result:
+
+```text
+MIRROR_WITHOUT_PRIMARY_EVIDENCE: NO
+PRIMARY_WITHOUT_DESIGNATION: NO
+ROLE: single surface OR UNKNOWN
+RESULT: PASS
+```
+
+If a verified primary surface is provided, `MIRROR` becomes valid; if the user/project explicitly designates the target as primary among multiple surfaces, `PRIMARY` becomes valid.
+
+### Profile meta-procedure negative case
+
+Generate a Project Profile from a repository whose `AGENTS.md` and Profile Skill contain detailed startup, freshness and classification procedure.
+
+Expected result:
+
+```text
+NUMBERED_STARTUP_READ_SEQUENCE: NO
+PROFILE_MAINTENANCE_SECTION: NO
+PROFILE_CLASSIFICATION_RULES_COPIED: NO
+DURABLE_POINTERS: PRESENT
+RESULT: PASS
+```
 
 ## 4. Continuation / workspace
 
