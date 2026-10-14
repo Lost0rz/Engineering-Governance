@@ -1,14 +1,16 @@
 # Engineering Governance Capability Model v0.6.0
 
-Status: ACTIVE DESIGN AUTHORITY for v0.6.0; current implementation task `EG-CAPABILITY-ARCHITECTURE-COMPLETION-062`
+Status: ACTIVE DESIGN AUTHORITY for v0.6.0; current model-policy amendment `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064`
 
 Date: 2026-10-14
+
+Related hardening authority: `documents/engineering-governance-capability-hardening-v0.6.0.md`
 
 ## 1. Purpose
 
 Engineering Governance v0.6.0 expands the reusable capability model from three top-level Skills to seven while preserving the existing three-file project control plane and a lightweight business-first default.
 
-The goal is not to reproduce Superpowers or another agent framework. It is to keep one project authority model while adding narrowly triggered capabilities for design, execution orchestration, cross-context handoff, and independent evidence audit.
+The goal is not to reproduce Superpowers or another agent framework. It is to keep one project authority model while adding narrowly triggered capabilities for design, execution orchestration, cross-context handoff, independent evidence audit, navigation, and evidence-gated diagnosis.
 
 The seven top-level Skills are:
 
@@ -24,330 +26,366 @@ Global routing is policy, not an eighth Skill.
 
 ## 2. Authority model
 
-The three project controls keep their existing ownership:
+The three project controls keep distinct ownership:
 
 - `AGENTS.md` — durable repository/project operating rules and stable boundaries;
 - `CURRENT_STATUS.md` — concise verified current-state snapshot;
 - `CURRENT_TASK.md` — the single active execution authorization.
 
-A Skill, durable plan, design record, handoff request, handoff receipt, execution ledger, audit report, reviewer finding, CI result, or subagent brief does not become a competing task/status/control authority merely because it exists.
+Durable planning/design may own long-lived rationale, constraints, and work-package structure, but it is not a fourth control file and does not authorize execution.
 
-Durable planning may own long-lived design/rationale/work-package structure, but it is not a fourth control file and does not authorize execution. Ephemeral execution state is not durable project authority.
+A Skill, design result, handoff request/receipt, Sub Agent brief, execution ledger, audit report, reviewer finding, CI result, runtime observation, or probe result does not become a competing task/status/control authority merely because it exists.
 
-## 3. Capability ownership
+## 3. Task, execution unit, and execution context
+
+Keep three concepts separate:
+
+- **Task** — one engineering objective/authorization owned by `CURRENT_TASK.md`; optional `TASK_CLASS` may describe DESIGN / EXECUTION / AUDIT / VERIFY / DIAGNOSIS / CORRECTIVE / CLOSEOUT.
+- **Execution unit** — bounded work inside the active task, potentially delegated to a Sub Agent.
+- **Execution context** — Web, local Codex, cloud agent, Sub Agent, reviewer, machine, or session where work occurs.
+
+Changing context does not create a new task by itself. Same-purpose work can continue across contexts and Sub Agent units under one `TASK_ID`.
+
+Use Project Governance reconciliation or a distinct task when engineering purpose/authorization materially changes, such as a separately commissioned independent audit, a distinct corrective objective, or a new design decision that changes scope/interfaces/side effects/writer authority.
+
+## 4. Capability ownership
 
 | Skill | Trigger | Owns | Must return / not own |
 | --- | --- | --- | --- |
-| `project-governance` | normal project/repository engineering work | control plane, scope/authorization, task/workspace/writer lifecycle, verification tier/cadence, composition, closeout | remains the governing flow; does not absorb specialist procedures |
-| `solution-design` | material intent/architecture/ownership ambiguity or durable cross-task design | design question, constraints, options/tradeoffs, accepted design, convergence | returns accepted design/reconciliation need; never authorizes implementation |
-| `execution-orchestrator` | authorized work needs decomposition, agents, parallelism, model policy, recovery or controlled integration | execution topology, role/write boundaries, sequencing, model tier, recovery ledger, integration checkpoints | does not expand task scope or independently declare merge readiness |
-| `agent-handoff` | responsibility crosses agent/session/machine/context | request envelope and structured receipt | transports authority references + fresh delta; never becomes authority |
-| `evidence-audit` | independent implementation/PR/CI/release/readiness verdict is needed | audit identity/range, evidence evaluation, severity, unknowns, verdict | read-only by default; does not authorize fixes |
-| `domain-navigation` | responsible semantic/source/test/runtime route is unclear | bounded evidence-backed route discovery | returns route/gap; does not own task or diagnosis |
-| `incident-doctor` | real failure/unsafe ambiguity blocks progress and current evidence is insufficient | diagnosis, hypotheses, probes, evidence-supported fix boundary | returns evidence/fix boundary; normal bugs with sufficient evidence do not enter Doctor |
+| `project-governance` | normal project/repository engineering work | control plane, task purpose/scope/authorization, workspace/writer lifecycle, verification tier/cadence, composition, closeout | governing flow; does not absorb specialist procedures |
+| `solution-design` | material intent/architecture/state-ownership ambiguity or durable design decision | design question, constraints, options/tradeoffs, accepted design, convergence | returns accepted design/reconciliation need; never authorizes implementation |
+| `execution-orchestrator` | authorized work benefits from decomposition, agents, parallelism, delegated-model policy, recovery, or controlled integration | execution topology, role/write boundaries, sequencing, delegated-model policy, recovery ledger, integration checkpoints | does not expand task scope or independently declare acceptance |
+| `agent-handoff` | responsibility crosses agent/session/machine/context | bounded request envelope and structured receipt | transports task/authority references + fresh delta; never becomes authority |
+| `evidence-audit` | explicit or independent implementation/PR/CI/release/readiness verdict is needed | audit identity/range, required claims, evidence evaluation, independence basis, findings/disposition/verdict | read-only by default; does not authorize fixes |
+| `domain-navigation` | semantic/source/test/runtime route is unclear | bounded evidence-backed route discovery | returns verified route/gap; does not own task or diagnosis |
+| `incident-doctor` | real failure/unsafe ambiguity blocks progress and current evidence is insufficient | diagnosis, hypotheses, probes, evidence-supported fix boundary | returns evidence/fix boundary; known bugs with sufficient evidence do not enter Doctor |
 
-## 4. External project audit — adopt / adapt / reject
+## 5. External project influence — adopt / adapt / reject
 
-External repositories remain conceptual references, never hidden runtime dependencies.
+External repositories are conceptual references, never hidden runtime dependencies.
 
 ### Superpowers
 
-Adopt/adapt: distinct process skills, decision-vs-assumption separation, narrow subagent briefs, resumable execution ledger, independent review, explicit model selection, parallelism only for independent work, systematic diagnosis techniques.
+Adopt/adapt: distinct process skills, decision-vs-assumption separation, narrow delegated briefs, resumable execution state, independent review, useful Sub Agent parallelism, systematic diagnosis techniques.
 
-Reject: universal brainstorming, universal mandatory TDD, every-bug debugging route, unconditional subagent/reviewer per task, mandatory worktrees, silent inheritance of expensive models, duplicate progress/control authority.
+Reject: universal brainstorming, universal mandatory TDD, every-bug debugging route, unconditional Sub Agent/reviewer dispatch, mandatory worktrees, silent model inheritance/escalation, duplicate progress/control authority.
 
 ### GitHub Spec Kit
 
-Adopt/adapt: separate intent/design from implementation mechanics; conditional clarify/checklist/convergence gates; plans should preserve decisions that an executor cannot safely reconstruct.
+Adopt/adapt: separate intent/design from implementation mechanics; conditional clarification/checklist/convergence; preserve decisions future execution cannot safely reconstruct.
 
 Reject: mandatory artifact chains for every small task or any task file competing with `CURRENT_TASK.md`.
 
-### OpenAI Agents SDK / LangGraph supervisor patterns
+### OpenAI Agents SDK / Microsoft Agent Framework / LangGraph supervisor patterns
 
-Adopt/adapt: manager/orchestrator and handoff are different concerns; transferred context should be filtered; central coordination is preferred when one authority must control writers and integration.
+Adopt/adapt: manager/orchestrator and handoff are different concerns; context transfer should be filtered; central coordination is preferred where one authority must control writers and integration; safe concurrency is useful execution capacity.
 
-### OpenHands / SWE-agent
+### OpenHands / SWE-agent / mini-SWE-agent
 
-Adopt/adapt: bounded workspace/context state; purpose-built context is preferable to raw history/repository dumping; successful no-change/no-output results must still be explicit.
+Adopt/adapt: bounded workspace/context; purpose-built context over raw history dumping; successful no-change/no-output remains explicit; orchestration complexity is not value by itself.
+
+### Kubernetes KEP / Backstage
+
+Adopt/adapt: durable design/lifecycle/acceptance boundaries and the distinction between descriptive metadata/participation and ultimate ownership/authority.
 
 ### reviewdog / OpenSSF Scorecard / SLSA
 
-Adopt/adapt: findings bind to an explicit diff/identity; evidence sources and unknown/inconclusive states are first-class; provenance is useful only when checked against explicit expectations; semantic evidence and live host gates are different claims.
+Adopt/adapt: findings bind to an explicit diff/identity; evidence sources and unknown/inconclusive states are first-class; required claims must be covered; provenance matters only when checked against expectations; semantic evidence and live host gates are different claims.
 
-## 5. End-to-end governed lifecycle
+## 6. End-to-end governed lifecycle
 
-The complete default lifecycle is:
+The default governed route is:
 
 ```text
 request
--> project-governance: establish/verify authorization and baseline
--> solution-design?        only if material design ambiguity exists
--> project-governance: reconcile task if design changes authorization
--> domain-navigation?      only if authority/source/test route is unclear
--> execution-orchestrator? only if execution topology needs policy
--> agent-handoff?          whenever responsibility crosses contexts
--> implementation / bounded diagnosis as authorized
--> verification            proportional V0-V3 evidence
--> evidence-audit?         when an independent acceptance/readiness verdict is required
--> live repository-host gates when applicable
--> project-governance: control alignment / lifecycle closeout
--> agent-handoff receipt?  when the result returns across contexts
+-> project-governance
+-> solution-design?        material design ambiguity only
+-> project-governance      reconcile/authorize resulting engineering purpose
+-> domain-navigation?      unclear semantic/source/test/runtime route only
+-> execution-orchestrator? useful decomposition/parallelism/delegated-model/recovery policy
+-> agent-handoff?          responsibility crosses contexts; same task when purpose unchanged
+-> authorized implementation / verification
+-> incident-doctor?        blocking evidence gap only
+-> evidence-audit?         explicit/independent acceptance-readiness boundary only
+-> live host gates?        when repository host governs the requested boundary
+-> project-governance      control alignment / lifecycle closeout
+-> agent-handoff?          return result across contexts
 ```
 
-`incident-doctor` may interrupt the normal execution path only when a blocking evidence gap meets its trigger, and returns to Project Governance for authorization before any out-of-scope behavior change.
+Question marks are real gates: do not invoke a capability solely because it exists. Conversely, do not suppress useful safe Sub Agent parallelism merely for conservatism.
 
-No narrower Skill silently keeps ownership after its bounded output is produced.
-
-## 6. Artifact authority taxonomy
-
-### Durable authorities
-
-- project controls: `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`;
-- accepted product/domain/data/runtime authorities owned by the target project;
-- accepted durable planning/design authority when justified;
-- Git/source history for repository facts.
-
-### Evidence / transport artifacts — not authority by default
-
-- handoff request;
-- handoff receipt;
-- execution/subagent brief;
-- recovery ledger;
-- audit report/reviewer finding;
-- CI/test result;
-- runtime observation/probe result;
-- PR/mergeability/review state observation.
-
-These artifacts can cite or summarize authority and may supply fresh evidence, but they do not independently expand scope or redefine project truth.
-
-### Conflict rule
-
-When an evidence/transport artifact conflicts with the source that owns that semantic class, do not let the artifact silently win. Re-verify freshness and reconcile through Project Governance. A newer explicit user instruction may require task reconciliation, not handoff override.
+No narrower Skill silently keeps task authority after its bounded output is produced.
 
 ## 7. Solution Design and durable planning
 
 Solution Design answers a material design question; durable planning stores accepted long-lived decisions only when future tasks need them.
 
-A design result must distinguish:
+A design result distinguishes:
 
 - verified facts/constraints;
 - user/project decisions;
 - agent assumptions;
-- agent-made implementation calls;
+- agent implementation calls;
 - unresolved decisions.
 
-Use goals/non-goals/anti-goals when they constrain the solution. Use a spike only when its outcome can change the decision. Before returning to execution, run a convergence check against the authorized objective and existing semantic authorities.
+Use goals/non-goals/anti-goals when material. Use a spike only when its result can change the decision. Before execution, run convergence against the authorized objective and existing semantic authorities.
 
-If the accepted design changes task scope, prerequisites, allowed side effects, verification, dependencies or STOP conditions, Project Governance must reconcile/re-authorize `CURRENT_TASK.md` before affected implementation.
+If accepted design changes task scope, prerequisites, allowed side effects, verification, dependencies, acceptance, or STOP conditions, Project Governance reconciles/re-authorizes `CURRENT_TASK.md` before affected implementation.
+
+A written accepted solution is referenced by later execution; each executor does not re-derive it from chat history.
 
 ## 8. Execution Orchestrator architecture
 
-### 8.1 Default topology
+### 8.1 Positive topology selection
 
-The lightest safe topology wins:
+Choose topology from dependency, authority, throughput, and integration needs rather than from a bias toward minimum agent count:
 
-1. one inline executor when sufficient;
-2. one controller + sequential delegated implementers when context separation helps;
-3. parallel read-only scouts/reviewers when questions are independent;
-4. parallel writers only for proven-disjoint semantic write authority and workspaces plus a defined integration check.
+1. **INLINE** — one executor when decomposition has little benefit or shared/dependent state dominates;
+2. **SEQUENTIAL_DELEGATED** — delegated units executed one at a time when context separation helps but dependencies prevent useful concurrency;
+3. **PARALLEL_READ_ONLY** — independent scouts/researchers/reviewers/verifiers with no shared mutation;
+4. **PARALLEL_DISJOINT_WRITERS** — independent writers only when semantic write authority/workspaces are proven disjoint and integration evidence is defined before dispatch.
 
-Branch/worktree separation alone does not prove semantic independence.
+When independent work exists and available parallelism materially improves wall-clock time or context isolation, use that capacity. Branch/worktree separation alone does not prove semantic independence.
+
+When material, track:
+
+```text
+AVAILABLE_PARALLELISM
+ACTIVE_UNITS
+DEPENDENCY_GRAPH
+WRITE_AUTHORITY_PER_UNIT
+INTEGRATION_BOUNDARY
+```
+
+Units may become `CANCELLED` or `SUPERSEDED` when later evidence invalidates their premise; stale results are not integrated blindly.
 
 ### 8.2 Role classes
 
 - Controller — sequencing/integration owner under the active task.
 - Implementer — bounded writer.
 - Scout/researcher — read-only discovery.
-- Reviewer/auditor — independent read-only evaluation unless separately re-authorized.
+- Reviewer/auditor — read-only evaluation unless separately re-authorized.
 - Probe/verifier — bounded observation/test role; diagnostic writes require explicit authorization.
 
-### 8.3 Model capability tiers
+A role name never grants write permission by itself.
 
-Use capability tiers rather than hardcoding one provider/model name:
+### 8.3 Delegated-model stabilization policy
 
-- `LOW` — mechanical/bounded lookup, extraction, formatting, simple deterministic edits when reliable;
-- `STANDARD` — normal implementation, multi-file pattern application, ordinary code review;
-- `HIGH` — architecture, subtle integration/concurrency/security reasoning, difficult diagnosis, high-risk final review when justified.
+Task 064 establishes the current v0.6.0 delegated Sub Agent policy:
 
-Policy:
+```text
+SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
+SUBAGENT_MODEL: environment configured default
+SUBAGENT_REASONING: environment configured default
+STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
+```
 
-- choose the lowest tier that reliably satisfies the role;
-- record an explicit maximum when cost/capability limits matter;
-- fallback may stay within the allowed tier band;
-- **no silent escalation** to a materially higher tier;
-- do not inherit the controller/session model automatically when the delegated role has a lower justified tier;
-- if the requested tier is unavailable and no allowed fallback exists, surface the mismatch instead of silently upgrading.
+The execution environment owns the concrete default model and reasoning setting. Reusable governance does not hardcode one provider/model as universal truth.
+
+The current user Codex convention may configure a default such as `gpt-6-luna` with `xhigh` reasoning effort. Model identity and reasoning effort are separate dimensions: `xhigh` reasoning does not mean a stronger/HIGH model was selected.
+
+`LOW / STANDARD / HIGH` remain only future portable capability vocabulary while `DEFAULT_ONLY` is active. They do not route delegated Sub Agents during stabilization.
+
+Do not downgrade or upgrade a delegated unit based on role complexity; do not inherit a different controller/session model merely because it is available; do not automatically or intentionally escalate a difficult Sub Agent to a stronger model.
+
+If the configured default model is unavailable or materially insufficient, return a capability/model gap to the controller. Re-enabling tier-based or stronger-model routing requires a later explicit user/project policy change and corresponding governance update.
 
 ### 8.4 Review gates
 
-Do not require reviewer-per-task ceremony.
+Review cadence follows risk and required independence, not agent count:
 
-- V0/V1: independent review only when task risk or user request justifies it.
-- V2: independent review/audit is normally appropriate at the integrated task/PR boundary, not necessarily after each work unit.
+- V0/V1: independent review only when task/user/risk justifies it;
+- V2: independent audit is normally useful at the integrated task/PR boundary, not after every unit;
 - V3: require explicit independent evidence/review appropriate to the high-consequence claim.
+
+Implementation self-check is verification, not automatically independent acceptance.
 
 ### 8.5 Recovery ledger
 
-Use an ephemeral ledger only when context loss/resume is a real risk. It may contain work-unit state, concrete result identity, verification, rulings/deviations, and resume point. It must never become a fourth control file and should be retired at terminal closeout unless the project explicitly promotes part of it into an existing durable authority.
+Use an ephemeral ledger only when context loss/restart is a realistic risk. It may record task/design identity, unit state, concrete result identity, verification evidence, controller rulings, unresolved dependencies/conflicts, and next resume point.
+
+It never replaces `CURRENT_STATUS.md`, `CURRENT_TASK.md`, durable planning, or Git history and should be retired at terminal closeout unless a bounded fact is deliberately promoted into an existing authority.
 
 ## 9. Agent Handoff architecture
 
 Core rule:
 
-`HANDOFF = AUTHORITY REFERENCES + FRESH DELTA + ACTION BOUNDARY + RETURN CONTRACT`
+`HANDOFF = TASK/AUTHORITY REFERENCES + FRESH DELTA + ACTION BOUNDARY + RETURN CONTRACT`
 
-Required semantic fields:
+Useful semantic fields:
 
 - `HANDOFF_ID`
+- `TASK_ID`
 - `MODE`
 - `TARGET`
 - `AUTHORITY`
+- `AUTHORITY_OBSERVED_BASIS` when freshness matters
+- `SOURCE_CONTEXT` / `TARGET_CONTEXT` when useful
 - `DELTA`
 - `BOUNDARY`
 - `RETURN_CONTRACT`
 
-Do not copy whole controls, plans, Domain maps or generic Engineering Governance procedure by default. Use bounded quoted snapshots only when the receiver cannot access the authority or exact text is required.
+For same-purpose continuation, preserve the same `TASK_ID`. The receiver rereads current authority; compatible advance may continue, material conflict returns to Project Governance, and unavailable required authority produces STOP rather than reconstruction from stale chat/memory.
 
-### Mode profiles
+Web/local/cloud/Sub Agent/reviewer/session/machine are context labels, not task-purpose definitions.
 
-- `EXECUTE` — target authorized mutation; return identity, changed paths, verification, lifecycle/control alignment.
-- `AUDIT` — strict read-only independent verdict; return identity/range, findings, unknowns, verdict, no control mutation.
-- `DIAGNOSE` — bounded evidence question/hypothesis/probe boundary; return evidence and fix boundary, not an unauthorized fix.
-- `REVIEW` — read-only evaluation of specified work product; return findings and evidence, not implementation thought history.
-- `VERIFY` — confirm a named claim/identity/check; return exact observation and what it proves, including explicit no-change/no-output success.
+Do not copy whole controls, plans, Domain maps, secrets, unrelated personal data, or generic Engineering Governance procedure into handoff cards by default.
 
-A handoff should be self-contained enough to act without reconstructing chat history but small enough that authority remains in its owning sources.
+Modes:
+
+- `EXECUTE` — authorized mutation in another context;
+- `AUDIT` — strict read-only evidence verdict under an authorized audit purpose;
+- `DIAGNOSE` — bounded diagnostic evidence/question transfer under existing authorization;
+- `REVIEW` — read-only evaluation of specified work product;
+- `VERIFY` — confirm a named claim/identity/check.
 
 ## 10. Evidence Audit architecture
 
 Audit profiles:
 
-- `CODE_DIFF` — requirement vs changed paths/source behavior;
-- `PR_MERGE` — semantic evidence + current PR host gates + merge readiness;
-- `CI` — workflow/run/job identity, expected source/ref/head, actual result and coverage;
-- `RELEASE_PROVENANCE` — source/tag/artifact/builder/hash/provenance expectations;
-- `POST_CHANGE` — delivered/merged/runtime identity vs the claim being verified.
+- `CODE_DIFF`
+- `PR_MERGE`
+- `CI`
+- `RELEASE_PROVENANCE`
+- `POST_CHANGE`
 
-Every verdict first binds:
+When formal independence matters, report:
 
-- target repository/artifact/runtime;
-- base/head/range or immutable artifact identity;
-- requirements/task/design authority;
-- evidence freshness;
-- literal host identity when live host gates matter.
+```text
+AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
+```
 
-Findings use `BLOCKING`, `IMPORTANT`, `MINOR`, `UNKNOWN`. Verdict uses `PASS`, `PASS_WITH_FOLLOWUPS`, or `STOP`.
+`SELF_CHECK` is useful implementation verification but is not independent acceptance.
 
-`UNKNOWN` is not silently converted to PASS or FAIL. Reviewer suggestions remain claims to verify, not automatic mutation instructions. Corrective work returns to Project Governance authorization.
+Before verdict, bind target/range/identity, authority/requirements, evidence freshness, literal host identity where relevant, and required claim coverage:
 
-## 11. Project Governance composition contract
+```text
+REQUIRED_CLAIMS
+OBSERVED_EVIDENCE
+UNVERIFIED_REQUIRED_CLAIMS
+```
 
-Project Governance owns entry, re-entry and closeout. A narrower Skill can call another narrower Skill only for a bounded dependency and then returns to its caller.
+Severity and requested-boundary disposition are distinct:
 
-Allowed common compositions include:
+- `BLOCKING` -> STOP;
+- `IMPORTANT` -> STOP when correction is required before the requested boundary; otherwise follow-up only when responsible authority explicitly accepts/defer it;
+- `MINOR` -> may coexist with `PASS_WITH_FOLLOWUPS`;
+- required `UNKNOWN` -> STOP.
 
-- `project-governance -> solution-design -> project-governance`;
-- `project-governance -> domain-navigation -> project-governance`;
-- `project-governance -> execution-orchestrator -> agent-handoff -> executor -> ... -> project-governance`;
-- `project-governance -> evidence-audit -> project-governance`;
-- `project-governance -> incident-doctor -> domain-navigation -> incident-doctor -> project-governance`;
-- `evidence-audit -> agent-handoff` only when the audit itself crosses contexts;
-- `execution-orchestrator -> agent-handoff` for delegated work.
+Verdicts are `PASS`, `PASS_WITH_FOLLOWUPS`, or `STOP` and state the exact boundary covered. CODE_DIFF PASS does not imply PR_MERGE PASS; source audit does not imply installed-runtime acceptance.
 
-Do not create uncontrolled recursive routing, a peer mesh of writers, or an implicit second controller.
+Reviewer findings are claims to verify, not corrective authority.
 
-## 12. Skill Engineering quality contract
+## 11. Domain Navigation and Incident Doctor
+
+Domain Navigation remains conditional, bounded, evidence-backed route discovery. Search/Repo Map results are leads; focused source reading verifies the route. It does not authorize tasks, decide product/business questions, diagnose incidents, or mutate product code.
+
+Incident Doctor remains evidence-gated and enters only when all three hold:
+
+1. real failure/unexplained unsafe ambiguity exists;
+2. it blocks safe progress;
+3. current evidence is insufficient for the next safe decision.
+
+Doctor names one missing fact and blocked decision before adding any probe. Diagnosis does not itself authorize a behavior change.
+
+## 12. Artifact authority taxonomy
+
+### Durable authorities
+
+- applicable `AGENTS.md`;
+- `CURRENT_STATUS.md` for current snapshot facts;
+- `CURRENT_TASK.md` for active authorization;
+- accepted product/domain/data/runtime authorities;
+- accepted durable planning/design authority when justified;
+- Git/repository host/runtime systems for facts they own.
+
+### Evidence / transport artifacts
+
+Handoff requests/receipts, Sub Agent briefs, recovery ledgers, audit reports, review findings, CI/test outputs, runtime observations, and probe results are not project controls by default.
+
+They may carry fresh evidence but cannot silently expand scope or replace an authority. When evidence conflicts with the source that owns the semantic class, re-verify freshness and reconcile through Project Governance.
+
+## 13. Skill Engineering quality contract
 
 This is repository-maintainer guidance, not an eighth Skill.
 
-Every top-level Skill must have:
+Every top-level Skill has:
 
-1. a distinct trigger;
+1. a distinct semantic trigger;
 2. one primary ownership boundary;
 3. an explicit return/output contract;
-4. negative trigger guidance to prevent overuse;
-5. progressive disclosure — concise `SKILL.md`, details in references/assets;
-6. no hidden task/control authority;
-7. no assumption that a Skill should trigger merely because it is installed.
+4. negative/near-miss guidance preventing routine overuse;
+5. positive guidance preventing material capability under-use where policy permits;
+6. progressive disclosure;
+7. no hidden task/control authority.
 
-Frontmatter descriptions should primarily describe **when to use** the Skill rather than summarizing its entire workflow. Route quality must include both positive and negative scenarios; over-triggering is a defect.
+Over-triggering is a defect. Material under-use of safe Sub Agent parallelism can also be a defect. A deliberate environment/project capability restriction is not under-use; during `DEFAULT_ONLY`, stronger-model non-use is intentional policy.
 
-## 13. Work packages
+## 14. Work packages and amendments
 
-### Foundation completed in Task 061
+### Task 061 — foundation
 
-- WP1 — seven-Skill skeleton and source authority.
+- WP1 — seven-Skill skeleton/source authority.
 - WP2 — global routing/adoption and Project Governance outer composition.
 - WP3 — initial handoff/execution contracts.
 - WP4 — initial evidence-audit contract.
-- WP5 — repository integration and draft PR.
+- WP5 — repository integration and Draft PR.
 
-### Architecture completion — Task 062
+### Task 062 — architecture completion
 
-- WP6 — central capability-composition contract and internal Project Governance lifecycle integration.
-- WP7 — execution/model/writer/recovery and handoff mode-profile completion.
-- WP8 — evidence-audit profiles, artifact-authority taxonomy, Solution Design/planning convergence.
-- WP9 — Skill Engineering quality contract and trigger/over-trigger rules.
-- WP10 — integrated acceptance matrix/specification; define now, execute only after architecture freeze.
+- WP6 — central capability-composition and lifecycle integration.
+- WP7 — execution/writer/recovery/handoff contract completion.
+- WP8 — evidence-audit/artifact-authority/design-planning integration.
+- WP9 — Skill Engineering quality contract.
+- WP10 — integrated acceptance specification.
 
-## 14. Integrated acceptance matrix — specification only
+### Task 063 — architecture hardening
 
-The architecture must be frozen before this matrix is executed.
+- WP11 — task purpose / execution unit / execution context separation.
+- WP12 — positive safe Sub Agent orchestration and cancellation/supersession.
+- WP13 — context-neutral handoff and independent audit hardening.
+- WP14 — acceptance/maintainer alignment.
 
-### Positive routing scenarios
+### Task 064 — model-policy stabilization
 
-1. clear small repository edit -> Project Governance only;
-2. material ambiguous architecture choice -> Solution Design, then return/reconcile;
-3. complex authorized multi-agent execution -> Execution Orchestrator;
-4. Web/local transfer -> Agent Handoff request + receipt;
-5. independent PR/CI/merge audit -> Evidence Audit;
-6. unclear Domain/source/test route -> Domain Navigation;
-7. blocking unexplained failure with evidence gap -> Incident Doctor.
+- WP15 — delegated policy `DEFAULT_ONLY`;
+- use environment-configured default Sub Agent model/reasoning;
+- distinguish reasoning effort such as `xhigh` from model tier;
+- disable automatic and intentional stronger-model escalation during stabilization;
+- retain LOW/STANDARD/HIGH only as inactive future vocabulary;
+- update integrated acceptance accordingly.
 
-### Negative / over-trigger scenarios
+## 15. Integrated acceptance contract
 
-1. clear edit must not trigger Solution Design merely because it is a feature;
-2. one-executor task must not spawn subagents merely because orchestration exists;
-3. ordinary bug with sufficient evidence must not enter Incident Doctor;
-4. no transfer means Agent Handoff is unnecessary;
-5. implementation self-check does not automatically become independent Evidence Audit;
-6. no Skill may replace/override `CURRENT_TASK.md` authority.
+The authoritative consolidated matrix is `references/V060_INTEGRATED_ACCEPTANCE.md`.
 
-### Composition scenarios
+It must exercise, at minimum:
 
-- Solution Design -> task reconciliation -> execution;
-- Execution Orchestrator -> Agent Handoff -> local executor -> compact receipt -> Project Governance;
-- Evidence Audit -> STOP finding -> Project Governance corrective authorization -> re-audit;
-- Incident Doctor -> Domain Navigation -> Doctor -> Project Governance;
-- control-only drift after semantic freeze -> semantic evidence reuse where allowed + live host gate reread.
+- exact seven-Skill discovery and normal Project Governance entry;
+- positive and negative/near-miss routing;
+- same-task continuation across contexts and Sub Agent units;
+- useful safe parallel Sub Agent execution;
+- `DEFAULT_ONLY` environment model/reasoning behavior;
+- no stronger-model inheritance or escalation during stabilization;
+- `xhigh` reasoning distinguished from stronger-model selection;
+- handoff authority freshness/conflict/unavailable behavior;
+- independent audit classification and required-claim coverage;
+- severity/disposition mapping;
+- control/planning authority boundaries;
+- CI/PR/release/post-change identity evidence;
+- Domain Navigation and Incident Doctor boundaries;
+- installed Plugin/global-routing/Web/Codex environment behavior for selected release surfaces.
 
-### Safety/economy scenarios
+Run this as one consolidated post-freeze acceptance pass, not one Skill at a time.
 
-- lower-tier delegated role does not silently inherit HIGH model;
-- unavailable low/standard model does not silently escalate outside allowed fallback;
-- parallel readers may coexist;
-- overlapping writers are rejected unless proven disjoint;
-- handoff card does not copy full task/status/governance rules;
-- no-change/no-output success is explicit in receipt;
-- missing CI status is `UNKNOWN/none`, not `PASS`.
+If acceptance finds a reusable-source defect, fix source remotely, freeze a new semantic identity, rerun affected integrated scenarios plus required closure evidence, and do not patch reusable source inside installed Plugin caches.
 
-### Acceptance sequencing
+## 16. Deferred beyond v0.6.0 architecture stabilization
 
-1. finish WP6-WP10 source architecture;
-2. run one final remote source-architecture audit;
-3. freeze Delivery / Semantic HEAD;
-4. run one consolidated installed Plugin/Web/Codex acceptance matrix against the frozen architecture;
-5. group related defects into bounded corrective work;
-6. rerun only the affected integrated scenarios plus final required closure evidence;
-7. only then consider PR merge and v0.6.0 release publication.
-
-Do **not** use `build one Skill -> installed acceptance -> build next Skill` as the v0.6.0 sequence.
-
-## 15. Deferred beyond architecture completion
-
-- actual installed Plugin/Web/Codex acceptance execution;
+- tier-based or stronger-model delegated routing until explicitly re-authorized;
+- generic automatic model-router executable;
+- actual installed Plugin/Web/Codex acceptance until the source freeze is complete;
 - v0.6.0 release workflow/tag/assets/publication;
-- generic automatic model router executable;
 - daemon/scheduler/database/enforcement runtime;
 - persistent fourth project-control file;
 - broad migration of historical `docs/superpowers/**` material;
