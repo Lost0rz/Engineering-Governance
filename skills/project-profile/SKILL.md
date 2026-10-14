@@ -15,9 +15,36 @@ It must not replace project `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`,
 
 Generating or auditing Profile content may be read-only/output-only. **Writing or refreshing a repository/project-managed Profile is state-changing and requires compatible Project Governance / `CURRENT_TASK.md` authorization.** This Skill never creates that authorization by itself.
 
+## Grounding gate
+
+Apply source grounding **before** deciding whether content belongs in the Profile.
+
+A substantive project-specific Profile claim is eligible only when it is traceable to either:
+
+1. a current verified project authority appropriate to that claim; or
+2. an explicit user instruction/reaffirmation in the current Profile task that clearly establishes or changes durable project context.
+
+The following may help discover what to verify, but they do **not** independently ground a Profile claim:
+
+- ChatGPT/model Memory;
+- prior conversations or conversation summaries;
+- previous assistant output;
+- previous Project Profile or Project Instructions text;
+- old task cards, handoffs, audit replies, PR prose, status summaries, or historical notes.
+
+An existing Profile/Project Instructions surface is `DERIVED_PROJECT_CONTEXT`, not source authority. When rebuilding or auditing it, treat its substantive claims as candidates to revalidate against current authority rather than facts to inherit.
+
+If a candidate is supported only by Memory/history/old derived context and cannot be verified, omit it from the generated Profile or keep the uncertainty outside the Profile. Do not silently promote it into durable project context.
+
+An explicit current-task user decision may establish durable user-authorized context. If it is not yet persisted in repository authority, do not describe it as repository-established fact.
+
+Preserve the owning project's authority semantics. Do not collapse storage, raw evidence, projections, implementation state, runtime evidence, or explicitly canonical fact classes into one universal Authority unless the current project authority actually defines that relationship.
+
+This grounding boundary applies only to Project Profile construction/audit. It does **not** disable Memory or prevent ordinary conversation from using Memory/context normally.
+
 ## Classification workflow
 
-Classify each candidate item before writing:
+After grounding eligibility is established, classify each candidate item before writing:
 
 1. current state/task -> STATUS/TASK;
 2. reusable cross-project workflow/protocol -> Engineering Governance Skill/reference, not Profile;
@@ -26,7 +53,7 @@ Classify each candidate item before writing:
 5. long-lived design rationale/work packages -> durable planning authority;
 6. stable descriptive context, stable project-specific priority/anti-goal/risk cue, environment role, or authority pointer -> Project Profile.
 
-Read only sources needed to establish the profile. Keep unknowns explicit; do not infer business truth, Profile-surface relationships, or authority from filenames or memory.
+Read only sources needed to establish the profile. Keep unknowns explicit; do not infer business truth, Profile-surface relationships, authority, or stable project constraints from filenames, Memory, or unverified historical context.
 
 ## Compression gate
 
@@ -42,9 +69,10 @@ Before returning a Profile, remove content that merely restates reusable governa
 - detailed Domain lists, ownership/source/symbol/test maps already owned by an established Domain/navigation authority;
 - ordered startup/read/check workflows already owned by Project Governance or project rules;
 - instructions for how to maintain, classify, refresh, or write the Project Profile itself;
-- copied project-specific MUST/MUST-NOT rule lists already owned by normative authority.
+- copied project-specific MUST/MUST-NOT rule lists already owned by normative authority;
+- unverified facts copied from Memory, prior chat, previous Profile/Project Instructions, or historical derived artifacts.
 
-If such material is useful for orientation, replace it with one short pointer or stable invariant. Preserve only project-specific stable facts that materially help an agent understand this project.
+If such material is useful for orientation, replace it with one short pointer or stable invariant. Preserve only grounded project-specific stable facts that materially help an agent understand this project.
 
 ## Surface-role evidence
 
@@ -66,13 +94,13 @@ Start from `assets/templates/PROJECT_PROFILE.md`.
 - Prefer concise bullets and authority pointers over explanatory procedure.
 - If a detailed Domain/navigation authority exists, point to it; keep only the few broad Domain concepts needed for orientation and do not add a separate `Domain Model`/mini-map section by default.
 - `Planning & navigation` contains durable pointers, not a numbered engineering startup sequence.
-- Do not add a `Project Profile Rule`, maintenance guide, classification guide, freshness procedure, or similar meta-section to the generated Profile.
-- `Priorities / constraints` may contain compact priorities, anti-goals, and risk cues; detailed normative execution rules remain in `AGENTS.md`/accepted normative authority.
+- Do not add a `Project Profile Rule`, maintenance guide, classification guide, freshness procedure, provenance ledger, or similar meta-section to the generated Profile.
+- `Priorities / constraints` may contain compact grounded priorities, anti-goals, and risk cues; detailed normative execution rules remain in `AGENTS.md`/accepted normative authority.
 - Keep one current Profile projection surface, or one explicit primary surface plus derived mirror; do not maintain independently edited competing Profiles.
-- A Profile should be substantially smaller than the combined authorities it indexes. If it reads like a governance handbook, mini Domain Map, or Profile-maintenance guide, run the compression gate again.
+- A Profile should be substantially smaller than the combined authorities it indexes. If it reads like a governance handbook, mini Domain Map, Profile-maintenance guide, or unverified memory summary, run the grounding/compression gates again.
 
 See `references/profile-contract.md` for the full contract.
 
 A current Profile may be used as an optional landing page for context recovery when available and cheap to read. It never removes the need to read authoritative controls/rules required for the actual decision.
 
-Refresh only when a profile-owned summary/pointer is materially stale.
+Refresh only when a grounded profile-owned summary/pointer is materially stale.
