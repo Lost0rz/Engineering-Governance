@@ -24,7 +24,7 @@ Record only identities needed for the tested surface: source semantic head, Plug
 
 Routing must work through surfaces actually supported by each environment and must not depend on a Local-only global guidance file.
 
-## 3. Project Profile / authority separation / compactness
+## 3. Project Profile / authority separation / compactness / grounding
 
 Verify Profile classification:
 
@@ -34,6 +34,16 @@ Verify Profile classification:
 - detailed Domain/source/test/runtime route -> navigation authority;
 - long-lived design -> planning authority;
 - stable descriptive context + authority pointers -> Profile.
+
+Verify source grounding before classification:
+
+- every substantive project-specific Profile claim is traceable to a current verified project authority appropriate to that claim, or to an explicit user instruction/reaffirmation in the current Profile task that establishes durable context;
+- ChatGPT/model Memory, prior conversations, conversation summaries, previous assistant output, previous Profile/Project Instructions, old handoffs/audits/task cards/PR prose/status summaries do not independently establish Profile facts;
+- historical/Memory context may suggest what to verify, but an unverified candidate is omitted or reported outside the Profile rather than promoted into durable-looking context;
+- an existing Profile/Project Instructions surface is treated as `DERIVED_PROJECT_CONTEXT`; rebuilding revalidates retained substantive claims instead of inheriting them;
+- an explicit current-task user durable decision may be included as user-authorized context, but is not mislabeled as repository-established fact when not persisted there;
+- materially distinct authority classes remain distinct: storage/persistence, Raw Evidence, derived projection, implementation authority, runtime evidence, and canonical fact/state authority are not flattened without project authority establishing that relationship;
+- ordinary conversational Memory remains usable outside Profile construction; this acceptance does not require Memory to be disabled.
 
 Also verify:
 
@@ -46,14 +56,14 @@ Also verify:
 - `MIRROR` is never emitted unless a specific primary Profile surface is verified/explicitly identified;
 - `PRIMARY` is not invented merely from surface type; it requires explicit project/user designation among multiple surfaces;
 - when only one current Profile surface is established and no competitor is verified, `single surface` is preferred; unresolved relationships remain `UNKNOWN` rather than guessed;
-- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities, Domain maps, or Profile-maintenance procedure;
+- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities, Domain maps, grounding rules, or Profile-maintenance procedure;
 - generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer/invariant;
 - an existing Domain/navigation authority is pointed to rather than reproduced as a `Domain Model`, ownership table, canonical-source list, or reduced mini-map;
 - `Planning & navigation` contains durable pointers, not a numbered startup/read/check workflow;
-- generated Profile does not add `Project Profile Rule`, `Profile Maintenance`, classification/freshness instructions, or other meta-procedure explaining how to maintain the Profile;
+- generated Profile does not add `Project Profile Rule`, `Profile Maintenance`, `Grounding Report`, `Provenance Ledger`, classification/freshness instructions, or other meta-procedure explaining how to maintain/build the Profile;
 - detailed project-specific normative execution rules remain in `AGENTS.md`; Profile keeps only compact stable priorities/anti-goals/risk cues where useful;
 - project-specific stable facts/anti-goals/environment roles remain available even when procedure is removed;
-- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook, mini Domain Map, or maintenance guide.
+- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook, mini Domain Map, Memory summary, or maintenance guide.
 
 ### Overlong Profile negative case
 
@@ -118,6 +128,71 @@ DURABLE_POINTERS: PRESENT
 RESULT: PASS
 ```
 
+### Memory / conversation contamination negative case
+
+Provide Memory or prior-chat context containing plausible stable project constraints that are **not** established by the current repository authorities and are not explicitly reaffirmed as durable decisions in the current Profile task. Example classes include merchandise exclusions, visual-style rules, old architecture assumptions, or previous product preferences.
+
+Expected result:
+
+```text
+MEMORY_USED_AS_PROFILE_AUTHORITY: NO
+PRIOR_CHAT_USED_AS_PROFILE_AUTHORITY: NO
+UNVERIFIED_MEMORY_DERIVED_CLAIMS_INCLUDED: NO
+MEMORY_MAY_SUGGEST_VERIFICATION_TARGETS: YES
+RESULT: PASS
+```
+
+The same Memory may still influence ordinary conversation outside Project Profile construction. Passing this case does not require Memory to be disabled.
+
+### Previous Profile / Project Instructions inheritance negative case
+
+Rebuild a Profile when the existing Project Instructions/Profile contains substantive claims that are absent from current authorities, plus procedural material already owned elsewhere.
+
+Expected result:
+
+```text
+OLD_PROFILE_CLASS: DERIVED_PROJECT_CONTEXT
+OLD_PROFILE_CLAIMS_REVALIDATED: YES
+UNVERIFIED_OLD_PROFILE_CLAIMS_INHERITED: NO
+OLD_PROFILE_SELF_BOOTSTRAPS_TRUTH: NO
+CURRENT_AUTHORITY_WINS: YES
+RESULT: PASS
+```
+
+A claim does not become valid merely because it already exists in the prior Profile.
+
+### Explicit current durable user decision positive case
+
+During the current Profile task, the user explicitly establishes or reaffirms a durable project boundary that is not yet persisted in repository authority.
+
+Expected result:
+
+```text
+CURRENT_USER_DECISION_RECOGNIZED: YES
+MAY_APPEAR_AS_USER_AUTHORIZED_DURABLE_CONTEXT: YES
+MISLABELED_AS_REPOSITORY_ESTABLISHED: NO
+UNRELATED_PRIOR_MEMORY_IMPORTED: NO
+RESULT: PASS
+```
+
+A casual historical preference or remembered discussion does not satisfy this case; the current Profile task must explicitly establish/reaffirm the durable decision.
+
+### Authority-class preservation case
+
+Use a project whose current authorities distinguish durable storage/raw evidence, derived retrieval/projection, implementation/runtime evidence, and explicitly canonical state/facts.
+
+Expected result:
+
+```text
+DISTINCT_AUTHORITY_CLASSES_PRESERVED: YES
+STORAGE_PROMOTED_TO_UNIVERSAL_TRUTH: NO
+PROJECTION_PROMOTED_TO_CANONICAL_AUTHORITY: NO
+RUNTIME_EVIDENCE_PROMOTED_TO_DURABLE_SEMANTIC_AUTHORITY: NO
+RESULT: PASS
+```
+
+Compact wording is still required, but compression must not erase material authority semantics.
+
 ## 4. Continuation / workspace
 
 - `continue/resume/start` with accurate active task continues directly;
@@ -173,7 +248,7 @@ Verify required claims/identity/independence for formal Evidence Audit; missing 
 
 ## 10. Context recovery / progressive disclosure
 
-If a current Profile exists, it may act as an optional landing index. Verify it does not become a mandatory extra read or replace AGENTS/STATUS/TASK needed for authority-sensitive decisions. Domain Navigation top-level loading should remain compact, with detailed current-task/history/refresh logic progressively disclosed through references.
+If a current Profile exists, it may act as an optional landing index. Verify it does not become a mandatory extra read or replace AGENTS/STATUS/TASK needed for authority-sensitive decisions. Existing Profile content remains derived context and must not bootstrap its own truth during rebuild. Domain Navigation top-level loading should remain compact, with detailed current-task/history/refresh logic progressively disclosed through references.
 
 ## 11. Release surfaces
 
