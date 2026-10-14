@@ -18,11 +18,11 @@ No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has been p
 
 Task `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065` completed the environment-model-authority corrective on branch `codex/capability-model-v0.6.0`.
 
-- New Architecture Delivery / Semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
+- Architecture Delivery / Semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
 - Prior Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance because reusable model-authority semantics changed after that freeze.
 - PR #26 remains OPEN / DRAFT / UNMERGED.
 - PR host mergeability observed during Task 065 source audit: `mergeable=true`.
-- Commit/check statuses on the new semantic head: none reported; **CI PASS is not claimed**.
+- Commit/check statuses on the semantic head: none reported; **CI PASS is not claimed**.
 - Installed Plugin/Web/Codex integrated acceptance: `NOT_RUN_BY_DESIGN`.
 
 ## Seven-Skill model unchanged
@@ -102,7 +102,7 @@ Verified:
 
 No blocking remote source defect is known from Task 065 audit.
 
-Remaining acceptance dependency: run one consolidated installed Plugin/Web/Codex acceptance pass against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` (or a proven control-only descendant). Reusable-source defects discovered there return to the remote source flow.
+Remaining acceptance dependency: run one consolidated installed Plugin/Web/Codex acceptance pass against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` or a proven semantic-tree-equivalent descendant. Reusable-source defects discovered there return to the remote source flow.
 
 ## Next intended milestone
 
