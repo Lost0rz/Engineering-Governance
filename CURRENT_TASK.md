@@ -8,7 +8,7 @@ Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
 Task class: `VERIFY`
 
-State: `WAITING_FLOATTABS_PROFILE_REGRESSION`
+State: `REVIEW_REMAINING_WEB_ROUTING_ACCEPTANCE`
 
 ## Objective
 
@@ -57,78 +57,79 @@ Authority map = authority pointers only
 
 `Environment` is limited to durable platform/environment/data-role context and pointers. Engineering Governance uses the compact shipped hook.
 
-## Fresh Web 0.6.6 evidence
+## Web 0.6.6 Project Profile acceptance
 
-### Gift — PASS for current target
+### Gift — PASS
 
 - no Memory-derived preference leakage;
-- no current task/PR/CI or development-stage machine/port state;
+- no current task/PR/CI or temporary machine/port state;
 - no stage-only `storefront CMS` anti-goal;
-- Authority map is pointer-oriented with no ownership subcatalog;
-- one broad upstream-vs-Gift invariant remains for orientation;
-- Environment is role/data-flow oriented;
+- Authority map pointer-oriented with no ownership subcatalog;
+- Environment role/data-flow oriented;
 - compact Engineering Governance hook;
 - durable B2B/Product-first/Inquiry/RFQ identity retained.
 
-Minor non-blocking compression note: generic `Keep project control lightweight` guidance is unnecessary Profile content.
-
-### Merloom — PASS for current target
+### Merloom — PASS
 
 - no current task/PR/CI/progress;
 - Authority map pointer-oriented;
 - no code/source responsibility map in Environment;
-- durable private-control-plane/Gift-serving and Business-vs-Analytics role distinctions retained;
+- durable private-control-plane/Gift-serving and Business-vs-Analytics distinctions retained;
 - durable greenfield/single-Authority/Publication/AI-candidate/recapture/Analytics boundaries retained;
 - compact Engineering Governance hook.
 
-### MemoX — PASS for required durability/authority-class target
+### MemoX — PASS
 
 - current Codex MVP/wave/viewer/runtime delivery shape excluded;
 - `V1 SQLite` retained with scope;
 - `long-term Rust Core` retained with scope;
-- planned Swift Apple shell/UI retained with Rust/Swift boundary still unselected;
-- Raw Evidence / Canonical Memory / Provider and derived projections / MCP distinctions preserved;
-- DOMAIN_MAP remains navigation pointer rather than truth;
+- planned Swift Apple shell/UI retained with Rust/Swift boundary unselected;
+- authority-class distinctions preserved;
+- DOMAIN_MAP remains navigation only;
 - current Task/Status/runtime state excluded;
 - compact Engineering Governance hook.
 
-Minor non-blocking compression note: the twelve-item durable constraint list is more detailed than the ideal compact Profile.
+### FloatTabs — PASS
+
+- old Project Instructions/history did not bootstrap unsupported Profile facts;
+- established `docs/architecture/DOMAIN_MAP.md` remains a navigation pointer rather than a recreated mini-map;
+- no current incident/task/PR/HEAD/worktree/acceptance state enters the Profile;
+- native macOS/WebKit/Apple Silicon/macOS support boundaries are grounded by current repository authority;
+- fixed metadata fields remain correct;
+- compact Engineering Governance hook remains intact.
 
 ## Decision
 
-Gift, Merloom and MemoX now materially pass the 0.6.6 grounding/durability/classification/Domain-pointer target. The remaining observations are compression-quality issues and do not justify another source corrective by themselves.
+The Project Profile Web acceptance boundary is materially PASS across Gift, Merloom, MemoX and FloatTabs on Web candidate `0.6.6`.
 
-Do not open Task 078 from these observations alone.
+Minor compression observations remain non-blocking and do not authorize another Profile source corrective by themselves.
 
 ## Required next verification
 
-Run a fresh FloatTabs Profile regression:
+Review the remaining Task-070 Web routing positive/negative scenarios in `references/V060_INTEGRATED_ACCEPTANCE.md` and distinguish:
 
-- old Project Instructions/Profile cannot bootstrap their own truth;
-- established Domain/navigation authority remains a pointer;
-- no current/runtime/acceptance detail enters the durable Profile;
-- no reduced ownership/code map appears;
-- fixed metadata fields remain correct;
-- Engineering Governance remains the compact hook.
+- scenarios already proven by current fresh Web evidence;
+- scenarios requiring one more direct Web routing test;
+- scenarios that belong to later Local Codex / integrated acceptance rather than Web Profile acceptance.
 
-If FloatTabs passes, review the remaining Task-070 routing positive/negative scenarios and decide whether Web acceptance can close before Local Codex integrated acceptance.
+Do not reopen Project Profile source work unless a fresh regression exposes a prohibited class or another reusable defect.
 
 ## Out of scope
 
 - formal immutable GitHub v0.6.x release/tag;
 - PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web boundary closes;
+- Local Codex / Mac mini / MacBook Air integrated acceptance until the Web boundary is closed;
 - changing ChatGPT Memory behavior;
 - another Profile source corrective without new reusable failure evidence.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance if FloatTabs reproduces a prohibited Profile class or another reusable source defect appears.
+Stop before formal release/merge/local acceptance if a remaining Web routing scenario fails materially or another reusable source defect appears.
 
 Control Alignment:
 
 - `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
 - `DOCUMENT_ALIGNMENT`: `UNCHANGED — current acceptance contract covers these cases`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED_WITH_GIFT_MERLOOM_MEMOX_EVIDENCE`
-- `CURRENT_TASK_RECONCILIATION`: `ADVANCED_TO_FLOATTABS_REGRESSION`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED_WITH_FLOATTABS_PASS`
+- `CURRENT_TASK_RECONCILIATION`: `ADVANCED_TO_ROUTING_ACCEPTANCE_REVIEW`
 - `CONTROL_ALIGNMENT`: `PASS`
