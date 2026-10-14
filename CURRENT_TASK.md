@@ -1,86 +1,66 @@
-# CURRENT TASK — Web Candidate Acceptance v0.6.x
+# CURRENT TASK — Project Profile Boundary Corrective v0.6.x
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
+Task ID: `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073`
 
-Task class: `VERIFY`
+Task class: `CORRECTIVE`
 
-State: `WAITING_FRESH_WEB_SESSION`
+State: `ACTIVE`
 
 ## Objective
 
-Validate the corrected installed Engineering Governance Plugin across fresh Web discovery/routing/Profile behavior before formal GitHub release or PR merge, using bounded source correctives only when real reusable defects are exposed.
+Correct three reusable Project Profile defects exposed by the fresh FloatTabs Web regression while preserving the accepted eight-Skill architecture and the compact derived-context model.
 
-## Corrective history / current source identity
+Parent acceptance purpose: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`.
 
-Completed acceptance-driven correctives:
+## Acceptance finding basis
 
-- `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff request/receipt templates aligned with the accepted Card/Receipt contract.
-- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile output contract hardened so Profiles remain compact landing indexes and do not duplicate generic Engineering Governance procedure.
+The fresh FloatTabs Project Profile was substantially improved and its project facts were supported by current repository authorities, but three reusable output defects remained:
 
-Current corrected Delivery / Semantic candidate:
+1. it emitted `Primary/mirror role: MIRROR` without evidence identifying a primary Profile surface;
+2. it reproduced a reduced Domain Model even though an established `docs/architecture/DOMAIN_MAP.md` already owned detailed Domain/navigation mapping;
+3. it added reusable meta-procedure (`Planning & Navigation` startup steps and a `Project Profile Rule` section explaining how to maintain/classify the Profile) instead of keeping only pointers.
 
-`ca64841b141888675c2670eeaf4c6cbccb8a5395`
+A related pressure remains: project-specific normative MUST/MUST-NOT rules should stay in `AGENTS.md`; Profile priorities/constraints should be stable risk cues/anti-goals rather than a copied normative rulebook.
 
-This is Task 072 semantic source `e08c77aa...` plus the package-version alignment `plugin.json: 0.6.0 -> 0.6.1`; no Skill behavior changed after the focused Task 072 audit.
+## In scope
 
-## Web candidate evidence
-
-- existing personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- prior Web candidate `0.6.0` was refreshed through the guarded Plugin update path;
-- current Web candidate version: `0.6.1`;
-- current Web release: `pluginrel_6acf006fb68c81918d269b6ee46719e6`;
-- scope/discoverability remain `USER / PRIVATE`;
-- platform-managed `.codex-plugin/plugin.json` and root `plugin.json` both report `0.6.1`;
-- only the manifest and three `project-profile` shipped files were overlaid for the Task 072 regression candidate;
-- installed `project-profile` Skill, template and contract contain the Task 072 compression/dedup rules.
-
-The source manifest has now been aligned to `0.6.1`; formal GitHub v0.6.1 release/tag is still not created.
-
-## Web acceptance evidence already established
-
-- fresh Web session discovers the exact eight top-level Skills: PASS;
-- ordinary project status/progress inspection -> `project-governance`: PASS;
-- advisory inspection did not over-route to Evidence Audit / Domain Navigation / Incident Doctor: PASS;
-- Project Profile request reached the Project Profile capability and excluded live PR/HEAD/CI/current-task content: PASS for routing/authority/freshness boundary;
-- first Project Profile output duplicated reusable routing/handoff/verification/incident/artifact procedure and was too long: reusable finding corrected by Task 072.
-
-## Remaining Web boundary
-
-Open a fresh Web conversation/session against current candidate `0.6.1`, then rerun the same Engineering-Governance Project Profile generation case and remaining routing positive/negative scenarios from `references/V060_INTEGRATED_ACCEPTANCE.md`.
-
-Project Profile retest must establish:
-
-- explicit known Profile surface + PRIMARY/MIRROR/single-surface role;
-- template-first compact output;
-- stable project-specific facts/pointers retained;
-- live STATUS/TASK/PR/CI content excluded;
-- reusable routing/Handoff/verification/Doctor/artifact/control procedure not duplicated;
-- no extra top-level procedure sections unless genuinely project-specific.
+- harden `skills/project-profile/SKILL.md` and `references/profile-contract.md` so `MIRROR` requires evidence of a named/identifiable primary surface;
+- when no competing Profile surface is established, prefer `single surface`; use `PRIMARY` only when project/user authority designates the target as primary/canonical among profile surfaces;
+- prohibit duplicating established Domain/navigation authority as a reduced Domain Model/source-symbol map; retain only the minimum stable concepts needed for orientation plus a pointer;
+- prohibit step-by-step startup/navigation workflow and Profile-maintenance/classification/meta-procedure in the generated Profile;
+- clarify that copied project-specific MUST/MUST-NOT lists belong in normative authority while Profile may retain concise priorities/anti-goals/risk cues;
+- update the shipped Profile template and integrated acceptance negative scenarios;
+- align Plugin package version for the refreshed Web candidate and update the existing personal Plugin through the guarded update path;
+- focused source audit and installed-file verification;
+- return to Task 070 after the corrective is frozen and Web candidate is ready for retest.
 
 ## Out of scope
 
-- formal immutable GitHub `plugin-v0.6.1` release/tag;
-- PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web surface is ready;
-- patching installed caches as source authority;
-- further source architecture expansion without a new real acceptance finding.
+- changing the eight-Skill model or routing architecture;
+- changing Project Governance task authority;
+- editing FloatTabs source/profile/control files;
+- changing Domain Navigation semantics;
+- formal GitHub release/tag or PR #26 merge;
+- Local Codex acceptance;
+- patching installed caches as source authority.
+
+## Verification
+
+- Skill/contract/template/acceptance agree on surface-role evidence, Domain deduplication and meta-procedure exclusion;
+- `MIRROR` cannot be emitted without an established primary;
+- an existing Domain Map is pointed to rather than summarized as a second Domain Map;
+- generated Profile contains no step-by-step engineering startup flow or Profile-maintenance rules;
+- stable project-specific facts remain available;
+- source and refreshed Web Plugin candidate contain the same corrected shipped Project Profile files.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance if a fresh Web session does not observe the corrected 0.6.1 Project Profile behavior, eight-Skill discovery regresses, generic-workflow duplication persists, or another reusable source defect appears.
+Stop if the correction requires a new authority layer, new Skill, new control file, or changes outside Project Profile/acceptance/package identity semantics.
 
 ## Terminal boundary
 
-Task 070 closes only after required Web routing/Profile acceptance evidence is recorded. Formal GitHub release remains a later integrated-acceptance boundary.
-
-Control Alignment:
-
-- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+Task 073 closes after focused source verification, package/version alignment, guarded Web Plugin refresh, and installed-file verification. Then restore Task 070 to `WAITING_FRESH_WEB_SESSION` for the user regression test.
