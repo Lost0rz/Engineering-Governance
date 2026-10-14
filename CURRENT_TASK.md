@@ -8,11 +8,11 @@ Task ID: `EG-V066-RELEASE-078`
 
 Task class: `RELEASE`
 
-State: `WAITING_LOCAL_ACCEPTANCE`
+State: `LOCAL_INSTALL_PASS_ROUTING_ACCEPTANCE_PENDING`
 
 ## Objective
 
-Publish the accepted Web candidate as formal GitHub Plugin release `plugin-v0.6.6`, then converge Local Codex onto that released Plugin and complete the remaining local integrated acceptance.
+Converge Local Codex onto formal Plugin release `plugin-v0.6.6` and complete the remaining local integrated acceptance after the accepted Web/release boundary.
 
 ## Published release
 
@@ -32,59 +32,55 @@ Publish the accepted Web candidate as formal GitHub Plugin release `plugin-v0.6.
 
 Web candidate acceptance is PASS for the release boundary, including Gift, Merloom, MemoX and FloatTabs Project Profile regressions.
 
-Full Web+Local integrated acceptance is not yet claimed.
+## Local installation evidence
+
+MacBook Air local Codex installation supplied fresh terminal evidence:
+
+- Plugin ID: `engineering-governance@engineering-governance-personal`;
+- marketplace: `engineering-governance-personal`;
+- source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`;
+- version: `0.6.6`;
+- installed/enabled: `true`;
+- installed cache path: `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.6.6`;
+- exact Skill count: `8`;
+- Skill names match the accepted v0.6.6 capability model.
+
+`LOCAL_PLUGIN_INSTALLATION`: `PASS`.
 
 ## Remaining authorized work
 
-Local Codex only:
+Local Codex only, read-only unless a reusable defect or stale global routing surface requires a separately authorized corrective:
 
-1. refresh the configured `engineering-governance-personal` marketplace from repository `main`;
-2. update/refresh the installed `engineering-governance` Plugin to `0.6.6` through the supported plugin/marketplace mechanism; do not manually patch active cache/source files;
-3. verify one active canonical Plugin authority, version `0.6.6`, and exactly eight top-level Skills;
-4. verify the current Engineering Governance routing surface is singular/current where the local environment uses authoritative global guidance;
-5. exercise bounded routing/continuation/profile/handoff evidence needed by `references/V060_INTEGRATED_ACCEPTANCE.md` for the Local surface;
-6. return the local receipt for Web audit and final Control Alignment.
-
-## Local update source
-
-Marketplace:
-
-`engineering-governance-personal`
-
-Repository source:
-
-`https://github.com/Lost0rz/Engineering-Governance.git`
-
-Repository ref:
-
-`main`
-
-Formal release identity:
-
-`plugin-v0.6.6`
+1. identify any authoritative local global guidance/routing surface and verify there is one current Engineering Governance routing block rather than conflicting legacy/duplicate managed regions;
+2. verify ordinary bounded engineering routes to `project-governance` and does not over-trigger Project Profile;
+3. verify Project Profile requests route to `project-profile`;
+4. verify same-task cross-context transfer uses `agent-handoff` with the same `TASK_ID` and the required Card core fields;
+5. verify formal release/readiness evidence can route to `evidence-audit` while ordinary status inspection remains Project Governance;
+6. verify continuation/resume with accurate active task does not create a new task merely because session/context changed;
+7. return one bounded local receipt with PASS/FAIL/UNKNOWN evidence for Web audit.
 
 ## Stop conditions
 
 STOP local acceptance if:
 
-- marketplace refresh does not resolve repository `main` containing `plugin-v0.6.6` source;
-- installed Plugin does not report `0.6.6`;
+- installed Plugin stops reporting `0.6.6` or exact eight-Skill identity;
 - more than one active Engineering Governance Plugin authority exists;
-- the installed Plugin does not expose exactly the eight accepted Skills;
-- local update requires manual mutation of active Plugin cache/source rather than the supported marketplace/plugin mechanism;
-- authoritative global routing contains conflicting/duplicate managed regions that cannot be safely reconciled;
-- a material reusable defect appears.
+- authoritative global routing contains conflicting/duplicate managed regions that cannot be safely classified;
+- a routing scenario materially contradicts `references/V060_INTEGRATED_ACCEPTANCE.md`;
+- validation requires manual mutation of active Plugin cache/source;
+- a reusable source defect appears.
+
+Do not repair reusable source or manually patch installed cache under this task. Return the evidence to Web for source-level corrective authorization if needed.
 
 ## Terminal boundary
 
-Task 078 closes only after the formal release provenance is accepted **and** Local Codex `0.6.6` acceptance succeeds. Any reusable local defect returns to Engineering-Governance source through a separately authorized corrective before final integrated PASS.
+Task 078 closes only after the local behavioral/routing acceptance succeeds and Web audits the returned receipt. Full integrated acceptance is not claimed before then.
 
 Control Alignment:
 
 - `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
 - `WEB_ACCEPTANCE`: `PASS`
 - `FORMAL_RELEASE`: `PASS`
-- `LOCAL_ACCEPTANCE`: `PENDING`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `LOCAL_PLUGIN_INSTALLATION`: `PASS`
+- `LOCAL_ROUTING_ACCEPTANCE`: `PENDING`
 - `CONTROL_ALIGNMENT`: `PASS`
