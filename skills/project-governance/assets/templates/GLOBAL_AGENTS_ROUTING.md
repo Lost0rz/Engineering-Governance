@@ -5,7 +5,7 @@ For software, repository, or project engineering work, use `project-governance` 
 
 Use `solution-design` only when materially ambiguous requirements, cross-boundary architecture/state ownership, competing options, or durable design decisions must be resolved before implementation.
 
-Use `execution-orchestrator` only when authorized work needs explicit decomposition, multiple roles/agents, parallel/sequential scheduling, model-tier policy, or resumable multi-step execution.
+Use `execution-orchestrator` only when authorized work needs explicit decomposition, multiple roles/agents, parallel/sequential scheduling, delegated-model policy, or resumable multi-step execution.
 
 Use `agent-handoff` whenever responsibility crosses agents, sessions, machines, or execution contexts and a bounded request/receipt is needed. A handoff references project authorities plus fresh delta; it does not replace `CURRENT_TASK.md`, `CURRENT_STATUS.md`, or durable rules.
 
