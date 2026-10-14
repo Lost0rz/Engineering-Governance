@@ -61,7 +61,7 @@ Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
 
 `b7fb0051b8c51b5c846a507fad9037518dcf18db`
 
-Later closeout descendants are semantic-tree-equivalent: the final tree differs from this semantic head only in `CURRENT_STATUS.md` and `CURRENT_TASK.md`.
+Later closeout descendants are semantic-tree-equivalent and differ from this semantic head only in `CURRENT_STATUS.md` and `CURRENT_TASK.md`.
 
 ## Verification result
 
