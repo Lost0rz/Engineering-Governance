@@ -4,84 +4,71 @@ Last verified: 2026-10-14.
 
 ## Published baseline
 
-Formal immutable GitHub release remains `plugin-v0.5.5` until Task `EG-V066-RELEASE-078` publishes `plugin-v0.6.6`.
+Formal GitHub Plugin release is now `plugin-v0.6.6`.
 
-Previously accepted Web/Mac mini/MacBook Air baseline remains `0.5.5`; Local Codex acceptance for `0.6.6` is intentionally deferred until installation from the formal release asset.
+Release provenance:
 
-## v0.6.6 accepted Web candidate
+- PR #26: `MERGED`;
+- merge/release source SHA: `7866e13cb6a82d59eb9c27ee4e536062ab357b1b`;
+- release workflow: `Release Plugin v0.6.6`;
+- workflow run: `38549662373` — `success`;
+- tag: `plugin-v0.6.6` -> `7866e13cb6a82d59eb9c27ee4e536062ab357b1b`;
+- GitHub Release ID: `412590103`;
+- asset: `engineering-governance-plugin.zip`;
+- asset size: `90618` bytes;
+- asset SHA-256: `433831130c2f85358ba75c4f07ef5063318a8ef00b255a8fa5966b2e7f16b93b`;
+- package entries: `47`;
+- package scope: `plugin.json` + `skills/**` only;
+- package version: `0.6.6`;
+- exact top-level Skills: `8`.
 
-The eight-Skill architecture remains accepted.
+The release workflow verified the manifest, exact eight-Skill set, Project Profile pre-return/Domain-pointer contract, Handoff core fields and package scope before publication.
 
-Current Delivery / Semantic candidate:
+## Accepted Web baseline
 
-`edf20c44a5ec32b49d2494b7a1c9511af8ca32cd`
-
-Current personal Web Plugin candidate:
+Personal Web Plugin:
 
 - Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
 - version: `0.6.6`;
 - Web release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`;
 - scope/discoverability: `USER / PRIVATE`;
-- root/platform manifests read back as `0.6.6`;
-- Task-077 Skill/template/contract installed readback: PASS;
-- Task-077 overlay ZIP SHA-256: `bc714a64fde1b273e346db6632728b338329ef1953bffb404360b5a078a1af64`;
-- packaged Git-blob identities matched repository source for the corrected Profile files before Web upload.
+- installed root/platform manifests read back as `0.6.6`.
 
-## Web acceptance
-
-Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is closed for the Web boundary.
-
-Project Profile regressions:
+Project Profile Web regressions:
 
 - Gift: PASS;
 - Merloom: PASS;
 - MemoX: PASS;
 - FloatTabs: PASS.
 
-The previously blocking Profile classes no longer reproduce:
+The blocking Profile classes no longer reproduce: Memory/history fact backfill, old-Profile self-bootstrap, current-stage/runtime promotion, temporary endpoint leakage, Domain ownership mini-map under `Authority map`, code maps in `Environment`, and expanded per-Skill routing.
 
-- Memory/history backfill into Profile facts;
-- old Profile self-bootstrap;
-- current-stage/runtime detail promoted into durable identity;
-- temporary endpoint leakage;
-- Domain ownership mini-map under `Authority map`;
-- source/code map in `Environment`;
-- expanded per-Skill Engineering Governance routing.
+Web routing/discovery acceptance is accepted for the release boundary.
 
-Previously established Web routing/discovery acceptance remains valid. Later Tasks 072–077 were bounded Project Profile correctives except Task 071's Handoff template correction and did not introduce a new material routing failure. Current Web use continues to route ordinary engineering through Project Governance, Profile work through Project Profile, and formal release/readiness audit through Evidence Audit.
+## Current local distribution state
 
-Minor compression observations in generated Profiles remain non-blocking.
+Previously accepted Local Codex baseline on Mac mini and MacBook Air is `0.5.5`.
 
-## Current release task
+Local `0.6.6` installation/acceptance is now the remaining boundary. The configured marketplace source is `engineering-governance-personal`, backed by this repository on `main`.
+
+Do not claim full Web+Local integrated acceptance until the local marketplace/plugin is refreshed to `0.6.6` and the required local checks pass.
+
+## Current task
 
 Task: `EG-V066-RELEASE-078`
 
-State: `ACTIVE`
+State: `WAITING_LOCAL_ACCEPTANCE`
 
-Authorized next actions:
+Next:
 
-1. add and audit a dedicated `0.6.6` release workflow;
-2. make PR #26 ready and merge only after release-readiness PASS;
-3. verify the main-triggered `plugin-v0.6.6` tag/release/package provenance;
-4. provide Local Codex update commands for installation from the formal release asset;
-5. run Local Codex integrated acceptance after update.
+1. refresh the local `engineering-governance-personal` marketplace from `main`;
+2. confirm the installed/cache Plugin version is `0.6.6` with exactly eight Skills;
+3. verify the authoritative global routing surface is singular/current where that environment uses it;
+4. run bounded Local Codex routing/behavior acceptance;
+5. reconcile controls after local acceptance.
 
-## PR / host state before release workflow change
+## Control identity
 
-- PR #26: OPEN / DRAFT / UNMERGED / mergeable at last fresh read;
-- base `main`: `3b8d99c3dba13ca01098abade5c6e696454ddd10`;
-- no required branch-protection status checks are configured on `main`;
-- no PR workflow/check result is being claimed as PASS where none exists.
+The formal release tag points to merge/source SHA `7866e13cb6a82d59eb9c27ee4e536062ab357b1b`.
 
-## Release boundary
-
-The formal GitHub Plugin asset must contain only:
-
-- `plugin.json`;
-- `skills/**`.
-
-Release version/tag:
-
-`0.6.6` / `plugin-v0.6.6`
-
-Local Codex is updated **after** publication from this immutable asset. Full Web+Local integrated acceptance remains pending until the local installation and acceptance succeed.
+Later commits limited to `CURRENT_STATUS.md` / `CURRENT_TASK.md` are control-only movement and do not alter the released Plugin payload.
