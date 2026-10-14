@@ -24,10 +24,14 @@ Ordinary software/project/repository engineering enters `project-governance` unl
 
 A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit during corrective work; mentioning a bug does not imply Doctor when evidence supports safe action; mentioning “design” does not imply `design` when the issue is engineering architecture or state ownership. A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal verdict boundary is requested.
 
+Routing is **selective rather than cumulative**. Choose the smallest materially necessary capability set. Do not traverse all installed Skills as a checklist, and do not add a second Skill merely because it can also discuss the same surface. Once a bounded problem is owned by a routed Skill, let that Skill complete the workflow it owns unless a separate material trigger appears.
+
+For example, an already-understood frontend redesign may route `project-governance → design` and remain there for the bounded design/implementation/visual-critique loop. It does not additionally require Domain Navigation merely to read known project authorities, nor Evidence Audit merely to critique its own rendered design.
+
 A request such as “give me the card/instructions to send to local Codex/another agent/reviewer” is not merely ordinary prose generation: the requested artifact itself crosses an execution-context boundary, so route through `agent-handoff`. This does not create a new task; Project Governance remains task/lifecycle owner and the current `TASK_ID` is preserved unless the engineering purpose was separately reconciled.
 
 Project Profile is not the normal development path. Read-only Profile drafting/audit may route directly to `project-profile`; repository/project-managed Profile mutation still requires compatible Project Governance task authorization.
 
 ## Composition
 
-Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns derived context/index. Design owns only bounded product-interface/frontend visual-design choices; Solution Design remains engineering architecture/state-ownership authority. Other narrow Skills return after their bounded capability finishes. Do not create a Router Skill, peer-controller mesh, or second task authority.
+Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns derived context/index. Design owns only bounded product-interface/frontend visual-design choices and its own visual critique loop; Solution Design remains engineering architecture/state-ownership authority. Other narrow Skills return after their bounded capability finishes. Do not create a Router Skill, peer-controller mesh, second task authority, or a linear all-Skill pipeline.
