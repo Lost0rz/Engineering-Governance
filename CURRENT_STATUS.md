@@ -114,5 +114,5 @@ Authorize the consolidated v0.6.0 integrated acceptance task using `references/V
 - Parent architecture: `documents/engineering-governance-capability-model-v0.6.0.md`.
 - Document alignment: `UPDATED` — both active design authorities now express environment-owned delegated-model configuration and cross-context isolation.
 - `CURRENT_STATUS.md`: `UPDATED`.
-- `CURRENT_TASK.md`: pending final closeout update in the same control-only closeout sequence.
-- Control alignment: `IN_PROGRESS` until task closeout commit is written.
+- `CURRENT_TASK.md`: `UPDATED`.
+- Control alignment: `PASS`.
