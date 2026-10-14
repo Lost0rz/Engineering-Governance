@@ -1,40 +1,47 @@
-# Handoff Request
+# Handoff Card
 
-HANDOFF_ID: `<id>`
-TASK_ID: `<same authorized task when purpose is unchanged>`
-MODE: `EXECUTE | AUDIT | DIAGNOSE | REVIEW | VERIFY`
+A Card is transport, not a second task contract. Reference current authority and carry only transfer-specific delta.
 
-SOURCE_CONTEXT: `<optional: web/local/cloud/subagent/reviewer/session/machine>`
-TARGET_CONTEXT: `<optional: web/local/cloud/subagent/reviewer/session/machine>`
+## Required core
 
-## TARGET
+```text
+CARD_ID: <id>
+TASK_ID: <same authorized task unless Project Governance changed the task boundary>
+MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
+CAPABILITY: <Engineering Governance Skill | NONE>
+TARGET: <immediate requested outcome / object>
+AUTHORITY: <current task + other decision-relevant authority references>
+DELTA: <fresh transfer-specific delta | NONE>
+BOUNDARY: <allowed read/write/action boundary>
+RETURN_CONTRACT: <evidence/result required for the next decision>
+```
 
-<Immediate requested outcome. This does not replace CURRENT_TASK authorization.>
+`CAPABILITY` selects the bounded Skill/capability the receiver should use. `MODE` classifies receiver action/side effects. A mode name never replaces Skill routing or grants mutation authority.
 
-## AUTHORITY
+## Conditional fields
 
-- `<AGENTS.md / CURRENT_STATUS.md / CURRENT_TASK.md / accepted design/plan / repository or runtime authority>`
+Use only when decision-relevant:
 
-AUTHORITY_OBSERVED_BASIS: `<revision/observation/head | omit when immaterial>`
+```text
+PURPOSE: <for example DIAGNOSTIC_PROBE | TEST_IMPLEMENTATION>
+PROFILE: <for example TEST_RUN>
+OBSERVED_BASIS: <revision/observation/head>
+SOURCE_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
+TARGET_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
+STOP: <transfer-specific stop condition>
+CLAIM: <named proposition for VERIFY/AUDIT when needed>
+EXPECTED_EVIDENCE: <what would establish the claim>
+AUDIT_INDEPENDENCE: <SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN>
+```
 
-## DELTA
+Do not duplicate the full objective, scope, acceptance, STOP conditions or workspace policy already owned by `CURRENT_TASK.md`. If accessible authority conflicts materially with the Card, return to Project Governance rather than following the stale Card.
 
-- `<Fresh fact/decision/focus not already represented safely in authority. Do not paste whole controls/rules here.>`
+## Mode hints
 
-## BOUNDARY
+- `EXECUTE` — authorized state change only within `BOUNDARY`; use explicit `PURPOSE` for state-changing test/probe work.
+- `AUDIT` — read-only audit action. `MODE: AUDIT` does not itself mean `CAPABILITY: evidence-audit`.
+- `REVIEW` — read-only work-product evaluation.
+- `VERIFY` — read-only named claim/check; normal test runs use `PROFILE: TEST_RUN`.
+- `DIAGNOSE` — read-only diagnostic evidence/question transfer; state-changing probes use `EXECUTE`.
 
-- `<Read/write scope, selected workspace/identity when material, unique STOP conditions, external/destructive side-effect limits.>`
-
-## RETURN_CONTRACT
-
-- `<Mode-specific evidence required for the next decision.>`
-
-### Mode hint
-
-- `EXECUTE`: same-task mutation result + changed paths + checks + lifecycle/alignment.
-- `AUDIT`: target/range + required claims + independence basis + findings/unknowns + verdict; read-only.
-- `DIAGNOSE`: evidence/hypothesis/probe result + fix boundary under existing authorization.
-- `REVIEW`: work-product findings + evidence; read-only.
-- `VERIFY`: named claim + exact observation/identity + PASS/FAIL/UNKNOWN + proof boundary.
-
-A change of Web/local/agent/session context alone does not require a new task. A materially different engineering purpose must be authorized/reconciled through Project Governance first.
+Context changes alone do not create a new task. A materially different engineering purpose must be authorized/reconciled through Project Governance first.
