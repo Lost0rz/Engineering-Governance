@@ -1,90 +1,91 @@
-# CURRENT TASK — Web Candidate Acceptance v0.6.x
+# CURRENT TASK — Project Profile Grounding Corrective
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
+Task ID: `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074`
 
-Task class: `VERIFY`
+Task class: `CORRECTIVE`
 
-State: `WAITING_FRESH_WEB_SESSION`
+State: `ACTIVE`
+
+Parent purpose task: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
 ## Objective
 
-Validate the corrected installed Engineering Governance Plugin across fresh Web discovery/routing/Profile behavior before formal GitHub release or PR merge, using bounded source correctives only when real reusable defects are exposed.
+Correct the reusable Project Profile source-grounding defect exposed during fresh Web acceptance: a generated Profile must remain a fact-grounded derived projection and must not promote ChatGPT Memory, prior conversation, previous assistant output, previous Project Instructions/Profile text, or historical workflow artifacts into project facts merely because they look stable.
 
-## Corrective history / current source identity
+Memory/context may suggest what to verify, but it must not independently satisfy the evidence requirement for a substantive Profile claim.
 
-Completed acceptance-driven correctives:
+## Verified defect evidence
 
-- `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff request/receipt templates aligned with the accepted Card/Receipt contract.
-- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile output contract hardened so Profiles remain compact landing indexes and do not duplicate generic Engineering Governance procedure.
-- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — Project Profile surface-role evidence, established-Domain deduplication, meta-procedure exclusion and normative-rule compression hardened from the FloatTabs Web regression.
+Fresh cross-project Web regression exposed the same failure class in more than one form:
 
-Current corrected Delivery / Semantic candidate:
+- FloatTabs showed that previous Project Instructions can be re-ingested as if they were source authority unless the generated Profile revalidates claims against current authorities.
+- Gift generated durable-looking merchandise and visual constraints from prior conversational memory even though the current repository business authorities did not establish those claims.
+- MemoX showed a related authority-semantic compression risk: a storage/evidence layer can be over-summarized into a universal fact Authority even when the project explicitly separates Raw Evidence, projections, and canonical fact classes.
 
-`c6d412d46fdda7ba04df277ff82471a8f246cac7`
+Current `project-profile` source says not to infer business truth from memory, and `profile-contract.md` says the Profile is compiled from verified project authorities, but neither defines a sufficiently explicit source-eligibility/grounding gate or old-Profile revalidation rule. This is therefore a reusable source-contract defect, not a project-specific content correction.
 
-Task 073 focused source verification: PASS.
+## Selected design
 
-## Current Web candidate
+Project Profile is the **fact-grounded derived layer**. Conversation Memory remains a separate context layer and continues to help normal dialogue; this corrective does not disable or weaken Memory globally.
 
-- existing personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- current Web candidate version: `0.6.2`;
-- current Web release: `pluginrel_6acf0b3b77a081918da5d86718bfef23`;
-- scope/discoverability remain `USER / PRIVATE`;
-- platform-managed `.codex-plugin/plugin.json` and root `plugin.json` both report `0.6.2`;
-- Task 073 overlay included only `plugin.json` and the three `project-profile` shipped files;
-- overlay ZIP SHA-256: `e47258bf25e7999fd305114d978a8cc01bf3001a2fc140b5f86221318c31f04a`;
-- overlay file Git-blob identities matched the repository source blobs before upload;
-- post-update installed-file readback confirms the Task 073 Skill/template/contract content is active.
+For Project Profile generation/rebuild/audit:
 
-## Web acceptance evidence already established
+- a substantive project-specific claim must be traceable to a current verified project authority appropriate to that claim, or to an explicit current user decision that clearly establishes/changes durable project context;
+- model memory, prior chats, previous assistant output, old Profile/Project Instructions, old handoffs/audits/task cards/PR prose, and historical summaries may be discovery clues only and do not independently ground a Profile claim;
+- an existing Profile/Project Instructions surface is `DERIVED_PROJECT_CONTEXT`, not source authority; rebuilding must revalidate its substantive claims rather than inherit them;
+- if a memory/history-derived candidate cannot be verified, omit it or keep it explicitly unknown outside the Profile rather than silently promote it;
+- when a current user establishes a durable decision that is not yet persisted in repository authority, it may be represented as user-authorized context but must not be misrepresented as repository-established fact;
+- preserve materially distinct authority classes; storage, evidence, projection, implementation, and canonical truth must not be collapsed into one universal Authority unless the owning project authority actually defines that relationship.
 
-- fresh Web session discovers the exact eight top-level Skills: PASS;
-- ordinary project status/progress inspection -> `project-governance`: PASS;
-- advisory inspection did not over-route to Evidence Audit / Domain Navigation / Incident Doctor: PASS;
-- Project Profile request reached the Project Profile capability and excluded live PR/HEAD/CI/current-task content: PASS for routing/authority/freshness boundary;
-- Task 072 removed the earlier handbook-sized generic-governance duplication;
-- fresh FloatTabs generation exposed three remaining reusable defects: unsupported `MIRROR`, reduced Domain Map duplication, and Profile/startup meta-procedure; these were corrected by Task 073 and are awaiting regression retest on 0.6.2.
+## Scope
 
-## Remaining Web boundary
+Allowed source changes are bounded to:
 
-Open a fresh Web conversation/session against current candidate `0.6.2` and rerun the same FloatTabs Project Profile generation case.
+- `skills/project-profile/SKILL.md`;
+- `skills/project-profile/references/profile-contract.md`;
+- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `references/V060_INTEGRATED_ACCEPTANCE.md`;
+- `plugin.json` version alignment for the corrected Web candidate;
+- `CURRENT_STATUS.md` / `CURRENT_TASK.md` reconciliation;
+- PR #26 description refresh if the corrected candidate identity changes.
 
-The regression must establish:
+No other Skill or capability architecture is in scope.
 
-- `MIRROR` only when a verified primary is identified; no guessed PRIMARY/MIRROR relationship;
-- established `docs/architecture/DOMAIN_MAP.md` is pointed to rather than recreated as a `Domain Model`/source-owner mini-map;
-- `Planning & navigation` contains durable pointers rather than numbered engineering startup steps;
-- no `Project Profile Rule`, maintenance/classification/freshness meta-section;
-- project-specific stable facts remain available;
-- detailed MUST/MUST-NOT execution rules are not copied from `AGENTS.md`; compact priorities/anti-goals/risk cues may remain;
-- live STATUS/TASK/PR/CI content stays excluded.
+## Acceptance
 
-After the FloatTabs regression passes, continue remaining routing positive/negative scenarios from `references/V060_INTEGRATED_ACCEPTANCE.md`.
+Source acceptance requires all of the following:
+
+1. explicit source-grounding gate in the Project Profile Skill/contract;
+2. Memory/prior-chat/old-Profile/old-Project-Instructions content cannot independently establish Profile facts;
+3. old Profile surfaces may seed a verification checklist but must be revalidated claim-by-claim;
+4. explicit current durable user decisions remain usable without being mislabeled as repository-established facts;
+5. authority-class semantics are preserved rather than flattened;
+6. the shipped template reinforces the grounding boundary without turning the Profile into a provenance report;
+7. integrated acceptance contains negative cases for Memory/history contamination and old-Profile inheritance, plus a positive current-user-decision case and a fact-class preservation case;
+8. no regression to Task 072/073 compactness, Domain deduplication, surface-role evidence, or live-state exclusion;
+9. corrected package/Web candidate uses a new patch version after source verification.
 
 ## Out of scope
 
+- changing ChatGPT Memory product behavior or account memory settings;
+- making Memory unavailable to ordinary conversation;
+- adding a ninth Skill or new control file;
+- importing Gift/FloatTabs/MemoX project-specific rules into Engineering Governance;
 - formal immutable GitHub v0.6.x release/tag;
 - PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web surface is ready;
-- patching installed caches as source authority;
-- further source architecture expansion without a new real acceptance finding.
+- Local Codex acceptance before the corrected Web candidate is ready.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance if the fresh 0.6.2 FloatTabs regression still reproduces unsupported surface-role claims, Domain-map duplication, Profile meta-procedure, generic-workflow duplication, or another reusable source defect.
+Stop before release/merge if the corrective would require changing global Memory behavior, adding a new project authority/control plane, or expanding beyond the Project Profile contract/acceptance surface.
 
-## Terminal boundary
+## Return to parent acceptance
 
-Task 070 closes only after required Web routing/Profile acceptance evidence is recorded. Formal GitHub release remains a later integrated-acceptance boundary.
+After focused source verification and corrected Web candidate installation, restore `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` with Task 074 recorded in corrective history and rerun fresh Profile regressions against the corrected candidate.
 
-Control Alignment:
-
-- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
-- `DOCUMENT_ALIGNMENT`: `UPDATED_BY_TASK_073`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+TASK_RECONCILIATION_REQUIRED: NO
+REASON: Parent Task 070 explicitly permits bounded source correctives when fresh Web acceptance exposes a reusable defect; this Task 074 records that corrective slice before mutation.
