@@ -10,88 +10,70 @@ No formal GitHub v0.6.x release has been created yet.
 
 ## v0.6.x source architecture / current semantic candidate
 
-The eight-Skill architecture remains accepted. Current corrected Delivery / Semantic candidate:
+The eight-Skill architecture remains accepted. Current completed semantic candidate before Task 075 source changes:
 
 `aa310bec3550c5e7e2ede2436b2f6f59ff2b9b59`
 
 Completed acceptance-driven correctives:
 
 - `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff templates aligned with Card/Receipt contract.
-- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile contract/template/acceptance hardened against generic-workflow duplication and handbook-sized output.
-- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — surface-role evidence, established-Domain deduplication, meta-procedure exclusion, and normative-rule compression hardened.
-- `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074` — fact grounding, Memory/history isolation, old-Profile revalidation, and authority-class preservation hardened.
+- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile compactness/generic-workflow deduplication.
+- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — surface-role evidence, Domain deduplication, meta-procedure exclusion and normative-rule compression.
+- `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074` — claim grounding, Memory/history isolation, old-Profile revalidation and authority-class preservation.
+
+Active acceptance-driven corrective:
+
+- `EG-V060-PROFILE-DURABILITY-CORRECTIVE-075` — distinguish factual verification from durable Profile membership.
 
 PR #26 remains OPEN / DRAFT / UNMERGED. Host facts are reread at their own boundary; CI/check PASS is not claimed without current evidence.
 
-## Project Profile grounding contract
+## Confirmed Web regression after 0.6.3
 
-Task 074 established the missing source-eligibility boundary:
+Task 074 grounding behavior materially improved:
 
-- Project Profile is a **fact-grounded derived projection**, not a Memory summary or independent authority;
-- every substantive project-specific Profile claim must trace to current verified project authority appropriate to the claim, or to an explicit durable user decision/reaffirmation in the current Profile task;
-- ChatGPT/model Memory, prior chats, previous assistant output, previous Project Instructions/Profile, and old handoff/audit/task/PR/status/history artifacts may suggest what to verify but cannot independently establish a Profile fact;
-- previous Profile/Project Instructions are `DERIVED_PROJECT_CONTEXT` and retained claims must be revalidated during rebuild/audit;
-- unsupported candidates are omitted from the Profile or reported separately as unverified;
-- current user-authorized durable context may be represented without being mislabeled as repository-established fact;
-- storage, Raw Evidence, projections, implementation authority, runtime evidence, and explicitly canonical state remain distinct when the owning project distinguishes them;
-- this boundary does not disable or weaken ordinary conversational Memory use.
+- Gift no longer imported Memory-only merchandise/visual preferences;
+- MemoX preserved Raw Evidence / Storage / Provider Memory / Canonical State authority distinctions;
+- ordinary current PR/TASK/HEAD content remained excluded.
 
-Task 072/073 compactness, Domain-deduplication, surface-role, live-state-exclusion, and normative-rule boundaries remain in force.
+Fresh Gift and MemoX Profile generations exposed a second reusable defect:
 
-## Task 074 source verification
+```text
+VERIFIED CLAIM
+!=
+DURABLE PROFILE-OWNED CLAIM
+```
 
-Focused source compare from the Task-074 control checkpoint changed only:
+Examples:
 
-- `plugin.json`;
-- `references/V060_INTEGRATED_ACCEPTANCE.md`;
-- `skills/project-profile/SKILL.md`;
-- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
-- `skills/project-profile/references/profile-contract.md`.
+- Gift: development-stage Mac mini/Air acceptance arrangement and canonical `:3000` endpoint are current verified project rules, but not durable Profile environment facts;
+- Gift: some current storefront-work non-goals were promoted too broadly into permanent constraints;
+- MemoX: current Codex-only delivery priority and current MVP viewer/runtime shape were promoted into durable Profile identity/environment;
+- MemoX: template fixed field `Primary/mirror role` was replaced by a free-form `Profile role` field.
 
-No other Skill or capability architecture changed.
+These independent regressions justify Task 075.
 
-Integrated acceptance now includes:
+## Task 075 target contract
 
-- Memory / prior-conversation contamination negative case;
-- previous Profile / Project Instructions inheritance negative case;
-- explicit current durable user-decision positive case;
-- authority-class preservation case.
+Project Profile construction must become:
 
-The final profile-contract commit also aligned repository bytes with the packaged overlay; it did not change Task-074 semantics.
+```text
+Grounding Gate
+→ Durability Gate
+→ Classification / Authority placement
+→ Compression
+→ Profile
+```
 
-## Web Plugin candidate acceptance
+The Durability Gate keeps a grounded claim only when it is stable across ordinary task/PR/release/runtime progression and materially useful for future project orientation.
 
-Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is restored to `WAITING_FRESH_WEB_SESSION`.
+Default-exclude current-stage delivery wave/MVP gate, temporary runtime/acceptance machine/port/endpoint, current-stage non-goals/deferred work, and provisional implementation/acceptance shape unless current authority explicitly establishes the concept as durable project identity or durable/version-scoped architecture.
 
-Current installed personal Web Plugin candidate:
+Task 074 grounding and authority-class preservation remain in force.
 
-- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.3`;
-- release: `pluginrel_6acf295fe3f08191bf7bc52f6a70eb43`;
-- scope/discoverability: `USER / PRIVATE`;
-- root `plugin.json` and platform-managed `.codex-plugin/plugin.json` both report `0.6.3`;
-- Task-074 overlay contained only `plugin.json` plus the three corrected `project-profile` shipped files;
-- overlay ZIP SHA-256: `b7d7ff6196721811dd56602272f62dcc4de64047be36031892f754e29376dd3d`;
-- packaged Git-blob identities matched repository source for all four uploaded files before installation;
-- post-update installed-file readback confirms the Task-074 Skill/template/contract content is active.
+## Current Web candidate
 
-Fresh Web evidence retained from earlier candidates:
-
-- exact eight top-level Skill discovery: PASS;
-- ordinary status/progress inspection -> `project-governance`: PASS;
-- advisory inspection avoids over-routing: PASS;
-- Project Profile routing and live-state exclusion: PASS;
-- Task 072/073 regressions materially improved Profile compactness and boundary behavior.
-
-Task 074 source/package corrective is complete; behavioral acceptance of the new grounding rules is still pending on fresh Web `0.6.3` sessions.
+Installed personal Web Plugin remains `0.6.3` / `pluginrel_6acf295fe3f08191bf7bc52f6a70eb43` until Task 075 source/package correction is complete.
 
 ## Next milestone
 
-Run fresh cross-project Project Profile regressions against Web Plugin `0.6.3`:
-
-1. Gift-like case: Memory-only merchandise/visual preferences absent current authority must not enter the Profile unless explicitly reaffirmed in the current Profile task.
-2. MemoX-like case: storage/evidence/projection/canonical authority classes must remain distinct.
-3. FloatTabs-like rebuild: old Project Instructions may guide verification but must not bootstrap their own truth.
-4. Positive current-user-decision case: an explicitly established durable decision may appear as user-authorized context without being presented as repository-established fact.
-
-If those grounding regressions and the remaining Task-070 routing scenarios pass, proceed to Local Codex integrated acceptance. Formal GitHub release/merge remains deferred until that boundary is supported.
+Complete the bounded Task 075 source correction, add durability regressions to integrated acceptance, update the existing personal Web Plugin to the next patch candidate, verify installed readback, then restore parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` for fresh Gift/MemoX/FloatTabs Web regressions.
