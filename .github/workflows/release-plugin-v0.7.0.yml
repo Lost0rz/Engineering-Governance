@@ -213,7 +213,9 @@ jobs:
           global_routing = Path('skills/project-governance/references/global-routing.md').read_text()
           assert 'Routing is **selective rather than cumulative**' in global_routing
           assert 'already-understood frontend redesign may route `project-governance → design`' in global_routing
-          assert 'do not additionally require Domain Navigation' in global_routing
+          assert 'does not additionally require Domain Navigation' in global_routing
+          assert 'Reading that existing context does not route through `project-profile`' in global_routing
+          assert 'The underlying project authorities still outrank the Profile.' in global_routing
 
           composition = Path('skills/project-governance/references/capability-composition.md').read_text()
           assert '## Composition is selective, not a pipeline' in composition
