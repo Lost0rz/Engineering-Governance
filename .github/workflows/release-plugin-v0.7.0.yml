@@ -2,10 +2,25 @@ name: Release Plugin v0.7.0
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - plugin.json
+      - skills/**
+      - references/V070_DESIGN_MULTI_MODULE_ACCEPTANCE.md
+      - references/LICENSE_NOTES.md
+      - references/UPSTREAMS.md
+      - .github/workflows/release-plugin-v0.7.0.yml
   push:
     branches:
       - main
     paths:
+      - plugin.json
+      - skills/**
+      - references/V070_DESIGN_MULTI_MODULE_ACCEPTANCE.md
+      - references/LICENSE_NOTES.md
+      - references/UPSTREAMS.md
       - .github/workflows/release-plugin-v0.7.0.yml
 
 permissions:
@@ -139,7 +154,7 @@ jobs:
               'awesome-design-md-informed synthesis — bounded visual-system specification',
               'Microsoft `frontend-design-review`-informed review — final Design audit',
               'This is an **internal Design pipeline**, not a global all-Skill pipeline.',
-              'External brands remain optional inspiration',
+              'External brand design documents are inspiration/reference only.',
           ):
               assert marker in module_map, marker
 
@@ -290,6 +305,7 @@ jobs:
           wc -c < engineering-governance-plugin.zip | tr -d ' ' | tee release.size
 
       - name: Create immutable tag and GitHub release
+        if: github.event_name != 'pull_request'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
