@@ -35,6 +35,7 @@ Current frozen v0.6.0 Architecture Delivery / Semantic HEAD:
 - Stored Plugin file surface contains all eight expected Skill trees.
 - Platform-managed `.codex-plugin/plugin.json` reports `engineering-governance` version `0.6.0` and `skills: ./skills`.
 - Semantic HEAD to current repository control descendant is proven `CONTROL_ONLY_DRIFT`; Delivery identity remains the frozen Semantic HEAD above.
+- Latest PR #26 host observation reports `mergeable=false`; this is a separate merge-boundary fact and is not treated as a Web candidate routing failure.
 
 ## Current Web routing observation
 
@@ -55,7 +56,7 @@ This does not establish a source/package defect. Web routing/discovery verdict f
 ## Out of scope
 
 - formal immutable GitHub `plugin-v0.6.0` release/tag;
-- PR #26 merge;
+- PR #26 merge/reconciliation;
 - Local Codex / Mac mini / MacBook Air installation or acceptance;
 - installed-cache patching;
 - source architecture changes unless a real reusable defect is found and separately authorized.
@@ -66,7 +67,7 @@ Stop before formal release/merge/local installation if a fresh Web session still
 
 ## Terminal boundary
 
-This task closes only after fresh-session Web discovery/routing evidence is recorded. Formal GitHub release remains a later boundary after required integrated acceptance supports publication.
+This task closes only after fresh-session Web discovery/routing evidence is recorded. Formal GitHub release remains a later boundary after required integrated acceptance supports publication. PR mergeability is reconciled separately at its host boundary.
 
 Control Alignment:
 
