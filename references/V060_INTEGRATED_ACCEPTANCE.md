@@ -87,10 +87,11 @@ Also verify:
 - when only one current Profile surface is established and no competitor is verified, `single surface` is preferred; unresolved relationships remain `UNKNOWN`;
 - output starts from the shipped Profile template;
 - generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer;
-- an existing Domain/navigation authority is pointed to rather than reproduced as a `Domain Model`, ownership table, canonical-source list, reduced mini-map, or ownership subcatalog;
+- when detailed Domain/navigation authority exists, `Authority map` is pointer-only: no Domain-specific ownership prose, `X owns / Y owns` subsections, upstream/downstream/runtime ownership lists, source-class catalogs, route catalogs, canonical-source inventories, or reduced Domain summaries;
+- at most one short broad ownership invariant may remain elsewhere only when essential to project orientation;
 - repository source/module responsibility lists are not placed in `Environment`;
 - `Planning & navigation` contains durable pointers, not current delivery progress or a numbered startup/read/check workflow;
-- `Environment` contains stable platform/environment roles, not temporary runtime/acceptance values or code navigation;
+- `Environment` contains stable platform/environment/data roles and pointers only, not temporary runtime/acceptance values, code navigation, fail-closed/fallback/no-fixture rules, verification rules or execution procedure;
 - generated Profile does not add Profile-maintenance/grounding/durability meta-procedure;
 - detailed project-specific normative execution rules remain in owning authority;
 - `Engineering Governance` uses the shipped compact hook and does not append per-Skill trigger prose or enumerate conditional Skills unless routing documentation was explicitly requested;
@@ -106,7 +107,9 @@ GROUNDED: YES
 DURABILITY_QUALIFIED: YES
 CORRECTLY_CLASSIFIED: YES
 AUTHORITY_CLASSES_PRESERVED: YES
+AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS: YES
 DOMAIN_AND_CODE_MAP_DEDUPED: YES
+ENVIRONMENT_ROLE_ONLY: YES
 ENGINEERING_GOVERNANCE_HOOK_COMPACT: YES
 TEMPLATE_FIELDS_PRESERVED: YES
 ```
@@ -129,7 +132,7 @@ EXTRA_TOP_LEVEL_PROCEDURE_SECTIONS: NONE_UNLESS_PROJECT_SPECIFICALLY_REQUIRED
 RESULT: PASS
 ```
 
-### Established Domain Map negative case
+### Established Domain Map structural negative case
 
 Use a project with an established detailed Domain/navigation map.
 
@@ -137,12 +140,17 @@ Expected result:
 
 ```text
 DOMAIN_AUTHORITY_POINTER: PRESENT
+AUTHORITY_MAP_POINTER_ONLY: YES
+DOMAIN_OWNERSHIP_PROSE_UNDER_AUTHORITY_MAP: NO
+X_OWNS_Y_OWNS_SUBSECTIONS: NO
+UPSTREAM_DOWNSTREAM_RUNTIME_OWNERSHIP_LISTS: NO
 REDUCED_DOMAIN_MAP_RECREATED: NO
-OWNERSHIP_SUBCATALOG_RECREATED: NO
 CANONICAL_SOURCE_SYMBOL_LIST_RECREATED: NO
-BROAD_ORIENTATION_CONCEPTS: ALLOWED_WHEN_NEEDED
+BROAD_OWNERSHIP_INVARIANTS_ELSEWHERE: <= 1
 RESULT: PASS
 ```
+
+A factually correct ownership catalog still fails this case because the Profile is not the navigation authority.
 
 ### Surface-role / fixed-field negative case
 
@@ -243,7 +251,9 @@ DEVELOPMENT_STAGE_MACHINE_IN_PROFILE_ENVIRONMENT: NO
 TEMP_ACCEPTANCE_PORT_OR_ENDPOINT_IN_PROFILE: NO
 CURRENT_STAGE_NON_GOAL_PROMOTED_TO_PERMANENT_ANTI_GOAL: NO
 STOREFRONT_CMS_STAGE_ONLY_NON_GOAL_IN_DURABLE_PROFILE: NO
-REDUCED_DOMAIN_OWNERSHIP_CATALOG: NO
+AUTHORITY_MAP_POINTER_ONLY: YES
+MERLOOM_GIFT_OWNERSHIP_SUBCATALOG: NO
+ENVIRONMENT_BEHAVIOR_RULE_LEAK: NO
 DURABLE_PRODUCT_IDENTITY_RETAINED: YES
 DURABLE_RFQ_IDENTITY_RETAINED: YES
 RESULT: PASS
@@ -277,6 +287,7 @@ DURABLE_SAVE_PUBLISH_BOUNDARY_RETAINED: YES
 SOURCE_DIRECTORY_RESPONSIBILITY_MAP_IN_ENVIRONMENT: NO
 CODE_PATH_CATALOG_IN_PROFILE: NO
 DOMAIN_NAVIGATION_POINTER: PRESENT
+AUTHORITY_MAP_POINTER_ONLY_WHEN_DETAILED_DOMAIN_AUTHORITY_EXISTS: YES
 PER_SKILL_TRIGGER_PROSE_IN_ENGINEERING_GOVERNANCE: NO
 ENGINEERING_GOVERNANCE_HOOK_MATCHES_COMPACT_TEMPLATE: YES
 RESULT: PASS
