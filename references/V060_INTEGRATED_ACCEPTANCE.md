@@ -24,7 +24,7 @@ Record only identities needed for the tested surface: source semantic head, Plug
 
 Routing must work through surfaces actually supported by each environment and must not depend on a Local-only global guidance file.
 
-## 3. Project Profile / authority separation / compactness / grounding / durability
+## 3. Project Profile / authority separation / compactness / grounding / durability / adherence
 
 Verify Profile construction order:
 
@@ -33,8 +33,11 @@ Grounding Gate
 → Durability Gate
 → Classification / authority placement
 → Compression / deduplication
+→ Mandatory Pre-return Compliance Gate
 → Project Profile
 ```
+
+The pre-return gate is corrective, not advisory. A draft with a known violation is revised before being returned.
 
 ### Grounding
 
@@ -49,10 +52,11 @@ Grounding Gate
 ### Durability
 
 - **verified != durable** is enforced: a currently true claim does not enter the Profile solely because it is grounded;
-- current task/milestone/wave/gate/MVP phase, immediate delivery priority and next-step state are excluded from the durable Profile unless the authority explicitly establishes a durable/version-scoped architectural meaning that materially aids orientation;
+- current task/milestone/wave/gate/MVP phase, immediate delivery priority and next-step state are excluded from the durable Profile unless authority explicitly establishes durable/version-scoped architectural meaning;
 - current-stage non-goals, deferrals and temporary sequencing choices are not silently promoted into permanent project anti-goals;
+- a non-goal sourced only from language such as `current`, `current work`, `MVP`, `phase`, `wave`, `deferred`, `not yet`, or equivalent stage scope is rejected unless separate durable authority establishes the same lasting boundary;
 - temporary development/acceptance machine names, ports, endpoints, branches, worktrees, runners, executables, local paths and process arrangements are excluded from durable `Environment` content;
-- provisional/current implementation or acceptance shape (for example a current read-only viewer or acceptance-only runtime topology) is not promoted into long-lived project identity;
+- provisional/current implementation or acceptance shape is not promoted into long-lived project identity;
 - durable/version-scoped architecture remains allowed when its authority explicitly establishes the scope, such as `V1 Local Store` or `long-term production Core`;
 - version/durability qualifiers are preserved rather than erased by compression;
 - useful current-stage facts are pointed to through STATUS/TASK/current delivery planning/runtime authority rather than copied into the Profile.
@@ -66,6 +70,7 @@ Verify Profile classification:
 - active authorization -> TASK;
 - current delivery wave/milestone/runtime arrangement -> current planning/runtime authority;
 - detailed Domain/source/test/runtime route -> navigation authority;
+- repository directories/module paths/source files/symbols/code-responsibility maps -> implementation/navigation authority, not `Environment`;
 - long-lived design -> planning authority;
 - stable durable descriptive context + authority pointers -> Profile.
 
@@ -75,24 +80,42 @@ Also verify:
 - repository/project-managed Profile mutation requires compatible PG/TASK authorization;
 - stale Profile never overrides authority;
 - Profile and Domain Map do not duplicate detailed ownership maps;
-- one current Profile projection surface exists, or one primary plus clearly derived mirror; two independently edited current Profiles are a defect;
+- one current Profile projection surface exists, or one primary plus clearly derived mirror;
 - generated output preserves shipped fixed metadata field names `Profile surface` and `Primary/mirror role`;
 - `MIRROR` is never emitted unless a specific primary Profile surface is verified/explicitly identified;
-- `PRIMARY` is not invented merely from surface type; it requires explicit project/user designation among multiple surfaces;
-- when only one current Profile surface is established and no competitor is verified, `single surface` is preferred; unresolved relationships remain `UNKNOWN` rather than guessed;
-- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities, Domain maps, grounding/durability rules, or Profile-maintenance procedure;
-- generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer/invariant;
-- an existing Domain/navigation authority is pointed to rather than reproduced as a `Domain Model`, ownership table, canonical-source list, or reduced mini-map;
+- `PRIMARY` is not invented merely from surface type;
+- when only one current Profile surface is established and no competitor is verified, `single surface` is preferred; unresolved relationships remain `UNKNOWN`;
+- output starts from the shipped Profile template;
+- generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer;
+- an existing Domain/navigation authority is pointed to rather than reproduced as a `Domain Model`, ownership table, canonical-source list, reduced mini-map, or ownership subcatalog;
+- repository source/module responsibility lists are not placed in `Environment`;
 - `Planning & navigation` contains durable pointers, not current delivery progress or a numbered startup/read/check workflow;
-- `Environment` contains stable platform/environment roles, not temporary runtime/acceptance values;
-- generated Profile does not add `Project Profile Rule`, `Profile Maintenance`, `Grounding Report`, `Durability Report`, `Provenance Ledger`, classification/freshness instructions, or other meta-procedure explaining how to maintain/build the Profile;
-- detailed project-specific normative execution rules remain in `AGENTS.md`; Profile keeps only compact durable priorities/anti-goals/risk cues where useful;
+- `Environment` contains stable platform/environment roles, not temporary runtime/acceptance values or code navigation;
+- generated Profile does not add Profile-maintenance/grounding/durability meta-procedure;
+- detailed project-specific normative execution rules remain in owning authority;
+- `Engineering Governance` uses the shipped compact hook and does not append per-Skill trigger prose or enumerate conditional Skills unless routing documentation was explicitly requested;
 - project-specific durable facts/anti-goals/environment roles remain available even when procedure/current delivery detail is removed;
-- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook, mini Domain Map, Memory summary, current delivery brief, runtime acceptance note, or maintenance guide.
+- the Profile is materially smaller than the combined authorities it indexes.
+
+### Mandatory pre-return gate
+
+Before returning a generated Profile, the installed environment must be able to satisfy:
+
+```text
+GROUNDED: YES
+DURABILITY_QUALIFIED: YES
+CORRECTLY_CLASSIFIED: YES
+AUTHORITY_CLASSES_PRESERVED: YES
+DOMAIN_AND_CODE_MAP_DEDUPED: YES
+ENGINEERING_GOVERNANCE_HOOK_COMPACT: YES
+TEMPLATE_FIELDS_PRESERVED: YES
+```
+
+A known `NO` is a generation failure and must be corrected in the same pass rather than explained after output.
 
 ### Overlong Profile negative case
 
-Ask the installed environment to create a Project Profile for Engineering-Governance or another governance-heavy project where source material contains routing, handoff, verification, incident, artifact-lifecycle and control mechanics.
+Ask the installed environment to create a Project Profile for Engineering-Governance or another governance-heavy project.
 
 Expected result:
 
@@ -106,8 +129,6 @@ EXTRA_TOP_LEVEL_PROCEDURE_SECTIONS: NONE_UNLESS_PROJECT_SPECIFICALLY_REQUIRED
 RESULT: PASS
 ```
 
-A semantically correct but handbook-sized output that re-explains reusable Skill procedure is a **Profile contract failure**, not merely a style preference.
-
 ### Established Domain Map negative case
 
 Use a project with an established detailed Domain/navigation map.
@@ -117,12 +138,11 @@ Expected result:
 ```text
 DOMAIN_AUTHORITY_POINTER: PRESENT
 REDUCED_DOMAIN_MAP_RECREATED: NO
+OWNERSHIP_SUBCATALOG_RECREATED: NO
 CANONICAL_SOURCE_SYMBOL_LIST_RECREATED: NO
 BROAD_ORIENTATION_CONCEPTS: ALLOWED_WHEN_NEEDED
 RESULT: PASS
 ```
-
-Correct Domain facts still fail this case if the Profile redundantly rebuilds the navigation authority.
 
 ### Surface-role / fixed-field negative case
 
@@ -142,7 +162,7 @@ RESULT: PASS
 
 ### Profile meta-procedure negative case
 
-Generate a Project Profile from a repository whose `AGENTS.md` and Profile Skill contain detailed startup, freshness, grounding, durability and classification procedure.
+Generate a Project Profile from a repository whose authorities contain detailed startup, freshness, grounding, durability and classification procedure.
 
 Expected result:
 
@@ -169,11 +189,9 @@ MEMORY_MAY_SUGGEST_VERIFICATION_TARGETS: YES
 RESULT: PASS
 ```
 
-The same Memory may still influence ordinary conversation outside Project Profile construction.
-
 ### Previous Profile / Project Instructions inheritance negative case
 
-Rebuild a Profile when existing Project Instructions/Profile contains substantive claims absent from current authorities, plus procedural material already owned elsewhere.
+Rebuild a Profile when existing Project Instructions/Profile contains substantive claims absent from current authorities.
 
 Expected result:
 
@@ -214,30 +232,26 @@ RUNTIME_EVIDENCE_PROMOTED_TO_DURABLE_SEMANTIC_AUTHORITY: NO
 RESULT: PASS
 ```
 
-### Gift-like durability negative case
+### Gift-like durability/adherence case
 
-Use a project whose current normative authority contains a development-stage LAN acceptance contract naming machines and a locked port, while its durable product/business authorities describe the storefront/business identity.
+Use a storefront project where current authority contains development-stage acceptance details and current-work non-goals while durable business authority defines Product/RFQ/storefront identity and a detailed Domain map exists.
 
 Expected result:
 
 ```text
 DEVELOPMENT_STAGE_MACHINE_IN_PROFILE_ENVIRONMENT: NO
 TEMP_ACCEPTANCE_PORT_OR_ENDPOINT_IN_PROFILE: NO
-CURRENT_STAGE_NON_GOALS_PROMOTED_TO_PERMANENT_ANTI_GOALS: NO
+CURRENT_STAGE_NON_GOAL_PROMOTED_TO_PERMANENT_ANTI_GOAL: NO
+STOREFRONT_CMS_STAGE_ONLY_NON_GOAL_IN_DURABLE_PROFILE: NO
+REDUCED_DOMAIN_OWNERSHIP_CATALOG: NO
 DURABLE_PRODUCT_IDENTITY_RETAINED: YES
-CURRENT_RUNTIME_AUTHORITY_POINTER_ALLOWED: YES
+DURABLE_RFQ_IDENTITY_RETAINED: YES
 RESULT: PASS
 ```
 
-The machine/port rule can remain authoritative for current engineering execution without becoming durable Profile content.
-
 ### MemoX-like durability negative/positive case
 
-Use a project where current authority simultaneously contains:
-
-- a current delivery overlay such as a Codex-only MVP and current read-only viewer/runtime phase;
-- accepted version-scoped/durable architecture such as `V1 Local Store: SQLite` and `long-term production Core: Rust`;
-- distinct Raw Evidence / projection / Canonical authority semantics.
+Use a project where current authority contains a current delivery overlay plus accepted version-scoped/durable architecture and distinct authority classes.
 
 Expected result:
 
@@ -250,7 +264,23 @@ AUTHORITY_CLASSES_PRESERVED: YES
 RESULT: PASS
 ```
 
-This case establishes that durability filtering is not blanket deletion of all implementation/architecture facts; explicit durable/version-scoped architecture survives.
+### Merloom-like code-map / routing-hook adherence case
+
+Use a project with durable architecture/business authorities, a detailed Domain/navigation surface, stable greenfield/authority rules, and repository directories that map implementation responsibilities.
+
+Expected result:
+
+```text
+DURABLE_GREENFIELD_IDENTITY_RETAINED: YES
+DURABLE_SINGLE_AUTHORITY_BOUNDARY_RETAINED: YES
+DURABLE_SAVE_PUBLISH_BOUNDARY_RETAINED: YES
+SOURCE_DIRECTORY_RESPONSIBILITY_MAP_IN_ENVIRONMENT: NO
+CODE_PATH_CATALOG_IN_PROFILE: NO
+DOMAIN_NAVIGATION_POINTER: PRESENT
+PER_SKILL_TRIGGER_PROSE_IN_ENGINEERING_GOVERNANCE: NO
+ENGINEERING_GOVERNANCE_HOOK_MATCHES_COMPACT_TEMPLATE: YES
+RESULT: PASS
+```
 
 ## 4. Continuation / workspace
 
