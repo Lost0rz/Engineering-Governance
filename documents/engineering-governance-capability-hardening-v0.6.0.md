@@ -1,6 +1,6 @@
 # Engineering Governance v0.6.0 — Architecture Hardening
 
-Status: ACTIVE DESIGN AUTHORITY for Task `EG-CAPABILITY-ARCHITECTURE-HARDENING-063`
+Status: ACTIVE DESIGN AUTHORITY for v0.6.0; amended by Task `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064`
 
 Date: 2026-10-14
 
@@ -8,9 +8,11 @@ Parent architecture: `documents/engineering-governance-capability-model-v0.6.0.m
 
 ## 1. Why the previous freeze was reopened
 
-Task 062 completed and froze a coherent seven-Skill architecture. A subsequent Skill-by-Skill audit found that the architecture boundaries were sound but several operational semantics were still biased toward conservative suppression rather than deliberate use of agent/model capability.
+Task 062 completed and froze a coherent seven-Skill architecture. A subsequent Skill-by-Skill audit found that the architecture boundaries were sound but several operational semantics needed hardening around task purpose, Sub Agent orchestration, handoff, audit independence, and model behavior.
 
-The accepted correction is narrow: keep the seven-Skill model, three-file control plane, evidence-first discipline, and one-task authority semantics, while refining task purpose, Sub Agent orchestration, model selection, handoff, and independent audit behavior.
+Task 063 established positive safe Sub Agent orchestration and explicit model-selection semantics. The user then chose a narrower operating policy for the initial stabilization period: keep Sub Agents actively usable, but have all delegated Sub Agents use the environment-configured default model and default reasoning setting. Stronger-model routing is deferred until explicitly re-enabled later.
+
+The accepted correction remains narrow: keep the seven-Skill model, three-file control plane, evidence-first discipline, one-task authority semantics, and positive safe parallelism.
 
 No eighth Skill is added.
 
@@ -110,54 +112,45 @@ INTEGRATION_BOUNDARY
 
 If new evidence makes an outstanding unit unnecessary, stale, or invalid, the controller may mark it `CANCELLED` or `SUPERSEDED` and should not integrate its stale result blindly.
 
-## 5. Explicit model selection
+## 5. Delegated model stabilization — Task 064 amendment
 
-### 5.1 Capability tiers remain portable
+This section supersedes Task 063's earlier active HIGH-selection/escalation semantics for the current v0.6.0 stabilization period.
 
-Reusable governance continues to use `LOW`, `STANDARD`, and `HIGH`, but those tiers must be intentionally mapped to actual environment capability when model choice materially affects cost or correctness.
+### 5.1 Active policy
 
-An environment may define:
+All delegated Sub Agents use the execution environment's configured default Sub Agent model and default reasoning setting:
 
 ```text
-MODEL_TIER_MAP
-LOW:
-  model: <actual model>
-  reasoning_effort: <bounded setting>
-STANDARD:
-  model: <actual model>
-  reasoning_effort: <bounded setting>
-HIGH:
-  model: <actual model>
-  reasoning_effort: <bounded setting>
+SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
+SUBAGENT_MODEL: environment configured default
+SUBAGENT_REASONING: environment configured default
+STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-This mapping may live in environment/global configuration; it is not universal repository truth.
+The current user Codex convention may configure a default such as `gpt-6-luna` with `xhigh` reasoning effort. That mapping belongs to environment configuration, not portable reusable governance.
 
-### 5.2 Positive selection rule
+### 5.2 Model identity vs reasoning effort
 
-Use the model capability justified by the work.
+Model identity and reasoning effort are separate dimensions.
 
-- LOW: bounded lookup/extraction/mechanical transformation/simple deterministic edit.
-- STANDARD: normal implementation, multi-file integration, ordinary review.
-- HIGH: architecture, difficult diagnosis, subtle concurrency/security/integration, high-consequence final judgment, or another task whose reasoning demand materially justifies stronger capability.
+A reasoning setting such as `xhigh` means the configured model is allowed to reason at that effort. It does **not** mean the Orchestrator selected a stronger/HIGH model tier.
 
-HIGH is not discouraged. If HIGH is the justified tier, select it deliberately.
+### 5.3 Tier vocabulary is retained but inactive
 
-### 5.3 Inheritance and escalation
+`LOW`, `STANDARD`, and `HIGH` may remain useful future capability vocabulary. During `DEFAULT_ONLY` stabilization they do not drive delegated model routing.
 
-The prohibited behavior is silent or unjustified selection, not escalation itself.
+Role complexity still affects decomposition, acceptance, review, and whether a task should return a capability gap. It does not automatically select a different Sub Agent model.
 
-Rules:
+### 5.4 No stronger-model escalation during stabilization
 
-- delegated roles do not automatically inherit the controller/session model if another tier is more appropriate;
-- a role may intentionally escalate when the reasoning demand changes materially;
-- escalation should report the reason when model choice is material;
-- fallback/escalation must remain within any explicit cost/capability boundary set by the task/environment;
-- if no allowed mapping/fallback exists, return the capability gap to the controller rather than guessing.
+Do not:
 
-Useful principle:
+- automatically upgrade a difficult delegated unit;
+- intentionally upgrade it because architecture/security/concurrency reasoning is harder;
+- inherit a stronger controller/session model merely because it is available;
+- silently substitute a stronger model if the configured Sub Agent default is unavailable.
 
-`USE THE STRONGEST JUSTIFIED MODEL, NOT AUTOMATICALLY THE STRONGEST AVAILABLE MODEL.`
+If the configured default is insufficient, the unit returns a capability/model gap to the controller. Re-enabling stronger-model selection requires a later explicit user/project decision and corresponding governance update.
 
 ## 6. Context-neutral Agent Handoff
 
@@ -219,11 +212,10 @@ A required claim without adequate evidence remains `UNKNOWN`.
 - define same-task vs new/reconciled-task rules;
 - separate task purpose from execution context and Sub Agent units.
 
-### WP12 — Positive orchestration and model selection
+### WP12 — Positive orchestration
 
 - revise orchestrator posture from agent minimization to safe effective parallelism;
-- add available-parallelism/dependency/cancellation semantics;
-- add environment `MODEL_TIER_MAP` and intentional HIGH-model selection/escalation.
+- add available-parallelism/dependency/cancellation semantics.
 
 ### WP13 — Context-neutral handoff and independent audit
 
@@ -234,20 +226,28 @@ A required claim without adequate evidence remains `UNKNOWN`.
 
 ### WP14 — Acceptance specification alignment
 
-- update integrated acceptance scenarios to require useful positive Sub Agent behavior where safe;
-- test intentional HIGH selection and explicit mapping rather than treating HIGH use as failure;
+- require useful positive Sub Agent behavior where safe;
 - test same-task cross-context continuation;
 - test separate audit-purpose task and non-independent self-check distinction.
 
+### WP15 — Model-policy stabilization (Task 064)
+
+- set delegated policy to `DEFAULT_ONLY`;
+- use environment-configured default Sub Agent model and reasoning effort;
+- distinguish `xhigh` reasoning from stronger-model selection;
+- disable automatic and intentional stronger-model escalation during stabilization;
+- retain LOW/STANDARD/HIGH only as inactive future vocabulary;
+- update integrated acceptance accordingly.
+
 ## 10. Acceptance sequencing
 
-Task 063 changes reusable source architecture, so the previous semantic freeze becomes historical. The sequence is:
+Task 064 changes reusable model-policy semantics, so the Task 063 semantic freeze becomes historical for final v0.6.0 acceptance. The sequence is:
 
-1. implement WP11-WP14;
+1. implement WP15 model-policy correction;
 2. run one remote source-architecture audit;
 3. freeze a new v0.6.0 Architecture Delivery / Semantic HEAD;
 4. run one consolidated installed Plugin/Web/Codex acceptance pass against the new frozen identity;
 5. return reusable-source defects to remote source corrective work;
 6. only after acceptance consider merge/release preparation.
 
-Do not test one Skill at a time during this hardening task.
+Do not test one Skill at a time during this stabilization task.
