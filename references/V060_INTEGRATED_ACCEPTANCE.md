@@ -24,26 +24,50 @@ Record only identities needed for the tested surface: source semantic head, Plug
 
 Routing must work through surfaces actually supported by each environment and must not depend on a Local-only global guidance file.
 
-## 3. Project Profile / authority separation / compactness / grounding
+## 3. Project Profile / authority separation / compactness / grounding / durability
+
+Verify Profile construction order:
+
+```text
+Grounding Gate
+→ Durability Gate
+→ Classification / authority placement
+→ Compression / deduplication
+→ Project Profile
+```
+
+### Grounding
+
+- every substantive project-specific Profile claim is traceable to a current verified project authority appropriate to that claim, or to an explicit user instruction/reaffirmation in the current Profile task that establishes durable context;
+- ChatGPT/model Memory, prior conversations, conversation summaries, previous assistant output, previous Profile/Project Instructions, old handoffs/audits/task cards/PR prose/status summaries do not independently establish Profile facts;
+- historical/Memory context may suggest what to verify, but an unverified candidate is omitted or reported outside the Profile rather than promoted into durable-looking context;
+- an existing Profile/Project Instructions surface is `DERIVED_PROJECT_CONTEXT`; rebuilding revalidates retained substantive claims instead of inheriting them;
+- an explicit current-task user durable decision may be included as user-authorized context, but is not mislabeled as repository-established fact when not persisted there;
+- materially distinct authority classes remain distinct: storage/persistence, Raw Evidence, derived projection, implementation authority, runtime evidence, and canonical fact/state authority are not flattened without project authority establishing that relationship;
+- ordinary conversational Memory remains usable outside Profile construction; this acceptance does not require Memory to be disabled.
+
+### Durability
+
+- **verified != durable** is enforced: a currently true claim does not enter the Profile solely because it is grounded;
+- current task/milestone/wave/gate/MVP phase, immediate delivery priority and next-step state are excluded from the durable Profile unless the authority explicitly establishes a durable/version-scoped architectural meaning that materially aids orientation;
+- current-stage non-goals, deferrals and temporary sequencing choices are not silently promoted into permanent project anti-goals;
+- temporary development/acceptance machine names, ports, endpoints, branches, worktrees, runners, executables, local paths and process arrangements are excluded from durable `Environment` content;
+- provisional/current implementation or acceptance shape (for example a current read-only viewer or acceptance-only runtime topology) is not promoted into long-lived project identity;
+- durable/version-scoped architecture remains allowed when its authority explicitly establishes the scope, such as `V1 Local Store` or `long-term production Core`;
+- version/durability qualifiers are preserved rather than erased by compression;
+- useful current-stage facts are pointed to through STATUS/TASK/current delivery planning/runtime authority rather than copied into the Profile.
+
+### Classification / compactness / surface
 
 Verify Profile classification:
 
 - normative project MUST/MUST-NOT -> `AGENTS.md`/accepted normative authority;
 - current state -> STATUS;
 - active authorization -> TASK;
+- current delivery wave/milestone/runtime arrangement -> current planning/runtime authority;
 - detailed Domain/source/test/runtime route -> navigation authority;
 - long-lived design -> planning authority;
-- stable descriptive context + authority pointers -> Profile.
-
-Verify source grounding before classification:
-
-- every substantive project-specific Profile claim is traceable to a current verified project authority appropriate to that claim, or to an explicit user instruction/reaffirmation in the current Profile task that establishes durable context;
-- ChatGPT/model Memory, prior conversations, conversation summaries, previous assistant output, previous Profile/Project Instructions, old handoffs/audits/task cards/PR prose/status summaries do not independently establish Profile facts;
-- historical/Memory context may suggest what to verify, but an unverified candidate is omitted or reported outside the Profile rather than promoted into durable-looking context;
-- an existing Profile/Project Instructions surface is treated as `DERIVED_PROJECT_CONTEXT`; rebuilding revalidates retained substantive claims instead of inheriting them;
-- an explicit current-task user durable decision may be included as user-authorized context, but is not mislabeled as repository-established fact when not persisted there;
-- materially distinct authority classes remain distinct: storage/persistence, Raw Evidence, derived projection, implementation authority, runtime evidence, and canonical fact/state authority are not flattened without project authority establishing that relationship;
-- ordinary conversational Memory remains usable outside Profile construction; this acceptance does not require Memory to be disabled.
+- stable durable descriptive context + authority pointers -> Profile.
 
 Also verify:
 
@@ -52,18 +76,19 @@ Also verify:
 - stale Profile never overrides authority;
 - Profile and Domain Map do not duplicate detailed ownership maps;
 - one current Profile projection surface exists, or one primary plus clearly derived mirror; two independently edited current Profiles are a defect;
-- when the target surface is known, the generated Profile declares the surface and an evidence-supported role;
+- generated output preserves shipped fixed metadata field names `Profile surface` and `Primary/mirror role`;
 - `MIRROR` is never emitted unless a specific primary Profile surface is verified/explicitly identified;
 - `PRIMARY` is not invented merely from surface type; it requires explicit project/user designation among multiple surfaces;
 - when only one current Profile surface is established and no competitor is verified, `single surface` is preferred; unresolved relationships remain `UNKNOWN` rather than guessed;
-- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities, Domain maps, grounding rules, or Profile-maintenance procedure;
+- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities, Domain maps, grounding/durability rules, or Profile-maintenance procedure;
 - generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer/invariant;
 - an existing Domain/navigation authority is pointed to rather than reproduced as a `Domain Model`, ownership table, canonical-source list, or reduced mini-map;
-- `Planning & navigation` contains durable pointers, not a numbered startup/read/check workflow;
-- generated Profile does not add `Project Profile Rule`, `Profile Maintenance`, `Grounding Report`, `Provenance Ledger`, classification/freshness instructions, or other meta-procedure explaining how to maintain/build the Profile;
-- detailed project-specific normative execution rules remain in `AGENTS.md`; Profile keeps only compact stable priorities/anti-goals/risk cues where useful;
-- project-specific stable facts/anti-goals/environment roles remain available even when procedure is removed;
-- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook, mini Domain Map, Memory summary, or maintenance guide.
+- `Planning & navigation` contains durable pointers, not current delivery progress or a numbered startup/read/check workflow;
+- `Environment` contains stable platform/environment roles, not temporary runtime/acceptance values;
+- generated Profile does not add `Project Profile Rule`, `Profile Maintenance`, `Grounding Report`, `Durability Report`, `Provenance Ledger`, classification/freshness instructions, or other meta-procedure explaining how to maintain/build the Profile;
+- detailed project-specific normative execution rules remain in `AGENTS.md`; Profile keeps only compact durable priorities/anti-goals/risk cues where useful;
+- project-specific durable facts/anti-goals/environment roles remain available even when procedure/current delivery detail is removed;
+- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook, mini Domain Map, Memory summary, current delivery brief, runtime acceptance note, or maintenance guide.
 
 ### Overlong Profile negative case
 
@@ -85,7 +110,7 @@ A semantically correct but handbook-sized output that re-explains reusable Skill
 
 ### Established Domain Map negative case
 
-Use a project with an established detailed Domain/navigation map (for example a map that already owns Domain names, source owners and tests).
+Use a project with an established detailed Domain/navigation map.
 
 Expected result:
 
@@ -99,24 +124,25 @@ RESULT: PASS
 
 Correct Domain facts still fail this case if the Profile redundantly rebuilds the navigation authority.
 
-### Surface-role evidence negative case
+### Surface-role / fixed-field negative case
 
 Use a target surface such as ChatGPT Project Instructions where no repository/user authority identifies another current primary Profile surface.
 
 Expected result:
 
 ```text
+PROFILE_SURFACE_FIELD: PRESENT
+PRIMARY_MIRROR_ROLE_FIELD: PRESENT
+FREEFORM_PROFILE_ROLE_REPLACEMENT: NO
 MIRROR_WITHOUT_PRIMARY_EVIDENCE: NO
 PRIMARY_WITHOUT_DESIGNATION: NO
 ROLE: single surface OR UNKNOWN
 RESULT: PASS
 ```
 
-If a verified primary surface is provided, `MIRROR` becomes valid; if the user/project explicitly designates the target as primary among multiple surfaces, `PRIMARY` becomes valid.
-
 ### Profile meta-procedure negative case
 
-Generate a Project Profile from a repository whose `AGENTS.md` and Profile Skill contain detailed startup, freshness and classification procedure.
+Generate a Project Profile from a repository whose `AGENTS.md` and Profile Skill contain detailed startup, freshness, grounding, durability and classification procedure.
 
 Expected result:
 
@@ -124,13 +150,14 @@ Expected result:
 NUMBERED_STARTUP_READ_SEQUENCE: NO
 PROFILE_MAINTENANCE_SECTION: NO
 PROFILE_CLASSIFICATION_RULES_COPIED: NO
+GROUNDING_OR_DURABILITY_REPORT_SECTION: NO
 DURABLE_POINTERS: PRESENT
 RESULT: PASS
 ```
 
 ### Memory / conversation contamination negative case
 
-Provide Memory or prior-chat context containing plausible stable project constraints that are **not** established by the current repository authorities and are not explicitly reaffirmed as durable decisions in the current Profile task. Example classes include merchandise exclusions, visual-style rules, old architecture assumptions, or previous product preferences.
+Provide Memory or prior-chat context containing plausible stable project constraints that are **not** established by current repository authorities and are not explicitly reaffirmed as durable decisions in the current Profile task.
 
 Expected result:
 
@@ -142,11 +169,11 @@ MEMORY_MAY_SUGGEST_VERIFICATION_TARGETS: YES
 RESULT: PASS
 ```
 
-The same Memory may still influence ordinary conversation outside Project Profile construction. Passing this case does not require Memory to be disabled.
+The same Memory may still influence ordinary conversation outside Project Profile construction.
 
 ### Previous Profile / Project Instructions inheritance negative case
 
-Rebuild a Profile when the existing Project Instructions/Profile contains substantive claims that are absent from current authorities, plus procedural material already owned elsewhere.
+Rebuild a Profile when existing Project Instructions/Profile contains substantive claims absent from current authorities, plus procedural material already owned elsewhere.
 
 Expected result:
 
@@ -158,8 +185,6 @@ OLD_PROFILE_SELF_BOOTSTRAPS_TRUTH: NO
 CURRENT_AUTHORITY_WINS: YES
 RESULT: PASS
 ```
-
-A claim does not become valid merely because it already exists in the prior Profile.
 
 ### Explicit current durable user decision positive case
 
@@ -175,8 +200,6 @@ UNRELATED_PRIOR_MEMORY_IMPORTED: NO
 RESULT: PASS
 ```
 
-A casual historical preference or remembered discussion does not satisfy this case; the current Profile task must explicitly establish/reaffirm the durable decision.
-
 ### Authority-class preservation case
 
 Use a project whose current authorities distinguish durable storage/raw evidence, derived retrieval/projection, implementation/runtime evidence, and explicitly canonical state/facts.
@@ -191,7 +214,43 @@ RUNTIME_EVIDENCE_PROMOTED_TO_DURABLE_SEMANTIC_AUTHORITY: NO
 RESULT: PASS
 ```
 
-Compact wording is still required, but compression must not erase material authority semantics.
+### Gift-like durability negative case
+
+Use a project whose current normative authority contains a development-stage LAN acceptance contract naming machines and a locked port, while its durable product/business authorities describe the storefront/business identity.
+
+Expected result:
+
+```text
+DEVELOPMENT_STAGE_MACHINE_IN_PROFILE_ENVIRONMENT: NO
+TEMP_ACCEPTANCE_PORT_OR_ENDPOINT_IN_PROFILE: NO
+CURRENT_STAGE_NON_GOALS_PROMOTED_TO_PERMANENT_ANTI_GOALS: NO
+DURABLE_PRODUCT_IDENTITY_RETAINED: YES
+CURRENT_RUNTIME_AUTHORITY_POINTER_ALLOWED: YES
+RESULT: PASS
+```
+
+The machine/port rule can remain authoritative for current engineering execution without becoming durable Profile content.
+
+### MemoX-like durability negative/positive case
+
+Use a project where current authority simultaneously contains:
+
+- a current delivery overlay such as a Codex-only MVP and current read-only viewer/runtime phase;
+- accepted version-scoped/durable architecture such as `V1 Local Store: SQLite` and `long-term production Core: Rust`;
+- distinct Raw Evidence / projection / Canonical authority semantics.
+
+Expected result:
+
+```text
+CURRENT_MVP_WAVE_PROMOTED_TO_PROJECT_IDENTITY: NO
+CURRENT_VIEWER_OR_ACCEPTANCE_SHAPE_PROMOTED_TO_DURABLE_ENVIRONMENT: NO
+V1_STORAGE_CHOICE_RETAINED_WITH_SCOPE: YES
+LONG_TERM_CORE_CHOICE_RETAINED_WITH_SCOPE: YES
+AUTHORITY_CLASSES_PRESERVED: YES
+RESULT: PASS
+```
+
+This case establishes that durability filtering is not blanket deletion of all implementation/architecture facts; explicit durable/version-scoped architecture survives.
 
 ## 4. Continuation / workspace
 
@@ -223,7 +282,7 @@ Verify `CAPABILITY` and `MODE` are independent dimensions:
 
 For a bounded change, identify affected semantic owners and reconcile only those owners. Verify:
 
-- `IMPLEMENTATION_AUTHORITY` (source/schema/config/workflow/state owner) is distinct from `OBSERVED_EVIDENCE` (CI/test/PR/runtime/review observations);
+- `IMPLEMENTATION_AUTHORITY` is distinct from `OBSERVED_EVIDENCE`;
 - unchanged owner -> no write/commit;
 - stale normative/current authority required for next mutation -> reconcile first;
 - stale derived Profile/Domain projection -> authority wins; refresh only when authorized/useful;
@@ -248,7 +307,7 @@ Verify required claims/identity/independence for formal Evidence Audit; missing 
 
 ## 10. Context recovery / progressive disclosure
 
-If a current Profile exists, it may act as an optional landing index. Verify it does not become a mandatory extra read or replace AGENTS/STATUS/TASK needed for authority-sensitive decisions. Existing Profile content remains derived context and must not bootstrap its own truth during rebuild. Domain Navigation top-level loading should remain compact, with detailed current-task/history/refresh logic progressively disclosed through references.
+If a current Profile exists, it may act as an optional landing index. Verify it does not become a mandatory extra read or replace AGENTS/STATUS/TASK needed for authority-sensitive decisions. Existing Profile content remains derived context and must not bootstrap its own truth during rebuild. Current delivery/runtime detail remains in its owning authority rather than being imported merely for context recovery. Domain Navigation top-level loading should remain compact, with detailed current-task/history/refresh logic progressively disclosed through references.
 
 ## 11. Release surfaces
 
