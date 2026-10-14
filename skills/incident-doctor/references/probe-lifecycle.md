@@ -1,8 +1,22 @@
 # Probe lifecycle
 
-Classify every probe as `TEMPORARY` or `DURABLE` and record its owner, scope, and disposition.
+Classify every state-changing probe as `TEMPORARY` or `DURABLE`.
 
-- **TEMPORARY:** the default for incident-specific evidence collection. After the evidence is captured and verified, retire/remove the probe and record that disposition. Retain it temporarily only with an explicit reason and scope; do not let an unresolved incident silently make it permanent.
-- **DURABLE:** ongoing diagnostic capability. Promotion requires all of: repeated evidence of continuing value, an explicit owner, an explicit scope, and separate authorization. A single incident does not justify automatic promotion.
+## TEMPORARY — default
 
-Preserve the evidence needed for the incident record before removing a temporary probe. Record whether removal occurred or, if promotion is proposed, the evidence and authorization still required. Diagnostic value alone does not authorize a permanent observability change.
+Before deployment record, when material:
+
+```text
+OWNER
+SCOPE
+REMOVE_WHEN
+ROLLBACK_METHOD
+```
+
+After evidence is captured, preserve the needed incident evidence and remove/disable the probe at the declared condition. If removal cannot occur, report the blocker explicitly.
+
+## DURABLE — exceptional
+
+Promotion requires repeated evidence of continuing value, explicit owner/scope, accepted safety/privacy/operability impact, and separate authorization. A single incident does not justify permanent observability.
+
+Diagnostic value alone never authorizes a durable probe.

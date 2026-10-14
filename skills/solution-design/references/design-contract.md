@@ -1,80 +1,66 @@
 # Design contract
 
-## 1. When design is justified
+## Trigger
 
-Enter Solution Design when one or more are material to correctness:
+Use Solution Design only when implementation would otherwise require material guessing about intent, architecture, state ownership, contract/schema, responsibility boundary, or durable cross-task decisions.
 
-- product/behavior intent is ambiguous;
-- state ownership, writer authority, contract/schema or module responsibility must change;
-- credible approaches have different lifecycle/cost/risk implications;
-- work spans bounded tasks and needs durable decisions;
-- a technical choice cannot safely be inferred from accepted repository convention;
-- bounded research/spike evidence is required before choosing.
+Do not enter for a clear local edit, known bug with sufficient evidence, routine config/dependency change, or merely because work is a feature.
 
-Do not enter for a clear local edit, known bug with sufficient evidence, routine config/dependency change, or merely because something is a feature.
+## Decision classes
 
-## 2. Decision classes
+Keep distinct:
 
-Keep these distinct:
-
-- **VERIFIED FACT / CONSTRAINT** — supported by accepted source/evidence;
-- **USER / PROJECT DECISION** — explicitly chosen or already authoritative;
-- **AGENT ASSUMPTION** — provisional and named as such;
-- **AGENT IMPLEMENTATION CALL** — agent-selected detail inside accepted authority;
-- **UNRESOLVED DECISION** — blocks or conditions implementation.
+- `VERIFIED FACT / CONSTRAINT`
+- `USER / PROJECT DECISION`
+- `AGENT ASSUMPTION`
+- `AGENT IMPLEMENTATION CALL`
+- `UNRESOLVED DECISION`
 
 Never present an agent-selected default as a user-approved requirement.
 
-## 3. Useful design record
+## Useful design record
 
-Record only decisions future execution cannot safely reconstruct:
+Record only what future execution cannot safely reconstruct:
 
-- intent/why;
-- verified constraints;
-- goals/non-goals/anti-goals where material;
+- intent/why and verified constraints;
 - selected option + credible rejected alternatives/rationale;
 - ownership/interfaces/data-flow implications;
-- compatibility/migration requirements;
-- verification implications;
-- decision class for assumptions/defaults.
+- compatibility/migration and verification implications;
+- **material** quality attributes only when they constrain the decision (for example reliability, performance, security, operability, maintainability, privacy);
+- consequences/reversibility when the choice is costly to undo.
 
-Avoid line-by-line implementation narration.
+When material, add:
 
-## 4. Spike rule
+```text
+CONSEQUENCES
+REVERSIBILITY
+REVERSAL_TRIGGER
+```
 
-Use a spike only when its possible outcomes can change the design decision. Keep it bounded/disposable and label it as evidence, not production implementation. Retaining spike code becomes normal authorized implementation and must meet project quality/verification rules.
+Avoid implementation narration and checklist inflation.
 
-## 5. Durable planning convergence
+## Research / spike
 
-A self-contained design decision needed only for one bounded task may remain in the task/handoff context if no durable value is lost.
+Use a spike only when possible results can change the decision. Keep it bounded/disposable and label it as evidence. Retained spike code becomes normal authorized implementation.
 
-When multiple tasks, future maintainers or whole-plan acceptance depend on the decision, record the accepted result in the project's existing durable architecture/product/design authority. If none exists and durable planning is justified, Project Governance's `documents/**` pattern may be used.
+## Durable decision lifecycle
 
-The durable design/planning authority owns long-lived rationale/constraints/work-package structure. It does **not** authorize execution or own live progress.
+Use durable planning only when multiple tasks/future maintainers/whole-plan acceptance depend on the decision. The durable record owns rationale/constraints, not execution authorization or live progress.
 
-## 6. Task reconciliation gate
+When an accepted durable decision is replaced, mark the old record/section clearly `SUPERSEDED` and point to the new authority. Do not maintain two active versions of the same decision.
 
-Before implementation, compare accepted design against `CURRENT_TASK.md`.
+## Task reconciliation
 
-Return:
+Before implementation compare the accepted design with `CURRENT_TASK.md`:
 
 ```text
 TASK_RECONCILIATION_REQUIRED: YES | NO
-REASON: <scope/prerequisite/side-effect/dependency/verification/acceptance/stop-condition change | none>
+REASON: <material authorization change | none>
 DURABLE_DOCUMENT: <path/section | NONE>
 ```
 
-If `YES`, return to Project Governance and reconcile/re-authorize before affected mutation.
+If `YES`, return to Project Governance before affected mutation.
 
-## 7. Convergence check
+## Convergence
 
-Before leaving design, verify that the selected option:
-
-- satisfies the original objective rather than optimizing an adjacent problem;
-- preserves or deliberately changes one canonical authority per fact/behavior class;
-- respects explicit non-goals/anti-goals;
-- does not create an unapproved new writer/control authority;
-- has a clear verification implication;
-- leaves unresolved decisions explicit.
-
-A technically elegant solution that changes the requested outcome has not converged.
+Before leaving design verify that the selected option satisfies the original objective, preserves/deliberately changes canonical authority, respects material non-goals, has clear verification implications, and leaves unresolved decisions explicit.
