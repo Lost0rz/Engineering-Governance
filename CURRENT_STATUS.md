@@ -8,53 +8,39 @@ Formal immutable GitHub release remains `plugin-v0.5.5`; previously accepted Web
 
 No formal GitHub v0.6.0 release has been created yet.
 
-## v0.6.0 source architecture — FROZEN
+## v0.6.0 source architecture
 
-Current frozen Architecture Delivery / Semantic HEAD:
+The eight-Skill architecture remains accepted; current acceptance exposed one bounded reusable Project Profile output-contract defect rather than an architecture/routing-model failure.
 
-`d8bdf9da4094a0550d59afe33e02b179582150b2`
+- Previous frozen Semantic HEAD before this corrective: `d8bdf9da4094a0550d59afe33e02b179582150b2`.
+- Task `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` is COMPLETE.
+- Task `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` is ACTIVE on PR #26.
+- PR #26 remains OPEN / DRAFT / UNMERGED; host facts are reread at their own boundary.
+- CI/check PASS is not claimed without current evidence.
 
-- Task `EG-CAPABILITY-CONTRACT-CORRECTIVE-069` is COMPLETE with V2 remote source-architecture audit PASS (`AUDIT_INDEPENDENCE: SELF_CHECK`).
-- Bounded corrective Task `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` is COMPLETE; shipped Handoff request/receipt templates now match the accepted Card/Receipt contract.
-- PR #26 remains OPEN / DRAFT / UNMERGED. Latest host observation reports `mergeable=false`; this is a separate merge-boundary fact and does not change the frozen semantic candidate.
-- No semantic-head CI/check PASS is claimed unless current host evidence reports it.
+## Web Plugin candidate acceptance evidence
 
-## Web Plugin candidate 0.6.0
+The installed personal Web Plugin candidate is version `0.6.0` on the existing Plugin identity.
 
-Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is `WAITING_FRESH_WEB_SESSION`.
+Fresh Web session evidence now establishes:
 
-Candidate installation evidence:
+- exact eight top-level Skill discovery: `PASS`;
+- ordinary project status/progress inspection routes to `project-governance` without over-routing to Audit/Navigation/Doctor: `PASS`;
+- Project Profile generation selects/uses the Project Profile capability and correctly excludes live PR/HEAD/CI/current-task state: `PASS` for routing/semantic boundary;
+- generated Profile still duplicated reusable routing, handoff, verification, incident, artifact-lifecycle procedure and became too long: `FAIL` for compactness/workflow deduplication.
 
-- exact candidate source: Semantic HEAD `d8bdf9da4094a0550d59afe33e02b179582150b2`;
-- candidate overlay: 33 `plugin.json` / `skills/**` entries;
-- Git-blob equivalence: `33/33 PASS`;
-- candidate ZIP SHA-256: `18bb5d7e063524f015e77f8f66feb7df1ac761512819728a38c4c4f3c48cce9e`;
-- personal Web Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- Web Plugin current version: `0.6.0`;
-- current Plugin release: `pluginrel_6acef4a99cac81919f1be1a44f965235`;
-- scope/discoverability remain `USER / PRIVATE`;
-- stored Plugin file surface contains all eight expected top-level Skill trees;
-- platform-managed `.codex-plugin/plugin.json` is also version `0.6.0` and points to `./skills`.
+This is a reusable source defect, so Task 070 Web acceptance is paused while Task 072 corrects source. Installed caches are not patched as source authority.
 
-Current already-open Web conversation still exposes the pre-update three-Skill discovery snapshot. This is classified as `STALE_PRE_UPDATE_SNAPSHOT`, not a v0.6.0 routing failure. Fresh-session Web discovery/routing remains `UNKNOWN` until tested in a new Web conversation/session.
-
-Semantic HEAD `d8bdf9da...` to current branch control descendant changes only `CURRENT_STATUS.md` / `CURRENT_TASK.md`: `CONTROL_ONLY_DRIFT`; Delivery identity remains unchanged.
-
-Formal GitHub `plugin-v0.6.0` publication is intentionally deferred until the required installed/integrated acceptance boundary supports publication.
-
-## Accepted architecture
+## Accepted architecture preserved
 
 - Exactly eight top-level Skills; global routing is policy, not a ninth Skill.
-- `project-profile` is a derived context/index. Repository/project-managed Profile mutation requires compatible task authorization.
-- A project keeps one current Profile projection surface, or one primary surface plus a derived mirror.
-- Project `AGENTS.md` is normative; Domain/navigation owns detailed routing; durable planning owns long-lived design; STATUS/TASK own current state/authorization.
-- Handoff separates `CAPABILITY` from `MODE`; required Card/Receipt core fields are standardized and shipped templates match that contract.
-- Artifact lifecycle separates normative/design/current/implementation authority, derived projections and observed evidence; unchanged semantics produce no write/commit.
-- Advisory read-only status/evidence inspection can remain in Project Governance; formal acceptance/readiness verdicts use Evidence Audit.
-- Project Governance emits one compact human status receipt for governed engineering/status/audit/CI/PR/merge responses without duplicating a full Handoff Receipt.
-- Same-purpose continuation preserves the active task and prefers a safe current PR/workspace for in-scope corrections.
-- Runtime/model/tool/capacity configuration remains environment-owned; stronger-model escalation remains disabled during stabilization.
+- Project Profile remains `DERIVED_PROJECT_CONTEXT`, not project/task/domain/design authority.
+- Project `AGENTS.md` is normative; STATUS/TASK own current state/authorization; Domain/navigation owns detailed routing; durable planning owns long-lived design.
+- Handoff keeps `CAPABILITY` and `MODE` separate.
+- Artifact lifecycle separates semantic owners, derived projections and observed evidence.
+- Advisory inspection remains distinct from formal Evidence Audit.
+- Same-purpose continuation preserves the active task; a bounded acceptance corrective may temporarily become the active task and then return to the parent acceptance purpose.
 
 ## Next milestone
 
-Open a fresh Web conversation/session against the updated Plugin and complete v0.6.0 eight-Skill discovery plus Web routing positive/negative scenarios. If Web passes, continue the remaining Local Codex integrated-acceptance surfaces. Separately reconcile PR #26's current mergeability before any formal release/merge preparation.
+Complete Task 072 by hardening the Project Profile compactness/dedup contract and its integrated-acceptance scenario. After focused source audit and candidate refresh, resume Task 070 Web acceptance with a fresh Project Profile generation case before continuing Local Codex integrated acceptance.
