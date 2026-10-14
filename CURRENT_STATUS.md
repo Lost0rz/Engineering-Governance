@@ -19,8 +19,7 @@ No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has been p
 Task `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064` completed the user-directed delegated-model stabilization on branch `codex/capability-model-v0.6.0`.
 
 - New Architecture Delivery / Semantic HEAD: `31d9d94f1f59a3d5b49fb7c614f37ec752cff479`.
-- Latest verified closeout comparison used literal head `563481e1ae6a6d3b95db2c8a92dfc786dc10328e`; this final status-only reconciliation advances literal HEAD again without changing delivery semantics.
-- `31d9d94f... -> 563481e...` changes only `CURRENT_STATUS.md` and `CURRENT_TASK.md`; `CONTROL_ONLY_DRIFT: PASS` and Delivery / Semantic HEAD remains `31d9d94f...`.
+- Task 064 closeout is control-only after that semantic head. The latest verified semantic-to-closeout comparison is limited to `CURRENT_STATUS.md` and `CURRENT_TASK.md`, so Delivery / Semantic HEAD remains `31d9d94f...`.
 - Prior Task 063 semantic candidate `5ad4f4a4465714f571bce4b9d095d741cd361c03` is historical/superseded for final v0.6.0 acceptance because model-policy source semantics changed.
 - PR #26 remains OPEN / DRAFT / UNMERGED.
 - PR host mergeability observed during Task 064 audit: `mergeable=true`.
