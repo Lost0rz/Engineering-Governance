@@ -9,7 +9,7 @@ Primary/mirror role: <PRIMARY | MIRROR | single surface | UNKNOWN>
 [What the project is, who/what it serves, its core product/business loop, and only clearly durable anti-goals when material. Current/MVP/phase/wave/deferred non-goals do not belong here unless separate durable authority establishes them as lasting product identity.]
 
 ## Stable concepts
-[Only grounded durable project-specific concepts needed to understand the project. If a detailed Domain Map exists, keep only a few broad distinctions here and point to the map; do not recreate ownership catalogs, source paths, symbols or code maps. Preserve the project's own authority distinctions.]
+[Only grounded durable project-specific concepts needed to understand the project. If a detailed Domain/navigation authority exists, keep at most one short broad ownership invariant here when essential to project identity; otherwise point to the Domain/navigation authority and do not recreate ownership catalogs, source paths, symbols or code maps. Preserve the project's own authority distinctions.]
 
 ## Authority map
 - Project rules: `AGENTS.md`
@@ -20,13 +20,13 @@ Primary/mirror role: <PRIMARY | MIRROR | single surface | UNKNOWN>
 - Durable planning/architecture: <path/authority | not established>
 - Runtime/host truth: <owning runtime/host evidence surface>
 
-[If an established Domain/navigation authority exists, do not add detailed upstream/downstream/runtime ownership subsections that reconstruct it. Keep at most the broad distinctions needed for orientation.]
+[When a detailed Domain/navigation authority exists, STOP this section at authority pointers. Do not append `X owns / Y owns` prose, upstream/downstream/runtime ownership lists, source-class catalogs, route catalogs, or reduced Domain summaries.]
 
 ## Planning & navigation
 [Durable pointers only. Do not copy current milestone/progress, current delivery-wave detail, or a numbered startup/read/check workflow.]
 
 ## Environment
-[Grounded durable platform/environment roles only. Do not list repository directories, module/source paths, symbols, code-responsibility maps, temporary machine names, ports, endpoints, runners, branches/worktrees, or acceptance-only runtime values. Version-scoped architecture is allowed when its durable scope is explicit.]
+[Grounded durable platform/environment/data-role context and authority pointers only. Do not list repository directories, module/source paths, symbols, code-responsibility maps, temporary machine names, ports, endpoints, runners, branches/worktrees, acceptance-only runtime values, or behavioral fail-closed/fallback/verification/execution rules. Version-scoped architecture is allowed when its durable scope is explicit.]
 
 ## Priorities / constraints
 [Grounded durable project-specific priorities, anti-goals, risk cues, or product constraints. Do not promote current-stage delivery priorities/non-goals into permanent identity. Do not copy detailed MUST/MUST-NOT execution rules from `AGENTS.md`.]
@@ -34,6 +34,6 @@ Primary/mirror role: <PRIMARY | MIRROR | single surface | UNKNOWN>
 ## Engineering Governance
 Engineering work uses Engineering Governance. Default entry: `project-governance`. Conditional capabilities follow the reusable routing contract.
 
-<!-- Do not append per-Skill triggers, Skill catalogs, Handoff/verification/incident/PR/worktree procedure, or routing explanations to the Engineering Governance section unless the user explicitly asked for routing documentation rather than a Project Profile. -->
-<!-- Before returning: every substantive claim must be grounded + durable + correctly classified + deduped; remove stage-only anti-goals, code/source maps, Domain mini-maps and current delivery/runtime detail. -->
+<!-- Do not append per-Skill triggers, Skill catalogs, Handoff/verification/incident/PR/worktree procedure, or routing explanations unless the user explicitly asked for routing documentation rather than a Project Profile. -->
+<!-- Before returning: every substantive claim must be grounded + durable + correctly classified + deduped. If a detailed Domain/navigation authority exists, Authority map must be pointer-only; Environment must contain roles/pointers only. -->
 <!-- Surface-role rule: preserve the fixed `Primary/mirror role` field. MIRROR requires a verified primary; PRIMARY requires explicit designation among multiple surfaces; otherwise use single surface when only one current surface is established, or UNKNOWN when unresolved. -->
