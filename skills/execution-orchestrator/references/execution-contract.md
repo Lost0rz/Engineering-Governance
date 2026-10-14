@@ -2,7 +2,7 @@
 
 ## 1. Trigger and non-trigger
 
-Use orchestration when execution topology itself needs a decision: decomposition, multiple roles/agents, parallelism, model selection, long-running recovery, cancellation/supersession, or integration of independent work.
+Use orchestration when execution topology itself needs a decision: decomposition, multiple roles/agents, parallelism, delegated-model policy, long-running recovery, cancellation/supersession, or integration of independent work.
 
 Do not invoke it when delegation adds no useful throughput/context benefit and one executor can complete the work cleanly. The presence of Sub Agents is neither a reason to use them nor a reason to avoid them.
 
@@ -59,52 +59,39 @@ Parallelize when all relevant conditions are established:
 
 If a material condition is unknown, resolve it first or run the affected units sequentially/read-only. This gate protects correctness; it is not a policy to under-use safe Sub Agent capacity.
 
-## 6. Model capability and environment mapping
+## 6. Delegated-model policy
 
-Reusable governance uses capability tiers:
+### 6.1 Current stabilization policy
 
-- **LOW** — bounded lookup, extraction, formatting, mechanical transformation, simple deterministic edit when reliable.
-- **STANDARD** — normal implementation, multi-file pattern application, ordinary analysis/review.
-- **HIGH** — architecture, subtle integration/concurrency/security reasoning, difficult diagnosis, high-consequence review, or another task whose reasoning demand materially justifies stronger capability.
-
-HIGH is valid. Select it deliberately when needed.
-
-When model choice materially affects cost/correctness, the execution environment should map tiers to concrete capability, for example:
+For v0.6.0 stabilization, delegated Sub Agents use the execution environment's configured default Sub Agent model and configured default reasoning setting:
 
 ```text
-MODEL_TIER_MAP
-LOW:
-  model: <actual model>
-  reasoning_effort: <bounded setting>
-STANDARD:
-  model: <actual model>
-  reasoning_effort: <bounded setting>
-HIGH:
-  model: <actual model>
-  reasoning_effort: <bounded setting>
+SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
+SUBAGENT_MODEL: environment configured default
+SUBAGENT_REASONING: environment configured default
+STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-Environment mapping may live in global/runtime configuration and must not be hardcoded as universal repository truth.
+The execution environment owns the concrete model/reasoning configuration. Reusable governance must not hardcode one provider/model as universal truth.
 
-### Selection and escalation
+A reasoning-effort setting such as `xhigh` is separate from model identity. Using `xhigh` on the configured default model does not mean a stronger model tier has been selected.
 
-- choose the capability tier justified by the unit's reasoning demand;
-- use the strongest justified model, not automatically the strongest available model;
-- delegated roles do not automatically inherit the controller/session model when another tier is more appropriate;
-- intentional escalation is allowed when new evidence increases reasoning demand;
-- when material, state `ESCALATION_REASON` and actual model/reasoning used;
-- respect explicit task/environment cost/capability ceilings and allowed fallbacks;
-- if the required mapped tier is unavailable and no accepted fallback exists, return `MODEL_CAPABILITY_UNAVAILABLE` to the controller rather than silently selecting another tier.
+### 6.2 Capability tiers are inactive routing vocabulary
 
-Suggested defaults are starting points only:
+`LOW / STANDARD / HIGH` may remain documented as portable future capability vocabulary, but while `DEFAULT_ONLY` is active they do not select a delegated Sub Agent model. Role complexity changes the task/unit boundary and review expectations, not the Sub Agent model override.
 
-| Role | Typical tier | Notes |
-| --- | --- | --- |
-| Scout / bounded researcher | LOW | STANDARD when synthesis is non-trivial |
-| Mechanical implementer | LOW or STANDARD | choose by edit/reliability demand |
-| Normal implementer | STANDARD | HIGH allowed for difficult integration |
-| Ordinary reviewer | STANDARD | HIGH for materially high-risk judgment |
-| Architecture / difficult diagnosis / high-risk reviewer | HIGH | intentional strong-model use |
+Do not:
+
+- downgrade a Sub Agent to another model because the task looks mechanical;
+- upgrade a Sub Agent to a stronger model because the task looks difficult;
+- inherit some different controller/session model merely because it is available;
+- silently change reasoning/model settings outside the configured Sub Agent default.
+
+If the configured default is unavailable or materially incapable of the required work, return the capability gap to the controller. Do not substitute a stronger model unless a later explicit user/project policy has re-enabled that path.
+
+### 6.3 Future re-enablement
+
+Tier-based model routing or stronger-model escalation is a deferred capability. Re-enabling it requires explicit user/project authorization and a corresponding governance update. It must not emerge implicitly from agent judgment during the stabilization period.
 
 ## 7. Delegation context package
 
@@ -122,9 +109,7 @@ RELEVANT_PATHS_SYMBOLS_TESTS
 FRESH_DELTA
 ACCEPTANCE
 STOP_CONDITIONS
-MODEL_TIER
-ACTUAL_MODEL / REASONING_EFFORT (when material)
-MAX_TIER / ALLOWED_FALLBACK (when constrained)
+SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
 RETURN_CONTRACT
 ```
 
@@ -146,7 +131,7 @@ Retry only when the likely failure mode is recoverable and another attempt has a
 
 When a unit's premise becomes stale, unnecessary, or invalid because another unit changed the decision boundary, mark it `CANCELLED` or `SUPERSEDED`. Do not integrate its result unless freshly revalidated against current task/evidence.
 
-If repeated failure reveals a design/scope/evidence problem, return it to the controller/Project Governance rather than spawning more agents blindly.
+Repeated failure does not authorize a stronger-model escalation during stabilization. If repeated failure reveals a model-capability, design, scope, or evidence problem, return it to the controller/Project Governance for a new decision.
 
 ## 10. Recovery ledger
 
@@ -172,6 +157,6 @@ The controller integrates under the original task/writer authority:
 4. resolve conflicts centrally rather than allowing agents to overwrite each other;
 5. run the defined integration/affected verification;
 6. reject unknown result identity rather than guessing equivalence;
-7. return any material scope/design discovery to Project Governance/Solution Design before further affected mutation.
+7. return any material scope/design/model-capability discovery to Project Governance/Solution Design before further affected mutation.
 
 A unit saying `PASS` does not establish integrated task PASS.
