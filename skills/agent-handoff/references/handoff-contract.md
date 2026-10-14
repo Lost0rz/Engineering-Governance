@@ -4,6 +4,8 @@
 
 A Card is transport, not a second task contract. Reference current authority and carry only fresh transfer-specific delta. The receiver rereads accessible authorities; material conflict returns to Project Governance.
 
+If the requested output itself will be sent to another agent, session, machine, reviewer, or execution context as engineering instructions/evidence, the transfer artifact uses this Handoff contract. A free-form “execution card” is not an alternate schema.
+
 ## Capability vs Mode
 
 These are orthogonal:
@@ -19,6 +21,14 @@ MODE       = receiver action / side-effect class
 CAPABILITY: evidence-audit
 MODE: AUDIT
 ```
+
+Valid `MODE` values are exactly:
+
+```text
+EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
+```
+
+Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belong in `PURPOSE` or `DELTA`, not `MODE`.
 
 ## Common Card schema
 
@@ -51,7 +61,23 @@ EXPECTED_EVIDENCE
 AUDIT_INDEPENDENCE
 ```
 
-Do not omit required core fields. Do not duplicate the full objective/scope/acceptance/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
+Do not omit required core fields. Do not duplicate the full objective/scope/acceptance/STOP/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
+
+## Card generation rules
+
+Before returning a generated Card, check and correct all of the following in the same pass:
+
+1. **Route** — the output has actually been shaped as an Agent Handoff Card when it crosses contexts.
+2. **Core schema** — all nine required core fields are present.
+3. **Mode** — `MODE` is one accepted side-effect class, not a task-purpose adjective.
+4. **Task identity** — preserve the current `TASK_ID` for the same engineering purpose. Context changes alone do not create tasks.
+5. **Authority compression** — `AUTHORITY` points to the current task/rules/design sources; do not re-copy the entire task contract.
+6. **Fresh delta** — `DELTA` contains only transfer-specific facts/instructions that are not recoverable by rereading those authorities.
+7. **Boundary** — the Card cannot grant writes, scope, side effects, or repository authority beyond the owning task.
+8. **Identity semantics** — sender-observed commits/refs belong in `OBSERVED_BASIS` by default. Promote an identity to `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or an equivalent lock only when an owning authority explicitly defines that lock and the Card is merely referencing it.
+9. **Outcome-neutral return** — `RETURN_CONTRACT` requests actual evidence/outcome. Do not predeclare `FINAL_STATE: READY`, `PASS`, merge/release completion, or another success that the receiver has not observed.
+
+A Card that knowingly fails one of these checks is not returned with a warning; revise it until compliant or return to Project Governance when the owning authority itself is ambiguous/conflicting.
 
 ## Mode profiles
 
@@ -97,6 +123,8 @@ CAPABILITY
 TARGET
 OUTCOME
 ```
+
+`OUTCOME` is always observed, not predetermined. The receiver may return success, failure, stop, blocked, unknown, no-change, or another mode-appropriate result supported by evidence.
 
 Then add only mode-relevant evidence.
 
