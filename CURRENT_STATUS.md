@@ -4,18 +4,31 @@ Last verified: 2026-10-14.
 
 ## Published baseline
 
-Formal release remains `plugin-v0.5.5`; accepted Web/Mac mini/MacBook Air baseline remains `0.5.5`.
+Formal immutable GitHub release remains `plugin-v0.5.5`; previously accepted Web/Mac mini/MacBook Air baseline remains `0.5.5`.
 
-No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has run.
+No formal GitHub v0.6.0 release has been created yet.
 
-## v0.6.0 source architecture — FROZEN FOR CONSOLIDATED ACCEPTANCE
+## v0.6.0 source architecture — FROZEN
 
-Task `EG-CAPABILITY-CONTRACT-CORRECTIVE-069` is COMPLETE.
+Frozen Architecture Delivery / Semantic HEAD:
 
-- Frozen Architecture Delivery / Semantic HEAD: `7be11aae70c42b075034eb4613a7dc66b242bb80`.
-- PR #26 remains OPEN / DRAFT / UNMERGED; final source audit observed `mergeable=true`.
-- Semantic head commit/check statuses: none reported; **CI PASS is not claimed**.
-- Installed integrated acceptance: `NOT_RUN`.
+`7be11aae70c42b075034eb4613a7dc66b242bb80`
+
+Task `EG-CAPABILITY-CONTRACT-CORRECTIVE-069` is COMPLETE with V2 remote source-architecture audit PASS (`AUDIT_INDEPENDENCE: SELF_CHECK`).
+
+PR #26 remains OPEN / DRAFT / UNMERGED. Semantic-head commit/check statuses were not reported, so CI PASS is not claimed.
+
+## Current acceptance task
+
+Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is ACTIVE.
+
+Current boundary:
+
+- build an exact Web Plugin candidate from frozen Semantic HEAD `7be11aae...`;
+- update the existing personal ChatGPT `engineering-governance` Plugin from 0.5.5 to 0.6.0 on the same Plugin identity;
+- run Web-side discovery/routing acceptance before formal GitHub release, PR merge, or Local Codex installation.
+
+Formal GitHub `plugin-v0.6.0` publication is intentionally deferred until required installed/integrated acceptance supports that boundary.
 
 ## Accepted architecture
 
@@ -30,14 +43,6 @@ Task `EG-CAPABILITY-CONTRACT-CORRECTIVE-069` is COMPLETE.
 - Same-purpose continuation preserves the active task and prefers a safe current PR/workspace for in-scope corrections.
 - Runtime/model/tool/capacity configuration remains environment-owned; stronger-model escalation remains disabled during stabilization.
 
-## Task 069 source audit
-
-`V2 remote source-architecture audit: PASS` for semantic head `7be11aae70c42b075034eb4613a7dc66b242bb80`.
-
-Audit independence: `SELF_CHECK` — complete source audit in the same implementation context; this is not independent installed/runtime acceptance.
-
-Verified: exact eight-Skill directory set; Plugin metadata `0.6.0`; Skill triggers/authority boundaries remain distinct; Profile mutation/surface rules are coherent; Handoff Card/Receipt schema is internally consistent; `CAPABILITY` and `MODE` are orthogonal; implementation authority is separated from observed evidence; advisory vs formal audit routing is coherent; Domain Navigation uses progressive disclosure; durable design, README and global routing template are aligned; no runtime/daemon/database/model-router/automatic enforcement was added.
-
 ## Next milestone
 
-Run one consolidated v0.6.0 installed Plugin/Web/Codex acceptance using `references/V060_INTEGRATED_ACCEPTANCE.md`. Reusable defects return to a bounded source corrective task; do not patch installed caches.
+Complete Task 070 Web candidate packaging/update and Web-side routing acceptance. Reusable defects return to a bounded source corrective task; do not patch installed caches.
