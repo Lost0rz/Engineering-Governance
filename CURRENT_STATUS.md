@@ -52,27 +52,23 @@ No other Skill or capability architecture changed.
 
 ## Fresh Web 0.6.6 profile regressions
 
-User supplied new generated Profile outputs for Gift, Merloom and MemoX after the `0.6.6` Web update. Repository authorities were reread to validate the claims.
+User supplied new generated Profile outputs for Gift, Merloom, MemoX and FloatTabs after the `0.6.6` Web update. Current repository authorities were reread to validate the claims.
 
-### Gift — PASS for the 0.6.6 structural/grounding/durability target
-
-Observed:
+### Gift — PASS
 
 - fixed metadata fields preserved;
 - no Memory-only merchandise/visual preferences;
-- no Mac mini/Air, `:3000`, current task/PR/CI or upstream-blocker state;
+- no temporary Mac mini/Air/`:3000`, current task/PR/CI or upstream-blocker state;
 - no stage-only `storefront CMS` anti-goal;
-- `Authority map` is pointer-oriented and no Merloom/Gift ownership subcatalog is recreated there;
-- one broad upstream-vs-Gift ownership invariant remains in `Stable concepts`, which is allowed for orientation;
-- `Environment` is platform/data-flow oriented and does not contain code/source maps or temporary runtime detail;
+- `Authority map` is pointer-oriented with no Merloom/Gift ownership subcatalog;
+- one broad upstream-vs-Gift ownership invariant remains for orientation;
+- `Environment` is platform/data-flow oriented;
 - Engineering Governance uses the compact hook;
 - durable B2B/Product-first/Inquiry/RFQ identity remains.
 
-Minor compression note: a `Keep project control lightweight` subsection under `Priorities / constraints` repeats generic control/Profile-placement guidance and is not needed for product orientation. This is non-blocking for the Task-077 target but should be omitted by ideal compression.
+Minor non-blocking compression note: generic `Keep project control lightweight` guidance is unnecessary Profile content.
 
-### Merloom — PASS for the 0.6.6 target
-
-Observed:
+### Merloom — PASS
 
 - fixed metadata fields preserved;
 - current PR/Task/CI/current-stage details absent;
@@ -82,50 +78,61 @@ Observed:
 - durable greenfield, single-Authority, evidence-vs-business, explicit Publication, AI-candidate, recapture and analytics boundaries remain;
 - Engineering Governance uses the compact hook.
 
-The `Priorities / constraints` section remains somewhat dense but consists mainly of durable greenfield/product anti-goals and is not a Task-077 regression.
-
-### MemoX — PASS for the required durability/authority-class regression
-
-Observed:
+### MemoX — PASS
 
 - current Codex-only MVP/wave/viewer/runtime delivery shape is absent;
-- accepted `V1 Local Store: SQLite` remains explicitly scoped;
-- accepted `long-term production Core: Rust` remains explicitly scoped;
-- planned Swift Apple shell/UI role is preserved with the unselected Rust/Swift boundary;
+- accepted `V1 Local Store: SQLite` remains scoped;
+- accepted `long-term production Core: Rust` remains scoped;
+- planned Swift Apple shell/UI role is preserved with the Rust/Swift boundary still unselected;
 - Raw Evidence, Canonical Memory, Provider/derived projections, Retrieval and MCP authority classes remain distinct;
-- `Authority map` is pointer-oriented and `DOMAIN_MAP.md` remains navigation only;
+- `DOMAIN_MAP.md` remains navigation only;
 - current Task/Status/PR/runtime state is absent;
 - Engineering Governance uses the compact hook.
 
-Minor compression note: `Priorities / constraints` lists twelve durable architecture/data rules and reads closer to an architecture summary than the ideal compact Profile. This is a quality/compression issue, not a grounding/durability/authority-class failure.
+Minor non-blocking compression note: `Priorities / constraints` is denser than the ideal compact Profile.
 
-## Acceptance interpretation
+### FloatTabs — PASS
 
-The 0.6.6 source correction is materially effective across Gift, Merloom and MemoX.
+Fresh FloatTabs Profile regression was checked against current `AGENTS.md`, `README.md`, `docs/architecture/DOMAIN_MAP.md` and `docs/architecture/README.md`.
 
-The previously blocking classes are no longer reproduced in these new outputs:
+Observed:
+
+- prior Project Instructions / historical context did not bootstrap unsupported facts;
+- durable native-macOS floating Web App / Slot / Browser Profile identity is supported by current repository authority;
+- `Authority map` is pointer-oriented and `docs/architecture/DOMAIN_MAP.md` is not recreated as an ownership/code catalog;
+- current PR/task/incident/HEAD/worktree/runtime-acceptance state is absent;
+- `Environment` retains supported durable platform context (native macOS, WebKit/WKWebView, Apple Silicon arm64, macOS 13+ baseline) rather than temporary runtime state;
+- Browser Profile/session data-safety boundary remains grounded;
+- Engineering Governance uses the compact shipped hook;
+- fixed metadata fields are preserved.
+
+Minor non-blocking compression note: several runtime/recovery/verification cautions in `Priorities / constraints` are durable and grounded but more operational than the minimum Profile needs. They do not reproduce the earlier prohibited Profile classes.
+
+## Profile acceptance interpretation
+
+Gift, Merloom, MemoX and FloatTabs now materially pass the Web `0.6.6` Project Profile target.
+
+The previously blocking classes are no longer reproduced across these independent project samples:
 
 - Memory/history backfill into Profile facts;
+- old Profile/Project Instructions self-bootstrap;
 - current-stage facts promoted into durable identity;
 - temporary environment/endpoint leakage;
 - Domain ownership mini-map under `Authority map`;
 - source/code map in `Environment`;
 - expanded per-Skill Engineering Governance routing.
 
-Remaining observations are minor semantic-compression quality issues, not evidence that another source corrective is required at this point.
+Remaining observations are semantic-compression quality notes, not evidence for another reusable source corrective.
 
 ## Next milestone
 
-Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` remains active.
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` remains active, but the Project Profile regression boundary is materially PASS.
 
-Remaining Web Profile acceptance:
+Next:
 
-1. fresh FloatTabs regression:
-   - old Project Instructions do not self-bootstrap their own truth;
-   - established Domain/navigation authority remains a pointer;
-   - current/runtime state stays out;
-   - fixed metadata and compact Engineering Governance hook remain correct.
-2. After FloatTabs passes, review the remaining Task-070 routing positive/negative scenarios before declaring the Web boundary complete.
-3. Local Codex integrated acceptance and formal GitHub release/merge remain later boundaries.
+1. review remaining Web routing positive/negative scenarios in `references/V060_INTEGRATED_ACCEPTANCE.md`;
+2. collect fresh evidence for any scenarios not yet proven on the `0.6.6` candidate;
+3. decide whether the Web boundary can close;
+4. Local Codex integrated acceptance and formal GitHub release/merge remain later boundaries.
 
-No new Profile source corrective is authorized from the current minor compression observations alone.
+No new Project Profile source corrective is authorized from current evidence.
