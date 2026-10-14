@@ -1,67 +1,54 @@
-# CURRENT TASK — Contract Corrective v0.6.0
+# CURRENT TASK — Web Candidate Acceptance v0.6.0
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-CAPABILITY-CONTRACT-CORRECTIVE-069`
+Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
-Task class: `CORRECTIVE`
+Task class: `VERIFY`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
 ## Objective
 
-Tighten the remaining v0.6.0 contract gaps around Project Profile mutation/surface ownership, Card/Receipt schema, capability-vs-mode semantics, artifact lifecycle taxonomy, compact status receipts, advisory-vs-formal audit boundaries, context recovery and acceptance coverage without adding new Skills or control files.
+Package the frozen v0.6.0 Semantic HEAD as an exact Web Plugin candidate, update the existing personal ChatGPT `engineering-governance` Plugin from 0.5.5 to 0.6.0, and run the Web-side discovery/routing portion of integrated acceptance before any formal GitHub release or PR merge.
 
-## Completed
+## Authority / identity
 
-- required compatible Project Governance / `CURRENT_TASK.md` authorization before repository/project-managed Profile mutation;
-- defined one current Profile projection surface or one primary + derived mirror;
-- separated Handoff `CAPABILITY` from `MODE` and made Card/Receipt required-core fields explicit;
-- added `PURPOSE` and other conditional transfer fields without bloating the core schema;
-- clarified that Handoff modes do not replace Skill routing;
-- separated `IMPLEMENTATION_AUTHORITY` from `OBSERVED_EVIDENCE` in artifact lifecycle;
-- made one compact human Engineering Status Receipt the normal required ending for governed engineering/status/audit/CI/PR/merge responses;
-- distinguished advisory read-only inspection from formal Evidence Audit verdict boundaries;
-- aligned optional Profile landing-page recovery wording;
-- slimmed Domain Navigation top-level Skill for progressive disclosure;
-- updated integrated acceptance, durable design authority, README and global routing template to the Task 069 semantics.
+- Frozen source / Semantic HEAD: `7be11aae70c42b075034eb4613a7dc66b242bb80`.
+- Current PR: #26, branch `codex/capability-model-v0.6.0`.
+- Existing Web Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`, current version `0.5.5`.
 
-## Architecture freeze
+## In scope
 
-Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
+- build/verify an exact Plugin payload containing only `plugin.json` and `skills/**` from the frozen Semantic HEAD;
+- update the existing Web personal Plugin to version `0.6.0` without changing audience/identity;
+- verify installed release metadata and exact eight-Skill availability;
+- run bounded Web routing/discovery checks from `references/V060_INTEGRATED_ACCEPTANCE.md` that are observable in this environment;
+- record unresolved Web-only or cross-environment acceptance gaps explicitly.
 
-`7be11aae70c42b075034eb4613a7dc66b242bb80`
+## Out of scope
 
-## Verification
+- formal immutable GitHub `plugin-v0.6.0` release/tag;
+- PR #26 merge;
+- Local Codex / Mac mini / MacBook Air installation or acceptance;
+- installed-cache patching;
+- source architecture changes unless a real reusable defect is found and separately authorized.
 
-`V2 remote source-architecture audit: PASS`.
+## Verification / acceptance
 
-`AUDIT_INDEPENDENCE: SELF_CHECK`.
+- package manifest version/name match `engineering-governance` `0.6.0`;
+- package contains only `plugin.json` + `skills/**` and the exact eight top-level Skills;
+- Web Plugin update produces a new current release on the same Plugin identity;
+- installed Web surface exposes the expected eight Skills and routing metadata;
+- Web routing positive/negative scenarios are checked where the platform surface makes them observable;
+- missing/unobservable platform behavior remains `UNKNOWN`, not `PASS`.
 
-- exact eight top-level Skill directories;
-- Plugin metadata remains `0.6.0`;
-- no competing task/control authority or duplicate Profile/Domain authority;
-- Project Profile mutation/surface ownership rules are explicit;
-- Card/Receipt schema is internally consistent and side-effect-safe;
-- `CAPABILITY` and `MODE` are independent dimensions;
-- artifact taxonomy cleanly separates semantic owners from observed evidence;
-- advisory inspection vs formal audit routing is explicit;
-- durable design and routing surfaces align with current source;
-- source changes remain governance/Skill/design/acceptance Markdown/control only;
-- no runtime/daemon/database/model-router/automatic enforcement implementation added;
-- PR #26 OPEN / DRAFT / UNMERGED and mergeable at final audit time;
-- no commit/check status on semantic head, so CI PASS is not claimed.
+## STOP conditions
 
-## Terminal state
+Stop before formal release/merge/local installation if package provenance differs from the frozen Semantic HEAD, Plugin identity changes unexpectedly, update would delete unknown existing Plugin files outside the intended payload, or Web installation/routing exposes a reusable source defect.
 
-Task 069 is complete. Next milestone is one consolidated installed Plugin/Web/Codex acceptance against the frozen semantic identity (or a proven semantic-tree-equivalent control-only descendant).
+## Terminal boundary
 
-Control Alignment:
-
-- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-hardening-v0.6.0.md`
-- `DOCUMENT_ALIGNMENT`: `UPDATED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+This task may close after the Web candidate is installed and Web-side acceptance evidence is recorded. Formal GitHub release remains a later boundary after the required integrated acceptance decision.
