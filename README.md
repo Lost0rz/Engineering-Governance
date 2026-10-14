@@ -4,18 +4,29 @@ Engineering-Governance is a source repository for reusable AI engineering Skills
 
 ## Capability model
 
-v0.6.0 has eight top-level Skills:
+v0.6.8 has nine top-level Skills:
 
 - **Project Governance** — normal engineering entry; task/control authority, lifecycle, writers/workspaces, verification and closeout.
 - **Project Profile** — creates/refreshes a compact derived project-context/index from verified authorities; repository/project-managed mutation still requires compatible task authority.
-- **Solution Design** — material requirements/architecture/state-ownership ambiguity.
+- **Solution Design** — material engineering requirements/architecture/state-ownership/API/data-flow/implementation-boundary ambiguity.
+- **Design** — bounded UI/UX/frontend visual design and redesign. The initial baseline bundles Anthropic `frontend-design` internally so design work routes through Engineering Governance rather than a separate Plugin.
 - **Execution Orchestrator** — decomposition, Sub Agents, safe parallelism, environment-aware delegation, recovery/integration.
 - **Agent Handoff** — standardized bounded cross-context cards/receipts with separate `CAPABILITY` and `MODE` dimensions.
 - **Evidence Audit** — formal read-only evidence/acceptance/readiness verdicts bound to identity and required claims; simple advisory inspection may remain in Project Governance.
 - **Domain Navigation** — unclear Domain/authority/source/symbol/test/runtime route.
 - **Incident Doctor** — blocking evidence gap requiring minimal diagnosis/probes.
 
-Global routing is policy, not a ninth Skill.
+Global routing is policy, not another Skill.
+
+## Design module direction
+
+`design` is the stable external capability boundary. Source-specific design material stays internal to that Skill:
+
+- Anthropic `frontend-design` — active baseline;
+- Microsoft design-review/adaptation source — planned, not active;
+- UX heuristic/audit source — planned, not active.
+
+This lets the design capability evolve without installing multiple overlapping design Plugins or changing project routing every time a source module is added.
 
 ## Project information layers
 
@@ -32,7 +43,7 @@ A Profile or Domain Map is a derived projection. If it conflicts with its author
 
 ## Normal route
 
-Ordinary software/project work enters `project-governance`. Use `project-profile` only to create/rebuild/audit the compact project context/index. Other narrow Skills trigger only when their semantic condition applies.
+Ordinary software/project work enters `project-governance`. Use narrower capabilities only when their semantic trigger applies. `solution-design` handles engineering architecture/state ownership; `design` handles bounded UI/UX/frontend visual direction and execution. They may compose under one Project Governance task without becoming parallel task authorities.
 
 Changing agent/session/machine/context does not create a new task. Same-purpose continuation keeps the task and, when safe, the current PR/workspace. Handoffs transport authority references + fresh delta; they do not restate a second task contract.
 
@@ -47,7 +58,7 @@ Verification follows risk (`V0`–`V3`) and evidence identity. Semantic evidence
 ## Maintainer references
 
 - `references/SKILL_ENGINEERING.md` — Skill design quality.
-- `references/V060_INTEGRATED_ACCEPTANCE.md` — consolidated acceptance matrix.
 - `skills/project-governance/references/global-routing.md` — capability selection.
 - `skills/project-governance/references/artifact-lifecycle.md` — artifact ownership/refresh lifecycle.
+- `skills/design/references/module-map.md` — Design source-module status and composition boundary.
 - `skills/agent-handoff/references/handoff-contract.md` — card/receipt contract.

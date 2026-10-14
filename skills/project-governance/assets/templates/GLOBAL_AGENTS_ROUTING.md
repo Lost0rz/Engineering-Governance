@@ -5,7 +5,9 @@ For ordinary software, repository, or project engineering work, use `project-gov
 
 Use `project-profile` only when creating, rebuilding, shrinking, or auditing the compact derived project context/index. It is not task authority or a Domain Map replacement; repository/project-managed Profile mutation still requires compatible task authorization.
 
-Use `solution-design` for material design ambiguity; `execution-orchestrator` for useful decomposition/delegation/recovery; `agent-handoff` for bounded cross-context transfer; `evidence-audit` for formal read-only evidence/acceptance/readiness verdicts; `domain-navigation` for unclear semantic/source/test/runtime routes; and `incident-doctor` only for a blocking evidence gap.
+Use `solution-design` for material engineering requirements/architecture/state-ownership/API/data-flow/implementation-boundary ambiguity. Use `design` for bounded UI/UX/frontend visual design or redesign, including aesthetic direction, typography, layout, visual hierarchy, density, composition, interface copy, and visual execution critique. Mentioning the word “design” alone is not enough to select `design`.
+
+Use `execution-orchestrator` for useful decomposition/delegation/recovery; `agent-handoff` for bounded cross-context transfer; `evidence-audit` for formal read-only evidence/acceptance/readiness verdicts; `domain-navigation` for unclear semantic/source/test/runtime routes; and `incident-doctor` only for a blocking evidence gap.
 
 When the requested output itself is a construction/execution/audit/review/verify/diagnose Card, instructions, or structured Receipt intended for another agent, session, machine, reviewer, or execution context, use `agent-handoff` for that transfer artifact. Preserve the current task authority; generating the Card does not create a new task.
 

@@ -1,6 +1,12 @@
-# Upstream concepts
+# Upstream concepts and bundled source
 
-This repository records public work that informed its design. These references describe conceptual influence; they are not hidden runtime dependencies or automatic authorities for target projects. v0.6.0 adapts concepts rather than copying external process text or code.
+This repository records public work that informed its design. Most references below describe conceptual influence rather than runtime dependencies or automatic authorities for target projects. When upstream source is intentionally bundled, that exception is identified explicitly with local provenance/license files.
+
+## Anthropic `frontend-design`
+
+The v0.6.8 `design` capability intentionally bundles Anthropic's `frontend-design` Skill as its active baseline source module. The imported Skill body is preserved under `skills/design/references/anthropic/frontend-design.md`; source identity and modification status are recorded in `skills/design/references/anthropic/PROVENANCE.md`, and Apache License 2.0 terms are bundled alongside it.
+
+This is source material inside the routed `design` capability, not a hidden runtime dependency and not a separately installed Plugin.
 
 ## Agent Skills and Anthropic skill patterns
 

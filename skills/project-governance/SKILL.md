@@ -12,12 +12,15 @@ Use this Skill as the normal engineering entry. It owns task/control authority, 
 Use a narrower Skill only for the bounded capability it owns, then return here when task authority/lifecycle decisions are required:
 
 - `project-profile` — create/rebuild/audit compact derived project context/index;
-- `solution-design` — material design ambiguity;
+- `solution-design` — material engineering requirements/architecture/state-ownership ambiguity;
+- `design` — bounded UI/UX/frontend visual design, redesign, aesthetic direction, typography/layout/visual hierarchy, or visual execution critique;
 - `execution-orchestrator` — decomposition, agents, parallelism, environment-aware delegation, recovery/integration;
 - `agent-handoff` — standardized cross-context cards/receipts;
 - `evidence-audit` — formal read-only acceptance/readiness verdict;
 - `domain-navigation` — unclear semantic/source/test/runtime route;
 - `incident-doctor` — blocking evidence gap.
+
+Do not route to `design` merely because an engineering task uses the word “design.” `solution-design` remains the owner for material architecture/state-ownership/API/data-flow/implementation-boundary choices; `design` owns bounded product-interface/frontend visual-design choices. A governed implementation can use both while Project Governance remains task/lifecycle owner.
 
 A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal acceptance/readiness verdict is requested. See `references/global-routing.md` and `references/capability-composition.md`.
 

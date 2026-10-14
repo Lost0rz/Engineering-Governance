@@ -14,18 +14,19 @@ This repository is the source for reusable Engineering Governance Skills, routin
 
 ## Capability model
 
-Exactly eight top-level Skills are supported:
+Exactly nine top-level Skills are supported:
 
 1. `project-governance`
 2. `project-profile`
 3. `solution-design`
-4. `execution-orchestrator`
-5. `agent-handoff`
-6. `evidence-audit`
-7. `domain-navigation`
-8. `incident-doctor`
+4. `design`
+5. `execution-orchestrator`
+6. `agent-handoff`
+7. `evidence-audit`
+8. `domain-navigation`
+9. `incident-doctor`
 
-Global routing is policy, not a ninth Skill. `project-profile` is derived context/navigation, not a fourth control source or replacement for project `AGENTS.md`, Domain authority, STATUS/TASK, or durable planning.
+Global routing is policy, not another Skill. `design` owns bounded UI/UX and frontend visual-design capability while `solution-design` remains the owner for material engineering/architecture/state-ownership ambiguity. `project-profile` is derived context/navigation, not a fourth control source or replacement for project `AGENTS.md`, Domain authority, STATUS/TASK, or durable planning.
 
 ## Environment boundary
 

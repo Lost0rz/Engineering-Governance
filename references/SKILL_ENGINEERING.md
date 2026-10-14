@@ -1,6 +1,6 @@
 # Skill Engineering quality contract
 
-This repository-maintainer contract governs how Engineering Governance Skills are added or changed. It is not a top-level Skill and must not appear as a ninth route.
+This repository-maintainer contract governs how Engineering Governance Skills are added or changed. It is not a top-level Skill and must not appear as an additional external route.
 
 ## Distinct capability test
 
@@ -17,6 +17,8 @@ A topic, checklist, template or reference section alone does not justify a Skill
 
 `project-profile` qualifies because its requested output is a compact derived context/index produced by classification across project authorities; it neither owns normal engineering execution nor duplicates Domain Navigation.
 
+`design` qualifies because bounded UI/UX/frontend visual-design choices require a distinct design process and quality criteria while remaining separate from `solution-design` engineering architecture/state-ownership decisions and from Project Governance task authority.
+
 ## Description / progressive disclosure
 
 Frontmatter primarily answers **when to use this Skill**. Keep `SKILL.md` focused on trigger, authority boundary, core workflow and supporting references. Put detailed matrices/templates/examples under `references/` or `assets/`.
@@ -31,7 +33,7 @@ Task purpose and execution context remain separate. Runtime configuration remain
 
 Every materially changed trigger/routing contract defines positive scenarios and negative/near-miss scenarios. Over-triggering is a defect. Materially suppressing safe useful capability can also be a defect.
 
-Project Profile must not trigger merely because a project exists; normal development still enters Project Governance. Domain Navigation must not be replaced by a summary Profile.
+Project Profile must not trigger merely because a project exists; normal development still enters Project Governance. Domain Navigation must not be replaced by a summary Profile. Design must not trigger merely because an engineering task contains the word “design”; Solution Design remains the route for architecture/state-ownership ambiguity.
 
 ## Authority discipline
 
