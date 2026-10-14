@@ -59,9 +59,11 @@ If the responsibility boundary becomes unclear, return to Domain Navigation or S
 
 ## 8. Use execution topology to improve effective throughput
 
-Use `execution-orchestrator` when the authorized task benefits from decomposition, multiple agents/roles, parallelism, explicit model selection, recovery state or controlled integration.
+Use `execution-orchestrator` when the authorized task benefits from decomposition, multiple agents/roles, parallelism, delegated-model policy, recovery state or controlled integration.
 
 Do not treat minimum agent count as the goal. If independent work units can safely run concurrently and concurrency materially improves throughput or context isolation, use available parallel capacity. Parallel readers/researchers/reviewers are often cheap to separate; parallel writers still require proven-disjoint semantic authority/workspaces plus an integration boundary.
+
+During the current v0.6.0 stabilization period, delegated Sub Agents use the execution environment's configured default Sub Agent model and default reasoning setting under `DEFAULT_ONLY`. Do not switch a delegated unit to a stronger model merely because the work becomes harder; return a capability gap to the controller if the configured default is insufficient. A reasoning setting such as `xhigh` is not itself a stronger-model selection.
 
 One inline executor remains correct when decomposition provides no material benefit or dependencies/shared state make concurrency inefficient or unsafe.
 
