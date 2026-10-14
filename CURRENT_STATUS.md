@@ -64,7 +64,7 @@ Global routing remains policy, not an eighth Skill.
 
 ## Integrated acceptance specification
 
-`references/V060_INTEGRATED_ACCEPTANCE.md` now tests:
+`references/V060_INTEGRATED_ACCEPTANCE.md` tests:
 
 - exact seven-Skill discovery and normal Project Governance entry;
 - positive and negative routing;
@@ -112,7 +112,7 @@ Authorize the consolidated v0.6.0 integrated acceptance task using `references/V
 
 - Related document: `documents/engineering-governance-capability-hardening-v0.6.0.md`.
 - Parent architecture: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Document alignment: `UPDATED` — both active design authorities now express environment-owned delegated-model configuration and cross-context isolation.
+- Document alignment: `UPDATED`.
 - `CURRENT_STATUS.md`: `UPDATED`.
 - `CURRENT_TASK.md`: `UPDATED`.
 - Control alignment: `PASS`.
