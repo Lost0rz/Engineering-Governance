@@ -24,13 +24,13 @@ Classify each candidate item before writing:
 3. project-specific MUST/MUST-NOT execution rule -> `AGENTS.md` or accepted normative authority;
 4. detailed Domain -> authority/source/test/runtime route -> Domain/navigation authority;
 5. long-lived design rationale/work packages -> durable planning authority;
-6. stable descriptive context, stable project-specific priority/anti-goal, environment role, or authority pointer -> Project Profile.
+6. stable descriptive context, stable project-specific priority/anti-goal/risk cue, environment role, or authority pointer -> Project Profile.
 
-Read only sources needed to establish the profile. Keep unknowns explicit; do not infer business truth from filenames or memory.
+Read only sources needed to establish the profile. Keep unknowns explicit; do not infer business truth, Profile-surface relationships, or authority from filenames or memory.
 
 ## Compression gate
 
-Before returning a Profile, remove content that merely restates reusable governance mechanics. In particular, a Profile normally does **not** reproduce:
+Before returning a Profile, remove content that merely restates reusable governance mechanics or another established project authority. In particular, a Profile normally does **not** reproduce:
 
 - full Skill routing tables or per-Skill trigger explanations;
 - Handoff Card/Receipt field schemas;
@@ -39,9 +39,24 @@ Before returning a Profile, remove content that merely restates reusable governa
 - artifact-lifecycle taxonomy/mechanics beyond a short project-relevant pointer;
 - continuation/workspace/PR lifecycle procedure;
 - Control Alignment or `CONTROL_ONLY_DRIFT` mechanics;
-- generic rules already owned by Engineering Governance Skills/references.
+- detailed Domain lists, ownership/source/symbol/test maps already owned by an established Domain/navigation authority;
+- ordered startup/read/check workflows already owned by Project Governance or project rules;
+- instructions for how to maintain, classify, refresh, or write the Project Profile itself;
+- copied project-specific MUST/MUST-NOT rule lists already owned by normative authority.
 
-If such material is useful for orientation, replace it with one short pointer/invariant. Preserve only project-specific stable facts that materially help an agent understand this project.
+If such material is useful for orientation, replace it with one short pointer or stable invariant. Preserve only project-specific stable facts that materially help an agent understand this project.
+
+## Surface-role evidence
+
+When the target Profile surface is known, state it explicitly. Do **not** invent its relationship to another Profile surface.
+
+Use:
+
+- `MIRROR` only when a specific primary Profile surface is verified or explicitly identified by project/user authority;
+- `PRIMARY` only when project/user authority explicitly designates this surface as primary/canonical among multiple Profile surfaces;
+- `single surface` when this is the only established current Profile surface and no competing Profile surface is verified.
+
+If the relationship cannot be established, keep it explicit as unknown rather than guessing `PRIMARY` or `MIRROR`.
 
 ## Output discipline
 
@@ -49,9 +64,12 @@ Start from `assets/templates/PROJECT_PROFILE.md`.
 
 - Prefer the template's existing top-level sections; add another section only when stable **project-specific** context cannot fit cleanly into them.
 - Prefer concise bullets and authority pointers over explanatory procedure.
-- When the target Profile surface is known, state `Profile surface` and `Primary/mirror role` explicitly.
+- If a detailed Domain/navigation authority exists, point to it; keep only the few broad Domain concepts needed for orientation and do not add a separate `Domain Model`/mini-map section by default.
+- `Planning & navigation` contains durable pointers, not a numbered engineering startup sequence.
+- Do not add a `Project Profile Rule`, maintenance guide, classification guide, freshness procedure, or similar meta-section to the generated Profile.
+- `Priorities / constraints` may contain compact priorities, anti-goals, and risk cues; detailed normative execution rules remain in `AGENTS.md`/accepted normative authority.
 - Keep one current Profile projection surface, or one explicit primary surface plus derived mirror; do not maintain independently edited competing Profiles.
-- A Profile should be substantially smaller than the combined authorities it indexes. If it reads like a governance handbook, run the compression gate again.
+- A Profile should be substantially smaller than the combined authorities it indexes. If it reads like a governance handbook, mini Domain Map, or Profile-maintenance guide, run the compression gate again.
 
 See `references/profile-contract.md` for the full contract.
 
