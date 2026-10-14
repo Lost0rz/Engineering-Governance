@@ -38,7 +38,7 @@ See `references/capability-composition.md` and `references/global-routing.md`.
 
 ## Cross-repository coordination
 
-When one engineering objective spans repositories, keep one governing task purpose and make only the material coordination facts explicit:
+When one engineering objective spans repositories, keep one governing objective and make only the material coordination facts explicit:
 
 ```text
 PRIMARY_TASK_AUTHORITY
@@ -49,7 +49,9 @@ INTEGRATION_ORDER
 ACCEPTANCE_OWNER
 ```
 
-Do not create a fourth control plane or mirror each repository's facts into one mega-task. Each repository remains authoritative for its own source/runtime facts; shared contract/integration claims point to the source that owns them.
+The primary task does **not** automatically grant write authority in another governed repository. If a participating repository has its own control plane, its local authorization must be current and compatible before mutation there.
+
+Do not create a fourth control plane or mirror each repository's facts into one mega-task. Each repository remains authoritative for its own controls/source/runtime facts; shared contract/integration claims point to the source that owns them.
 
 ## Three-file boundary
 
@@ -72,3 +74,16 @@ CONTROL_ALIGNMENT: PASS
 ```
 
 Strict read-only work reports observed alignment without mutating controls solely to make them current.
+
+## Supporting contracts
+
+Read only what the current decision needs:
+
+- `references/control-plane.md` — control roles/alignment.
+- `references/control-identity.md` — HEAD/provenance/control-only drift.
+- `references/development-flow.md` — full governed flow.
+- `references/code-structure.md` — canonical writer/authority.
+- `references/workspace-lifecycle.md` — workspace/branch closeout.
+- `references/verification-tiers.md` — proportional verification.
+- `references/planning-documents.md` — durable design linkage.
+- `references/adoption.md` — environment-aware routing adoption.

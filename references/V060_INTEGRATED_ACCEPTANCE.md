@@ -104,11 +104,12 @@ Use one bounded producer/consumer or upstream/downstream case when available.
 
 Expected:
 
-- one governing task purpose;
+- one governing objective / primary task authority;
 - participating repositories and per-repo writer authority are explicit only as needed;
+- a primary task does not grant mutation rights in another governed repository: that repository's local task/control authorization must also be current and compatible when it owns writes;
 - shared contract authority is identified;
 - Domain Navigation traces the relevant cross-repo route without inventing ownership;
-- each repository/system remains authority for its own source/runtime facts.
+- each repository/system remains authority for its own controls/source/runtime facts.
 
 ## 9. Design / Doctor quality
 

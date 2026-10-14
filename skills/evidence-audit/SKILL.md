@@ -5,7 +5,7 @@ description: Use when the requested outcome is a read-only evidence, acceptance,
 
 # Evidence Audit
 
-Use for an explicit evidence/acceptance/readiness boundary. It evaluates evidence; it does not authorize corrective mutation.
+Use for an explicit evidence/acceptance/readiness boundary. It evaluates evidence; it does not authorize corrective mutation. Read `references/audit-contract.md` for profile-specific evidence rules.
 
 Calling this Skill from an implementation context does not make the result independent. When independence matters, report the actual basis: `SELF_CHECK`, `FRESH_CONTEXT`, `SEPARATE_AGENT`, or `HUMAN`.
 

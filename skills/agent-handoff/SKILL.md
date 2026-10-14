@@ -7,7 +7,7 @@ description: Use when engineering responsibility crosses agents, sessions, machi
 
 `HANDOFF = authority references + fresh delta + action boundary + return contract`
 
-A handoff transports responsibility/evidence; it does not create task authority or copy sender runtime configuration into the receiver.
+A handoff transports responsibility/evidence; it does not create task authority or copy sender runtime configuration into the receiver. Read `references/handoff-contract.md` for mode/receipt details.
 
 ## Same-task continuation
 
