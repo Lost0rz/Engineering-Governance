@@ -17,14 +17,14 @@ Ordinary software/project/repository engineering enters `project-governance` unl
 | resolve material intent/architecture/state-ownership ambiguity | `solution-design` |
 | improve execution through decomposition/agents/parallelism/delegation/recovery | `execution-orchestrator` |
 | transfer responsibility across agents/sessions/machines/contexts | `agent-handoff` |
-| produce a read-only evidence/acceptance/readiness verdict | `evidence-audit` |
+| produce a formal read-only evidence/acceptance/readiness verdict | `evidence-audit` |
 | establish unclear Domain/authority/source/symbol/runtime/dependency/test route | `domain-navigation` |
 | investigate a blocking failure/unsafe ambiguity with an evidence gap | `incident-doctor` |
 
-A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit during corrective work; mentioning a bug does not imply Doctor when evidence supports safe action.
+A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit during corrective work; mentioning a bug does not imply Doctor when evidence supports safe action. A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal verdict boundary is requested.
 
-Project Profile is not the normal path for development and must not be invoked merely because a project exists. It is used when the requested outcome is the compact context/index itself.
+Project Profile is not the normal development path. Read-only Profile drafting/audit may route directly to `project-profile`; repository/project-managed Profile mutation still requires compatible Project Governance task authorization.
 
 ## Composition
 
-Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns a derived context/index; it never becomes task authority. Other narrow Skills return to their caller after their bounded capability finishes. Do not create a Router Skill, peer-controller mesh, or second task authority.
+Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns derived context/index. Other narrow Skills return after their bounded capability finishes. Do not create a Router Skill, peer-controller mesh, or second task authority.

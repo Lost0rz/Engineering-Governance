@@ -15,24 +15,26 @@ Use a narrower Skill only for the bounded capability it owns, then return here w
 - `solution-design` — material design ambiguity;
 - `execution-orchestrator` — decomposition, agents, parallelism, environment-aware delegation, recovery/integration;
 - `agent-handoff` — standardized cross-context cards/receipts;
-- `evidence-audit` — explicit read-only acceptance/readiness verdict;
+- `evidence-audit` — formal read-only acceptance/readiness verdict;
 - `domain-navigation` — unclear semantic/source/test/runtime route;
 - `incident-doctor` — blocking evidence gap.
 
-See `references/global-routing.md` and `references/capability-composition.md`.
+A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal acceptance/readiness verdict is requested. See `references/global-routing.md` and `references/capability-composition.md`.
 
 ## Governed development
 
-1. Read applicable project authority and only the bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
+1. Read applicable project authority and only bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
 2. If the user says continue/resume/start and the active task remains accurate, **continue it directly**. Do not create a new task, plan, handoff card, branch/worktree/PR, or execution contract solely because work resumed.
 3. Keep task purpose, execution unit and execution context distinct. Context/agent changes do not create tasks.
 4. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
 5. Confirm mutation remains inside authorized objective/scope/side effects/verification/STOP boundary; reconcile material changes before mutation.
 6. Keep one canonical writer/authority per semantic class. Use narrower Skills only when their trigger materially applies.
-7. If a correction remains inside the current task objective and the current PR/workspace remains safe and valid, **prefer continuing it**; do not create a successor merely because a defect/correction was discovered.
+7. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
 8. Implement the smallest authorized outcome and choose risk-proportional verification.
 9. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
 10. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
+
+Repository/project-managed Project Profile mutation is state-changing and therefore requires compatible task authorization. The Profile Skill may still be used read-only to draft/audit profile content.
 
 ## Cross-repository coordination
 
@@ -48,7 +50,7 @@ Project Profile, planning, Domain maps, handoffs, audits, CI/test output and run
 
 ## Compact Engineering Status Receipt
 
-For engineering governance/execution/audit/CI/PR/merge/status responses, append a compact human-readable receipt when useful. Use only applicable fields:
+For governed engineering/execution/audit/CI/PR/merge/status responses, emit **one compact human-readable receipt**. Omit non-applicable fields, not the receipt itself:
 
 ```text
 Governance route:
@@ -61,7 +63,7 @@ PR / workspace:
 Next:
 ```
 
-Only name Skills actually used. Keep it status-oriented; do not copy scope/history into the receipt. Detailed machine/context transfer receipts belong to `agent-handoff`.
+Only name Skills actually used. Keep it status-oriented and do not copy scope/history. If the response already contains a detailed machine/context Handoff Receipt, do not duplicate that full receipt; provide only the compact human summary needed for the user-facing response.
 
 ## Supporting contracts
 

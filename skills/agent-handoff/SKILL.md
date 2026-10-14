@@ -9,33 +9,39 @@ description: Use when engineering responsibility crosses agents, sessions, machi
 
 A handoff transports responsibility/evidence; it does not create task authority or copy sender runtime configuration into the receiver.
 
+## Two independent dimensions
+
+- `CAPABILITY` — which bounded Engineering Governance Skill, if any, the receiver should use (`NONE` when no specialist capability is needed).
+- `MODE` — the receiver action/side-effect class: `EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE`.
+
+`MODE` does **not** select or replace a Skill. Example: a formal cross-context evidence verdict may use `CAPABILITY: evidence-audit` with `MODE: AUDIT`.
+
 ## Standard card
 
-Use the common envelope from `references/handoff-contract.md`:
+Required core fields:
 
 ```text
 CARD_ID
 TASK_ID
 MODE
+CAPABILITY: <skill | NONE>
 TARGET
 AUTHORITY
-OBSERVED_BASIS
-DELTA
+DELTA: <fresh transfer delta | NONE>
 BOUNDARY
-STOP
 RETURN_CONTRACT
 ```
 
-Omit fields that add no decision value, but do not replace missing authority with pasted chat history.
+Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, and claim/evidence fields. See `references/handoff-contract.md`.
 
 ## Modes
 
 - `EXECUTE` — authorized state change;
-- `AUDIT` — read-only evidence/acceptance verdict;
+- `AUDIT` — read-only audit action;
 - `REVIEW` — read-only evaluation;
 - `VERIFY` — confirm a named claim/identity/check; normal test-run cards map here;
 - `DIAGNOSE` — read-only diagnostic evidence/question transfer.
 
-Changing test code or diagnostic instrumentation is state-changing and therefore uses `EXECUTE` with an explicit purpose/boundary.
+Changing test code or diagnostic instrumentation is state-changing and therefore uses `EXECUTE` with an explicit `PURPOSE`/boundary.
 
-Same-purpose continuation preserves the same `TASK_ID`. The receiver resolves its own runtime/configuration capabilities. Detailed mode profiles and receipt standards are in `references/handoff-contract.md`.
+Same-purpose continuation preserves the same `TASK_ID`. The receiver resolves its own runtime/configuration capabilities. A Card cannot expand authorization.

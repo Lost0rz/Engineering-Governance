@@ -1,11 +1,13 @@
 ---
 name: evidence-audit
-description: Use when the requested outcome is a read-only evidence, acceptance, or readiness verdict for implementation/code/PR/CI/release/post-change state, separate from corrective implementation. Do not use merely because code, PR, CI, or release is mentioned while the requested outcome is fixing or continuing work.
+description: Use when the requested outcome is a formal read-only evidence, acceptance, or readiness verdict for implementation/code/PR/CI/release/post-change state, separate from corrective implementation. Do not use merely because code, PR, CI, or release is mentioned while the requested outcome is fixing, continuing, or simple advisory status inspection.
 ---
 
 # Evidence Audit
 
-Use for an explicit evidence/acceptance/readiness boundary. It evaluates evidence; it does not authorize corrective mutation. Read `references/audit-contract.md` for profile-specific evidence rules.
+Use for an explicit evidence/acceptance/readiness verdict boundary. It evaluates evidence; it does not authorize corrective mutation. Read `references/audit-contract.md`.
+
+A simple advisory read-only inspection that only reports current evidence/status may remain in Project Governance and does not require a new AUDIT task or formal verdict. When formal acceptance/readiness is already authorized by the active task, reuse that authority; when it is a materially distinct engineering purpose, Project Governance authorizes the corresponding AUDIT/VERIFY task boundary.
 
 Calling this Skill from an implementation context does not make the result independent. When independence matters, report the actual basis: `SELF_CHECK`, `FRESH_CONTEXT`, `SEPARATE_AGENT`, or `HUMAN`.
 
@@ -19,7 +21,7 @@ Calling this Skill from an implementation context does not make the result indep
 
 ## Before verdict
 
-Bind target/range/identity, requirement/design authority, evidence freshness, live host identity when relevant, and the claims that must be established:
+Bind target/range/identity, requirement/design authority, evidence freshness, live host identity when relevant, and required claims:
 
 ```text
 REQUIRED_CLAIMS
@@ -32,7 +34,7 @@ A required unsupported claim remains `UNKNOWN`.
 ## Findings and verdict
 
 - `BLOCKING` -> `STOP`.
-- `IMPORTANT` -> `STOP` when required before the requested boundary; follow-up only when responsible authority explicitly accepts deferral.
+- `IMPORTANT` -> `STOP` when required before the boundary; follow-up only when responsible authority explicitly accepts deferral.
 - `MINOR` -> may allow `PASS_WITH_FOLLOWUPS`.
 - required `UNKNOWN` -> `STOP`.
 

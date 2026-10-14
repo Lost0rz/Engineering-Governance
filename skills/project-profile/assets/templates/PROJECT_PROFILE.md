@@ -1,5 +1,8 @@
 # <Project> — Project Profile
 
+Profile surface: <repository file | project instructions | other accepted surface>
+Primary/mirror role: <PRIMARY | MIRROR | single surface>
+
 ## Purpose
 [What the project is, who/what it serves, and its core product/business loop.]
 
@@ -14,7 +17,7 @@
 - Durable planning/architecture: <path/authority | not established>
 
 ## Planning & navigation
-[Point to long-term design, large-initiative/work-package planning, and navigation authorities. Link; do not copy their detail.]
+[Point to long-term design, large-initiative/work-package planning, and navigation authorities. Link; do not copy detail.]
 
 ## Environment
 [Stable project-specific development/acceptance environment roles only. No runtime-local model/tool values.]
