@@ -18,6 +18,8 @@ Apply when the surface is materially one of:
 - command/search/filter-driven workspace;
 - dialog/sheet-supported management actions.
 
+When applied, record `ADMIN_PATTERN_LAYER: APPLIED` in the Design completion record. When the surface does not materially match these families, record `ADMIN_PATTERN_LAYER: NOT_APPLICABLE` with a short reason.
+
 Do not apply mechanically to marketing sites, editorial pages, consumer landing pages or storefront discovery surfaces.
 
 ## First classify the page family
