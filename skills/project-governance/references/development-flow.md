@@ -63,7 +63,7 @@ Use `execution-orchestrator` when the authorized task benefits from decompositio
 
 Do not treat minimum agent count as the goal. If independent work units can safely run concurrently and concurrency materially improves throughput or context isolation, use available parallel capacity. Parallel readers/researchers/reviewers are often cheap to separate; parallel writers still require proven-disjoint semantic authority/workspaces plus an integration boundary.
 
-During the current v0.6.0 stabilization period, delegated Sub Agents use the execution environment's configured default Sub Agent model and default reasoning setting under `DEFAULT_ONLY`. Do not switch a delegated unit to a stronger model merely because the work becomes harder; return a capability gap to the controller if the configured default is insufficient. A reasoning setting such as `xhigh` is not itself a stronger-model selection.
+During the current v0.6.0 stabilization period, delegated Sub Agents follow `ENVIRONMENT_DEFAULT_ONLY`. Each delegated execution context resolves its own authoritative Sub Agent configuration/runtime default. Do not propagate concrete model/reasoning values from another context or infer an unobservable platform default. Do not switch a delegated unit to a stronger model merely because the work becomes harder; return a capability/environment gap to the controller if the current environment default is insufficient.
 
 One inline executor remains correct when decomposition provides no material benefit or dependencies/shared state make concurrency inefficient or unsafe.
 
@@ -74,6 +74,8 @@ Orchestration never expands `CURRENT_TASK.md`.
 Whenever responsibility crosses agents, sessions, machines or execution contexts, use `agent-handoff`.
 
 A same-task continuation preserves the same `TASK_ID` and references the same task/design authorities. The request carries authority references + fresh delta + immediate action boundary + return contract. It may record source/target context when useful, but Web/local identity does not define task purpose.
+
+Under environment-owned delegated-model policy, handoff carries the policy only. It does not make the sender's concrete model/reasoning configuration authoritative for the receiver.
 
 Do not paste complete task/status/rules into the card by default. If the receiver can read the authority, point to it. The task's own `Handoff / current stop point` is lifecycle/authorization state, not a transport card.
 
