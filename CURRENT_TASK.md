@@ -8,97 +8,95 @@ Task ID: `EG-HANDOFF-CARD-GENERATION-CORRECTIVE-079`
 
 Task class: `CORRECTIVE_RELEASE`
 
-State: `AUTHORIZED_IN_PROGRESS`
+State: `COMPLETE`
 
 ## Objective
 
-Correct the reusable cross-context Handoff Card generation defect exposed by real ChatGPT Web use, then publish and synchronize the corrected Engineering Governance Plugin so Web and Local Codex can consume the same source contract.
+Correct the reusable cross-context Handoff Card generation defect exposed by real ChatGPT Web use, publish the corrected Plugin, and synchronize the supported Web distribution without manually patching Local Codex cache/source.
 
-The defect is not that the Handoff schema is absent. The shipped `agent-handoff` source contains the required fields, but generation can still return a legacy execution card that:
+## Result
 
-- does not route through the bounded `agent-handoff` capability;
-- emits an invalid mode such as `CORRECTIVE` instead of `EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE`;
-- omits required core fields such as `CARD_ID`, `CAPABILITY`, `TARGET`, `AUTHORITY`, `DELTA`, `BOUNDARY`, or `RETURN_CONTRACT`;
-- duplicates task/plan scope rather than carrying only fresh transfer delta;
-- promotes observed SHAs into execution locks without owning authority;
-- hard-codes a successful final state instead of returning the observed outcome.
+Completed.
 
-## Authorization basis
+The corrective now makes generated cross-context construction/execution/audit/review/verify/diagnose Cards, instructions, and structured Receipts an explicit `agent-handoff` boundary.
 
-Task 078 explicitly required a separately authorized source corrective when a reusable source defect appeared during local routing/handoff acceptance. The user has now explicitly authorized repairing the Plugin source and synchronizing the remote repository and ChatGPT Web Plugin.
+The mandatory pre-return contract enforces:
 
-Task 078 is therefore superseded as the active authorization while its local integrated-acceptance conclusion remains unresolved. Its accepted v0.6.6 release/install evidence remains historical evidence, not current release authority.
+- required Card core fields;
+- valid `MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE`;
+- same-purpose `TASK_ID` preservation unless Project Governance reconciles a new purpose;
+- authority references + fresh transfer delta instead of rewriting `CURRENT_TASK.md`;
+- no mutation-boundary expansion;
+- sender-observed SHAs remain observations unless owning authority explicitly defines a lock;
+- outcome-neutral Return Contracts;
+- structured Receipts report observed outcomes rather than predetermined success.
 
-## Authorized source changes
+Regression acceptance is recorded in `references/V067_HANDOFF_CARD_ACCEPTANCE.md`.
 
-Keep the correction narrow and reusable:
+## Source / release evidence
 
-1. `project-governance` routing must explicitly recognize generation of instructions/cards for another agent/session/machine/execution context as a mandatory `agent-handoff` boundary rather than letting a generic execution-card format bypass it.
-2. `agent-handoff` must apply a mandatory pre-return compliance gate to generated Cards and structured Receipts.
-3. The pre-return gate must enforce the required core schema and valid MODE set, preserve `TASK_ID` unless Project Governance changed task authority, keep Card content delta-oriented rather than duplicating `CURRENT_TASK.md`, and prevent a Card from inventing authority/head locks or optimistic success states.
-4. The Handoff request/receipt templates and contract may be updated only as needed to make the generation/return requirements operationally unambiguous.
-5. Integrated acceptance must add a negative case reproducing the real legacy-card failure class.
-6. Release validation must check the strengthened Handoff contract rather than only confirming that field names happen to exist in a template.
-7. Bump the Plugin to the next patch release and publish the corrected source through the existing repository/Plugin distribution model.
+- PR #27: `MERGED`;
+- merge/release source SHA: `53590bcec50c057d6c0fdd25b0e834133a808a93`;
+- Plugin version: `0.6.7`;
+- release workflow run: `38552557416` — `success`;
+- tag: `plugin-v0.6.7`;
+- GitHub Release ID: `412610677`;
+- release asset size: `94260` bytes;
+- release asset SHA-256: `082a332d08a526c59c392c073e301c7a78a9a05e47912e96ade2a5b59bdb7c6e`;
+- package entries: `47`;
+- exact top-level Skills: `8`.
 
-## Preserve
+## Web Plugin synchronization
 
-- exactly eight top-level Skills;
-- `project-governance` as task/control/lifecycle owner;
-- `agent-handoff` as transport, never a second task authority;
-- `CAPABILITY` and `MODE` as independent dimensions;
-- same-purpose continuation keeps the same `TASK_ID`;
-- Handoff/Receipt artifacts remain observed evidence/transport, not a fourth control source;
-- environment-specific runtime/model/tool values remain owned by the receiving environment;
-- no daemon, scheduler, database, installer service, model router, automatic enforcement runtime, or cache patching;
-- no unrelated Project Profile/Domain/Doctor/Orchestrator redesign.
+Existing private personal Plugin updated in place:
+
+- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.7`;
+- release ID: `pluginrel_6acf5f4fb8648191af081084ff326c44`;
+- scope/discoverability remains `USER / PRIVATE`;
+- root and platform manifests read back as `0.6.7`;
+- corrected Handoff and Project Governance routing/generation files read back from the installed release.
+
+`WEB_PLUGIN_SYNC`: `PASS`.
+
+## Local boundary
+
+No Local Codex cache/source was manually mutated.
+
+The previously configured supported Plugin source points to this repository `main`, which now publishes `0.6.7`; Local Codex can update through the supported marketplace/plugin refresh mechanism.
+
+A fresh local installation/runtime readback is not part of this source corrective and remains an observational follow-up. The latest directly observed Local installed version is still the earlier `0.6.6` evidence until the user refreshes and returns new local evidence.
 
 ## Verification
 
-Before publication verify at minimum:
+- exact eight-Skill capability model preserved: `PASS`;
+- mandatory cross-context Handoff route: `PASS`;
+- mandatory Handoff Card pre-return gate: `PASS`;
+- mandatory structured Receipt outcome gate: `PASS`;
+- v0.6.7 legacy-card regression acceptance: `PASS` as source/release contract;
+- exact formal release/package validation: `PASS`;
+- Web Plugin version/content readback: `PASS`;
+- Local installed/runtime v0.6.7 behavior: `PENDING_USER_TRIAL`, not claimed.
 
-- source still exposes exactly eight top-level Skills;
-- Handoff Card required-core schema is present and the mandatory pre-return gate is explicit;
-- generated-card negative acceptance requires valid `MODE`, all required core fields, authority references + fresh delta rather than duplicated task contract, non-invented head locks, and outcome-dependent final state;
-- Project Governance explicitly routes cross-context Card/instruction generation to Agent Handoff;
-- release/package validation checks those strengthened invariants;
-- Plugin package remains `plugin.json` + `skills/**` only;
-- remote branch/PR identity is exact for review/merge;
-- after merge, formal release and ChatGPT Web Plugin identities are read back before claiming synchronization.
+## Terminal state
 
-## Release / distribution boundary
+Task 079 terminal conditions are satisfied:
 
-A corrected release may be published only from merged accepted source. Synchronize:
+- source corrective merged;
+- formal release succeeded for the exact merged source;
+- existing Web Plugin updated/read back at `0.6.7`;
+- status/task controls reconciled;
+- Local can consume the published version without cache mutation.
 
-1. repository `main` / formal GitHub Plugin release;
-2. the existing private personal ChatGPT Web Plugin `plugins_6acb0b9e8b748191a9b89fad47d89517` without changing its audience/scope;
-3. leave Local Codex cache untouched; Local should consume the published repository/marketplace version through its supported update mechanism.
-
-## Stop conditions
-
-STOP if:
-
-- the correction would require changing the eight-Skill capability model;
-- the Plugin cannot be updated without changing identity/scope or manually patching an installed cache;
-- source/branch evidence reveals unexplained unique work or conflicting active writer authority;
-- a material architecture decision beyond this Handoff-generation defect appears;
-- formal release or Web Plugin readback does not match the intended source identity/version.
-
-## Terminal boundary
-
-This task is complete only when:
-
-- source corrective is merged to `main`;
-- the new formal Plugin release succeeds for that merged source;
-- the existing ChatGPT Web Plugin is updated and read back at the same corrected version/content boundary;
-- `CURRENT_STATUS.md` and `CURRENT_TASK.md` are reconciled to the final state;
-- Local Codex can update from the published source without manual cache mutation.
+Any behavior discovered during subsequent Local/Web use is fresh evidence and should be classified before deciding whether it is a new corrective.
 
 Control Alignment:
 
 - `PREDECESSOR_TASK`: `EG-V066-RELEASE-078`
-- `DEFECT_SOURCE`: real Web Handoff Card generation
-- `SOURCE_CORRECTIVE`: `AUTHORIZED`
-- `WEB_PLUGIN_SYNC`: `AUTHORIZED`
-- `LOCAL_CACHE_MUTATION`: `NOT_AUTHORIZED`
+- `SOURCE_CORRECTIVE`: `PASS`
+- `FORMAL_RELEASE`: `PASS`
+- `WEB_PLUGIN_SYNC`: `PASS`
+- `LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`
+- `LOCAL_CACHE_MUTATION`: `NONE`
+- `LOCAL_067_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`
 - `CONTROL_ALIGNMENT`: `PASS`
