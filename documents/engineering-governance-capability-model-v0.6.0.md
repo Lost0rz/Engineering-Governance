@@ -1,6 +1,6 @@
 # Engineering Governance Capability Model v0.6.0
 
-Status: ACTIVE DESIGN AUTHORITY; current amendment `EG-CAPABILITY-PROFILE-HANDOFF-LIFECYCLE-068`
+Status: ACTIVE DESIGN AUTHORITY; current amendment `EG-CAPABILITY-CONTRACT-CORRECTIVE-069`
 
 Date: 2026-10-14
 
@@ -28,14 +28,15 @@ Global routing is policy, not a ninth Skill.
 | Layer | Role |
 | --- | --- |
 | project `AGENTS.md` | normative project-specific rules/boundaries |
-| Project Profile | compact derived context/index + authority pointers |
+| Project Profile | compact derived context/index + authority pointers; one current projection surface or explicit primary + mirror |
 | Domain/navigation authority | detailed semantic ownership/source/test/runtime route |
 | durable planning/design | long-lived rationale/design/work packages when justified |
 | `CURRENT_STATUS.md` | concise verified current-state snapshot |
 | `CURRENT_TASK.md` | single active execution authorization |
-| code/schema/CI/host/runtime | implementation/evidence sources for what they own |
+| implementation authority | canonical source/schema/config/workflow/persisted contract or state owner for the implementation class |
+| observed evidence | CI/test results, PR/host state, runtime/review/audit/probe observations |
 
-Profile, Domain maps, handoff cards, audit reports and CI output do not become competing project controls. Derived projections yield to the authority they summarize.
+Profile, Domain maps, handoff cards, audit reports and evidence observations do not become competing project controls. Derived projections yield to the authority they summarize.
 
 ## 3. Task and execution model
 
@@ -50,15 +51,15 @@ Context changes and Sub Agent decomposition do not create tasks by themselves. I
 | Skill | Primary trigger / ownership |
 | --- | --- |
 | `project-governance` | normal engineering entry; task/control/lifecycle/writers/verification/closeout |
-| `project-profile` | compact project context/profile generation, reduction or freshness audit |
+| `project-profile` | compact project context/profile generation, reduction or freshness audit; mutation still requires task authority |
 | `solution-design` | material intent/architecture/state-ownership ambiguity |
 | `execution-orchestrator` | useful decomposition, agents, parallelism, environment-aware delegation, recovery/integration |
 | `agent-handoff` | standardized bounded cross-context Card + Receipt transport |
-| `evidence-audit` | read-only evidence/readiness verdict bound to identity/claims/independence |
+| `evidence-audit` | formal read-only evidence/acceptance/readiness verdict bound to identity/claims/independence |
 | `domain-navigation` | unclear semantic/authority/source/symbol/test/runtime route |
 | `incident-doctor` | blocking failure/unsafe ambiguity with insufficient evidence |
 
-Narrow Skills do not silently retain task authority after their bounded result.
+Narrow Skills do not silently retain task authority after their bounded result. Advisory read-only inspection may remain in Project Governance when no formal verdict boundary is requested.
 
 ## 5. Environment capability authority
 
@@ -85,7 +86,14 @@ Core rule:
 HANDOFF = AUTHORITY REFERENCES + FRESH DELTA + ACTION BOUNDARY + RETURN CONTRACT
 ```
 
-Cards do not restate a second task contract. EXECUTE permits authorized mutation. AUDIT/REVIEW/VERIFY/DIAGNOSE are read-only; a normal test run is VERIFY, while changing tests/instrumentation is EXECUTE. Receipts report actual identity/outcome/evidence/unknowns and remain transport/evidence.
+Handoff has two independent dimensions:
+
+```text
+CAPABILITY = bounded Skill/capability requested, or NONE
+MODE       = receiver action / side-effect class
+```
+
+A mode does not replace Skill routing. Required Card core fields are stable; conditional fields are used only when decision-relevant. EXECUTE permits authorized mutation. AUDIT/REVIEW/VERIFY/DIAGNOSE are read-only; a normal test run is VERIFY, while changing tests/instrumentation is EXECUTE. Receipts report transfer identity/outcome before mode-specific evidence and remain transport/evidence.
 
 ## 8. Project artifact lifecycle
 
@@ -94,21 +102,22 @@ Classes:
 - normative authority;
 - durable design authority;
 - current controls;
+- implementation authority;
 - derived projections;
-- evidence.
+- observed evidence.
 
 At state-changing boundaries, identify materially affected semantic owners and reconcile only those owners. `NO_SEMANTIC_CHANGE -> NO_WRITE -> NO_COMMIT`.
 
 ## 9. Evidence / audit / navigation / diagnosis
 
-Verification follows risk and evidence identity. Semantic evidence and live host gates are separate claims. Evidence Audit binds verdicts to required claims and independence basis. Domain Navigation uses focused evidence-backed route discovery. Incident Doctor enters only when a real blocker plus evidence gap prevents the next safe decision.
+Verification follows risk and evidence identity. Semantic evidence and live host gates are separate claims. Evidence Audit owns formal verdicts; simple advisory status/evidence inspection can remain in Project Governance. Domain Navigation uses focused evidence-backed route discovery. Incident Doctor enters only when a real blocker plus evidence gap prevents the next safe decision.
 
 ## 10. Skill Engineering constraints
 
-Each top-level Skill requires a distinct semantic trigger, primary ownership boundary, clear output/return contract, near-miss guidance, positive utilization guidance and progressive disclosure. Over-triggering and material under-use are both defects. Reusable source must not create hidden replacements for project controls, domain/data truth, durable planning, or runtime authorities.
+Each top-level Skill requires a distinct semantic trigger, primary ownership boundary, clear output/return contract, near-miss guidance, positive utilization guidance and progressive disclosure. Over-triggering and material under-use are both defects. Reusable source must not create hidden replacements for project controls, domain/data truth, durable planning, implementation authority, or runtime authorities.
 
 ## 11. v0.6.0 sequence
 
-Tasks 061–066 established and hardened the original seven-Skill architecture. Task 068 adds Project Profile plus standardized transfer/lifecycle contracts before installed acceptance. Task 067 was superseded before runtime acceptance and produced no v0.6.0 runtime verdict.
+Tasks 061–066 established/hardened the original seven-Skill architecture. Task 067 was superseded before runtime acceptance. Task 068 added Project Profile and transfer/lifecycle contracts. Task 069 tightens Profile mutation/surface ownership, Card/Receipt schema, capability-vs-mode semantics, artifact taxonomy, status receipt requirements and audit-boundary clarity before installed acceptance.
 
-The authoritative integrated matrix is `references/V060_INTEGRATED_ACCEPTANCE.md`. Final acceptance must test composition and positive/negative routing on the frozen eight-Skill candidate rather than only proving individual Skill files load.
+The authoritative integrated matrix is `references/V060_INTEGRATED_ACCEPTANCE.md`. Final acceptance tests composition, positive/negative routing, authority preservation and transfer/lifecycle semantics on the frozen eight-Skill candidate rather than only proving individual Skill files load.
