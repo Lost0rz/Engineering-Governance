@@ -1,125 +1,77 @@
-# CURRENT TASK — Web Candidate Acceptance v0.6.x
+# CURRENT TASK — Project Profile Domain Pointer Corrective
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
+Task ID: `EG-V060-PROFILE-DOMAIN-POINTER-CORRECTIVE-077`
 
-Task class: `VERIFY`
+Parent task: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
-State: `WEB_PROFILE_DOMAIN_DEDUP_PARTIAL_FAIL`
+Task class: `CORRECTIVE`
+
+State: `ACTIVE`
 
 ## Objective
 
-Validate the corrected installed Engineering Governance Plugin across fresh Web discovery/routing/Profile behavior before formal GitHub release or PR merge, using bounded source correctives only when real reusable defects are exposed.
+Correct the remaining Web Project Profile Domain-dedup adherence failure exposed by fresh Gift `0.6.5` acceptance, using the smallest structural/template change rather than additional synonymous warning prose.
 
-## Corrective history / current source identity
+## Fresh evidence / defect
 
-Completed acceptance-driven correctives:
+Merloom `0.6.5` Profile regression passed Task-076 adherence.
 
-- `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071`
-- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072`
-- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073`
-- `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074`
-- `EG-V060-PROFILE-DURABILITY-CORRECTIVE-075`
-- `EG-V060-PROFILE-ADHERENCE-CORRECTIVE-076`
+Gift `0.6.5` materially improved but still returned a reduced ownership catalog under `Authority map` despite an established detailed `docs/storefront/DOMAIN_MAP.md`. The draft separately listed upstream-published fact classes and Gift-owned/runtime fact classes. Those facts were grounded but the Profile recreated navigation authority that already exists elsewhere.
 
-Current corrected Delivery / Semantic candidate:
+A minor related classification leak placed a fail-closed/no-fixture behavioral rule inside `Environment`; `Environment` should contain platform/environment roles only.
 
-`1a38f87a31016cad356f9f51c34ef2e4b53a13a8`
+## Authorized source scope
 
-Task 076 focused source/package/readback verification: PASS.
+Modify only:
 
-## Current Web candidate
+- `skills/project-profile/SKILL.md`;
+- `skills/project-profile/references/profile-contract.md`;
+- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `references/V060_INTEGRATED_ACCEPTANCE.md`;
+- `plugin.json` patch version.
 
-- existing personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- current Web candidate version: `0.6.5`;
-- current Web release: `pluginrel_6acf3fdcd9308191b75415893bfa0d35`;
-- scope/discoverability remain `USER / PRIVATE`;
-- platform-managed `.codex-plugin/plugin.json` and root `plugin.json` both report `0.6.5`;
-- Task-076 overlay file identities matched repository source before upload;
-- post-update installed-file readback confirms Task-076 Skill/template/contract content is active.
+Control files may be reconciled for task/status bookkeeping.
 
-## Fresh Web 0.6.5 acceptance
+Do not change other Skills or the eight-Skill architecture.
 
-### Merloom
+## Required design
 
-`PASS`
+1. When an established detailed Domain/navigation authority exists, `Authority map` is structurally pointer-oriented:
+   - include the Domain/navigation pointer;
+   - do not append Domain-specific upstream/downstream/runtime ownership lists or subsections;
+   - at most one short broad ownership invariant may appear elsewhere in the Profile when needed to understand project identity.
+2. `Environment` contains only durable platform/environment/data-role context and authority pointers; behavioral fail-closed/fallback/verification/execution rules must be omitted or classified under durable constraints only when genuinely Profile-worthy.
+3. The pre-return gate must treat either leak as a non-returnable draft and correct it in the same generation pass.
+4. Add explicit Gift/Merloom acceptance coverage for the structural boundary.
+5. Bump candidate patch version to `0.6.6`, update the existing Web Plugin identity, verify installed readback, then restore parent Task 070 and run fresh neutral Gift + Merloom Profile regressions.
 
-- no current task/PR/CI/progress in Profile body;
-- fixed header fields preserved;
-- no source/code directory responsibility map in `Environment`;
-- compact Engineering Governance hook only;
-- durable greenfield/single-Authority/Evidence-vs-Business/Publication/AI-candidate/recapture/RFQ/Analytics/Merloom-Gift boundaries retained.
+## Verification
 
-### Gift
+Required source verification:
 
-`PARTIAL FAIL`
+- compare from this task control checkpoint shows only the authorized five semantic files;
+- shipped template/Skill/contract agree on pointer-only Domain behavior;
+- integrated acceptance covers both prior Gift and Merloom failure shapes;
+- Web overlay source identities match repository source before update;
+- installed Web root/platform manifests and shipped Profile files read back as `0.6.6`.
 
-Passed:
+Required behavioral verification after Web update:
 
-- no Memory-only preferences;
-- no Mac mini/Air or `:3000` acceptance detail;
-- no current task/PR/CI/upstream blocker content;
-- no stage-only `storefront CMS` permanent anti-goal;
-- fixed header fields preserved;
-- compact Engineering Governance hook;
-- durable B2B/Product-first/Inquiry/RFQ identity retained.
-
-Failed:
-
-- `Authority map` still recreates a reduced ownership catalog (`Merloom / upstream publication systems` and `Gift` detailed ownership lists) although `docs/storefront/DOMAIN_MAP.md` already owns detailed source-class/ownership navigation. This fails `DOMAIN_AND_CODE_MAP_DEDUPED` and the explicit Task-076 Domain mini-map rejection check.
-
-Minor classification issue:
-
-- a grounded fail-closed/no-fixture/no-fallback behavioral rule appears inside `Environment`; this should be omitted there or expressed only as a compact durable constraint/pointer if materially useful.
-
-## Required next action
-
-Web Profile acceptance remains open.
-
-Before another neutral Gift regression, determine the smallest source-level adjustment needed to make the already-defined Domain-dedup pre-return condition operationally reliable. Prefer structural/template restriction over adding more synonymous warning prose.
-
-Target behavior:
-
-- when a detailed Domain/navigation authority exists, `Authority map` is primarily pointers;
-- retain at most one short broad ownership invariant needed for project orientation;
-- no separate upstream/downstream/runtime ownership lists or subcatalogs;
-- `Environment` contains platform/environment roles only, not behavioral execution rules.
-
-Then update the Web candidate and rerun Gift. Pending MemoX and FloatTabs regressions remain required after Gift passes.
-
-## Previously established acceptance that remains valid
-
-- exact eight top-level Skill discovery: PASS;
-- ordinary project status/progress -> `project-governance`: PASS;
-- advisory inspection avoids over-routing: PASS;
-- Profile routing/live-state exclusion: PASS;
-- Memory/history grounding isolation: PASS;
-- authority-class preservation: PASS;
-- Merloom Task-076 adherence regression: PASS;
-- Task 076 source/package identity: PASS.
+- Gift: `Authority map` contains pointers rather than Merloom/Gift ownership catalogs; durable B2B/Product-first/Inquiry/RFQ identity remains; `Environment` has no behavioral rule leakage.
+- Merloom: remains free of source/code maps, uses compact Engineering Governance hook, retains durable greenfield/single-Authority/Publication/Merloom-Gift identity.
 
 ## Out of scope
 
-- formal immutable GitHub v0.6.x release/tag;
+- changing ChatGPT Memory behavior;
+- adding/changing another top-level Skill;
+- formal GitHub v0.6.x release/tag;
 - PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web Profile/routing boundary passes;
-- changing ChatGPT Memory behavior.
+- Local Codex acceptance.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance while Gift Domain-dedup acceptance remains partial-fail or another required regression remains unresolved.
-
-## Terminal boundary
-
-Task 070 closes only after required Web routing/Profile acceptance evidence is recorded. Formal GitHub release remains a later integrated-acceptance boundary.
-
-Control Alignment:
-
-- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED — Task 076 already defines Domain mini-map rejection`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED_WITH_WEB_0_6_5_EVIDENCE`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED_WITH_WEB_0_6_5_EVIDENCE`
-- `CONTROL_ALIGNMENT`: `PASS`
+Stop before release/merge if source scope expands, installed package identity cannot be verified, or the fresh Gift/Merloom regressions still reproduce the prohibited structural classes.
