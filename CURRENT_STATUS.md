@@ -4,81 +4,51 @@ Last verified: 2026-10-14.
 
 ## Published baseline
 
-Formal GitHub Plugin release is now `plugin-v0.6.7`.
+Formal GitHub Plugin release remains `plugin-v0.6.7`.
 
 Release provenance:
 
 - PR #27: `MERGED`;
 - merge/release source SHA: `53590bcec50c057d6c0fdd25b0e834133a808a93`;
-- release workflow: `Release Plugin v0.6.7`;
-- workflow run: `38552557416` — `success`;
-- tag: `plugin-v0.6.7` -> `53590bcec50c057d6c0fdd25b0e834133a808a93`;
-- GitHub Release ID: `412610677`;
-- asset: `engineering-governance-plugin.zip`;
-- asset size: `94260` bytes;
-- asset SHA-256: `082a332d08a526c59c392c073e301c7a78a9a05e47912e96ade2a5b59bdb7c6e`;
-- package entries: `47`;
-- package scope: `plugin.json` + `skills/**` only;
+- release workflow run: `38552557416` — `success`;
+- tag: `plugin-v0.6.7`;
 - package version: `0.6.7`;
-- top-level Skills: exactly `8`.
+- package scope: `plugin.json` + `skills/**` only;
+- released top-level Skills: exactly `8`.
 
-The release workflow verified the exact eight-Skill set, Project Profile pre-return contract, mandatory cross-context Handoff routing, Handoff Card/Receipt pre-return gates, required Card/Receipt fields, valid MODE semantics, the Local global-routing template, the v0.6.7 regression acceptance markers, and exact Plugin package scope before publication.
+The existing private personal Web Plugin is still on the verified `0.6.7` release. Local installed/runtime `0.6.7` acceptance remains observational and must not be inferred from source state.
 
-## Web Plugin distribution
+## Active source work
 
-The existing private personal ChatGPT Web Plugin has been updated in place:
+Task: `EG-DESIGN-ANTHROPIC-BASELINE-080`
 
-- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.7`;
-- Web release: `pluginrel_6acf5f4fb8648191af081084ff326c44`;
-- scope/discoverability: `USER / PRIVATE` — unchanged;
-- root `plugin.json`: `0.6.7` read back;
-- platform `.codex-plugin/plugin.json`: `0.6.7` read back;
-- corrected `agent-handoff`, Handoff request/receipt templates, Handoff contract, `project-governance`, and global routing template read back from the installed Web release.
+State: `ACTIVE`
 
-`WEB_PLUGIN_SYNC`: `PASS`.
+Branch: `codex/design-anthropic-baseline`
 
-## Corrective result
+Start main: `0c4c404e9b173b3f2e125bfa138bd68e76bf42f2`
 
-The reproduced v0.6.6 Handoff generation defect is corrected at the reusable source-contract level.
+Authorized change:
 
-The corrected contract now requires that a construction/execution/audit/review/verify/diagnose Card, instructions, or structured Receipt intended for another agent/session/machine/reviewer/execution context routes through `agent-handoff` before return.
+- expand the source capability model from eight to nine top-level Skills by adding stable routed `design`;
+- bundle Anthropic `frontend-design` as the first complete internal Design source module with Apache-2.0 license/provenance preserved;
+- route bounded UI/UX/frontend visual-design work through `design` while leaving task/lifecycle authority in `project-governance` and material engineering architecture/state-ownership ambiguity in `solution-design`;
+- prepare, but do not yet activate, future Microsoft design-review and UX-audit source modules.
 
-The Handoff pre-return gate now rejects the reproduced legacy-card failure classes:
+## Distribution boundary
 
-- task-purpose labels such as `CORRECTIVE` used as `MODE`;
-- missing required Handoff core fields;
-- rewriting `CURRENT_TASK.md`/plan content instead of authority references + fresh transfer delta;
-- promoting sender-observed SHAs into execution locks without owning authority;
-- boundaries that expand task authority;
-- return contracts or Receipts that predeclare an unobserved successful outcome.
+No new Plugin version is published yet for task 080. `0.6.7` remains the only released/verified distribution identity until the design source candidate is accepted, merged, and separately released.
 
-Regression authority: `references/V067_HANDOFF_CARD_ACCEPTANCE.md`.
-
-## Local distribution state
-
-No Local Codex cache/source was manually patched.
-
-The supported source configured for the prior Local installation remains repository `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`, and `main` now publishes Plugin `0.6.7`. Local Codex can therefore update through its supported marketplace/plugin refresh mechanism.
-
-The latest directly observed Local installed version remains the earlier `0.6.6` evidence until a fresh local readback is supplied. Do not claim Local installed/runtime `0.6.7` acceptance before that readback.
-
-`LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`.
-`LOCAL_CACHE_MUTATION`: `NONE`.
-`LOCAL_067_INSTALL_READBACK`: `PENDING_USER_TRIAL`.
-
-## Current task
-
-Task: `EG-HANDOFF-CARD-GENERATION-CORRECTIVE-079`
-
-State: `COMPLETE`
-
-Source merge, formal release, Web Plugin synchronization/readback, and control reconciliation are complete. Local use of the published `0.6.7` release is the next observational trial, not an unfinished source-corrective step.
+No Local cache/source mutation is authorized as part of source construction.
 
 ## Control identity
 
-Released Delivery / Semantic Plugin identity:
+Published Delivery / Semantic Plugin identity remains:
 
 `53590bcec50c057d6c0fdd25b0e834133a808a93`
 
-Subsequent commits limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` are control-only Repository HEAD movement and do not alter the released Plugin payload or its semantic release identity.
+Active source construction identity begins from repository main:
+
+`0c4c404e9b173b3f2e125bfa138bd68e76bf42f2`
+
+Control-only commits and source-construction commits must not be represented as a published Plugin release before release evidence exists.
