@@ -12,10 +12,27 @@ TASK_ID: <authorized task id>
 MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
 CAPABILITY: <Engineering Governance Skill actually requested | NONE>
 TARGET: <card target>
-OUTCOME: <mode-appropriate result>
+OUTCOME: <observed mode-appropriate result; never predetermined>
 ```
 
 Then add only mode-relevant evidence. Do not restate the full task contract.
+
+## Mandatory pre-return gate
+
+Before returning a structured Receipt, revise it until all are true:
+
+```text
+RECEIPT_CORE_COMPLETE: YES
+SOURCE_CARD_ID_PRESERVED: YES
+TASK_ID_PRESERVED_UNLESS_RECONCILED: YES
+MODE_PRESERVED: YES
+CAPABILITY_REPORTED_ACCURATELY: YES
+OUTCOME_IS_OBSERVED: YES
+EVIDENCE_IS_MODE_RELEVANT: YES
+RECEIPT_DOES_NOT_EXPAND_AUTHORITY: YES
+```
+
+`OUTCOME` may be success, failure, stop, blocked, unknown, no-change, or another evidence-supported result. Never force the Receipt into `READY`, `PASS`, merged, released, or another success state merely because the Card requested that work.
 
 ## EXECUTE
 
