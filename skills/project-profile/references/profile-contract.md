@@ -103,7 +103,7 @@ Role claims are evidence-bound:
 
 - `MIRROR` requires a verified/explicitly identified primary Profile surface. Name or point to that primary when useful.
 - `PRIMARY` requires project/user authority explicitly designating this surface as primary/canonical among multiple Profile surfaces.
-- `single surface` is used when this is the only established current Profile surface and no competing surface is verified.
+- `single surface` is used when this is the only established current Profile surface and no competing Profile surface is verified.
 - `UNKNOWN` is preferred to guessing when the relationship cannot be established from current authority/user intent.
 
 Do not infer `MIRROR` merely because the target is ChatGPT Project Instructions, and do not infer `PRIMARY` merely because a repository file could exist.
