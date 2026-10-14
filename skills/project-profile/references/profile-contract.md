@@ -6,7 +6,7 @@
 
 The Profile is a concise landing index compiled from verified project authorities. It helps Web/local/agent context recovery but has no independent power to authorize work or override truth.
 
-A healthy Profile is **fact-grounded, durability-qualified, authority-preserving and compact**. It is not a summarized copy of the governance system, Domain map, Memory layer, current delivery brief, runtime acceptance note, or Profile-maintenance rules behind it.
+A healthy Profile is **fact-grounded, durability-qualified, authority-preserving and compact**. It is not a summarized copy of the governance system, Domain map, Memory layer, current delivery brief, code map, runtime acceptance note, or Profile-maintenance rules behind it.
 
 ## Construction pipeline
 
@@ -17,10 +17,11 @@ Grounding Gate
 → Durability Gate
 → Classification / authority placement
 → Compression / deduplication
+→ Mandatory Pre-return Compliance Gate
 → Project Profile
 ```
 
-Passing an earlier gate does not imply passing a later one.
+Passing an earlier gate does not imply passing a later one. The final compliance gate must pass before returning the Profile.
 
 ## Grounding model
 
@@ -104,6 +105,8 @@ Do not promote these into the durable Profile merely because they are currently 
 - current rollout, migration, incident, release, CI, PR or upstream-readiness state;
 - current accepted page/order/sequence when its authority explicitly owns only a present delivery overlay rather than durable architecture/product identity.
 
+A non-goal or exclusion whose owning authority is explicitly scoped to `current`, `current work`, `MVP`, `phase`, `wave`, `deferred`, `not yet`, or equivalent delivery-stage language fails the durability gate unless a separate durable authority establishes that same boundary as lasting product identity.
+
 These belong in `CURRENT_STATUS.md`, `CURRENT_TASK.md`, current delivery/planning authority, implementation/runtime evidence, or the owning operational surface.
 
 ### Durable and version-scoped context
@@ -116,7 +119,7 @@ Version-scoped architecture may be suitable when its scope is explicit and mater
 - a durable platform/environment role;
 - a durable anti-goal or product identity boundary.
 
-Preserve the authority's scope wording (`V1`, `long-term`, `current product boundary`, etc.). Do not transform a current MVP/wave choice into permanent project identity.
+Preserve the authority's scope wording (`V1`, `long-term`, etc.). Do not transform a current MVP/wave choice into permanent project identity.
 
 ### Practical durability test
 
@@ -148,6 +151,21 @@ For example, the fact that data is stored in a database does not by itself make 
 
 This contract constrains Project Profile construction only. It does not disable or reduce ordinary conversational use of Memory/context.
 
+## Classification boundary
+
+After grounding and durability checks, classify candidates by semantic owner:
+
+- current state/task -> STATUS/TASK;
+- current delivery/runtime shape -> current planning/runtime authority;
+- reusable workflow -> Engineering Governance;
+- project execution rule -> normative authority;
+- Domain/source/test/runtime route -> Domain/navigation authority;
+- repository directories, module paths, source files, symbols and code-responsibility maps -> implementation/navigation authority;
+- long-lived design rationale/work packages -> durable planning authority;
+- stable project identity, broad product loop, durable authority boundary, durable/version-scoped architecture, stable environment/platform role, durable priorities/anti-goals/risk cues, or authority pointers -> Profile.
+
+A repository-relative path can appear as an authority pointer (for example `docs/architecture/DOMAIN_MAP.md`). It must not become an `Environment` item or a code-responsibility catalog merely because it is stable in the repository.
+
 ## Current projection surface
 
 A project should have **one current Profile projection surface**. It may be a repository file such as `PROJECT_PROFILE.md`, ChatGPT Project Instructions, or another accepted project context surface.
@@ -164,15 +182,13 @@ Do not rename `Primary/mirror role` to a free-form field such as `Profile role`.
 Role claims are evidence-bound:
 
 - `MIRROR` requires a verified/explicitly identified primary Profile surface;
-- `PRIMARY` requires project/user authority explicitly designating this surface as primary/canonical among multiple Profile surfaces;
+- `PRIMARY` requires project/user authority explicitly designating this surface as primary/canonical among multiple surfaces;
 - `single surface` is used when this is the only established current Profile surface and no competing surface is verified;
-- `UNKNOWN` is preferred to guessing when the relationship cannot be established from current authority/user intent.
+- `UNKNOWN` is preferred to guessing when the relationship cannot be established.
 
 Do not infer `MIRROR` merely because the target is ChatGPT Project Instructions, and do not infer `PRIMARY` merely because a repository file could exist.
 
 If two surfaces are operationally required, declare one `PRIMARY_PROFILE_SURFACE` and treat the other as a derived mirror. Do not maintain two independently edited current Profiles. A stale mirror never overrides the primary projection or underlying authorities.
-
-Do not create a new manifest merely to name the surface. Record the pointer in an existing project authority/context surface when useful and supported by the project.
 
 ## Mutation authority
 
@@ -189,13 +205,13 @@ Keep only grounded, durability-qualified context that materially reduces orienta
 - stable project environment/platform roles;
 - durable project-specific priorities, anti-goals or risk cues;
 - explicit durable/version-scoped architecture context when useful;
-- a short Engineering Governance hook.
+- the shipped compact Engineering Governance hook.
 
-Project-specific stable facts may summarize a concept, but current delivery detail, reusable procedure and detailed normative rules should be linked rather than re-explained.
+Project-specific stable facts may summarize a concept, but current delivery detail, reusable procedure, code navigation and detailed normative rules should be linked rather than re-explained.
 
 ## Anti-content / deduplication
 
-Do **not** turn the Profile into a second `AGENTS.md`, routing manual, handoff protocol, verification guide, incident runbook, control-plane specification, Domain Map, Memory summary, current delivery plan, runtime acceptance note, or Profile-maintenance guide.
+Do **not** turn the Profile into a second `AGENTS.md`, routing manual, handoff protocol, verification guide, incident runbook, control-plane specification, Domain Map, code map, Memory summary, current delivery plan, runtime acceptance note, or Profile-maintenance guide.
 
 Normally remove or replace with a short pointer:
 
@@ -207,6 +223,7 @@ Normally remove or replace with a short pointer:
 - continuation, branch/worktree/PR lifecycle procedure;
 - detailed Control Alignment / semantic-head / `CONTROL_ONLY_DRIFT` procedure;
 - detailed Domain lists and Domain-to-source/symbol/test/runtime maps when an established Domain/navigation authority exists;
+- repository directory/module/source responsibility lists when navigation authority exists;
 - ordered startup/read/check/navigation sequences already owned by Project Governance or project rules;
 - instructions explaining how future agents should maintain, classify, ground, durability-test or refresh the Profile;
 - copied project-specific MUST/MUST-NOT execution-rule lists already owned by `AGENTS.md`/accepted normative authority;
@@ -222,16 +239,27 @@ A short stable invariant is allowed when it materially helps orientation. Exampl
 If an established Domain/navigation authority already maps ownership/source/test/runtime routes:
 
 1. point to that authority;
-2. retain at most the few broad Domain distinctions required to understand the product;
-3. do not create a separate `Domain Model`, ownership table, symbol list, or reduced copy of that map unless the user explicitly requests a Domain summary rather than a Project Profile.
+2. retain at most the few broad product/authority distinctions required to understand the project;
+3. do not create multiple ownership subsections, reduced ownership catalogs, symbol lists, source-path lists or a separate `Domain Model` unless the user explicitly requested a Domain summary rather than a Project Profile.
 
-A Profile that reproduces most Domain names or canonical source owners from an existing Domain Map fails deduplication even if those facts are correct and durable.
+A Profile that recreates upstream/downstream/runtime ownership catalogs from an existing Domain Map fails deduplication even if each fact is correct and durable.
 
 ### Normative-rule boundary
 
 `Priorities / constraints` may keep concise grounded **durable** project-specific priorities, anti-goals and risk cues. It should not restate a detailed set of operational MUST/MUST-NOT rules from `AGENTS.md` or current-stage non-goals from a delivery overlay.
 
 When a rule is needed only to govern execution, point to normative authority. Keep the Profile statement only when the underlying idea is a stable project identity/risk cue that materially helps orientation.
+
+### Engineering Governance hook boundary
+
+For ordinary Project Profile generation, use this compact hook and stop:
+
+```text
+## Engineering Governance
+Engineering work uses Engineering Governance. Default entry: `project-governance`. Conditional capabilities follow the reusable routing contract.
+```
+
+Do not append per-Skill trigger prose, list conditional Skills, or explain Handoff/verification/incident/PR/worktree behavior unless the user asked for routing documentation rather than a Project Profile.
 
 ## Template-first compression
 
@@ -253,37 +281,47 @@ In particular, generated Profiles normally do **not** add sections named or serv
 - `Project Profile Rule` / `Profile Maintenance` / `How to use this Profile`;
 - `Grounding Report` / `Provenance Ledger` / `Durability Report`;
 - `Workflow` / `Startup` / numbered read-order instructions;
-- `Current Delivery` / `Current Runtime` / `Current Acceptance` summaries.
+- `Current Delivery` / `Current Runtime` / `Current Acceptance` summaries;
+- source-directory/code-responsibility maps.
 
-Before returning a Profile, apply this check:
+## Mandatory pre-return compliance gate
+
+This gate is **required before returning the Profile**. It is not optional guidance and must correct the draft in the same generation pass.
+
+Evaluate the complete draft:
 
 ```text
-For each substantive paragraph/bullet:
-0. What current eligible source grounds this claim?
-   NONE -> remove it, or report it outside the Profile as unverified when useful.
-1. Is the only support Memory, prior chat, previous assistant output, old Profile/Project Instructions, or another derived historical artifact?
-   YES -> revalidate against current authority; if not verified, remove.
-2. Is the claim durable enough for a long-lived Profile?
-   NO -> remove; point to STATUS/TASK/current planning/runtime authority when useful.
-3. Does the claim preserve the owning authority's fact class/semantics and explicit version scope?
-   NO -> correct or remove; do not flatten storage/evidence/projection/canonical distinctions or current MVP into permanent identity.
-4. Is this stable project-specific context or an authority pointer?
-   YES -> candidate to keep.
-5. Is it current status/task/host/delivery/runtime evidence?
-   YES -> remove.
-6. Is it a project-specific normative execution rule?
-   YES -> point to AGENTS/accepted normative authority; keep only a compact durable risk cue when justified.
-7. Is it reusable Engineering Governance or Profile-maintenance procedure?
-   YES -> remove and replace with the shortest useful pointer/invariant.
-8. Is it detailed Domain/design content already owned elsewhere?
-   YES -> point to the owning authority; do not rebuild a summary map by default.
-9. Does a PRIMARY/MIRROR role claim have evidence?
-   NO -> use `single surface` when only one current surface is established, otherwise `UNKNOWN`.
-10. Did the generated output preserve the fixed metadata field names?
-   NO -> correct before returning.
+GROUNDED: YES
+DURABILITY_QUALIFIED: YES
+CORRECTLY_CLASSIFIED: YES
+AUTHORITY_CLASSES_PRESERVED: YES
+DOMAIN_AND_CODE_MAP_DEDUPED: YES
+ENGINEERING_GOVERNANCE_HOOK_COMPACT: YES
+TEMPLATE_FIELDS_PRESERVED: YES
 ```
 
-A Profile should be substantially smaller than the combined authorities it indexes. Concision is semantic deduplication, not omission of grounded durable project-specific facts.
+Any `NO` or unresolved uncertainty means the draft is not returnable. Remove, compress or reclassify the offending content, then rerun the gate.
+
+Mandatory rejection checks:
+
+1. **Stage-only anti-goal leak**
+   - claim is sourced only from current/MVP/phase/wave/deferred delivery language;
+   - no separate durable authority establishes it as lasting product identity;
+   - action: remove from Profile and point to current planning authority when useful.
+2. **Code-map leak**
+   - `Environment` or another section lists repository-relative implementation directories/modules/source files/symbols as responsibility mapping;
+   - action: remove and point to Domain/navigation authority.
+3. **Domain mini-map leak**
+   - detailed Domain authority exists and draft recreates ownership catalogs/subsections;
+   - action: keep only broad distinctions required for orientation plus one pointer.
+4. **Engineering Governance expansion**
+   - draft adds per-Skill triggers or enumerates conditional Skills beyond the compact hook;
+   - action: replace the section with the shipped hook.
+5. **Template drift**
+   - fixed metadata fields missing/renamed;
+   - action: correct before return.
+
+The user receives the corrected Profile, not a knowingly non-compliant Profile followed by caveats about what should have been removed.
 
 ## Freshness
 
