@@ -34,6 +34,7 @@ Current frozen v0.6.0 Architecture Delivery / Semantic HEAD:
 - Scope/discoverability unchanged: `USER / PRIVATE`.
 - Stored Plugin file surface contains all eight expected Skill trees.
 - Platform-managed `.codex-plugin/plugin.json` reports `engineering-governance` version `0.6.0` and `skills: ./skills`.
+- Semantic HEAD to current repository control descendant is proven `CONTROL_ONLY_DRIFT`; Delivery identity remains the frozen Semantic HEAD above.
 
 ## Current Web routing observation
 
@@ -66,3 +67,11 @@ Stop before formal release/merge/local installation if a fresh Web session still
 ## Terminal boundary
 
 This task closes only after fresh-session Web discovery/routing evidence is recorded. Formal GitHub release remains a later boundary after required integrated acceptance supports publication.
+
+Control Alignment:
+
+- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `CONTROL_ALIGNMENT`: `PASS`
