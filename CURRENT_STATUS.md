@@ -10,31 +10,33 @@ No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has run.
 
 ## v0.6.0 source architecture — FROZEN FOR CONSOLIDATED ACCEPTANCE
 
-Task `EG-CAPABILITY-PROFILE-HANDOFF-LIFECYCLE-068` is COMPLETE.
+Task `EG-CAPABILITY-CONTRACT-CORRECTIVE-069` is COMPLETE.
 
-- Frozen Architecture Delivery / Semantic HEAD: `448661193faa24d6e5dd719ef3840ec40517bb1f`.
-- Task 067 was superseded before runtime acceptance and produced no v0.6.0 runtime verdict.
-- PR #26 remains OPEN / DRAFT / UNMERGED; source audit observed `mergeable=true`, `mergeable_state=clean`.
+- Frozen Architecture Delivery / Semantic HEAD: `7be11aae70c42b075034eb4613a7dc66b242bb80`.
+- PR #26 remains OPEN / DRAFT / UNMERGED; final source audit observed `mergeable=true`.
 - Semantic head commit/check statuses: none reported; **CI PASS is not claimed**.
 - Installed integrated acceptance: `NOT_RUN`.
 
 ## Accepted architecture
 
 - Exactly eight top-level Skills; global routing is policy, not a ninth Skill.
-- `project-profile` owns compact derived project context/index generation and refresh, never project task/status/domain/design authority.
-- Project `AGENTS.md` is normative; Domain/navigation is detailed routing; durable planning owns long-lived design; STATUS/TASK own current state/authorization.
-- Artifact lifecycle reconciles only affected semantic owners; unchanged semantics produce no write/commit.
+- `project-profile` is a derived context/index. Repository/project-managed Profile mutation requires compatible task authorization.
+- A project keeps one current Profile projection surface, or one primary surface plus a derived mirror.
+- Project `AGENTS.md` is normative; Domain/navigation owns detailed routing; durable planning owns long-lived design; STATUS/TASK own current state/authorization.
+- Handoff separates `CAPABILITY` from `MODE`; required Card/Receipt core fields are standardized and a mode never replaces Skill routing.
+- Artifact lifecycle separates normative/design/current/implementation authority, derived projections and observed evidence; unchanged semantics produce no write/commit.
+- Advisory read-only status/evidence inspection can remain in Project Governance; formal acceptance/readiness verdicts use Evidence Audit.
+- Project Governance emits one compact human status receipt for governed engineering/status/audit/CI/PR/merge responses without duplicating a full Handoff Receipt.
 - Same-purpose continuation preserves the active task and prefers a safe current PR/workspace for in-scope corrections.
-- Agent Handoff uses one common Card envelope plus EXECUTE/AUDIT/REVIEW/VERIFY/DIAGNOSE mode profiles and standardized receipts.
-- Normal test runs map to VERIFY; state-changing test/instrumentation work maps to EXECUTE with explicit purpose.
-- Project Governance provides a separate compact human-facing Engineering Status Receipt.
 - Runtime/model/tool/capacity configuration remains environment-owned; stronger-model escalation remains disabled during stabilization.
 
-## Task 068 source audit
+## Task 069 source audit
 
-`V2 remote source-architecture audit: PASS` for semantic head `448661193faa24d6e5dd719ef3840ec40517bb1f`.
+`V2 remote source-architecture audit: PASS` for semantic head `7be11aae70c42b075034eb4613a7dc66b242bb80`.
 
-Verified: exact eight-Skill directory set; Plugin metadata `0.6.0`; Profile/AGENTS/Domain/control/planning boundaries remain distinct; Card/Receipt side-effect classes are coherent; only governance/Skill/design/acceptance Markdown/control changed; no runtime/daemon/database/workflow/model-router/automatic enforcement was added.
+Audit independence: `SELF_CHECK` — complete source audit in the same implementation context; this is not independent installed/runtime acceptance.
+
+Verified: exact eight-Skill directory set; Plugin metadata `0.6.0`; Skill triggers/authority boundaries remain distinct; Profile mutation/surface rules are coherent; Handoff Card/Receipt schema is internally consistent; `CAPABILITY` and `MODE` are orthogonal; implementation authority is separated from observed evidence; advisory vs formal audit routing is coherent; Domain Navigation uses progressive disclosure; durable design, README and global routing template are aligned; no runtime/daemon/database/model-router/automatic enforcement was added.
 
 ## Next milestone
 
