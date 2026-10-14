@@ -14,91 +14,33 @@ Formal GitHub Plugin release remains `plugin-v0.5.5`.
 
 No v0.6.0 release or installed Plugin/Web/Codex integrated acceptance has been performed yet.
 
-## v0.6.0 architecture — FROZEN FOR CONSOLIDATED ACCEPTANCE
+## v0.6.0 architecture — ROUTING / ENVIRONMENT HARDENING ACTIVE
 
-Task `EG-CAPABILITY-ENVIRONMENT-MODEL-AUTHORITY-065` completed the environment-model-authority corrective on branch `codex/capability-model-v0.6.0`.
+Task `EG-CAPABILITY-ROUTING-ENVIRONMENT-HARDENING-066` is active on `codex/capability-model-v0.6.0`.
 
-- Architecture Delivery / Semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
-- Prior Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance.
+- Task start literal HEAD: `b6bb90a4abfb1c99ef7fe91bcfa0b3ba0aa18b2a`.
+- Prior frozen semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db` — superseded once Task 066 produces a new semantic freeze.
 - PR #26 remains OPEN / DRAFT / UNMERGED.
-- PR host mergeability observed during Task 065 source audit: `mergeable=true`.
-- Commit/check statuses on the semantic head: none reported; **CI PASS is not claimed**.
-- Installed Plugin/Web/Codex integrated acceptance: `NOT_RUN_BY_DESIGN`.
+- Installed v0.6.0 integrated acceptance remains `NOT_RUN_BY_DESIGN`.
 
-## Seven-Skill model unchanged
+## Stable invariants
 
-Exactly seven top-level Skills remain:
-
-1. `project-governance`
-2. `solution-design`
-3. `execution-orchestrator`
-4. `agent-handoff`
-5. `evidence-audit`
-6. `domain-navigation`
-7. `incident-doctor`
-
-Global routing remains policy, not an eighth Skill.
-
-## Accepted delegated-model authority semantics
-
+- Exactly seven top-level Skills remain; global routing is policy, not an eighth Skill.
+- `CURRENT_TASK.md` remains the single active execution authorization.
+- Task purpose, execution unit, and execution context remain distinct.
 - Safe useful Sub Agent parallelism remains encouraged.
-- Active stabilization policy is `ENVIRONMENT_DEFAULT_ONLY`.
-- Reusable Engineering Governance does not define a concrete provider/model/reasoning value for delegated Sub Agents.
-- Each execution context resolves its own authoritative Sub Agent configuration/runtime default.
-- Local configuration remains local runtime truth; Web/cloud/managed defaults remain authority for those environments.
-- If an environment does not expose exact model/reasoning identity, keep it `PLATFORM_DEFAULT` / `UNKNOWN`; do not guess or override it.
-- Agent Handoff carries policy/task authority, not concrete sender model/reasoning values as receiver defaults.
-- Stronger-model override/escalation remains disabled until a later explicit user/project policy change.
-- `LOW / STANDARD / HIGH` remain inactive future vocabulary only and do not route delegated Sub Agents during stabilization.
+- Delegated-model stabilization remains `ENVIRONMENT_DEFAULT_ONLY`; concrete runtime values remain owned by the current execution environment.
 
-## Other hardened v0.6.0 semantics preserved
+## Task 066 focus
 
-- Task purpose, Sub Agent execution unit, and execution context remain distinct.
-- Same-purpose work may continue across Web/local/cloud/session/machine/Sub Agent contexts under the same `TASK_ID`.
-- Safe independent Sub Agent parallelism is positively used when beneficial.
-- Parallel writers require proven-disjoint semantic authority/workspaces and integration evidence.
-- Agent Handoff remains context-neutral and rereads current authority.
-- Evidence Audit distinguishes implementation self-check from independent acceptance and binds verdicts to required claims/evidence/independence basis.
-- Domain Navigation and Incident Doctor trigger boundaries remain unchanged.
+- environment-neutral routing surfaces;
+- concise Skill-owned portable workflows and lighter repository-only root guidance;
+- generic environment capability resolution without hardcoded values;
+- bounded cross-repository governance/navigation;
+- small routing/safety gaps in Evidence Audit, Handoff, Solution Design, Incident Doctor, and control-write acceptance.
 
-## Integrated acceptance specification
+No new runtime/model-router/enforcement implementation is authorized.
 
-`references/V060_INTEGRATED_ACCEPTANCE.md` tests environment-specific configuration authority, Local/Web/cloud isolation, observable current-environment configuration, opaque platform defaults, no cross-context model/reasoning propagation, no stronger-model escalation, positive parallelism, handoff/audit/control/CI/PR/release/post-change behavior, Domain Navigation, and Incident Doctor.
+## Next milestone
 
-The consolidated acceptance matrix has **not** been executed under Task 065.
-
-## Task 065 remote source audit
-
-`V2 remote source-architecture audit: PASS` for semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
-
-Verified:
-
-- exact seven-Skill directory set;
-- Plugin metadata remains `0.6.0`;
-- Task 065 changes are governance/Skill/design/acceptance Markdown/control only;
-- no runtime, daemon, database, release workflow, model-router, or automatic model-selection implementation was added;
-- active reusable model semantics use `ENVIRONMENT_DEFAULT_ONLY`;
-- concrete sender settings do not propagate across contexts;
-- opaque platform defaults remain `PLATFORM_DEFAULT` / `UNKNOWN` rather than guessed;
-- stronger-model escalation remains disabled;
-- positive safe parallelism remains intact;
-- no commit/check status exists on the semantic head, so CI PASS is not claimed.
-
-## Active problems and blockers
-
-No blocking remote source defect is known from Task 065 audit.
-
-Remaining acceptance dependency: run one consolidated installed Plugin/Web/Codex acceptance pass against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` or a proven semantic-tree-equivalent descendant.
-
-## Next intended milestone
-
-Authorize the consolidated v0.6.0 integrated acceptance task using `references/V060_INTEGRATED_ACCEPTANCE.md`. Do not split acceptance into one Skill at a time.
-
-## Task 065 control alignment
-
-- Related document: `documents/engineering-governance-capability-hardening-v0.6.0.md`.
-- Parent architecture: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Document alignment: `UPDATED`.
-- `CURRENT_STATUS.md`: `UPDATED`.
-- `CURRENT_TASK.md`: `UPDATED`.
-- Control alignment: `PASS`.
+Complete Task 066 as one coherent source change, freeze a new semantic head, then run one consolidated installed Plugin/Web/Codex acceptance matrix rather than testing one Skill at a time.
