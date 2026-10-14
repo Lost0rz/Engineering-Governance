@@ -1,105 +1,89 @@
-# CURRENT TASK — Capability Architecture Completion v0.6.0
+# CURRENT TASK — Capability Architecture Hardening v0.6.0
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-CAPABILITY-ARCHITECTURE-COMPLETION-062`
+Task ID: `EG-CAPABILITY-ARCHITECTURE-HARDENING-063`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
-Mode: remote reusable-source architecture completion before integrated Plugin/runtime acceptance
+Mode: remote reusable-source architecture hardening before consolidated installed Plugin/runtime acceptance
 
 ## Objective
 
-Complete the full seven-Skill Engineering Governance v0.6.0 architecture before running installed Plugin/runtime acceptance. Integrate the Skills into one governed engineering lifecycle, complete composition/artifact/model/handoff/audit contracts, define the consolidated acceptance matrix, and freeze the architecture for one later acceptance pass.
+Refine the frozen v0.6.0 seven-Skill architecture so task semantics, Sub Agent orchestration, model selection, cross-context handoff, and independent audit behavior match the intended operating model before integrated acceptance.
+
+The goal is **not** to suppress Sub Agents or high-capability models. The goal is to use them deliberately and effectively: parallelize independent work when useful, select stronger models when judgment demand justifies them, keep execution authority explicit, and separate engineering task purpose from the Web/Local/agent context in which the work happens.
 
 ## Planning context
 
-- Related document: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Work packages: `WP6` through `WP10`.
-- Relationship to plan: completed architecture integration after Task 061's initial seven-Skill source skeleton.
+- Related document: `documents/engineering-governance-capability-hardening-v0.6.0.md`.
+- Parent architecture authority: `documents/engineering-governance-capability-model-v0.6.0.md`.
+- Relationship to plan: Task 062 froze a complete architecture candidate; Task 063 reopens source architecture only for bounded semantic hardening accepted after the seven-Skill audit.
 
 ## Accepted baseline
 
-- Task start literal branch HEAD: `b70f2b7cd76c199229989a287c83ea3bea0081e3`.
-- Prior Task 061 Delivery / Semantic HEAD: `c97d3cef13ac5546bf00d9d1eb4d620c88ffad57`.
+- Task start literal branch HEAD: `177c685e867747eb8346edcef31272e03df405ea`.
+- Prior frozen Architecture Delivery / Semantic HEAD: `26fdc590b4c4ef1e25781f7065626fc87fc349cf`.
 - Branch: `codex/capability-model-v0.6.0`.
-- PR #26 remained OPEN / DRAFT / UNMERGED throughout construction.
-- Published/installed baseline remained Plugin `0.5.5`.
+- PR #26: OPEN / DRAFT / UNMERGED.
+- Published/installed Plugin baseline remains `0.5.5`.
+- Installed v0.6.0 integrated acceptance has not run.
 
-## Completed work
+## User-decided architecture corrections
 
-### WP6 — end-to-end composition
+1. **Sub Agents are a throughput capability, not a behavior to minimize.** When authorized work decomposes into genuinely independent units, the orchestrator should use available safe parallelism. The constraint is dependency/writer/integration safety, not an arbitrary preference for fewer agents.
+2. **HIGH-capability models are allowed and should be selected when justified.** The prohibited behavior is silent/unreasoned inheritance or escalation, not intentional use of strong models.
+3. **Web and Local are execution contexts, not engineering task classes.** The same execution task may cross contexts without becoming a new task merely because another machine/session/agent continues it.
+4. **Task boundaries follow engineering purpose/authorization.** Design, execution, independent audit/acceptance, corrective work, verification, diagnosis, and closeout may be distinct tasks when their objective/authority boundary is distinct. Subagent work units inside one authorized execution remain the same task.
+5. **A written/accepted solution is execution authority context, not something every executor re-derives.** An execution task should implement the accepted design/plan; a later independent audit/acceptance task evaluates the result from its own evidence boundary.
 
-- Added `skills/project-governance/references/capability-composition.md`.
-- Rebuilt the internal normal development flow around all seven Skills and explicit return paths.
-- Clarified that the task's `Handoff / current stop point` is lifecycle state, not a Web/local/subagent transport card.
+## In scope
 
-### WP7 — execution and handoff operational contracts
+1. Add a lightweight task-purpose / task-class contract under Project Governance, including same-task vs new-task rules.
+2. Make Execution Orchestrator positively exploit safe parallel Sub Agent capacity when decomposition is beneficial, while preserving dependency and writer-authority gates.
+3. Add explicit environment model-tier mapping semantics for actual model + reasoning effort, including intentional HIGH selection and explicit escalation/fallback behavior.
+4. Make handoff context-neutral: source/target contexts may be Web, local, cloud, subagent, reviewer, or another execution surface without defining task purpose.
+5. Bind same-task cross-context continuation to the same task authority and fresh authority basis rather than duplicated interpretation.
+6. Clarify that formal independent audit/acceptance is a distinct task-purpose boundary when independence is required; implementation self-check remains verification rather than independent acceptance.
+7. Update the integrated acceptance specification for positive Sub Agent use, intentional HIGH-model use, task-purpose/context separation, and cross-context same-task continuity.
+8. Re-audit the hardened source and freeze a new v0.6.0 Architecture Delivery / Semantic HEAD candidate.
 
-- Defined executor topologies, role/write authority, parallelism gates, delegation context packages, risk-based review gates and ephemeral recovery ledger semantics.
-- Defined model capability tiers `LOW / STANDARD / HIGH`, explicit ceilings/fallbacks and no silent escalation/inheritance.
-- Completed Agent Handoff `EXECUTE / AUDIT / DIAGNOSE / REVIEW / VERIFY` profiles and mode-specific request/receipt behavior.
+## Out of scope
 
-### WP8 — design, evidence and authority integration
+- Running installed Plugin/Web/Codex integrated acceptance under this task.
+- Adding an eighth top-level Skill.
+- Hardcoding one universal provider/model name into reusable governance.
+- Adding a model-router executable, daemon, scheduler, database, automatic enforcement runtime, or fourth project control file.
+- Merging PR #26 or publishing v0.6.0.
 
-- Connected Solution Design to durable planning convergence and `TASK_RECONCILIATION_REQUIRED`.
-- Classified transport/evidence artifacts as non-control by default.
-- Defined Evidence Audit `CODE_DIFF / PR_MERGE / CI / RELEASE_PROVENANCE / POST_CHANGE` profiles, findings/verdict rules and semantic-evidence/live-host-gate separation.
-- Integrated those semantics into planning, control-plane and verification contracts.
+## Verification level, cadence, and rationale
 
-### WP9 — Skill Engineering quality
+`V2` source-architecture hardening.
 
-- Added `references/SKILL_ENGINEERING.md`.
-- Required distinct trigger/owner/return contract, progressive disclosure, positive + negative routing scenarios and explicit over-trigger prevention without adding a top-level Skill.
-
-### WP10 — integrated acceptance specification
-
-- Added `references/V060_INTEGRATED_ACCEPTANCE.md`.
-- Defined positive routes, negative/over-trigger cases, composition, handoff, model/writer, evidence-audit, control/planning and environment acceptance scenarios.
-- The matrix was **defined only**, not executed under this task.
-
-## Architecture freeze
-
-Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
-
-`26fdc590b4c4ef1e25781f7065626fc87fc349cf`
-
-Any later reusable-source correction discovered by integrated acceptance creates a new semantic candidate and must be re-audited accordingly.
-
-## Verification result
-
-`V2 remote source-architecture audit: PASS`.
-
-Evidence:
-
-- exactly seven top-level Skill directories;
-- `plugin.json` version `0.6.0`;
-- global routing/adoption/template contracts name all seven Skills and keep specialist routes conditional;
-- Project Governance reference set includes the new capability-composition lifecycle;
-- Solution Design, Execution Orchestrator, Agent Handoff and Evidence Audit operational contracts reread from the frozen branch;
-- Incident Doctor retains the three-condition evidence gate;
-- PR #26 at semantic freeze is OPEN / DRAFT / UNMERGED / `mergeable=true`;
-- frozen semantic head has no reported commit/check statuses; CI PASS is not claimed;
-- base-to-frozen diff contains only governance/Skill Markdown/JSON paths and no changed release workflow/runtime implementation.
+During construction use bounded source/reference consistency checks only. After all hardening changes are integrated, run one remote source-architecture audit and freeze a new semantic head. Installed Plugin/Web/Codex acceptance remains one later consolidated pass against that frozen identity.
 
 ## Acceptance criteria
 
-All Task 062 architecture-completion criteria are satisfied.
+- Project Governance distinguishes engineering task purpose from execution context and from subagent work units.
+- The same authorized task can continue across contexts without artificial task duplication.
+- Independent audit/acceptance can be represented as a distinct task-purpose boundary rather than implementer self-review masquerading as independence.
+- Execution Orchestrator treats safe parallelism as useful capacity and can actively dispatch independent units when beneficial.
+- Model selection can intentionally choose LOW / STANDARD / HIGH and bind those tiers to actual environment model/reasoning settings when material.
+- HIGH use is not prohibited; silent/unjustified inheritance/escalation remains prohibited.
+- Handoff references the same task authority for continuation and records enough authority basis to detect incompatible drift.
+- Integrated acceptance scenarios cover these semantics.
+- No new task/status/control authority is introduced.
+- PR #26 remains Draft.
 
-Installed Plugin/Web/Codex routing/runtime acceptance is explicitly not part of Task 062 and has not been run. The accepted sequence is architecture completion/freeze first, then one consolidated integrated acceptance task.
+## Stop conditions
 
-## Handoff / terminal state
+- A proposed rule makes Web/Local a reusable task-authority distinction.
+- A proposed rule suppresses useful parallel agents or HIGH models solely for conservatism rather than dependency/risk/cost constraints.
+- A proposed task class becomes a second task authority instead of metadata owned by `CURRENT_TASK.md`.
+- The branch acquires unrelated runtime/release implementation.
 
-Task 062 is complete. PR #26 remains Draft.
+## Handoff / current stop point
 
-Next authorized work must be a separate consolidated v0.6.0 acceptance task against semantic head `26fdc590b4c4ef1e25781f7065626fc87fc349cf`, using `references/V060_INTEGRATED_ACCEPTANCE.md`. Do not patch reusable source inside local installed Plugin acceptance; reusable defects return to the remote source flow.
-
-Control Alignment Gate:
-
-- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-model-v0.6.0.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+Task 063 is authorized for remote source hardening. The next terminal boundary is a **new hardened architecture semantic freeze**, followed later by the existing consolidated integrated acceptance process.
