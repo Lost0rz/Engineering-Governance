@@ -8,39 +8,48 @@ Task ID: `EG-CAPABILITY-ROUTING-ENVIRONMENT-HARDENING-066`
 
 Task class: `CORRECTIVE`
 
-State: `ACTIVE`
+State: `COMPLETE`
 
 ## Objective
 
-Finish the v0.6.0 architecture with a lightweight routing/configuration cleanup before consolidated installed acceptance.
+Finish the v0.6.0 architecture with lightweight routing, rule-authority, environment-capability, cross-repository, and bounded safety hardening before consolidated installed acceptance.
 
-## Scope
+## Completed
 
-1. Make routing surfaces environment-neutral: explicit selection, Skill metadata, global/project guidance, or platform routing where available.
-2. Keep portable workflow rules in Skills/references; keep root repository guidance focused on this source repository.
-3. Generalize environment-owned capability resolution beyond Sub Agent model values without hardcoding local/runtime settings.
-4. Add only the missing bounded cross-repository governance/navigation semantics.
-5. Tighten Evidence Audit metadata, DIAGNOSE side-effect semantics, Solution Design reversibility, Doctor probe safety/cleanup, and no-op control-write acceptance.
+- Routing surfaces made environment-neutral; Local-style global guidance is no longer a universal requirement.
+- Routing metadata hardened toward requested outcome/condition rather than keywords.
+- Root repository guidance reduced; portable workflow remains in Skills/references with progressive-disclosure links.
+- Added generic environment capability resolution without hardcoded runtime values.
+- Added bounded cross-repository control/navigation semantics without a new Skill/control plane.
+- Clarified read-only `DIAGNOSE` vs state-changing diagnostic probe handoff.
+- Added material-only design reversibility and diagnostic probe observer-effect/cleanup rules.
+- Condensed integrated acceptance and added no-op control-write checks.
 
-## Constraints
+## Architecture freeze
 
-- No eighth Skill.
-- No runtime, daemon, installer, model-router, database, or automatic enforcement service.
-- Do not add large mandatory forms; environment capability fields are read only when material to the current task.
-- Preserve `ENVIRONMENT_DEFAULT_ONLY` and safe useful Sub Agent parallelism.
-- Do not run Skill-by-Skill installed acceptance during construction.
+Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
 
-## Baseline
-
-- Branch: `codex/capability-model-v0.6.0`.
-- Start literal HEAD: `b6bb90a4abfb1c99ef7fe91bcfa0b3ba0aa18b2a`.
-- Prior frozen semantic HEAD: `b7fb0051b8c51b5c846a507fad9037518dcf18db`.
-- PR #26: OPEN / DRAFT / UNMERGED.
+`f3d47b00cac41ebd19408cef18563c91be67ae53`
 
 ## Verification
 
-Use bounded source/static consistency checks during construction. Freeze one new semantic head only after the whole Task 066 scope is coherent, then update the consolidated acceptance specification.
+`V2 remote source-architecture audit: PASS`.
 
-## Stop conditions
+- exactly seven top-level Skills;
+- Plugin metadata `0.6.0`;
+- only governance/Skill/design/acceptance Markdown/control changes;
+- no runtime/daemon/database/workflow/model-router/automatic enforcement added;
+- PR #26 OPEN / DRAFT / UNMERGED and mergeable/clean at audit time;
+- no commit/check status on semantic head, so CI PASS is not claimed.
 
-Stop if the change would create a new control plane, hardcode environment-specific runtime values, or materially expand beyond the seven-Skill architecture.
+## Terminal state
+
+Task 066 is complete. Next authorized milestone is one consolidated v0.6.0 installed Plugin/Web/Codex acceptance against the frozen semantic identity (or a proven semantic-tree-equivalent closeout descendant).
+
+Control Alignment Gate:
+
+- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-hardening-v0.6.0.md`
+- `DOCUMENT_ALIGNMENT`: `UPDATED`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `CONTROL_ALIGNMENT`: `PASS`
