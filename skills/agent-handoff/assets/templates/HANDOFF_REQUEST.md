@@ -13,19 +13,21 @@ TARGET: <immediate requested outcome / object>
 AUTHORITY: <current task + other decision-relevant authority references>
 DELTA: <fresh transfer-specific delta | NONE>
 BOUNDARY: <allowed read/write/action boundary>
-RETURN_CONTRACT: <evidence/result required for the next decision>
+RETURN_CONTRACT: <actual evidence/result required for the next decision; do not predeclare success>
 ```
 
 `CAPABILITY` selects the bounded Skill/capability the receiver should use. `MODE` classifies receiver action/side effects. A mode name never replaces Skill routing or grants mutation authority.
+
+Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` are not `MODE` values. Put them in `PURPOSE` or `DELTA` when useful.
 
 ## Conditional fields
 
 Use only when decision-relevant:
 
 ```text
-PURPOSE: <for example DIAGNOSTIC_PROBE | TEST_IMPLEMENTATION>
+PURPOSE: <for example CORRECTIVE | DIAGNOSTIC_PROBE | TEST_IMPLEMENTATION>
 PROFILE: <for example TEST_RUN>
-OBSERVED_BASIS: <revision/observation/head>
+OBSERVED_BASIS: <sender-observed revision/observation/head; not automatically a lock>
 SOURCE_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
 TARGET_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
 STOP: <transfer-specific stop condition>
@@ -36,9 +38,29 @@ AUDIT_INDEPENDENCE: <SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN>
 
 Do not duplicate the full objective, scope, acceptance, STOP conditions or workspace policy already owned by `CURRENT_TASK.md`. If accessible authority conflicts materially with the Card, return to Project Governance rather than following the stale Card.
 
+A sender-observed SHA/ref belongs in `OBSERVED_BASIS` by default. Use `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or another equality-lock field only when the referenced owning authority explicitly defines that lock.
+
+## Mandatory pre-return gate
+
+Before returning this Card, revise the draft until every item is YES:
+
+```text
+HANDOFF_ROUTE_APPLIED: YES
+REQUIRED_CORE_COMPLETE: YES
+MODE_VALID: YES
+TASK_AUTHORITY_PRESERVED: YES
+AUTHORITY_REFERENCED_NOT_DUPLICATED: YES
+DELTA_IS_TRANSFER_SPECIFIC: YES
+BOUNDARY_DOES_NOT_EXPAND_AUTHORITY: YES
+OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES
+RETURN_CONTRACT_OUTCOME_NEUTRAL: YES
+```
+
+Do not return a known-noncompliant draft plus commentary. Correct it before return.
+
 ## Mode hints
 
-- `EXECUTE` — authorized state change only within `BOUNDARY`; use explicit `PURPOSE` for state-changing test/probe work.
+- `EXECUTE` — authorized state change only within `BOUNDARY`; use explicit `PURPOSE` for corrective/test/probe work when decision-relevant.
 - `AUDIT` — read-only audit action. `MODE: AUDIT` does not itself mean `CAPABILITY: evidence-audit`.
 - `REVIEW` — read-only work-product evaluation.
 - `VERIFY` — read-only named claim/check; normal test runs use `PROFILE: TEST_RUN`.
