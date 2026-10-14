@@ -7,11 +7,11 @@ Engineering-Governance is a source repository for reusable AI engineering Skills
 v0.6.0 has eight top-level Skills:
 
 - **Project Governance** — normal engineering entry; task/control authority, lifecycle, writers/workspaces, verification and closeout.
-- **Project Profile** — creates/refreshes a compact derived project-context/index from verified authorities; it is not project authority.
+- **Project Profile** — creates/refreshes a compact derived project-context/index from verified authorities; repository/project-managed mutation still requires compatible task authority.
 - **Solution Design** — material requirements/architecture/state-ownership ambiguity.
 - **Execution Orchestrator** — decomposition, Sub Agents, safe parallelism, environment-aware delegation, recovery/integration.
-- **Agent Handoff** — standardized bounded cross-context cards and receipts.
-- **Evidence Audit** — read-only evidence/acceptance/readiness verdicts bound to identity and required claims.
+- **Agent Handoff** — standardized bounded cross-context cards/receipts with separate `CAPABILITY` and `MODE` dimensions.
+- **Evidence Audit** — formal read-only evidence/acceptance/readiness verdicts bound to identity and required claims; simple advisory inspection may remain in Project Governance.
 - **Domain Navigation** — unclear Domain/authority/source/symbol/test/runtime route.
 - **Incident Doctor** — blocking evidence gap requiring minimal diagnosis/probes.
 
@@ -20,12 +20,13 @@ Global routing is policy, not a ninth Skill.
 ## Project information layers
 
 - project `AGENTS.md` — normative project-specific MUST/MUST-NOT rules and durable boundaries;
-- Project Profile — concise descriptive context + pointers to authorities;
+- Project Profile — concise descriptive context + pointers to authorities; one current projection surface or explicit primary + mirror;
 - Domain/navigation authority — detailed semantic ownership/source/test/runtime route;
 - durable planning — long-lived design/rationale/work packages when justified;
 - `CURRENT_STATUS.md` — concise current-state snapshot;
 - `CURRENT_TASK.md` — single active authorization;
-- code/schema/CI/host/runtime — evidence/implementation sources for what they own.
+- implementation authority — canonical source/schema/config/workflow/persisted contract/state owner for the implementation class;
+- observed evidence — CI/test results, PR/host state, runtime/review/audit/probe observations.
 
 A Profile or Domain Map is a derived projection. If it conflicts with its authority, the authority wins and the projection is stale.
 
