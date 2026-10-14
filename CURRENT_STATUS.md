@@ -50,54 +50,82 @@ Focused compare from Task-077 control checkpoint `15be4b538affccec34480dc053e820
 
 No other Skill or capability architecture changed.
 
-Task 077 hardens the Profile structure:
+## Fresh Web 0.6.6 profile regressions
 
-```text
-Detailed Domain/navigation authority exists
-→ Authority map = authority pointers only
-→ no X-owns/Y-owns subsections or upstream/downstream/runtime ownership catalogs
-→ at most one broad ownership invariant elsewhere when essential
-```
+User supplied new generated Profile outputs for Gift, Merloom and MemoX after the `0.6.6` Web update. Repository authorities were reread to validate the claims.
 
-`Environment` now accepts only durable platform/environment/data-role context and authority pointers; behavioral fail-closed/fallback/no-fixture/verification/execution rules are rejected from that section.
-
-## Web 0.6.6 regression result
-
-After installed readback, neutral in-session Gift and Merloom Profile generations were exercised against the corrected contract.
-
-### Gift — PASS for Task-077 target
+### Gift — PASS for the 0.6.6 structural/grounding/durability target
 
 Observed:
 
-- `Authority map` contains authority pointers only, including `docs/storefront/DOMAIN_MAP.md`;
-- no separate `Merloom owns / Gift owns` ownership subcatalog is emitted under `Authority map`;
-- one broad upstream-vs-serving invariant is sufficient for project identity;
-- `Environment` contains storefront/platform/data-flow role only and no fail-closed/no-fixture behavioral rule;
-- no Memory-only merchandise/visual preferences, Mac mini/Air, `:3000`, current task/PR/CI or stage-only `storefront CMS` anti-goal;
-- durable B2B/Product-first/Inquiry/RFQ identity remains;
-- Engineering Governance uses the compact hook.
+- fixed metadata fields preserved;
+- no Memory-only merchandise/visual preferences;
+- no Mac mini/Air, `:3000`, current task/PR/CI or upstream-blocker state;
+- no stage-only `storefront CMS` anti-goal;
+- `Authority map` is pointer-oriented and no Merloom/Gift ownership subcatalog is recreated there;
+- one broad upstream-vs-Gift ownership invariant remains in `Stable concepts`, which is allowed for orientation;
+- `Environment` is platform/data-flow oriented and does not contain code/source maps or temporary runtime detail;
+- Engineering Governance uses the compact hook;
+- durable B2B/Product-first/Inquiry/RFQ identity remains.
 
-### Merloom — PASS for Task-077 target
+Minor compression note: a `Keep project control lightweight` subsection under `Priorities / constraints` repeats generic control/Profile-placement guidance and is not needed for product orientation. This is non-blocking for the Task-077 target but should be omitted by ideal compression.
+
+### Merloom — PASS for the 0.6.6 target
 
 Observed:
 
-- `Authority map` remains pointer-oriented and does not expand into domain ownership subsections;
-- no source/code directory responsibility map appears in `Environment`;
-- `Environment` keeps only durable Merloom/Gift platform relationship and Business/Analytics data-role context;
-- durable greenfield/single-Authority/Evidence-vs-Business/Publication/AI-candidate/recapture/RFQ/Analytics identity remains;
+- fixed metadata fields preserved;
+- current PR/Task/CI/current-stage details absent;
+- `Authority map` remains pointer-oriented;
+- no repository source/code responsibility map appears in `Environment`;
+- durable private-control-plane / Gift-serving / Business-vs-Analytics data-role distinctions remain;
+- durable greenfield, single-Authority, evidence-vs-business, explicit Publication, AI-candidate, recapture and analytics boundaries remain;
 - Engineering Governance uses the compact hook.
 
-These are same-session neutral Web regressions after installing `0.6.6`; they demonstrate the corrected generation shape but do not substitute for a separate fresh-session independence check if final integrated acceptance requires one.
+The `Priorities / constraints` section remains somewhat dense but consists mainly of durable greenfield/product anti-goals and is not a Task-077 regression.
+
+### MemoX — PASS for the required durability/authority-class regression
+
+Observed:
+
+- current Codex-only MVP/wave/viewer/runtime delivery shape is absent;
+- accepted `V1 Local Store: SQLite` remains explicitly scoped;
+- accepted `long-term production Core: Rust` remains explicitly scoped;
+- planned Swift Apple shell/UI role is preserved with the unselected Rust/Swift boundary;
+- Raw Evidence, Canonical Memory, Provider/derived projections, Retrieval and MCP authority classes remain distinct;
+- `Authority map` is pointer-oriented and `DOMAIN_MAP.md` remains navigation only;
+- current Task/Status/PR/runtime state is absent;
+- Engineering Governance uses the compact hook.
+
+Minor compression note: `Priorities / constraints` lists twelve durable architecture/data rules and reads closer to an architecture summary than the ideal compact Profile. This is a quality/compression issue, not a grounding/durability/authority-class failure.
+
+## Acceptance interpretation
+
+The 0.6.6 source correction is materially effective across Gift, Merloom and MemoX.
+
+The previously blocking classes are no longer reproduced in these new outputs:
+
+- Memory/history backfill into Profile facts;
+- current-stage facts promoted into durable identity;
+- temporary environment/endpoint leakage;
+- Domain ownership mini-map under `Authority map`;
+- source/code map in `Environment`;
+- expanded per-Skill Engineering Governance routing.
+
+Remaining observations are minor semantic-compression quality issues, not evidence that another source corrective is required at this point.
 
 ## Next milestone
 
-Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` resumes.
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` remains active.
 
-Remaining Web acceptance:
+Remaining Web Profile acceptance:
 
-1. fresh/independent MemoX Profile regression: current MVP/wave/viewer shape excluded while `V1 SQLite`, `long-term Rust Core` and authority-class distinctions remain;
-2. fresh/independent FloatTabs Profile regression: old Project Instructions do not self-bootstrap, established Domain Map remains a pointer, current/runtime state stays out;
-3. optional independent fresh-session Gift/Merloom confirmation before claiming the complete Web Profile boundary PASS;
-4. then continue remaining Task-070 routing scenarios and Local Codex integrated acceptance.
+1. fresh FloatTabs regression:
+   - old Project Instructions do not self-bootstrap their own truth;
+   - established Domain/navigation authority remains a pointer;
+   - current/runtime state stays out;
+   - fixed metadata and compact Engineering Governance hook remain correct.
+2. After FloatTabs passes, review the remaining Task-070 routing positive/negative scenarios before declaring the Web boundary complete.
+3. Local Codex integrated acceptance and formal GitHub release/merge remain later boundaries.
 
-Formal GitHub release/merge remains deferred until the integrated acceptance boundary is supported.
+No new Profile source corrective is authorized from the current minor compression observations alone.
