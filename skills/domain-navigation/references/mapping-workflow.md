@@ -1,21 +1,54 @@
 # Task-to-code mapping workflow
 
-Route from the authorized work to the smallest useful source set:
+Route to the smallest source set sufficient for the current decision.
 
-Current-task route: `authority gate -> verified CURRENT_TASK -> affected Domain(s) -> existing semantic authorities and/or navigation projection -> candidate authorities / entry points / symbols / tests -> targeted search or optional Repo Map -> focused source reading -> confirmed route + unresolved gaps`
+## Authority gate
 
-Explicit snapshot route: `named target -> affected Domain(s) -> relevant authorities / entry points / symbols / tests -> focused source reading -> bounded/historical result`
+For current-task navigation, identify the selected repository/checkout and verify the applicable task/control authority is current enough for this routing decision. If authority is unavailable/materially stale/contradictory, return `STOP_CURRENT_TASK_NAVIGATION` rather than guess.
 
-1. Classify the request before mapping: is the route based on the current task, or has the user explicitly bounded it to a named snapshot/file/symbol?
-2. For current-task navigation, identify the selected repository/checkout, read its applicable controls, and establish that the task authority's provenance and freshness are sufficient for this decision before using it as current. Use the project's declared authority and check only the relevant revision, ref, or control state needed to verify it.
-3. Do not require fetching every remote or perfect repository-wide freshness when the authority is already sufficiently supported. A known stale checkout, an unrefreshed authority ref when remote currentness matters, conflicting controls, or a material gap in the freshness basis means current-task authority is unresolved. Return `STOP_CURRENT_TASK_NAVIGATION`, state the evidence and gap, hand back to Project Governance reconciliation, and stop before routing the guessed task to sources, symbols, or tests. Branch names, working-tree changes, local code shape, old documents, chat, and memory may signal a mismatch but cannot establish the active task.
-4. For an explicitly bounded or historical target, skip current-task claims, fix the named scope/revision for this navigation, and label the result `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION`. Do not use this exception to resume a current-task route whose authority is unresolved.
-5. Keep the navigation target within the verified current task or the explicitly bounded mapping goal. Discover accepted business, product, domain, and capability maps or other semantic authorities already present in the target repository, regardless of filename. Determine which semantic facts they actually own; do not assume a file named `DOMAIN_MAP.md` must exist or that a similarly named document is authoritative without evidence.
-6. Identify the affected Domain(s) from the verified task and those accepted semantic authorities. If a current navigation projection exists, follow it to candidate authority sources, entry points, symbols, and tests and verify that each task-relevant pointer is current enough for this decision. Distinguish three outcomes for the checked route: the projection is verified correct; the projection is wrong/incomplete/stale but a replacement route is verified; or the route remains unresolved.
-7. If no navigation projection exists, or the existing one is missing or insufficient, route from the accepted semantic authorities and inspect only the smallest evidence set needed for this work. Depending on the question, this may include applicable controls and accepted intent/docs, repository manifests and source entry points, relevant tests, imports or references found from those paths, and runtime/operational entry points when relevant. Create or refresh a separate navigation projection only when durable source/symbol/test routing adds value beyond the existing semantic authorities; do not duplicate their business/domain truth.
-8. Use targeted search or an optional Repo Map to choose candidate files or symbols when useful. Treat results as leads, then read the focused sources directly.
-9. Report the confirmed route: which files to read and why, relevant symbols/tests, the authority for each needed fact class, and which relationships are directly observed. When an accepted projection was checked, also state whether it remains correct, has a verified affected correction, or still contains an unresolved/stale point. Keep unsupported ownership, missing paths, and conflicts explicitly unresolved. A useful route does not require a new persistent navigation file.
-10. For **current-task navigation**, hand any verified current projection correction to the accepted [refresh policy](refresh-policy.md). A correct unchanged route produces no route-content churn; an unresolved replacement stays explicit rather than guessed. In strict read-only work, report the correction candidate but do not mutate the projection.
-11. For `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION`, the bounded or historical result is evidence about that named target only and must not refresh the current project projection merely because the historical route differs. Refresh is allowed only when the bounded artifact itself is the explicitly authorized mutation target, or when current-target evidence is separately checked and independently verifies the same correction under the normal current-task refresh contract.
+For an explicitly named historical commit/branch/file/symbol, label the result `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION` and do not present it as current task authority.
 
-Do not start with a whole-repository survey by default. Expand to whole-repository mapping only when the authorized task genuinely requires that scope; otherwise follow references outward only as needed to answer the routing question.
+## Focused route
+
+```text
+verified task/target
+-> affected Domain/capability
+-> accepted semantic authority/navigation projection
+-> candidate entry points/symbols/tests/runtime evidence
+-> focused verification
+-> confirmed route + unresolved gaps
+```
+
+Existing maps/search/indexes are leads, not proof. Direct focused source/runtime evidence verifies the route.
+
+## Search escalation
+
+Use the lightest method that answers the question:
+
+1. known path -> direct read;
+2. name/symbol -> targeted text search;
+3. structural code question -> AST/structural search when available;
+4. call/dependency/xref question -> indexed symbol/reference tool when available;
+5. runtime ownership -> runtime/config/entry-point evidence.
+
+Tool choice is environment-specific; this Skill defines the search progression, not a mandatory tool.
+
+## Cross-repository route
+
+When the governing task or explicit target spans repositories, route only through the named participants and shared contract authority. Report when material:
+
+```text
+OWNING_REPOSITORY
+CONSUMER_REPOSITORY / DOWNSTREAM
+UPSTREAM
+CROSS_REPO_CONTRACT_AUTHORITY
+RELEVANT_SOURCE_TEST_RUNTIME_ROUTE
+```
+
+Do not infer repository ownership from folder/name similarity or create a new cross-repo control artifact.
+
+## Stop rule
+
+Stop when the route is sufficient for the current decision. Expand one dependency/ownership hop only when a decision-relevant gap remains. Do not turn bounded navigation into whole-repository or whole-organization archaeology.
+
+If an accepted navigation projection is verified stale and the active task authorizes refresh, update only the affected derived claim. Read-only work reports the correction candidate without mutation.

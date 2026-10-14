@@ -1,45 +1,44 @@
 # Global Skill routing
 
-This contract answers one question: **which Engineering Governance Skill should handle the request now?** It selects capability; it does not duplicate Skill procedures or project facts.
+This contract answers one question: **which Engineering Governance capability should handle the request now?** It selects capability; it does not duplicate Skill procedure or project facts.
 
-## Routing precedence
+## Routing surfaces
 
-1. Follow higher-priority system, developer, user, and explicitly selected Skill instructions.
-2. Follow the selected repository's applicable `AGENTS.md` and project controls.
-3. For software/project/repository engineering work, use `project-governance` as the normal Engineering Governance entry unless a higher-priority instruction already selected a narrower route.
-4. Route conditionally only for the bounded capability whose trigger is met, then return to the governing caller.
+An execution environment may expose one or more routing surfaces:
 
-Project Governance remains lightweight for simple clear work: entering it does not require extra plans, agents, worktrees, audits, or broad validation merely because the Plugin is active.
+- explicit user/host Skill selection;
+- Skill frontmatter/metadata discovery;
+- project guidance such as repository `AGENTS.md`;
+- authoritative global guidance when that environment supports it;
+- platform/runtime routing behavior.
 
-## Route table
+Do not require a Local-style global guidance file in environments that do not have one. A routing surface selects capability; it does not create project task authority.
 
-| Situation | Route | Return path |
-| --- | --- | --- |
-| Establishing/using project authority, starting/reconciling authorized work, verification-tier choice, workspace lifecycle, final alignment/closeout | `project-governance` | Remain here unless a narrower capability is needed. |
-| Materially ambiguous requirements, cross-boundary architecture/state ownership, competing options, or durable design decisions must be resolved before implementation | `solution-design` | Return accepted design and reconciliation need to Project Governance. |
-| Authorized work needs decomposition, multi-agent/role scheduling, parallelism, delegated-model policy, or resumable execution | `execution-orchestrator` | Return execution evidence/result to Project Governance. |
-| Responsibility crosses agents/sessions/machines/contexts and needs a bounded request/receipt | `agent-handoff` | Return to the caller/receiver workflow; handoff never becomes task authority. |
-| Independent implementation/code/PR/CI/release/merge-readiness evidence verdict is requested | `evidence-audit` | Return verdict/findings to Project Governance or the requesting read-only caller. |
-| Domain/capability/authority/source/symbol/runtime/dependency/test route is unclear | `domain-navigation` | Return verified route/unresolved gap to caller. |
-| A real failure/unexplained unsafe ambiguity blocks progress and existing evidence is insufficient for the next safe decision | `incident-doctor` | Return evidence/fix boundary to Project Governance when authorization/change is needed. |
-| Bug/failure already has enough evidence for safe action | Stay in authorized Project Governance flow | Do not enter Doctor merely because a defect exists. |
-| Non-project/non-engineering request | No Engineering Governance route required | N/A. |
+## Routing rule
 
-## Composition examples
+For software/project/repository engineering work, `project-governance` is the normal Engineering Governance entry unless a higher-priority instruction or explicit bounded Skill selection already determines the route. Narrow Skills are invoked only for the capability whose semantic trigger is met, then return to the governing caller.
+
+| Requested outcome / condition | Route |
+| --- | --- |
+| establish/reconcile task authority, scope, workspace/writer lifecycle, verification level, final alignment | `project-governance` |
+| resolve material intent/architecture/state-ownership ambiguity before implementation | `solution-design` |
+| improve execution through decomposition, agents, parallelism, environment-aware delegation, recovery, or controlled integration | `execution-orchestrator` |
+| transfer responsibility across agents/sessions/machines/contexts with a bounded request/receipt | `agent-handoff` |
+| produce a read-only evidence/acceptance/readiness verdict separate from implementation | `evidence-audit` |
+| establish an unclear Domain/authority/source/symbol/runtime/dependency/test route | `domain-navigation` |
+| investigate a real blocking failure/unsafe ambiguity when existing evidence cannot support the next safe decision | `incident-doctor` |
+
+A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit when the requested outcome is implementation or corrective work. Mentioning a bug does not imply Incident Doctor when evidence already supports safe action.
+
+## Composition
+
+Project Governance remains the authority/lifecycle owner when several capabilities apply. Typical bounded compositions include:
 
 - `project-governance -> solution-design -> project-governance`
 - `project-governance -> execution-orchestrator -> project-governance`
-- `execution-orchestrator -> agent-handoff -> delegated role -> agent-handoff receipt -> execution-orchestrator`
+- `execution-orchestrator -> agent-handoff -> delegated unit -> receipt -> execution-orchestrator`
 - `project-governance -> evidence-audit -> project-governance`
-- any caller -> `domain-navigation` -> caller when routing evidence is unclear
-- `project-governance -> incident-doctor -> domain-navigation -> incident-doctor -> project-governance` only when the Doctor evidence gate and navigation need both apply
+- caller -> `domain-navigation` -> caller
+- `incident-doctor -> domain-navigation -> incident-doctor` when diagnosis only needs bounded evidence location
 
-A handoff/delegation never creates a second task authority. Narrow Skills do not override project controls.
-
-## Anti-duplication boundary
-
-The global managed block contains only route-selection semantics. Do not copy into it control-plane procedures, design workflows, orchestration/delegated-model rules, handoff templates, audit procedures, workspace lifecycle, V0–V3 details, Doctor probe methods, or current project facts.
-
-## Ambiguity rule
-
-If multiple capabilities appear relevant, keep Project Governance as authority/lifecycle owner and invoke the narrow capability only for the part it owns. Do not create a Router Skill; this file is the routing policy.
+Do not create a Router Skill, recursive peer mesh, or second task authority.

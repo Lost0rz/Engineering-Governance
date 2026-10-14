@@ -1,49 +1,38 @@
-# Global routing adoption and upgrade
+# Routing adoption and upgrade
 
-Engineering Governance adoption is performed by an authorized AI agent. This contract does **not** define or require an installer executable, daemon, hook, MCP service, background process, or automatic file-mutating runtime.
+Adoption makes the seven Skills discoverable through the routing surfaces supported by the current execution environment. It does not require an installer daemon, hook, MCP service, background process, or automatic file mutation.
 
-The adoption target is the user's declared authoritative global agent-guidance file.
+## Completion contract
 
-## Installation completion contract
+Adoption is complete when:
 
-Installation/adoption is complete only when:
+1. the intended Plugin payload/version is available and all seven Skills resolve; and
+2. at least one supported authoritative routing surface can select them correctly.
 
-1. the Plugin payload is installed/available and all seven expected Skills resolve: `project-governance`, `solution-design`, `execution-orchestrator`, `agent-handoff`, `evidence-audit`, `domain-navigation`, `incident-doctor`;
-2. the authoritative global guidance contains exactly one verified current Engineering Governance managed routing block.
+If the environment has an authoritative global guidance file, manage exactly one current Engineering Governance routing block using the shipped markers/template. If the environment does not expose such a file, do **not** invent one; rely on its supported Skill metadata/platform/explicit-selection routing surfaces and verify behavior there.
 
-For upgrades, verify the new Skill payload first, then reconcile the managed routing block. Do not install a route that points to unavailable capabilities.
+## Global-guidance environments
 
-## Managed block identity
-
-Use the exact markers shipped in [GLOBAL_AGENTS_ROUTING.md](../assets/templates/GLOBAL_AGENTS_ROUTING.md):
+Use the exact markers in `assets/templates/GLOBAL_AGENTS_ROUTING.md`:
 
 ```text
 <!-- BEGIN ENGINEERING-GOVERNANCE ROUTING -->
 <!-- END ENGINEERING-GOVERNANCE ROUTING -->
 ```
 
-Manage only that complete region; preserve unrelated global guidance.
+Manage only that region and preserve unrelated guidance. Multiple/conflicting marker regions require reconciliation rather than guessing.
 
-## Adoption state machine
+## Upgrade verification
 
-1. **No managed block** — insert exactly one current block.
-2. **Exactly one current block** — no semantic change.
-3. **Exactly one older compatible block** — replace that marker-bounded region in place.
-4. **Multiple blocks/conflicting partial markers** — stop and reconcile; do not guess.
-5. **No authoritative global guidance established** — report the missing authority rather than inventing a project-local substitute.
+Verify only the surfaces relevant to the environment being upgraded:
 
-## Upgrade/verification contract
+- intended Plugin identity/version;
+- exact seven-Skill availability;
+- Project Governance as normal engineering entry;
+- narrow Skills remain conditional;
+- routing is based on semantic outcome/condition rather than keywords;
+- no routing surface duplicates Skill procedure or project facts;
+- environments with managed global guidance have exactly one current routing block;
+- environments without it remain functional through their actual supported routing surface.
 
-After adoption or upgrade verify:
-
-- intended Plugin identity/version is established;
-- all seven expected Skills are available;
-- exactly one BEGIN and one END marker exist and bound one current region;
-- Project Governance is the normal engineering entry;
-- the four new capabilities are conditional rather than mandatory ceremony;
-- Domain Navigation remains conditional routing evidence;
-- Incident Doctor remains reactive/evidence-gated;
-- the block does not duplicate Skill procedures or project facts;
-- unrelated global rules remain materially unchanged.
-
-Global routing and target-project governance remain separate operations. Do not copy the global block into every repository by default.
+Global routing adoption and target-project governance are separate operations.

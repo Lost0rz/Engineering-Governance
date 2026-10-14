@@ -1,86 +1,51 @@
 # Engineering-Governance Repository Rules
 
-## Repository purpose
+## Purpose
 
-Engineering-Governance is the source repository for reusable AI engineering-governance Skills, templates, operating rules, routing/adoption contracts, and governance context. It is not a business-product repository, generic governance runtime, installer runtime, daemon, scheduler, database, or automatic enforcement/remediation service.
+This repository is the source for reusable Engineering Governance Skills, routing contracts, templates, and acceptance specifications. It is not a governance runtime, daemon, scheduler, database, installer service, or automatic remediation system.
 
-A target project is adapted by an AI agent after inspecting that project's real repository state. Templates define structure/required semantics; they are not copied blindly and do not replace project-specific facts.
+## Repository authority
 
-## Core principles
+- `AGENTS.md` contains only durable rules for maintaining this source repository.
+- `CURRENT_STATUS.md` is the concise verified current snapshot.
+- `CURRENT_TASK.md` is the single active execution authorization.
+- Reusable engineering workflow belongs in `skills/**`; do not duplicate Skill procedure here.
+- `documents/**` may preserve durable design rationale, but does not replace live controls or become a second runtime procedure source.
 
-1. **Three-file control plane.** `AGENTS.md` holds durable project/repository operating rules, `CURRENT_STATUS.md` is the concise verified current-state snapshot, and `CURRENT_TASK.md` is the single active execution authorization.
-2. **Durable planning is linked, not duplicated control.** Long-lived design/large-PR/multi-task rationale may live in an accepted planning authority. Planning documents are not a fourth control file and do not own live progress or authorize execution.
-3. **Seven-Skill capability model.** Top-level Skills are exactly `project-governance`, `solution-design`, `execution-orchestrator`, `agent-handoff`, `evidence-audit`, `domain-navigation`, and `incident-doctor`. Global routing policy is not an eighth Skill.
-4. **Project Governance remains the normal entry/authority owner.** Narrow Skills own bounded capabilities and return to the caller; none creates a second task authority.
-5. **Task purpose is independent from execution context.** A task owns one engineering objective/authorization. Sub Agent work units remain inside that task unless purpose/authority changes. Web/local/cloud/session/machine/agent are execution contexts, not reusable task classes.
-6. **Business-first, specialist Skills on demand.** Clear work stays lightweight. Use Solution Design only for material design ambiguity, Execution Orchestrator when decomposition/parallelism/delegated-model/recovery policy adds value, Agent Handoff when responsibility crosses contexts, Evidence Audit for an explicit evidence/acceptance boundary, Domain Navigation when route/authority/source/test location is unclear, and Incident Doctor only after its blocking evidence-gap gate is met.
-7. **Handoff is transport, not authority.** Cross-agent/session/machine cards preserve task authority and carry authority references + fresh delta + action boundary + return contract. Do not copy whole controls or durable Engineering Governance procedure into cards by default.
-8. **Use safe agent parallelism deliberately.** Sub Agents are throughput/context-isolation capability, not something to minimize by policy. Exploit independent parallel units when useful. Overlapping writers require one authority; multiple writers require proven-disjoint semantic write scopes/workspaces plus integration evidence.
-9. **Delegated model configuration is execution-environment authority.** Current v0.6.0 policy is `ENVIRONMENT_DEFAULT_ONLY`: each execution context uses its own authoritative Sub Agent configuration/runtime default. Reusable source must not name a concrete model/reasoning value as a cross-environment default, and handoff must not propagate sender-specific model settings to the receiver. If an environment does not expose exact model/reasoning identity, keep it `PLATFORM_DEFAULT` / `UNKNOWN` rather than infer it. Stronger-model override/escalation remains disabled until a later explicit policy change.
-10. **Proportional verification.** `V0`–`V3` expresses change risk/scope; cadence is separate. Implementation self-check is verification, not automatically independent acceptance. Universal mandatory TDD is not a repository rule.
-11. **Control records are not delivery identity.** `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only movement advances literal Repository HEAD but may be `CONTROL_ONLY_DRIFT` without changing Delivery / Semantic HEAD. Repository-host gates remain live constraints on the literal identity the host governs.
-12. **Final control alignment is mandatory; writes are conditional.** Governed state-changing work rereads/compares current status/task and materially affected linked planning authority before a final successful handoff, updates only sources whose owned semantics changed, and reports alignment explicitly.
+## Capability model
 
-## Repository layout
+Exactly seven top-level Skills are supported:
 
-- `skills/` contains reusable Skill modules. Each top-level module has one `SKILL.md` plus only needed `references/`, `assets/`, and `scripts/`.
-- `documents/` contains durable planning/design authority for this repository when work spans bounded tasks or needs long-lived rationale/constraints. It is not live progress state.
-- `references/` records upstream research, attribution/licensing notes, repository-wide maintainer contracts, and integrated acceptance specifications.
-- `examples/` contains validated examples only.
-- `docs/superpowers/` may preserve historical/tool-oriented maintainer planning; it is not reusable Plugin payload.
-- Root `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` govern this repository itself.
+1. `project-governance`
+2. `solution-design`
+3. `execution-orchestrator`
+4. `agent-handoff`
+5. `evidence-audit`
+6. `domain-navigation`
+7. `incident-doctor`
 
-## Skill design rules
+Global routing is policy, not an eighth Skill. Follow `references/SKILL_ENGINEERING.md` for Skill quality and `skills/project-governance/references/global-routing.md` for capability selection.
 
-Follow `references/SKILL_ENGINEERING.md` for the maintainer quality contract.
+## Environment boundary
 
-- Use the Agent Skills shape: `SKILL.md` plus optional supporting directories.
-- A Skill must have a distinct trigger, ownership boundary, return contract, and negative/near-miss trigger guidance. A topic alone is not a Skill.
-- Keep frontmatter `description` focused on **when to use** the Skill rather than summarizing its full workflow; put procedure in the Skill body/references.
-- Keep frequently selected Skill bodies focused; move detailed contracts/examples into references for progressive disclosure.
-- Do not duplicate authority across Skills. Project Governance owns task/control/workspace lifecycle; Solution Design owns design resolution; Execution Orchestrator owns execution topology/delegated-model/parallel/recovery policy; Agent Handoff owns transfer envelopes; Evidence Audit owns evidence verdicts; Domain Navigation owns semantic/source routing; Incident Doctor owns evidence-gated diagnosis.
-- Over-triggering and systematic under-use are both defects: do not invoke a Skill just because it is installed, but do not suppress a materially useful bounded capability merely for conservatism.
-- Scripts are optional and must be justified. Do not add daemons, background services, databases, installer executables, automatic remediation, or silent global-file mutation.
+Reusable source defines what environment capability must be resolved, not concrete machine/platform values. Model/reasoning defaults, parallel capacity, delegation limits, tool availability, workspace/runtime constraints, and similar execution facts remain owned by the execution environment unless a project explicitly defines a portable configuration artifact.
 
-## Evidence and adaptation
+Do not copy one environment's runtime values into reusable Plugin policy or another context's defaults. See `skills/execution-orchestrator/references/environment-capabilities.md`.
 
-- Inspect a target repository before generating/updating governance files.
-- Separate verified facts, user/project decisions, agent assumptions, and agent-made choices. Unsupported facts remain unknown.
-- Prefer concrete paths, symbols, manifests, tests, runtime entry points, Git identities, CI jobs/runs, and host-gate evidence.
-- Discover accepted semantic/domain/architecture authorities before creating derived maps or documents; reference them rather than duplicate product truth.
-- External projects are references, not hidden dependencies. Record conceptual influence and licensing posture before copying code/text. Prefer adaptation of ideas over verbatim process import.
-- When revisions are named, classify their semantic role before comparing them. Provenance/transition bases are not implicit current-head equality locks.
-- Audit claims bind to the identity/range and required claims they inspected. Preserve semantic-evidence vs repository-host-gate separation.
+## Source development rules
 
-## Delivery workflow
+- Inspect actual repository/PR/source evidence before changing governance.
+- Keep one canonical owner per semantic rule; reference rather than duplicate.
+- Preserve unknown/unique work and existing project authorities.
+- Keep changes proportional: no extra Skill, worktree, agent, document, or test ceremony without material value.
+- Do not add runtime/daemon/database/model-router/automatic-enforcement behavior unless a future task explicitly changes repository purpose.
+- External projects are references, not hidden dependencies; record attribution/licensing posture before copying material.
+- No-op reconciliation means no write and no commit. Control alignment is mandatory; control mutation is conditional on semantic change.
 
-- Keep one active task in `CURRENT_TASK.md`.
-- Use optional `TASK_CLASS` only when engineering-purpose distinction helps (for example DESIGN / EXECUTION / AUDIT / VERIFY / DIAGNOSIS / CORRECTIVE / CLOSEOUT). It is task metadata, not another authority.
-- Link a durable planning section/work package when the task implements part of a cross-task design; standalone tasks may have no related document.
-- On material objective/scope/authorization/task-purpose change, reconcile the control plane before affected implementation.
-- Do not create a new task merely because work crosses Web/local/session/machine/agent context or is decomposed into Sub Agent units.
-- Prefer small independently reviewable slices without forcing artificial task fragmentation.
-- Use Agent Handoff for cross-context transfer. Same-purpose continuation keeps the same task authority; the card carries authority references + fresh delta + bounded target/return evidence.
-- Use Execution Orchestrator when decomposition/agents/parallelism/delegated-model policy/recovery adds material value. Use safe available parallelism deliberately; one executor remains correct when delegation has no material benefit or dependencies/shared state dominate.
-- During the current stabilization period, each delegated execution context resolves its own authoritative Sub Agent configuration/runtime default. Do not hardcode, copy from another machine/context, or override that default in reusable source. If exact model/reasoning identity is not observable, leave it `PLATFORM_DEFAULT` / `UNKNOWN`. Do not route a Sub Agent to a stronger model because a unit is difficult; return a capability/environment gap to the controller instead.
-- Use Evidence Audit for explicit acceptance/readiness judgments. Implementation self-check is not automatically independent; formal independent acceptance should declare its task purpose and independence basis when required.
-- **Repository-specific execution convention:** for this source repository today, Web/remote sessions commonly own reusable-source construction/remote GitHub mutation/source audit while local AI is commonly used for installed Plugin/runtime acceptance. This is an operational convention of this repository, not the reusable meaning of DESIGN/EXECUTION/AUDIT tasks and not a rule that Web or Local inherently owns a capability.
-- Preserve unknown staged/unstaged/untracked/local-only work. Do not reset/stash/delete/force-clean merely to satisfy a card.
-- Before final successful state-changing handoff, run the Control Alignment Gate and report document/status/task alignment.
+## Current repository execution convention
 
-## Verification levels and cadence
+For this repository today, Web/remote work commonly owns reusable-source construction and remote GitHub audit, while local Codex is commonly used for installed Plugin/runtime acceptance. This is an operational convention, not the reusable meaning of DESIGN/EXECUTION/AUDIT or any Skill.
 
-- **V0 — control/documentation/layout:** path/tree/content/link/frontmatter/scope consistency.
-- **V1 — localized behavior:** targeted tests plus relevant lint/type checks.
-- **V2 — domain/cross-capability change:** targeted checks plus affected-domain/integration evidence.
-- **V3 — cross-domain/high-risk/release:** broad relevant integration/build/runtime/release evidence.
+## Release / acceptance boundary
 
-Verification effort follows change risk, not change count. Cadence may deliberately separate construction sanity checks from expensive integrated acceptance. At merge/release boundaries, semantic implementation evidence and live repository-host gate state are separate claims and both must satisfy the accepted contract.
-
-## Incident Doctor boundary
-
-Incident Doctor is not a parallel product track. Enter only when a real failure/unexplained unsafe ambiguity blocks safe progress **and** current evidence cannot answer the needed decision. Use existing evidence first, then the minimum probe/hypothesis test required. Diagnosis does not itself authorize a behavior change.
-
-## Legacy preservation
-
-Historical plans/governance experiments remain recoverable through Git history/tags. Do not keep obsolete runtime trees in the active repository merely as archives.
+For multi-Skill architecture work, bounded source checks may occur during construction, but installed/runtime acceptance should follow the task-defined cadence. Do not claim CI, installed behavior, or release readiness without evidence for the exact relevant identity.

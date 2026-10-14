@@ -1,28 +1,16 @@
 # Handoff contract
 
-## 1. Task, authority, context, and freshness
+## Authority and freshness
 
-A handoff moves responsibility between execution contexts. It does not define engineering purpose and does not create task authority.
+Same-purpose continuation preserves `TASK_ID`. `AUTHORITY` names current truth; the receiver rereads it when accessible. When drift matters, `AUTHORITY_OBSERVED_BASIS` allows:
 
-For same-purpose continuation, preserve the same `TASK_ID`. `AUTHORITY` identifies where current truth/authorization lives; the receiver rereads the named authorities it can access.
+- `CURRENT_COMPATIBLE` — continue under current truth;
+- `CURRENT_CONFLICT` — stop for Project Governance reconciliation;
+- `AUTHORITY_UNAVAILABLE` — stop when required authority cannot be accessed and a bounded snapshot is insufficient.
 
-When freshness/drift matters, record `AUTHORITY_OBSERVED_BASIS` such as a control revision, task observation, PR/head identity, or equivalent bounded basis. The receiver compares current authority with that basis:
+`DELTA` contains only recent transfer-specific facts/boundaries.
 
-- `CURRENT_COMPATIBLE` — current authority is the same or newer without invalidating the handoff action boundary; continue.
-- `CURRENT_CONFLICT` — current authority materially changes objective/scope/side effects/writer boundary/acceptance/stop conditions; stop and return to Project Governance.
-- `AUTHORITY_UNAVAILABLE` — required authority cannot be accessed and a bounded snapshot is insufficient; stop rather than infer.
-
-`DELTA` contains only recent action-specific information not safely represented in those authorities, such as:
-
-- fresh repository/PR/CI/runtime state;
-- a newer user/project decision requiring reconciliation;
-- bounded focus for this pass;
-- current cross-repository dependency fact;
-- transfer-specific STOP/output condition.
-
-Do not put durable engineering principles, full control-file text, stale chat history, speculative facts, unrelated secrets/credentials, unnecessary personal data, or sender-specific runtime model configuration into `DELTA`.
-
-## 2. Common request envelope
+## Request envelope
 
 ```text
 HANDOFF_ID
@@ -31,139 +19,36 @@ MODE: EXECUTE | AUDIT | DIAGNOSE | REVIEW | VERIFY
 TARGET
 AUTHORITY
 AUTHORITY_OBSERVED_BASIS: <when material>
-SOURCE_CONTEXT: <optional context label>
-TARGET_CONTEXT: <optional context label>
+SOURCE_CONTEXT / TARGET_CONTEXT: <when useful>
 DELTA
 BOUNDARY
 RETURN_CONTRACT
 ```
 
-Source/target context may be Web, local Codex, cloud agent, Sub Agent, reviewer context, machine/session, or project-equivalent. These labels are operational context only.
+## Runtime/configuration isolation
 
-A request should be short enough to reveal the immediate action without archaeology and complete enough to identify what to do, where authority lives, what changed, what may be mutated, when to STOP and what evidence must return.
+Runtime/model/tool/capacity configuration belongs to the receiving execution environment unless an accepted portable project artifact owns it. Sender observations may be evidence about the sender, not receiver defaults.
 
-## 3. Same task vs distinct task
+Under `ENVIRONMENT_DEFAULT_ONLY`, concrete Sub Agent model/reasoning values never propagate as receiver defaults. The same rule applies to concurrency/delegation/tool/runtime values unless a portable authority explicitly owns them.
 
-Use the same `TASK_ID` when the engineering objective/authorization is unchanged across context transfer, including:
+## Mode side effects
 
-- Web/session -> local/session implementation continuation;
-- controller -> Sub Agent delegated unit;
-- one machine/session -> another after interruption/compaction;
-- implementation-local verification supporting the same task.
+- `EXECUTE` — state change allowed only within active authorization.
+- `AUDIT`, `REVIEW`, `VERIFY` — read-only.
+- `DIAGNOSE` — read-only transfer of diagnostic question/evidence/hypothesis state.
 
-Do not manufacture a new task merely because a different agent/machine/session acts.
+A state-changing diagnostic probe uses `MODE: EXECUTE` and `PURPOSE: DIAGNOSTIC_PROBE`, with its mutation/cleanup boundary explicitly authorized. This keeps diagnosis capability separate from handoff side-effect class.
 
-If the receiver is being asked to perform a materially different engineering purpose, such as a separately commissioned independent acceptance audit or distinct corrective objective, Project Governance establishes/reconciles that task purpose first. Agent Handoff transports it; Agent Handoff does not invent it.
+## Same task vs new task
 
-## 4. Execution-environment configuration isolation
+Different agent/session/machine/context does not require a new task. A materially different engineering purpose (independent audit, distinct corrective, new design objective) returns to Project Governance for task reconciliation.
 
-Runtime/tool/model configuration belongs to the execution environment that owns it unless the active task explicitly authorizes a portable configuration artifact.
+## Context economy
 
-For delegated-model policy `ENVIRONMENT_DEFAULT_ONLY`:
+Prefer authority references + bounded fresh delta. Exact excerpts are for inaccessible sources or exact-wording needs only. Do not send full chat history or repeated generic governance.
 
-1. the sender may state the policy but does not transmit a concrete Sub Agent model/reasoning value as the receiver's default;
-2. the receiver resolves its own authoritative Sub Agent configuration/runtime default after the handoff;
-3. Local/Web/cloud/other environments do not inherit each other's model or reasoning settings;
-4. if the receiver cannot observe its concrete default, use `PLATFORM_DEFAULT` / `UNKNOWN` rather than infer it from sender text, memory, repository docs, or another machine;
-5. a concrete model/reasoning observation may appear in a receipt only as evidence about the environment that actually exposed it, never as reusable cross-context authority.
+## Receipts
 
-This prevents a portable handoff from accidentally turning one environment's local configuration into a global Plugin default.
+State-changing receipts report task/handoff identity, outcome, start/final identity, changed paths, verification, lifecycle effects, unresolved evidence, and final control alignment when applicable.
 
-## 5. Mode profiles
-
-### EXECUTE
-
-Use for authorized mutation in another execution context.
-
-Request adds only transfer-specific detail such as selected workspace/identity when material, immediate mutation focus and unique side-effect/STOP boundary. It must not re-authorize work absent from `CURRENT_TASK.md`.
-
-Return at minimum:
-
-- `TASK_ID` and handoff identity;
-- start/final execution identity;
-- changed paths or `NONE`;
-- verification actually run/result;
-- branch/PR/worktree lifecycle effects when material;
-- unresolved evidence;
-- authority compatibility/conflict observation when material;
-- document/status/task reconciliation and Control Alignment for final successful state-changing handoff;
-- next safe action.
-
-### AUDIT
-
-Strict read-only unless a separate task explicitly authorizes mutation. Use when the active engineering purpose is an audit/acceptance boundary.
-
-Request identifies audit target/range/identity, required claims, independence expectation, and requested verdict boundary.
-
-Return target/range/observed identity, evidence, required-claim coverage, findings by severity, unknown/unverified items, independence basis, CI/test/host evidence where relevant, verdict and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`.
-
-### DIAGNOSE
-
-Use as transport for an already authorized diagnostic route. The request identifies the blocked question, current evidence/hypothesis state, allowed observation/probe boundary and mutation restrictions.
-
-Return observations, hypothesis support/falsification, root-cause confidence only where evidence supports it, probe effects, unresolved gap and minimum evidence-supported fix boundary. Do not silently implement an out-of-scope fix.
-
-### REVIEW
-
-Read-only evaluation of specified work product. Give the reviewer target/range, requirements/authority references and relevant verification evidence; do not send the implementer's private reasoning history as a substitute for work-product evidence.
-
-Return findings + evidence + severity/unknown state. A review finding is not corrective authorization.
-
-### VERIFY
-
-Confirm a named claim, identity or check. Request states exactly what proposition must be established and the evidence source expected.
-
-Return the observation, identity/freshness, `PASS | FAIL | UNKNOWN`, what that result proves and what it does not prove. If success means no change/no output, say that explicitly.
-
-## 6. Receipt profiles
-
-### State-changing compact receipt
-
-```text
-HANDOFF_ID:
-TASK_ID:
-MODE: EXECUTE
-SKILLS_USED:
-AUTHORITY_COMPATIBILITY: CURRENT_COMPATIBLE | CURRENT_CONFLICT | UNKNOWN
-OUTCOME: PASS | PARTIAL | STOP
-START_IDENTITY:
-FINAL_IDENTITY:
-CHANGED_PATHS:
-VERIFICATION:
-LIFECYCLE:
-UNRESOLVED: NONE | ...
-RELATED_DOCUMENT:
-DOCUMENT_ALIGNMENT:
-CURRENT_STATUS_RECONCILIATION:
-CURRENT_TASK_RECONCILIATION:
-CONTROL_ALIGNMENT:
-NEXT_SAFE_ACTION:
-```
-
-### Read-only compact receipt
-
-```text
-HANDOFF_ID:
-TASK_ID:
-MODE: AUDIT | REVIEW | VERIFY | DIAGNOSE(read-only)
-TARGET:
-OBSERVED_IDENTITY:
-EVIDENCE_RANGE:
-SKILLS_USED:
-AUTHORITY_COMPATIBILITY: CURRENT_COMPATIBLE | CURRENT_CONFLICT | UNKNOWN
-FINDINGS_OR_OBSERVATION:
-UNKNOWN_OR_UNVERIFIED:
-CI_TEST_HOST_EVIDENCE:
-CONTROL_ALIGNMENT_OBSERVATION: MATCH | STALE | UNKNOWN | NOT_APPLICABLE
-CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
-VERDICT_OR_RESULT:
-NEXT_SAFE_ACTION:
-```
-
-Fields may be omitted only when genuinely not applicable and the decision signal remains unambiguous. Absence is not evidence of `UNCHANGED`.
-
-## 7. Context-package economy
-
-Prefer references + bounded fresh delta. Include exact excerpts only when the receiver cannot access the source or exact wording is necessary. Avoid full chat history and repeated generic governance rules.
-
-The handoff should be self-contained enough to act without reconstructing conversation history but small enough that authority remains in its owning source. An accepted plan/design should be referenced by identity/path rather than repeatedly paraphrased into every execution prompt.
+Read-only receipts report target/range/identity, evidence/findings/unknowns, verdict/result, and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`.

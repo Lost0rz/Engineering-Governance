@@ -1,19 +1,19 @@
 <!-- BEGIN ENGINEERING-GOVERNANCE ROUTING -->
 ## Engineering Governance Skill routing
 
-For software, repository, or project engineering work, use `project-governance` as the normal Engineering Governance entry point unless a higher-priority instruction explicitly selects another route. Keep simple low-risk work lightweight.
+For software, repository, or project engineering work, use `project-governance` as the normal Engineering Governance entry unless a higher-priority instruction or explicit bounded Skill selection determines another route. Keep simple work lightweight.
 
-Use `solution-design` only when materially ambiguous requirements, cross-boundary architecture/state ownership, competing options, or durable design decisions must be resolved before implementation.
+Use `solution-design` only to resolve material intent/architecture/state-ownership ambiguity before implementation.
 
-Use `execution-orchestrator` only when authorized work needs explicit decomposition, multiple roles/agents, parallel/sequential scheduling, delegated-model policy, or resumable multi-step execution.
+Use `execution-orchestrator` when authorized work materially benefits from decomposition, multiple roles/agents, parallel/sequential scheduling, environment-aware delegation, recovery, or controlled integration.
 
-Use `agent-handoff` whenever responsibility crosses agents, sessions, machines, or execution contexts and a bounded request/receipt is needed. A handoff references project authorities plus fresh delta; it does not replace `CURRENT_TASK.md`, `CURRENT_STATUS.md`, or durable rules.
+Use `agent-handoff` when responsibility crosses agents, sessions, machines, or execution contexts and a bounded request/receipt is needed.
 
-Use `evidence-audit` for an independent or explicit implementation/code/PR/CI/release/merge-readiness evidence verdict. Read-only audit reports stale controls/findings without mutating them.
+Use `evidence-audit` when the requested outcome is a read-only evidence/acceptance/readiness verdict separate from implementation. Do not trigger it merely because code, PR, CI, or release is mentioned during corrective work.
 
-Use `domain-navigation` when the responsible Domain/capability, semantic authority, source location, symbol, runtime entry, dependency, or relevant test cannot be established safely. Return the verified route/unresolved gap to the caller.
+Use `domain-navigation` when the responsible Domain/capability/authority/source/symbol/runtime/dependency/test route cannot be established safely.
 
-Use `incident-doctor` only when a real failure, unexplained behavior, or unsafe ambiguity blocks safe progress and current evidence is insufficient for the next safe decision. A defect with sufficient evidence stays in normal governed work.
+Use `incident-doctor` only when a real failure or unsafe ambiguity blocks safe progress and existing evidence cannot support the next safe decision.
 
-These Skills compose; they do not create parallel task authority. Follow the selected Skill and the target repository's own `AGENTS.md`/controls for procedure and project facts.
+These Skills compose without creating parallel task authority. Follow the selected Skill and the target repository's own controls for procedure and project facts.
 <!-- END ENGINEERING-GOVERNANCE ROUTING -->
