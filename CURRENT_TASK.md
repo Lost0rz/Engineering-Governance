@@ -1,114 +1,86 @@
-# CURRENT TASK — Capability Architecture Hardening v0.6.0
+# CURRENT TASK — Model Policy Stabilization v0.6.0
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-CAPABILITY-ARCHITECTURE-HARDENING-063`
+Task ID: `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064`
 
 Task class: `CORRECTIVE`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
-Mode: remote reusable-source architecture hardening before consolidated installed Plugin/runtime acceptance
+Mode: remote reusable-source model-policy correction before consolidated installed Plugin/runtime acceptance
 
 ## Objective
 
-Refine the frozen v0.6.0 seven-Skill architecture so task semantics, Sub Agent orchestration, model selection, cross-context handoff, and independent audit behavior match the intended operating model before integrated acceptance.
+Correct the v0.6.0 Execution Orchestrator model policy so Sub Agents remain actively usable for safe parallel work while delegated model selection stays stable during an initial operating period.
 
-The goal is **not** to suppress Sub Agents or high-capability models. The goal is to use them deliberately and effectively: parallelize independent work when useful, select stronger models when judgment demand justifies them, keep execution authority explicit, and separate engineering task purpose from the Web/Local/agent context in which the work happens.
+During this stabilization period, delegated Sub Agents use the execution environment's configured default Sub Agent model and default reasoning setting. Do not select or escalate a Sub Agent to a stronger model than that configured default. Stronger-model routing can be reconsidered later only through an explicit user/project policy change.
 
 ## Planning context
 
 - Related document: `documents/engineering-governance-capability-hardening-v0.6.0.md`.
 - Parent architecture authority: `documents/engineering-governance-capability-model-v0.6.0.md`.
-- Relationship to plan: Task 062 froze a complete architecture candidate; Task 063 completed bounded semantic hardening accepted after the seven-Skill audit.
+- Relationship to plan: narrow correction of Task 063 model-selection semantics; seven-Skill architecture and positive Sub Agent parallelism remain unchanged.
 
 ## Accepted baseline
 
-- Task start literal branch HEAD: `177c685e867747eb8346edcef31272e03df405ea`.
-- Prior Task 062 Architecture Delivery / Semantic HEAD: `26fdc590b4c4ef1e25781f7065626fc87fc349cf`.
+- Task start literal branch HEAD: `f5c998ab72b6a27577a66cc87beb7a4be6570f37`.
+- Prior hardened Architecture Delivery / Semantic HEAD: `5ad4f4a4465714f571bce4b9d095d741cd361c03`.
 - Branch: `codex/capability-model-v0.6.0`.
-- PR #26 remained OPEN / DRAFT / UNMERGED.
-- Published/installed baseline remained Plugin `0.5.5`.
-- Installed v0.6.0 integrated acceptance was not run.
+- PR #26 remains OPEN / DRAFT / UNMERGED.
+- Installed v0.6.0 integrated acceptance has not run.
 
-## Completed work
+## User-decided operating policy
 
-### WP11 — Task purpose and lifecycle semantics
+1. Sub Agents are still a throughput/context-isolation capability and should be used when independent parallel work is useful.
+2. Sub Agents use the environment's configured default Sub Agent model and default reasoning setting during stabilization.
+3. Current user Codex convention: default Sub Agent model `gpt-6-luna`, reasoning effort `xhigh`; this is environment configuration, not universal reusable source truth.
+4. `xhigh` is a reasoning-effort setting and must not be conflated with selecting a higher model tier.
+5. No delegated stronger-model escalation is permitted during stabilization, whether automatic or agent-initiated.
+6. Existing `LOW / STANDARD / HIGH` abstractions may remain as future design vocabulary but must not drive active v0.6.0 delegated model routing while `DEFAULT_ONLY` stabilization is in force.
+7. Re-enabling stronger model selection requires a later explicit user/project decision.
 
-- Added optional `TASK_CLASS` guidance without creating a new control authority.
-- Distinguished engineering task, Sub Agent execution unit, and execution context.
-- Defined same-task continuation across Web/local/session/machine/Sub Agent contexts when objective/authorization is unchanged.
-- Defined reconciliation/new-task boundaries for materially distinct engineering purposes such as independent acceptance audit or corrective work.
-- Updated Project Governance task template, main Skill, development flow, capability composition, and control-plane semantics.
+## In scope
 
-### WP12 — Positive orchestration and model selection
+- Update `execution-orchestrator` Skill and execution contract to `DEFAULT_ONLY` delegated model policy.
+- Remove/override current wording that encourages intentional HIGH selection during the stabilization period.
+- Update repository/global guidance and integrated acceptance scenarios so they test default-model use and prohibited stronger-model escalation.
+- Update the v0.6.0 hardening design record where needed for semantic consistency.
+- Run bounded remote source audit and freeze the corrected semantic candidate.
 
-- Replaced minimum-agent bias with effective-safe-execution semantics.
-- Added positive use of safe independent parallel Sub Agent capacity.
-- Added `AVAILABLE_PARALLELISM`, dependency/write/integration state, cancellation and supersession semantics.
-- Added environment `MODEL_TIER_MAP` for actual model + reasoning effort when material.
-- Clarified that HIGH is allowed and should be selected deliberately when judgment demand justifies it.
-- Allowed intentional escalation with explicit reason/boundary while continuing to prohibit silent/unreasoned inheritance/escalation.
+## Out of scope
 
-### WP13 — Context-neutral handoff and independent audit
+- Changing current user Codex runtime configuration from its configured default.
+- Selecting a different model/provider.
+- Building a model router executable.
+- Changing positive Sub Agent parallelism, task/context semantics, handoff, evidence-audit, Domain Navigation or Incident Doctor architecture.
+- Installed Plugin/Web/Codex integrated acceptance.
+- PR merge or v0.6.0 release.
 
-- Added same-task `TASK_ID` continuity across execution contexts.
-- Added optional `SOURCE_CONTEXT`, `TARGET_CONTEXT`, and `AUTHORITY_OBSERVED_BASIS`.
-- Added compatible/conflicting/unavailable authority handling instead of stale-intent execution.
-- Clarified that Web/local are context labels, not reusable task-purpose definitions.
-- Distinguished implementation self-check from independent acceptance.
-- Added audit independence basis `SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN`.
-- Added required-claim coverage and explicit severity-to-boundary disposition semantics.
+## Verification
 
-### WP14 — Acceptance and maintainer alignment
+`V2` source-architecture corrective.
 
-- Updated `references/V060_INTEGRATED_ACCEPTANCE.md` for task/context separation, positive parallelism, model mapping/HIGH/escalation, authority-basis handoff cases, independent audit, required claims, and severity/disposition.
-- Updated root `AGENTS.md`, README, verification contract, Skill Engineering quality contract, and upstream conceptual references.
-- Preserved the seven-Skill model and no-eighth-Skill rule.
+Verify:
 
-## New architecture freeze
-
-Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
-
-`5ad4f4a4465714f571bce4b9d095d741cd361c03`
-
-The earlier Task 062 semantic candidate `26fdc590b4c4ef1e25781f7065626fc87fc349cf` is historical/superseded for final v0.6.0 acceptance because reusable semantics changed under Task 063.
-
-## Verification result
-
-`V2 remote source-architecture audit: PASS`.
-
-Evidence:
-
-- compare from Task 063 start `177c685e...` to semantic head `5ad4f4a...` contains only governance/Skill Markdown and control files; no runtime/daemon/model-router/workflow implementation was added;
-- exactly seven top-level Skill directories remain;
-- Project Governance distinguishes task purpose, execution unit, and execution context;
-- Orchestrator semantics positively use safe parallel capacity and intentionally allow HIGH model use;
-- model tier mapping/escalation semantics remain provider-neutral;
-- Handoff preserves same-task authority across contexts and handles authority drift explicitly;
-- Evidence Audit now separates self-check from independent acceptance, required-claim coverage from verdict, and severity from boundary disposition;
-- Integrated acceptance specification covers the hardened semantics;
-- PR #26 is OPEN / DRAFT / UNMERGED / `mergeable=true` at audit time;
-- semantic head has no reported commit/check statuses; CI PASS is not claimed.
+- no active reusable rule instructs Sub Agents to choose/escalate to HIGH during stabilization;
+- delegated work uses environment default model/reasoning semantics;
+- `xhigh` reasoning is not represented as a stronger model tier;
+- positive safe parallelism remains intact;
+- integrated acceptance has a default-model scenario and a no-stronger-model-escalation scenario;
+- seven top-level Skills remain unchanged;
+- no runtime/model-router/workflow implementation is added.
 
 ## Acceptance criteria
 
-All Task 063 source-hardening acceptance criteria are satisfied.
+- Task 063 HIGH-selection semantics are superseded by explicit `DEFAULT_ONLY` stabilization policy.
+- Sub Agent orchestration remains positively usable and parallel where safe.
+- Model policy is environment-default based and provider-neutral in reusable source.
+- Stronger model selection is marked deferred until explicit future re-authorization.
+- Remote source audit passes and a new semantic head is frozen.
 
-Installed Plugin/Web/Codex routing/runtime acceptance remains explicitly outside this task and has not been run. The accepted next sequence is one consolidated integrated acceptance task against semantic head `5ad4f4a4465714f571bce4b9d095d741cd361c03` (or a proven control-only descendant).
+## Stop conditions
 
-## Handoff / terminal state
-
-Task 063 is complete. PR #26 remains Draft.
-
-Next authorized work should be the consolidated v0.6.0 integrated acceptance task using `references/V060_INTEGRATED_ACCEPTANCE.md`. Reusable defects discovered during installed acceptance return to the remote source flow; do not patch reusable source inside installed Plugin caches.
-
-Control Alignment Gate:
-
-- `RELATED_DOCUMENT`: `documents/engineering-governance-capability-hardening-v0.6.0.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
-- `CONTROL_ALIGNMENT`: `PASS`
+Stop if the correction would require changing the user's actual runtime configuration, introducing a model-router runtime, or materially redesigning another Skill.
