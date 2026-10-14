@@ -8,57 +8,62 @@ Formal immutable GitHub release remains `plugin-v0.5.5`; previously accepted Web
 
 No formal GitHub v0.6.x release has been created yet.
 
-## v0.6.x source architecture / current semantic candidate
+## v0.6.x source architecture / corrective state
 
-The eight-Skill architecture remains accepted. Current corrected Delivery / Semantic candidate:
+The eight-Skill architecture remains accepted. Previous corrected Delivery / Semantic candidate before the current corrective:
 
 `ca64841b141888675c2670eeaf4c6cbccb8a5395`
 
-Completed bounded correctives:
+Completed acceptance-driven correctives:
 
 - `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff templates aligned with Card/Receipt contract.
 - `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile contract/template/acceptance hardened against generic-workflow duplication and handbook-sized output.
 
-Task 072 focused source audit: PASS.
+Current bounded corrective:
 
-After the Web Plugin refresh automatically advanced the installed candidate to `0.6.1`, repository `plugin.json` was aligned from `0.6.0` to `0.6.1`. This version-alignment commit changes package identity only; no Skill behavior changed after the Task 072 semantic corrective.
+- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — ACTIVE.
+
+Task 073 was opened from fresh FloatTabs Web evidence. The generated Profile was substantially improved and its substantive project facts matched current repository authorities, but three reusable Profile-contract gaps remained:
+
+1. `MIRROR` was emitted without evidence of a primary Profile surface;
+2. an established Domain Map was partially duplicated as a reduced Domain Model;
+3. Profile output still contained step-by-step engineering/navigation and Profile-maintenance meta-procedure.
+
+This is a Project Profile output-boundary defect, not an eight-Skill architecture or routing-model defect.
 
 PR #26 remains OPEN / DRAFT / UNMERGED. Host facts are reread at their own boundary; CI/check PASS is not claimed without current evidence.
 
 ## Web Plugin candidate acceptance
 
-Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is `WAITING_FRESH_WEB_SESSION`.
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is paused while Task 073 corrects reusable source.
 
-Current candidate installation evidence:
+Current installed personal Web Plugin before the Task 073 refresh:
 
-- personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- Web Plugin current version: `0.6.1`;
-- current Web release: `pluginrel_6acf006fb68c81918d269b6ee46719e6`;
-- scope/discoverability remain `USER / PRIVATE`;
-- root `plugin.json` and platform-managed `.codex-plugin/plugin.json` both report `0.6.1`;
-- the refresh overlaid only the manifest plus the three corrected `project-profile` shipped files;
-- installed `project-profile` Skill, template and contract contain the compression gate, anti-content/dedup rules, template-first output discipline, and explicit Profile surface/role rule.
+- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.1`;
+- release: `pluginrel_6acf006fb68c81918d269b6ee46719e6`;
+- scope/discoverability: `USER / PRIVATE`.
 
-Evidence already established in a previous fresh Web conversation:
+Fresh Web evidence already established:
 
 - exact eight top-level Skill discovery: PASS;
 - ordinary status/progress inspection -> `project-governance`: PASS;
-- advisory inspection does not over-route to formal Audit/Navigation/Doctor: PASS;
-- Project Profile request -> Project Profile capability: PASS for routing/authority/freshness boundary;
-- first generated Profile excluded live PR/HEAD/CI/current-task state but duplicated reusable governance procedure: FAIL, corrected by Task 072 source.
+- advisory inspection avoids over-routing: PASS;
+- Project Profile routing/authority/live-state exclusion: PASS;
+- Task 072 generic-governance compactness regression: materially improved;
+- FloatTabs regression exposed the remaining surface-role / Domain-dedup / meta-procedure defects now owned by Task 073.
 
-The previous fresh conversation may still hold the pre-refresh 0.6.0 Skill snapshot. The corrected Profile regression must therefore be rerun in a new fresh Web conversation/session against candidate `0.6.1`.
+Installed caches are not patched as source authority. The source contract is corrected first, then the existing Web Plugin is refreshed through the guarded Plugin update path.
 
-## Project Profile corrected contract
+## Accepted Project Profile invariants preserved
 
-- Profile is a compact `DERIVED_PROJECT_CONTEXT` landing index, not a second governance manual.
-- Stable project-specific context, priorities/anti-goals, environment roles and authority pointers remain in Profile.
+- Profile remains compact `DERIVED_PROJECT_CONTEXT`, not project/task/domain/design authority.
+- Stable project-specific context and authority pointers belong in Profile.
 - Current state/task/host evidence stays in STATUS/TASK/live evidence.
-- Project-specific normative MUST/MUST-NOT remains in AGENTS/accepted normative authority.
-- Detailed Domain/design content stays in its owning authority.
-- Reusable routing tables, Handoff schemas, verification tiers/procedure, Incident Doctor procedure, artifact/workspace/control mechanics are removed or reduced to the shortest useful pointer/invariant.
-- Generated output starts from the shipped template, declares known Profile surface/role, and does not add top-level procedure sections merely because a reusable Skill exists.
+- Project-specific normative MUST/MUST-NOT belongs in `AGENTS.md`/accepted normative authority.
+- Detailed Domain/source/test/runtime mapping stays in Domain/navigation authority.
+- Reusable Engineering Governance procedure stays in Skills/references.
 
 ## Next milestone
 
-Open a new fresh Web conversation against Plugin `0.6.1` and rerun the same Engineering-Governance Project Profile generation case. If compactness/dedup regression passes, continue the remaining Web routing scenarios; then continue Local Codex integrated acceptance. Formal GitHub release/merge remains deferred.
+Complete Task 073 source hardening, run focused verification, align the Plugin candidate version, refresh the personal Web Plugin, verify installed files, then restore Task 070 to `WAITING_FRESH_WEB_SESSION` for the user to rerun the FloatTabs Profile case.
