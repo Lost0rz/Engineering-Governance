@@ -72,6 +72,16 @@ Result: `PASS`.
 - ROUTER_SKILL_CREATED: `NO`
 - PARALLEL_TASK_AUTHORITY_CREATED: `NO`
 
+## Regression preservation
+
+The v0.6.8 release verification carries forward the previously accepted Project Profile and Handoff gates from v0.6.7 in addition to the new Design checks.
+
+- PROJECT_PROFILE_PRE_RETURN_GATE_PRESERVED: `YES`
+- HANDOFF_PRE_RETURN_GATE_PRESERVED: `YES`
+- HANDOFF_REQUEST_RECEIPT_SCHEMA_GATES_PRESERVED: `YES`
+- V067_HANDOFF_REGRESSION_MARKERS_PRESERVED: `YES`
+- PRIOR_RELEASE_GATES_PRESERVED: `YES`
+
 ## Package boundary
 
 The Plugin payload remains limited to `plugin.json` plus `skills/**`. The Anthropic source module, license, provenance, and Design module map therefore travel with the Plugin release without packaging repository control files.

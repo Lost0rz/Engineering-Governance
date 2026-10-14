@@ -50,6 +50,49 @@ jobs:
               path = Path('skills') / skill / 'SKILL.md'
               assert path.is_file(), path
 
+          # Preserve previously accepted Project Profile and Handoff release gates.
+          profile = Path('skills/project-profile/SKILL.md').read_text()
+          assert 'Mandatory pre-return compliance gate' in profile
+          assert 'AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS' in profile
+
+          project_governance = Path('skills/project-governance/SKILL.md').read_text()
+          assert 'Mandatory cross-context handoff boundary' in project_governance
+          assert 'route the transfer artifact through `agent-handoff` before returning it' in project_governance
+
+          handoff_skill = Path('skills/agent-handoff/SKILL.md').read_text()
+          assert 'Mandatory pre-return compliance gate' in handoff_skill
+          for marker in (
+              'HANDOFF_ROUTE_APPLIED: YES',
+              'REQUIRED_CORE_COMPLETE: YES',
+              'MODE_VALID: YES',
+              'AUTHORITY_REFERENCED_NOT_DUPLICATED: YES',
+              'OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES',
+              'RETURN_CONTRACT_OUTCOME_NEUTRAL: YES',
+          ):
+              assert marker in handoff_skill, marker
+
+          handoff_request = Path('skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md').read_text()
+          for field in ('CARD_ID', 'TASK_ID', 'MODE', 'CAPABILITY', 'TARGET', 'AUTHORITY', 'DELTA', 'BOUNDARY', 'RETURN_CONTRACT'):
+              assert field in handoff_request, field
+          assert 'MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE' in handoff_request
+          assert 'Do not return a known-noncompliant draft plus commentary' in handoff_request
+
+          handoff_receipt = Path('skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md').read_text()
+          for field in ('CARD_ID', 'TASK_ID', 'MODE', 'CAPABILITY', 'TARGET', 'OUTCOME'):
+              assert field in handoff_receipt, field
+          assert 'OUTCOME_IS_OBSERVED: YES' in handoff_receipt
+
+          v067_acceptance = Path('references/V067_HANDOFF_CARD_ACCEPTANCE.md').read_text()
+          for marker in (
+              'MODE: CORRECTIVE',
+              'FULL_TASK_OBJECTIVE_RECOPIED: NO',
+              'CARD_INVENTS_EXPECTED_HEAD_LOCK: NO',
+              'SUCCESS_PREDECLARED: NO',
+              'RETURN_CONTRACT_OUTCOME_NEUTRAL: YES',
+          ):
+              assert marker in v067_acceptance, marker
+
+          # v0.6.8 Design capability and imported Anthropic baseline.
           design = Path('skills/design/SKILL.md').read_text()
           for marker in (
               'stable routed design capability',
@@ -80,7 +123,6 @@ jobs:
           assert 'Anthropic `frontend-design` — active baseline' in module_map
           assert 'planned, not active' in module_map
 
-          project_governance = Path('skills/project-governance/SKILL.md').read_text()
           assert '`design` — bounded UI/UX/frontend visual design' in project_governance
           assert '`solution-design` remains the owner' in project_governance
 
@@ -89,20 +131,23 @@ jobs:
           assert '| `design` |' in global_routing
 
           global_template = Path('skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md').read_text()
+          assert 'When the requested output itself is a construction/execution/audit/review/verify/diagnose Card' in global_template
+          assert 'use `agent-handoff` for that transfer artifact' in global_template
           assert 'Use `design` for bounded UI/UX/frontend visual design or redesign' in global_template
 
           composition = Path('skills/project-governance/references/capability-composition.md').read_text()
           assert 'The nine Skills cooperate' in composition
           assert '-> design?' in composition
 
-          acceptance = Path('references/V068_DESIGN_ANTHROPIC_ACCEPTANCE.md').read_text()
+          v068_acceptance = Path('references/V068_DESIGN_ANTHROPIC_ACCEPTANCE.md').read_text()
           for marker in (
               'TOP_LEVEL_SKILL_COUNT: `9`',
               'LOCAL_FRONTEND_DESIGN_CONTENT_SHA_MATCH: `YES`',
               'SEPARATE_ANTHROPIC_PLUGIN_REQUIRED: `NO`',
               'SOLUTION_DESIGN_ARCHITECTURE_AUTHORITY_PRESERVED: `YES`',
+              'PRIOR_RELEASE_GATES_PRESERVED: `YES`',
           ):
-              assert marker in acceptance, marker
+              assert marker in v068_acceptance, marker
           PY
 
       - name: Build exact Plugin payload
@@ -205,6 +250,7 @@ jobs:
           - preserve Apache-2.0 license and source provenance
           - distinguish UI/frontend visual design from Solution Design engineering architecture/state ownership
           - keep Microsoft design-review/adaptation and UX heuristic/audit modules planned but inactive
+          - preserve previously accepted Project Profile and Handoff release gates
           - require no separate Anthropic design Plugin
 
           The release asset contains only plugin.json and skills/**. Repository controls, documents, references, marketplace catalogs and workflows are not packaged into the Plugin ZIP.
