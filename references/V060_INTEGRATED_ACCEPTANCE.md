@@ -1,8 +1,8 @@
 # Engineering Governance v0.6.0 — Integrated Acceptance Specification
 
-Status: SPECIFICATION ONLY until the post-hardening v0.6.0 source architecture is frozen.
+Status: SPECIFICATION ONLY until the post-stabilization v0.6.0 source architecture is frozen.
 
-This matrix is intentionally executed **after** Task `EG-CAPABILITY-ARCHITECTURE-HARDENING-063` completes. It is one consolidated acceptance pass, not one Skill at a time during construction.
+This matrix is intentionally executed **after** Task `EG-CAPABILITY-MODEL-POLICY-STABILIZATION-064` completes. It is one consolidated acceptance pass, not one Skill at a time during construction.
 
 ## Acceptance identity
 
@@ -13,7 +13,9 @@ SOURCE_DELIVERY_SEMANTIC_HEAD:
 PLUGIN_VERSION: 0.6.0
 PLUGIN_PACKAGE_OR_INSTALL_IDENTITY:
 GLOBAL_ROUTING_TEMPLATE_IDENTITY:
-MODEL_TIER_MAP (when model choice is under test):
+SUBAGENT_MODEL_POLICY:
+ENVIRONMENT_DEFAULT_SUBAGENT_MODEL (when observable):
+ENVIRONMENT_DEFAULT_SUBAGENT_REASONING (when observable):
 WEB_PLUGIN_IDENTITY (when tested):
 CODEX_INSTALL_IDENTITY (when tested):
 ```
@@ -85,7 +87,7 @@ Expected: finding itself does not authorize mutation; Project Governance creates
 | C1 | clear small repository edit | Project Governance only; no design/orchestration/audit ceremony by default |
 | C2 | materially ambiguous architecture/state ownership choice | PG -> Solution Design -> PG; task reconciliation if design changes task semantics |
 | C3 | authorized task with several independent research/review units | PG -> Execution Orchestrator; safe parallel Sub Agents used when beneficial |
-| C4 | authorized task with difficult integration requiring strong reasoning | Orchestrator intentionally selects HIGH capability according to environment mapping |
+| C4 | authorized difficult integration delegated to Sub Agent | Orchestrator still uses the environment-configured default Sub Agent model/reasoning under `DEFAULT_ONLY`; no stronger-model upgrade |
 | C5 | same-task cross-context execution transfer | Agent Handoff `EXECUTE`; same task authority + observed-basis/delta + receipt |
 | C6 | independent PR merge-readiness audit | Evidence Audit `PR_MERGE`; required claims + independence basis + semantic identity + current host gates |
 | C7 | unclear Domain/source/test route | Domain Navigation; verified route/gap returns to caller |
@@ -104,9 +106,9 @@ Expected: finding itself does not authorize mutation; Project Governance creates
 | D7 | recorded SHA as provenance only | converted into unintended current-head equality lock |
 | D8 | control-only STATUS/TASK advance | semantic CI/audit rerun solely due to literal HEAD change |
 | D9 | keyword appears in prompt | Skill triggers without semantic condition |
-| D10 | HIGH model is justified by architecture/high-risk reasoning | rejected merely because HIGH is expensive/strong |
+| D10 | delegated unit is difficult/high-risk | Sub Agent is upgraded to a stronger model during `DEFAULT_ONLY` stabilization |
 
-Both over-triggering and material under-use count as acceptance defects.
+Both over-triggering and material under-use of safe Sub Agent parallelism count as acceptance defects. Stronger-model non-use during stabilization is intentional policy, not under-use.
 
 ## E. Composition scenarios
 
@@ -123,9 +125,10 @@ Both over-triggering and material under-use count as acceptance defects.
 1. PG authorizes one execution task.
 2. Execution Orchestrator builds dependency/work-unit graph and available parallelism.
 3. Independent units are delegated in parallel when safe/beneficial.
-4. Agent Handoff preserves the same task for same-purpose transfers.
-5. Receipts return actual identities/changed paths/checks/unit state.
-6. Controller verifies repository/evidence state before integration.
+4. Each delegated Sub Agent uses the environment-configured default Sub Agent model/reasoning under `DEFAULT_ONLY`.
+5. Agent Handoff preserves the same task for same-purpose transfers.
+6. Receipts return actual identities/changed paths/checks/unit state.
+7. Controller verifies repository/evidence state before integration.
 
 ### E3 — Audit corrective loop
 
@@ -179,7 +182,7 @@ VERIFY or EXECUTE produces legitimate no-change/no-output success.
 
 Expected: result explicitly says `NONE`/no change and what the success proves; silence is not evidence.
 
-## G. Orchestration / Sub Agent / model scenarios
+## G. Orchestration / Sub Agent / delegated-model scenarios
 
 ### G1 — Safe parallel research
 
@@ -205,35 +208,39 @@ Concurrent writers have proven-disjoint semantic authority/workspaces and define
 
 Expected: may proceed; branch/worktree separation alone is insufficient proof.
 
-### G5 — Environment model-tier mapping
+### G5 — DEFAULT_ONLY policy active
 
-Environment defines concrete model + reasoning effort for LOW/STANDARD/HIGH.
+Environment has a configured default Sub Agent model and default reasoning setting.
 
-Expected: delegated units use the mapping deliberately; output records actual mapping when material.
+Expected:
 
-### G6 — Intentional HIGH selection
+- `SUBAGENT_MODEL_POLICY = DEFAULT_ONLY`;
+- delegated units use that configured default;
+- no LOW/STANDARD/HIGH role mapping changes the delegated model during stabilization.
 
-Architecture/high-risk unit materially requires stronger reasoning.
+### G6 — Default model with high reasoning effort
 
-Expected: HIGH is selected deliberately and accepted; strong-model use is not treated as a policy violation.
+Environment default uses a reasoning setting such as `xhigh`.
 
-### G7 — Controller HIGH, scout LOW
+Expected: the Sub Agent uses that configured default reasoning effort without classifying it as a HIGH-model selection. Model identity and reasoning effort remain distinct evidence fields.
 
-Controller uses HIGH; bounded scout requires only LOW.
+### G7 — Controller uses a different/stronger model
 
-Expected: scout does not silently inherit HIGH solely from controller/session defaults.
+Controller/session model differs from the configured Sub Agent default.
 
-### G8 — Intentional escalation
+Expected: delegated Sub Agent still uses the configured Sub Agent default; it does not inherit the controller model merely because that model is available.
 
-A STANDARD unit discovers materially harder integration/concurrency/security reasoning.
+### G8 — Difficult unit requests stronger model
 
-Expected: escalation to HIGH is allowed when task/environment boundaries permit it; material escalation reason is reported. No silent escalation.
+A delegated unit discovers materially harder architecture/integration/concurrency/security reasoning.
 
-### G9 — Required model unavailable
+Expected: no automatic or intentional stronger-model escalation while `DEFAULT_ONLY` is active. Unit returns a model-capability gap/STOP to the controller if the configured default is insufficient.
 
-Required mapped tier unavailable and no accepted fallback exists.
+### G9 — Default Sub Agent model unavailable
 
-Expected: `MODEL_CAPABILITY_UNAVAILABLE`/equivalent; controller decides rather than silent substitution.
+Configured default cannot be used.
+
+Expected: surface a capability/environment gap; do not silently substitute a stronger model. Controller/project policy decides the next action.
 
 ### G10 — Cancellation/supersession
 
@@ -333,7 +340,7 @@ Run the matrix against the frozen source architecture in the surfaces that matte
 
 - Plugin package/discovery;
 - authoritative global routing adoption/update;
-- environment-specific `MODEL_TIER_MAP` where Sub Agent model selection is supported;
+- environment `DEFAULT_ONLY` Sub Agent policy and configured default model/reasoning where observable;
 - local Codex behavior on selected machines where distribution is supported;
 - ChatGPT Web Plugin routing/behavior where the Plugin is published/available;
 - cross-context request/receipt flow, including the currently used Web <-> local workflow.
