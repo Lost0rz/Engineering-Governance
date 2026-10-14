@@ -63,31 +63,41 @@ If a material condition is unknown, resolve it first or run the affected units s
 
 ### 6.1 Current stabilization policy
 
-For v0.6.0 stabilization, delegated Sub Agents use the execution environment's configured default Sub Agent model and configured default reasoning setting:
+For v0.6.0 stabilization, delegated Sub Agents follow the **current execution environment's own authoritative Sub Agent configuration/runtime default**:
 
 ```text
-SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
-SUBAGENT_MODEL: environment configured default
-SUBAGENT_REASONING: environment configured default
+SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY
+SUBAGENT_MODEL_SOURCE: current execution environment authoritative Sub Agent configuration/runtime default
+MODEL_OVERRIDE: NONE
+CROSS_CONTEXT_MODEL_PROPAGATION: DISABLED
 STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
 ```
 
-The execution environment owns the concrete model/reasoning configuration. Reusable governance must not hardcode one provider/model as universal truth.
+Reusable governance does not define the concrete provider, model, or reasoning setting. Those are execution-environment facts.
 
-A reasoning-effort setting such as `xhigh` is separate from model identity. Using `xhigh` on the configured default model does not mean a stronger model tier has been selected.
+Resolution rules:
+
+1. if the current environment exposes an authoritative Sub Agent configuration, use that configuration;
+2. if the current environment manages its default internally, allow the platform/runtime default to apply without an explicit override;
+3. if the exact model/reasoning identity is not observable, keep it `PLATFORM_DEFAULT` / `UNKNOWN` rather than infer a value;
+4. never import a model/reasoning value from another machine, session, Web/local context, repository document, memory, or controller model;
+5. a cross-context handoff preserves task/policy authority but the receiver resolves model configuration again from **its own** execution environment.
+
+Model identity and reasoning configuration are separate evidence fields. Neither implies the other.
 
 ### 6.2 Capability tiers are inactive routing vocabulary
 
-`LOW / STANDARD / HIGH` may remain documented as portable future capability vocabulary, but while `DEFAULT_ONLY` is active they do not select a delegated Sub Agent model. Role complexity changes the task/unit boundary and review expectations, not the Sub Agent model override.
+`LOW / STANDARD / HIGH` may remain documented as portable future capability vocabulary, but while `ENVIRONMENT_DEFAULT_ONLY` is active they do not select a delegated Sub Agent model. Role complexity changes the task/unit boundary and review expectations, not the Sub Agent model override.
 
 Do not:
 
 - downgrade a Sub Agent to another model because the task looks mechanical;
 - upgrade a Sub Agent to a stronger model because the task looks difficult;
-- inherit some different controller/session model merely because it is available;
-- silently change reasoning/model settings outside the configured Sub Agent default.
+- inherit a different controller/session model merely because it is available;
+- silently change model/reasoning settings outside the current environment's authoritative default;
+- propagate concrete model/reasoning settings across execution contexts.
 
-If the configured default is unavailable or materially incapable of the required work, return the capability gap to the controller. Do not substitute a stronger model unless a later explicit user/project policy has re-enabled that path.
+If the current environment's default is unavailable or materially incapable of the required work, return the capability/environment gap to the controller. Do not substitute a stronger model unless a later explicit user/project policy has re-enabled that path.
 
 ### 6.3 Future re-enablement
 
@@ -109,9 +119,11 @@ RELEVANT_PATHS_SYMBOLS_TESTS
 FRESH_DELTA
 ACCEPTANCE
 STOP_CONDITIONS
-SUBAGENT_MODEL_POLICY: DEFAULT_ONLY
+SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY
 RETURN_CONTRACT
 ```
+
+Do not place a concrete delegated model/reasoning value in the brief merely to preserve the sender's environment. The delegated execution context resolves its own authoritative default.
 
 Do not pass full chat history, full controls or unrelated repository context by default. Use Agent Handoff when the brief crosses a context boundary.
 
@@ -131,7 +143,7 @@ Retry only when the likely failure mode is recoverable and another attempt has a
 
 When a unit's premise becomes stale, unnecessary, or invalid because another unit changed the decision boundary, mark it `CANCELLED` or `SUPERSEDED`. Do not integrate its result unless freshly revalidated against current task/evidence.
 
-Repeated failure does not authorize a stronger-model escalation during stabilization. If repeated failure reveals a model-capability, design, scope, or evidence problem, return it to the controller/Project Governance for a new decision.
+Repeated failure does not authorize a stronger-model escalation during stabilization. If repeated failure reveals a model-capability, environment-configuration, design, scope, or evidence problem, return it to the controller/Project Governance for a new decision.
 
 ## 10. Recovery ledger
 
@@ -157,6 +169,6 @@ The controller integrates under the original task/writer authority:
 4. resolve conflicts centrally rather than allowing agents to overwrite each other;
 5. run the defined integration/affected verification;
 6. reject unknown result identity rather than guessing equivalence;
-7. return any material scope/design/model-capability discovery to Project Governance/Solution Design before further affected mutation.
+7. return any material scope/design/model-capability/environment-configuration discovery to Project Governance/Solution Design before further affected mutation.
 
 A unit saying `PASS` does not establish integrated task PASS.
