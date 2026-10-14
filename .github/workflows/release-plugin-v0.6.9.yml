@@ -1,6 +1,7 @@
 name: Release Plugin v0.6.9
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -50,7 +51,6 @@ jobs:
               path = Path('skills') / skill / 'SKILL.md'
               assert path.is_file(), path
 
-          # Preserve Project Profile and Agent Handoff release gates.
           profile = Path('skills/project-profile/SKILL.md').read_text()
           assert 'Mandatory pre-return compliance gate' in profile
           assert 'AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS' in profile
@@ -92,7 +92,6 @@ jobs:
           ):
               assert marker in v067_acceptance, marker
 
-          # Preserve v0.6.8 Anthropic source identity/provenance and nine-Skill routing baseline.
           design = Path('skills/design/SKILL.md').read_text()
           for marker in (
               'stable routed design capability',
@@ -129,7 +128,6 @@ jobs:
           ):
               assert marker in v068_acceptance, marker
 
-          # v0.6.9 Design closed-loop execution contract.
           for marker in (
               '## Mandatory Design pass',
               '## Anti-shotgun composition rule',
@@ -149,7 +147,6 @@ jobs:
           assert 'Microsoft frontend design review/adaptation — planned, not active' in module_map
           assert 'UX heuristic audit source — planned, not active' in module_map
 
-          # Selective routing rather than an all-Skill pipeline.
           global_routing = Path('skills/project-governance/references/global-routing.md').read_text()
           assert 'Routing is **selective rather than cumulative**' in global_routing
           assert 'already-understood frontend redesign may route `project-governance → design`' in global_routing
@@ -163,7 +160,6 @@ jobs:
           assert 'Routing is selective, not cumulative' in global_template
           assert 'report the actual `Governance route` and actual `Skills used`' in global_template
 
-          # Strong receipt observability and pre-return enforcement.
           for marker in (
               '## Compact Engineering Status Receipt',
               'Governance route:',
