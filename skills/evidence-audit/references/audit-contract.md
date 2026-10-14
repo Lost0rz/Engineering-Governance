@@ -1,17 +1,38 @@
 # Audit contract
 
-## 1. Evidence before verdict
+## 1. Audit purpose and independence
+
+Evidence Audit evaluates an explicit audit/acceptance boundary. When that boundary is a distinct engineering purpose, Project Governance authorizes the corresponding AUDIT/VERIFY task; the audit does not borrow implementation authority merely because it examines implementation work.
+
+Implementation self-check remains useful verification but is not automatically independent acceptance.
+
+When independence is material, declare:
+
+```text
+AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
+```
+
+- `SELF_CHECK` — same implementation context; not independent acceptance.
+- `FRESH_CONTEXT` — fresh context without relying on implementation reasoning history.
+- `SEPARATE_AGENT` — separate reviewer/auditor agent.
+- `HUMAN` — human independent review/acceptance.
+
+The required independence level follows user/task/risk requirements; do not force expensive independence for every local check.
+
+## 2. Evidence before verdict
 
 Every material finding names the evidence that supports it: requirement/authority, path/symbol/diff, test result, CI run/job, PR/host gate, release/provenance record, artifact hash or runtime observation.
 
 Do not substitute confidence, prior summaries or a matching name for the underlying evidence when it is available.
 
-## 2. Common identity envelope
+## 3. Common identity and coverage envelope
 
 Before verdict establish:
 
 ```text
+TASK_ID
 AUDIT_PROFILE
+AUDIT_INDEPENDENCE
 TARGET
 EXPECTED_AUTHORITY_OR_REQUIREMENT
 BASE_HEAD_RANGE_OR_ARTIFACT_ID
@@ -19,11 +40,14 @@ DELIVERY_SEMANTIC_IDENTITY (when relevant)
 LITERAL_HOST_IDENTITY (when host gates matter)
 EVIDENCE_FRESHNESS
 KNOWN_EQUIVALENCE_OR_PROVENANCE
+REQUIRED_CLAIMS
+OBSERVED_EVIDENCE
+UNVERIFIED_REQUIRED_CLAIMS
 ```
 
-Evidence proves the identity it actually observed.
+Evidence proves the identity and claim it actually observed. A required claim with insufficient evidence remains `UNKNOWN`.
 
-## 3. Audit profiles
+## 4. Audit profiles
 
 ### CODE_DIFF
 
@@ -68,34 +92,36 @@ Purpose: verify a merged/delivered/installed/runtime identity after the change.
 
 Name the observed merge commit/tree, package/build/install/deploy/runtime identity and the proposition being verified. Do not infer installed/runtime behavior solely from source success without provenance/equivalence.
 
-## 4. Semantic evidence vs host gates
+## 5. Semantic evidence vs host gates
 
 Semantic test/CI/review/audit evidence may remain valid across proven `CONTROL_ONLY_DRIFT` when semantic-tree equivalence and task conditions permit reuse.
 
 Live repository-host gates are separate. Re-read them at the boundary whose decision they govern.
 
-## 5. Findings
+## 6. Findings and boundary disposition
 
-- `BLOCKING` — unsafe/incorrect to accept or proceed.
-- `IMPORTANT` — material defect expected to be corrected before the requested boundary.
-- `MINOR` — non-blocking improvement/follow-up.
-- `UNKNOWN` — evidence unavailable/insufficient for a material claim.
+Severity describes the issue; disposition describes what the requested acceptance boundary may do.
 
-A required `UNKNOWN` produces `STOP`, not optimistic PASS.
+- `BLOCKING` — unsafe/incorrect to accept or proceed -> `STOP`.
+- `IMPORTANT` — material issue. If correction is required before the requested boundary -> `STOP`. If the responsible authority explicitly accepts/defers it outside that boundary -> follow-up may remain.
+- `MINOR` — non-blocking improvement/follow-up -> may coexist with `PASS_WITH_FOLLOWUPS`.
+- `UNKNOWN` — evidence unavailable/insufficient for a claim. If that claim is required -> `STOP`.
 
-## 6. Verdict
+Do not infer disposition from prose volume or severity name alone; state it explicitly.
 
-- `PASS` — required evidence for this audit boundary is satisfied.
-- `PASS_WITH_FOLLOWUPS` — acceptance may proceed; only non-blocking items remain.
-- `STOP` — blocking defect, required unknown, identity mismatch or applicable host gate prevents safe acceptance.
+## 7. Verdict
+
+- `PASS` — all required claims for this audit boundary are adequately supported and no blocking/required-before-boundary issue remains.
+- `PASS_WITH_FOLLOWUPS` — required claims are supported and only explicitly non-blocking/deferred items remain.
+- `STOP` — blocking defect, required-before-boundary IMPORTANT issue, required unknown, identity mismatch or applicable host gate prevents safe acceptance.
 
 The verdict must state what boundary it covers. A `CODE_DIFF PASS` is not automatically `PR_MERGE PASS`; a source audit is not installed-runtime acceptance.
 
-## 7. Reviewer finding validation
+## 8. Reviewer finding validation
 
-A reviewer/agent suggestion is a claim. Before corrective mutation, verify it against actual code/requirements/evidence. If valid but out of current scope, return to Project Governance for authorization. Do not blindly implement review prose.
+A reviewer/agent suggestion is a claim. Before corrective mutation, verify it against actual code/requirements/evidence. If valid but outside the current task purpose, return to Project Governance for a CORRECTIVE/reconciled task rather than mutating under audit authority.
 
-## 8. Read-only rule
+## 9. Read-only rule
 
 Evidence Audit is read-only by default. It may report stale controls:
 
