@@ -12,76 +12,42 @@ No formal GitHub v0.6.x release has been created yet.
 
 The eight-Skill architecture remains accepted.
 
-Current corrected Delivery / Semantic candidate:
+Current corrected Delivery / Semantic candidate before Task 076 source mutation:
 
 `1b46159acfda4ec2c36af46b6da58ad26c1b5482`
 
-Current personal Web Plugin candidate:
+Current personal Web Plugin before Task 076 update:
 
 - Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
 - version: `0.6.4`;
 - release: `pluginrel_6acf306eeacc8191814073d8973b3e39`;
-- scope/discoverability: `USER / PRIVATE`;
-- root/platform manifests read back as `0.6.4`;
-- Task-075 Skill/template/contract readback: PASS.
+- scope/discoverability: `USER / PRIVATE`.
 
 PR #26 remains OPEN / DRAFT / UNMERGED. CI/check PASS is not claimed without fresh evidence.
 
-## Completed Profile correctives
+## Fresh Web 0.6.4 finding
 
-- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — compactness / generic-workflow deduplication.
-- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — surface-role evidence, Domain deduplication, meta-procedure exclusion and normative-rule compression.
-- `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074` — fact grounding, Memory/history isolation, old-Profile revalidation and authority-class preservation.
-- `EG-V060-PROFILE-DURABILITY-CORRECTIVE-075` — separate durability gate after grounding; `verified != durable`; temporary delivery/runtime facts stay out by default; explicit durable/version-scoped architecture remains eligible; fixed metadata fields enforced.
+Grounding and most durability behavior improved, but fresh Gift/Merloom generation still reproduced already-forbidden Profile content:
 
-## Fresh Web 0.6.4 behavioral evidence
+- Gift promoted stage-only/current-work `storefront CMS` non-goal into durable constraints;
+- Gift retained more detailed Domain ownership than needed despite an established Domain map;
+- Merloom placed source/code responsibility paths into `Environment`;
+- Merloom repeated per-Skill trigger prose in `Engineering Governance`.
 
-Fresh Gift and Merloom Profile generations materially improved the Task-075 target but did not fully pass the durable Profile contract.
+The previous plan to rerun the unchanged `0.6.4` candidate is superseded by Owner direction. Because the same candidate cannot demonstrate a corrective that was never implemented, a bounded source corrective is now authorized.
 
-### Gift result
+## Active corrective
 
-PASS:
+`EG-V060-PROFILE-ADHERENCE-CORRECTIVE-076` is ACTIVE.
 
-- fixed header fields `Profile surface` + `Primary/mirror role`;
-- Memory-only merchandise/visual preferences absent;
-- development-stage Mac mini/Air and `:3000` acceptance endpoint absent;
-- current Product-upload blocker / PR / CI / task progress absent;
-- durable B2B Product-first / Inquiry / RFQ identity retained.
+Goal: turn the existing Grounding / Durability / Classification / Compression requirements into a mandatory pre-return compliance gate and add exact rejection rules for the repeated leakage classes, without changing the eight-Skill architecture.
 
-Remaining findings:
+Authorized source scope:
 
-- `storefront CMS` was still promoted into long-term constraints although the current Gift business authority phrases it as a **current storefront-work non-goal**;
-- Authority sections still reproduce more of the established Domain ownership map than the compact broad-orientation boundary requires;
-- a few detailed runtime/verification rules remain in `Priorities / constraints` instead of staying in their owning authorities.
+- `skills/project-profile/SKILL.md`;
+- `skills/project-profile/references/profile-contract.md`;
+- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `references/V060_INTEGRATED_ACCEPTANCE.md`;
+- `plugin.json` patch version.
 
-### Merloom result
-
-PASS:
-
-- fixed header fields preserved;
-- current `PRODUCT_DETAIL_AUTHORING_WORKFLOW_REDESIGN_001`, PR/CI and live progress excluded from the Profile body;
-- greenfield / single-Authority / explicit Save-Publish / AI-candidate / Merloom-Gift boundaries retained from current durable authorities;
-- no temporary acceptance port or current runtime instance detail promoted.
-
-Remaining findings:
-
-- `Environment` reproduced a code-responsibility/source map (`apps/web`, `backend/product`, `backend/sites`, `backend/publishing`, etc.); this is implementation/navigation detail, not a stable environment/platform role;
-- `Engineering Governance` restated `domain-navigation` and `incident-doctor` trigger prose instead of using only the compact reusable routing hook.
-
-## Acceptance interpretation
-
-Task 075 **source/package corrective remains valid**, but Web `0.6.4` behavioral durability acceptance is **PARTIAL FAIL**.
-
-The observed failures are already prohibited by the current 0.6.4 contract/template. Therefore no new reusable source corrective is justified yet. This is currently treated as a behavioral-adherence regression, not evidence that another rule block is missing.
-
-## Next milestone
-
-Under parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`:
-
-1. rerun fresh neutral Gift and Merloom Profile generations against Web `0.6.4` without reminding the model of the failed classes;
-2. Gift must omit stage-only `storefront CMS` style non-goals and keep only a compact broad Authority distinction rather than a reduced Domain map;
-3. Merloom must omit code-directory responsibility maps from `Environment` and collapse Engineering Governance to the default entry + reusable routing pointer;
-4. run the pending FloatTabs rebuild regression;
-5. create another source corrective only if the same already-forbidden classes reproduce reliably enough to show the shipped contract is not operationally strong enough.
-
-Formal GitHub release/merge and Local Codex integrated acceptance remain deferred until the Web boundary passes.
+After source/package/readback verification, update the same Web Plugin identity and restore parent Task 070 to fresh Web regression state.
