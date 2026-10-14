@@ -68,7 +68,7 @@ Frozen v0.6.0 Architecture Delivery / Semantic HEAD:
 
 `b7fb0051b8c51b5c846a507fad9037518dcf18db`
 
-The Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance because reusable model-authority semantics changed under Task 065.
+Later closeout commits are semantic-tree-equivalent descendants: comparison from `b7fb0051...` to the final Task 065 literal head changes only `CURRENT_STATUS.md` and `CURRENT_TASK.md`. The Task 064 semantic candidate `31d9d94f1f59a3d5b49fb7c614f37ec752cff479` is historical/superseded for final v0.6.0 acceptance.
 
 ## Verification result
 
@@ -93,7 +93,7 @@ Evidence:
 
 All Task 065 source-corrective acceptance criteria are satisfied.
 
-Installed Plugin/Web/Codex integrated acceptance remains explicitly outside this task and has not run. The accepted next sequence is one consolidated integrated acceptance task against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` (or a proven control-only descendant).
+Installed Plugin/Web/Codex integrated acceptance remains explicitly outside this task and has not run. The accepted next sequence is one consolidated integrated acceptance task against semantic head `b7fb0051b8c51b5c846a507fad9037518dcf18db` or a proven semantic-tree-equivalent descendant.
 
 ## Handoff / terminal state
 
