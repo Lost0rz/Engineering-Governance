@@ -1,45 +1,73 @@
 # Handoff Receipt
 
-Use the profile matching `MODE`. Do not fill irrelevant fields merely for ceremony.
+A Receipt reports the actual result/evidence of one Card. It is transport/evidence, not project authority.
 
-## State-changing / EXECUTE
+## Required core
 
-HANDOFF_ID: `<id>`
-TASK_ID: `<same authorized task unless Project Governance changed the task boundary>`
-MODE: `EXECUTE`
-SKILLS_USED: `<actual Skills used>`
-AUTHORITY_COMPATIBILITY: `CURRENT_COMPATIBLE | CURRENT_CONFLICT | UNKNOWN`
-OUTCOME: `PASS | PARTIAL | STOP`
-START_IDENTITY: `<identity>`
-FINAL_IDENTITY: `<identity>`
-CHANGED_PATHS: `<paths | NONE>`
-VERIFICATION: `<checks + results>`
-LIFECYCLE: `<branch/PR/worktree effects | NONE>`
-UNRESOLVED: `<NONE | evidence/blocker>`
-RELATED_DOCUMENT: `<path | NONE>`
-DOCUMENT_ALIGNMENT: `UPDATED | UNCHANGED | NOT_APPLICABLE`
-CURRENT_STATUS_RECONCILIATION: `UPDATED | UNCHANGED`
-CURRENT_TASK_RECONCILIATION: `UPDATED | UNCHANGED`
-CONTROL_ALIGNMENT: `PASS | NEEDS_RECONCILIATION`
-NEXT_SAFE_ACTION: `<next decision/action>`
+Every structured Receipt starts with:
 
-## Read-only / AUDIT | REVIEW | VERIFY | DIAGNOSE
+```text
+CARD_ID: <source card id>
+TASK_ID: <authorized task id>
+MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
+CAPABILITY: <Engineering Governance Skill actually requested | NONE>
+TARGET: <card target>
+OUTCOME: <mode-appropriate result>
+```
 
-HANDOFF_ID: `<id>`
-TASK_ID: `<authorized task>`
-MODE: `<mode>`
-TARGET: `<claim/work product/question>`
-OBSERVED_IDENTITY: `<identity>`
-EVIDENCE_RANGE: `<range/source>`
-SKILLS_USED: `<actual Skills used>`
-AUTHORITY_COMPATIBILITY: `CURRENT_COMPATIBLE | CURRENT_CONFLICT | UNKNOWN`
-INDEPENDENCE_BASIS: `<SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN | NOT_APPLICABLE>`
-FINDINGS_OR_OBSERVATION: `<evidence-backed result>`
-UNKNOWN_OR_UNVERIFIED: `<NONE | details>`
-CI_TEST_HOST_EVIDENCE: `<relevant evidence | N/A>`
-CONTROL_ALIGNMENT_OBSERVATION: `MATCH | STALE | UNKNOWN | NOT_APPLICABLE`
-CONTROL_MUTATION: `NOT_AUTHORIZED_READ_ONLY`
-VERDICT_OR_RESULT: `PASS | PASS_WITH_FOLLOWUPS | STOP | FAIL | UNKNOWN`
-NEXT_SAFE_ACTION: `<next decision/action>`
+Then add only mode-relevant evidence. Do not restate the full task contract.
 
-Execution-context changes do not imply task changes. Report a new `TASK_ID` only when Project Governance actually authorized/reconciled a distinct engineering purpose.
+## EXECUTE
+
+```text
+START_IDENTITY: <identity>
+FINAL_IDENTITY: <identity>
+CHANGED_PATHS: <paths | NONE>
+VERIFICATION: <checks + results>
+LIFECYCLE: <branch/PR/workspace effects | NONE>
+UNRESOLVED: <NONE | evidence/blocker>
+CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION | NOT_APPLICABLE>
+NEXT_SAFE_ACTION: <next decision/action>
+```
+
+`EXECUTE` does not permit mutation beyond the Card/task authority. Legitimate no-change execution should report `CHANGED_PATHS: NONE` explicitly.
+
+## AUDIT / REVIEW
+
+```text
+OBSERVED_IDENTITY_OR_RANGE: <identity/range>
+EVIDENCE_OR_FINDINGS: <evidence-backed result>
+UNKNOWN: <NONE | unverified claim/gap>
+VERDICT: <PASS | PASS_WITH_FOLLOWUPS | STOP | UNKNOWN as applicable>
+CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
+NEXT_SAFE_ACTION: <next decision/action>
+```
+
+If formal Evidence Audit was requested, `CAPABILITY` should identify `evidence-audit`. `MODE: AUDIT` alone is only the read-only action class.
+
+## VERIFY
+
+```text
+CLAIM: <named proposition/check>
+OBSERVED_IDENTITY: <identity>
+RESULT: PASS | FAIL | UNKNOWN
+EVIDENCE: <what was observed>
+PROVES: <supported boundary>
+DOES_NOT_PROVE: <important non-covered boundary>
+NEXT_SAFE_ACTION: <next decision/action>
+```
+
+## DIAGNOSE
+
+Keep diagnosis read-only unless the Card used `MODE: EXECUTE` for an authorized probe. Report only decision-linked evidence, for example:
+
+```text
+OBSERVED_IDENTITY: <identity/runtime>
+MISSING_FACT_OR_QUESTION: <fact/question>
+EVIDENCE_OR_HYPOTHESIS: <result>
+UNKNOWN: <NONE | unresolved gap>
+CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
+NEXT_SAFE_ACTION: <next decision/action>
+```
+
+Changing execution context does not imply a task change. Report a different `TASK_ID` only when Project Governance actually authorized/reconciled a distinct engineering purpose.
