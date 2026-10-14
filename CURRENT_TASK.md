@@ -1,102 +1,79 @@
-# CURRENT TASK — Plugin v0.5.5 Local Convergence
+# CURRENT TASK — Plugin v0.6.6 Release
 
-Date: 2026-10-13
+Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060`
+Task ID: `EG-V066-RELEASE-078`
 
-State: `COMPLETE`
+Task class: `RELEASE`
 
-Mode: bounded local Plugin convergence and global routing verification
+State: `ACTIVE`
 
 ## Objective
 
-Converge Mac mini and MacBook Air from local Plugin `0.5.4` to `0.5.5`, preserving one active canonical Engineering Governance authority on each machine, then verify exactly one current managed Engineering Governance routing block in the authoritative global `AGENTS.md`.
+Publish the accepted Web candidate as formal GitHub Plugin release `plugin-v0.6.6`, then hand off the immutable release identity and local update commands for Local Codex acceptance.
 
-## Planning context
+## Release candidate
 
-- Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`.
-- Relationship to plan: local distribution only; durable governance design is unchanged.
+- PR: `#26`
+- branch: `codex/capability-model-v0.6.0`
+- current Web Plugin version: `0.6.6`
+- current Web release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`
+- current Delivery / Semantic candidate: `edf20c44a5ec32b49d2494b7a1c9511af8ca32cd`
+- exact eight top-level Skills are the v0.6.x capability model.
 
-## Accepted baseline
+## Accepted prerequisite
 
-- Formal release: `plugin-v0.5.5`.
-- Frozen publication source: `8871327915396b8de458f3e5709e3f67e36eff8f`.
-- Current global routing template blob: `c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`.
-- v0.5.4 and v0.5.5 global routing templates are byte-identical.
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is closed for the Web boundary:
 
-## Completed execution
+- Project Profile regressions PASS across Gift, Merloom, MemoX and FloatTabs;
+- previously established Web routing/discovery behavior remains valid and later Profile-only correctives did not change non-Profile routing Skills;
+- no material Web blocker remains for publication.
 
-1. Mac mini — `PASS_LOCAL_PLUGIN_055`.
-2. Mini receipt audit — `PASS`.
-3. MacBook Air — `PASS_LOCAL_PLUGIN_055`.
-4. Final dual-machine convergence audit — `PASS`.
+This does **not** claim full cross-environment integrated acceptance. Local Codex acceptance follows installation from the formal release asset.
 
-## Accepted Mac mini result
+## Authorized mutation
 
-- Plugin: `0.5.4 -> 0.5.5`.
-- Active authority count: `1`.
-- Active authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
-- Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
-- Exactly three top-level Skills.
-- Planning-document linkage: `PASS`.
-- Control Alignment Gate: `PASS`.
-- `CONTROL_ONLY_DRIFT`: `PASS`.
-- Delivery / Semantic HEAD: `PASS`.
-- Repository-host gate boundary: `PASS`.
-- Global agent authority: `/Users/ox_miles/.codex/AGENTS.md`.
-- Managed routing markers: exactly one BEGIN and one END.
-- Managed routing template match: `PASS`.
-- Global routing reconciliation: `UNCHANGED`.
-- Unrelated global rules preserved: `PASS`.
-- Manual cache mutation: `NO`.
-- Plugin source-directory mutation: `NO`.
+1. add a dedicated `0.6.6` release workflow on this branch;
+2. verify release workflow/package scope and current PR host state;
+3. update PR release evidence;
+4. make PR #26 ready and merge only if release-readiness evidence is PASS;
+5. verify the main-triggered release workflow, immutable tag, GitHub Release asset and package provenance;
+6. reconcile `CURRENT_STATUS.md` / `CURRENT_TASK.md` after publication.
 
-## Accepted MacBook Air result
+## Release contract
 
-- Plugin: `0.5.4 -> 0.5.5`.
-- Active authority count: `1`.
-- Active authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
-- Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
-- Exactly three top-level Skills.
-- Planning-document linkage: `PASS`.
-- Control Alignment Gate: `PASS`.
-- `CONTROL_ONLY_DRIFT`: `PASS`.
-- Delivery / Semantic HEAD: `PASS`.
-- Repository-host gate boundary: `PASS`.
-- Global agent authority: `/Users/jack7788/.codex/AGENTS.md`.
-- Managed routing markers: exactly one BEGIN and one END.
-- Managed routing template match: `PASS`.
-- Global routing reconciliation: `UNCHANGED`.
-- Unrelated global rules preserved: `PASS`.
-- Manual cache mutation: `NO`.
-- Plugin source-directory mutation: `NO`.
+The GitHub release asset contains only:
 
-## Scope integrity
+- `plugin.json`;
+- `skills/**`.
 
-No full Project Governance procedures were copied into either global `AGENTS.md`. No project-local `AGENTS.md` was changed solely for this Plugin update. No fourth Skill was added. No manual active Plugin cache/source mutation was used. Formal release and governance semantics were not changed by this task.
+It must report version `0.6.6`, contain exactly the eight accepted top-level Skills, and publish as:
 
-## Verification result
+`plugin-v0.6.6`
 
-`V1 local distribution/configuration verification: PASS`.
+with asset:
 
-Both machines now converge on the same canonical local Plugin authority and version, and both authoritative global routing blocks are singular and current.
+`engineering-governance-plugin.zip`
 
-## Acceptance criteria
+## Stop conditions
 
-All Task 060 acceptance criteria are satisfied.
+STOP before merge/release if:
 
-## Handoff / terminal state
+- PR #26 is no longer mergeable or main moved unexpectedly;
+- manifest/version/Skill set differs from the accepted candidate;
+- package workflow would include repository controls/docs/workflows in the Plugin ZIP;
+- required release provenance cannot be established;
+- another material source defect appears.
 
-Task 060 is complete. No further v0.5.5 local distribution or global-routing mutation is authorized or required under this task.
+## Post-release boundary
 
-Control Alignment Gate:
+After formal publication, Local Codex is updated from the immutable `plugin-v0.6.6` release asset and receives the remaining local integrated acceptance. Full integrated acceptance is not claimed until that succeeds.
 
-- `RELATED_DOCUMENT`: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+Control Alignment:
+
+- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
+- `WEB_ACCEPTANCE`: `PASS`
+- `LOCAL_ACCEPTANCE`: `PENDING_POST_RELEASE_UPDATE`
 - `CONTROL_ALIGNMENT`: `PASS`
-
-Next work must receive separate task authorization.

@@ -1,11 +1,11 @@
 <!-- BEGIN ENGINEERING-GOVERNANCE ROUTING -->
 ## Engineering Governance Skill routing
 
-For software, repository, or project engineering work that acts on or reasons about a project/repository, use `project-governance` as the normal Engineering Governance entry point unless a higher-priority instruction explicitly selects another route. Project Governance should scale its procedure to the task; simple low-risk work does not require extra plans, worktrees, broad scans, or broad validation merely because this route is active.
+For ordinary software, repository, or project engineering work, use `project-governance` as the normal entry unless a higher-priority instruction or explicit bounded Skill selection determines another route. Keep simple work lightweight.
 
-Use `domain-navigation` when the responsible Domain/capability, semantic authority, source location, symbol, runtime entry, dependency, or relevant test cannot be established safely. Return the verified route or unresolved gap to the calling workflow; do not use Domain Navigation as a substitute for task authorization or diagnosis.
+Use `project-profile` only when creating, rebuilding, shrinking, or auditing the compact derived project context/index. It is not task authority or a Domain Map replacement; repository/project-managed Profile mutation still requires compatible task authorization.
 
-Use `incident-doctor` only when a real failure, unexplained behavior, or unsafe ambiguity blocks safe progress and current evidence is insufficient for the next safe decision. If an incident also needs source/authority location, Incident Doctor may use `domain-navigation` for that bounded purpose and then resume diagnosis. If diagnosis requires a behavior change outside the active authorization, return to `project-governance` before mutation.
+Use `solution-design` for material design ambiguity; `execution-orchestrator` for useful decomposition/delegation/recovery; `agent-handoff` for bounded cross-context transfer; `evidence-audit` for formal read-only evidence/acceptance/readiness verdicts; `domain-navigation` for unclear semantic/source/test/runtime routes; and `incident-doctor` only for a blocking evidence gap.
 
-Do not force these Skills onto non-project or non-engineering requests. This block selects Skills only; follow the selected Skill and the target repository's own `AGENTS.md`/controls for procedure and project facts.
+Simple advisory read-only status/evidence inspection may remain in `project-governance`. Keywords alone do not select a Skill. These capabilities compose without creating parallel task authority. Follow the selected Skill and the target repository's own authorities for project facts.
 <!-- END ENGINEERING-GOVERNANCE ROUTING -->

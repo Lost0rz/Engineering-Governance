@@ -1,112 +1,77 @@
-# Durable planning documents and task linkage
+# Durable planning documents, Solution Design, and task linkage
 
-Use a durable planning document only when the work needs long-lived design context that spans more than one bounded execution task. The default pattern is `documents/**` when the target project has no better accepted planning authority. Reuse an existing architecture/product/design authority when one already owns this role; do not create a duplicate tree merely to satisfy a filename convention.
+Use a durable planning/design document only when long-lived context materially helps more than one bounded execution decision. Reuse an accepted architecture/product/design authority when one already owns this role; `documents/**` is a default pattern only when the target project has no better authority.
 
-A planning document is **not** a fourth control file. The three-file control plane remains `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`.
+A planning/design document is **not** a fourth control file. The three project controls remain `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`.
 
 ## Ownership model
 
 | Source | Owns | Must not become |
 | --- | --- | --- |
-| `AGENTS.md` | Durable operating rules and stable project/repository boundaries | Current plan, live progress, task history |
-| durable planning document | Long-lived design, rationale, multi-task/large-PR plan, work-package decomposition, durable constraints and acceptance boundary | Live progress tracker, task authorization, CI/PR history |
-| `CURRENT_TASK.md` | The one active execution authorization and bounded task contract | Long-term architecture/plan, project history |
-| `CURRENT_STATUS.md` | Verified current project snapshot and current planning position | Detailed plan or implementation log |
+| `AGENTS.md` | durable operating rules and stable repository/project boundaries | live task/progress history |
+| durable planning/design authority | accepted long-lived design, rationale, constraints, work-package structure, whole-plan acceptance boundary | task authorization, live CI/PR/progress log |
+| `CURRENT_TASK.md` | one active execution authorization and bounded task contract | long-term architecture/plan |
+| `CURRENT_STATUS.md` | concise verified project snapshot/current planning position | detailed plan or implementation diary |
+| Solution Design output | bounded design decision/evidence before placement in the correct authority | automatic task authorization or second design authority |
 
-Keep one owner per fact class. Link between sources rather than copying their full contents.
+Keep one owner per fact/decision class and link instead of copying full contents.
 
-## When to create or reuse a planning document
+## Solution Design relationship
 
-A durable planning document is justified when at least one of these materially helps future execution:
+`solution-design` resolves a material design question. Its result may remain bounded to one task when no durable value would be lost. When future tasks/maintainers depend on the accepted decision, write the long-lived portion into the project's accepted durable planning/design authority.
 
-- a large PR or program is intentionally delivered across multiple bounded tasks/work packages;
-- architecture/contract migration rationale must survive multiple sessions;
-- later tasks depend on the same accepted design, sequencing, constraints, or whole-plan acceptance boundary;
-- a durable design decision would otherwise be repeatedly reconstructed from historical PRs or chat context.
-
-Do not require a document for every bug, one-off maintenance task, small refactor, or otherwise self-contained unit of work. A standalone task may state `Related document: NONE — standalone task`.
-
-## What a durable plan should contain
-
-Keep the document focused on durable planning semantics:
-
-1. purpose and desired outcome;
-2. non-goals;
-3. accepted design / authority boundaries;
-4. durable constraints and dependencies;
-5. useful work packages or phases;
-6. whole-plan acceptance boundary;
-7. assumptions or decisions whose later change would materially alter future work.
-
-Do not maintain routine execution state such as task completion percentages, current CI results, review state, branch/worktree state, or chronological progress. `CURRENT_STATUS.md`, `CURRENT_TASK.md`, live repository/runtime evidence, or task receipts own those facts according to their class.
-
-## Task planning context
-
-When the active task implements part of a durable plan, `CURRENT_TASK.md` records a bounded planning link:
+A Solution Design result returns:
 
 ```text
-Related document: documents/<name>.md
-Document section / work package: <section/phase>
-Document revision basis: <verified revision or observation basis>
-Relationship to plan: <what this task implements and what remains outside scope>
+TASK_RECONCILIATION_REQUIRED: YES | NO
+REASON: <material task-owned semantic change | none>
+DURABLE_DOCUMENT: <path/section | NONE>
 ```
 
-The revision basis is provenance by default. It is not an implicit literal Repository HEAD or Delivery / Semantic HEAD equality lock. A later unrelated document edit does not invalidate the task.
+If `YES`, Project Governance reconciles/re-authorizes `CURRENT_TASK.md` before affected implementation. Writing a design document does not itself authorize execution.
 
-If the planning document materially changes a task-owned prerequisite, scope, acceptance criterion, stop condition, allowed side effect, dependency, explicit head lock, or authorization boundary, reconcile and re-authorize the task before further affected mutation.
+## When durable planning is justified
 
-## Status planning context
+Use it when a large PR/program spans multiple bounded tasks, architecture/contract migration rationale must survive sessions, later tasks depend on shared design/sequencing/constraints, or a durable decision would otherwise be repeatedly reconstructed.
 
-`CURRENT_STATUS.md` may summarize the active planning location so a fresh session can recover the project quickly:
+Do not require it for every bug, maintenance change, small refactor or self-contained task.
 
-```text
-Planning document: documents/<name>.md | NONE
-Current work package / phase: <phase> | standalone
-Current task: <task id>
-Current state: <verified concise state>
-Next intended milestone: <next outcome>
-```
+## Durable contents
 
-Do not copy the detailed plan into status. The planning document owns durable design; status owns where the project is now.
+Keep durable semantics only: purpose/outcome, material non-goals, accepted design/authority boundaries, durable constraints/dependencies, useful work packages/phases, whole-plan acceptance boundary, and assumptions/decisions whose later change materially alters future work.
 
-## Planning-document alignment at handoff
+Do not store routine completion percentage, current CI/review state, branch/worktree state, or chronological logs.
 
-For a linked plan, final state-changing handoff checks whether execution changed the durable plan itself.
+## Task linkage
 
-Update the planning document when, for example:
+When the active task implements part of a durable plan, record the document, bounded section/work package, revision/observation basis, and relationship to the plan. Revision basis is provenance by default, not an implicit HEAD equality lock.
 
-- implementation disproves a durable design assumption;
-- a dependency or work-package boundary materially changes;
-- whole-plan design, non-goal, or acceptance boundary changes;
-- leaving the document unchanged would mislead later tasks.
+If a later design change materially alters task-owned prerequisites, scope, acceptance, STOP conditions, dependencies, allowed side effects, verification or explicit locks, stop affected mutation and reconcile/re-authorize the task.
 
-Do **not** update it merely because:
+## Status linkage
 
-- the current task completed as planned;
-- CI/audit/review passed;
-- a PR merged;
-- a work package became complete without changing the design.
+`CURRENT_STATUS.md` summarizes only where the project is now; do not copy the detailed plan into status.
 
-Report the result as `DOCUMENT_ALIGNMENT: UPDATED | UNCHANGED | NOT_APPLICABLE` in a final state-changing receipt when the project uses this contract.
+## Planning/design alignment at final handoff
+
+Update a linked durable authority when implementation disproves a durable assumption or materially changes design/dependency/work-package/whole-plan acceptance. Do not update it merely because a task finished as planned, CI/audit passed, a PR merged, or a work package completed without changing durable design semantics.
+
+Report `DOCUMENT_ALIGNMENT: UPDATED | UNCHANGED | NOT_APPLICABLE`.
 
 ## Cross-session recovery
 
-Recover context in this order unless a project-specific durable rule says otherwise:
+If a current Project Profile surface exists and is cheap/available, it may be read first as an optional landing index. It is not mandatory and is not authoritative.
+
+For actual authority-sensitive decisions, progressively read as needed:
 
 1. applicable `AGENTS.md`;
 2. `CURRENT_STATUS.md`;
 3. `CURRENT_TASK.md`;
-4. the task's `Related document`, when present;
-5. additional domain/navigation/source evidence only as needed for the current decision.
+4. the task's bounded related design/plan when present;
+5. additional Domain/source/runtime/evidence only as needed.
 
-This should establish how the project works, where it is now, what is authorized, and why the larger work exists without reconstructing historical PRs.
-
-## Historical material
-
-Do not bulk-migrate historical planning artifacts merely to conform to this contract. Historical `docs/**`, ADRs, specs, Superpowers artifacts, or other existing records may remain where they are. Use the project's accepted durable planning authority for new work; `documents/**` is a default pattern, not a mandatory literal path.
+A stale/absent Profile does not block recovery when underlying authorities are available.
 
 ## Delivery identity
 
-Planning documents are durable project/governance content. They are **not** included in the default `CONTROL_ONLY_DRIFT` exclusion. Only `CURRENT_STATUS.md` and `CURRENT_TASK.md` are excluded by default under the control-identity contract.
-
-A planning-document edit therefore participates in normal Delivery / Semantic identity evaluation and receives the verification appropriate to its task and risk.
+Durable planning/design files are governance/delivery-relevant content. They are not part of the default `CONTROL_ONLY_DRIFT` exclusion. Only `CURRENT_STATUS.md` and `CURRENT_TASK.md` are excluded by default.

@@ -1,16 +1,24 @@
 # Minimum decision-linked probe
 
-Design a probe only after the evidence gate names one concrete missing fact and the decision it blocks. Explain why existing evidence cannot establish that fact. A probe should close that gap or distinguish the current plausible explanations, and its possible results must be able to change the next decision. If it cannot change a decision, it usually should not be added.
+Add a probe only after the evidence gate names one concrete missing fact and the decision it blocks. Prefer existing read-only/canonical/runtime evidence first.
 
-Record for each probe:
+Record only what matters:
 
 ```text
-MISSING_FACT: <the one fact to establish>
-COMPETING_EXPLANATIONS: <current reasonable explanations relevant to the blocked decision>
-DISCRIMINATING_OBSERVATION: <what observation would support or weaken each explanation>
-RESULT_TO_DECISION: <the next decision for each material result>
+MISSING_FACT
+COMPETING_EXPLANATIONS
+DISCRIMINATING_OBSERVATION
+RESULT_TO_DECISION
 ```
 
-Prefer, in order, existing read-only evidence, canonical state, identified runtime evidence, and then narrowly scoped instrumentation only when needed. Keep the probe limited to the smallest observation that distinguishes the alternatives or establishes the missing fact.
+If the probe can change timing, ordering, resource use, state, privacy exposure, or user-visible behavior, also record:
 
-Do not collect broad logs “just in case,” change product behavior under the label of diagnosis, add permanent telemetry by default, or observe facts unrelated to the blocked question. If all plausible outcomes lead to the same next decision, do not add the probe.
+```text
+OBSERVER_EFFECT_RISK
+SAFETY_PRIVACY_IMPACT
+CLEANUP_PLAN
+```
+
+Choose the least intrusive observation whose possible outcomes can change the next decision. If all plausible results lead to the same action, do not add the probe.
+
+Do not collect broad logs "just in case", change product behavior under the label of diagnosis, or add permanent telemetry by default.

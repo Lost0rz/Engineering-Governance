@@ -1,0 +1,164 @@
+name: Release Plugin v0.6.6
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/release-plugin-v0.6.6.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path('plugin.json').read_text())
+          assert manifest['name'] == 'engineering-governance'
+          assert manifest['version'] == '0.6.6'
+
+          expected = {
+              'project-governance',
+              'project-profile',
+              'solution-design',
+              'execution-orchestrator',
+              'agent-handoff',
+              'evidence-audit',
+              'domain-navigation',
+              'incident-doctor',
+          }
+          actual = {p.name for p in Path('skills').iterdir() if p.is_dir()}
+          assert actual == expected, (actual, expected)
+
+          for skill in sorted(expected):
+              path = Path('skills') / skill / 'SKILL.md'
+              assert path.is_file(), path
+
+          profile = Path('skills/project-profile/SKILL.md').read_text()
+          assert 'Mandatory pre-return compliance gate' in profile
+          assert 'AUTHORITY_MAP_POINTER_ONLY_WHEN_DOMAIN_AUTHORITY_EXISTS' in profile
+
+          handoff = Path('skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md').read_text()
+          for field in ('CARD_ID', 'TASK_ID', 'MODE', 'CAPABILITY', 'TARGET', 'AUTHORITY', 'DELTA', 'BOUNDARY', 'RETURN_CONTRACT'):
+              assert field in handoff, field
+          PY
+
+      - name: Build exact Plugin payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          files = [Path('plugin.json')] + sorted(
+              p for p in Path('skills').rglob('*') if p.is_file()
+          )
+
+          with zipfile.ZipFile('engineering-governance-plugin.zip', 'w', compression=zipfile.ZIP_DEFLATED) as zf:
+              for path in files:
+                  zf.write(path, path.as_posix())
+
+          with zipfile.ZipFile('engineering-governance-plugin.zip') as zf:
+              names = zf.namelist()
+              assert len(names) == len(files), (len(names), len(files))
+              assert names[0] == 'plugin.json'
+              assert all(n == 'plugin.json' or n.startswith('skills/') for n in names)
+              assert not any(n.startswith('.codex-plugin/') for n in names)
+
+          Path('release.entries').write_text(str(len(files)))
+          PY
+
+          sha256sum engineering-governance-plugin.zip | tee release.sha256
+          wc -c < engineering-governance-plugin.zip | tr -d ' ' | tee release.size
+
+      - name: Create immutable tag and GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG='plugin-v0.6.6'
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            REMOTE_TAG_SHA="$(git ls-remote --tags origin "refs/tags/${TAG}" | awk '{print $1}')"
+            if [ "${REMOTE_TAG_SHA}" != "${GITHUB_SHA}" ]; then
+              echo "Tag ${TAG} already exists at ${REMOTE_TAG_SHA}; refusing to move release identity from ${GITHUB_SHA}."
+              exit 1
+            fi
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git tag "${TAG}" "${GITHUB_SHA}"
+            git push origin "refs/tags/${TAG}"
+          fi
+
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists; refusing duplicate publication."
+            exit 1
+          fi
+
+          SIZE="$(cat release.size)"
+          SHA256="$(cut -d' ' -f1 release.sha256)"
+          ENTRIES="$(cat release.entries)"
+
+          cat > release-notes.txt <<EOF
+          Engineering Governance Plugin v0.6.6
+
+          Package version: 0.6.6
+
+          Source SHA:
+          ${GITHUB_SHA}
+
+          Asset:
+          engineering-governance-plugin.zip
+
+          Size (bytes):
+          ${SIZE}
+
+          SHA-256:
+          ${SHA256}
+
+          Package file entries:
+          ${ENTRIES}
+
+          Included Skills:
+          - project-governance
+          - project-profile
+          - solution-design
+          - execution-orchestrator
+          - agent-handoff
+          - evidence-audit
+          - domain-navigation
+          - incident-doctor
+
+          Changes since v0.5.5:
+          - expand Engineering Governance from three to eight top-level Skills while keeping global routing as policy rather than a ninth Skill
+          - add Project Profile as compact derived project context with fact grounding, durability filtering, authority-class preservation and structural Domain-map deduplication
+          - add Solution Design, Execution Orchestrator, Agent Handoff and Evidence Audit as bounded reusable capabilities
+          - harden cross-context handoff Card/Receipt contracts and separate CAPABILITY from MODE
+          - preserve Project Governance as the normal entry for task/control/lifecycle/closeout
+          - keep Domain Navigation and Incident Doctor conditional rather than default routing
+          - validate the 0.6.6 Web candidate across Gift, Merloom, MemoX and FloatTabs Project Profile regressions
+
+          The release asset contains only plugin.json and skills/**. Repository controls, documents, references, marketplace catalogs and workflows are not packaged into the Plugin ZIP.
+          EOF
+
+          gh release create "${TAG}" engineering-governance-plugin.zip \
+            --verify-tag \
+            --title 'Engineering Governance Plugin v0.6.6' \
+            --notes-file release-notes.txt

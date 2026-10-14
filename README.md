@@ -1,54 +1,53 @@
 # Engineering-Governance Skills
 
-Engineering-Governance is a source repository for reusable AI engineering-governance Skills, templates, routing/adoption contracts, operating rules, and reference material. An AI agent reads the relevant material, inspects a target project, and adapts what is useful to that project's verified facts.
+Engineering-Governance is a source repository for reusable AI engineering Skills, routing contracts, templates, and reference material. Project facts stay with the project; reusable workflow stays here.
 
-## What this repository is
+## Capability model
 
-This repository provides three focused capabilities:
+v0.6.0 has eight top-level Skills:
 
-- **Project Governance** — the normal engineering entry, three-file control plane, normal task flow, workspace lifecycle, storage-affinity for durable project-controlled development state, risk-proportional verification, and lightweight non-blocking Follow-ups kept in current status for later task selection.
-- **Domain Navigation** — conditional evidence-backed semantic routing from a task to the relevant authorities, code, symbols, tests, dependencies, and runtime evidence, reusing existing project maps when they already own domain meaning and refreshing only a verified affected routing claim when an accepted projection is wrong or stale.
-- **Incident Doctor** — a reactive process for real blocking problems when existing evidence is insufficient.
+- **Project Governance** — normal engineering entry; task/control authority, lifecycle, writers/workspaces, verification and closeout.
+- **Project Profile** — creates/refreshes a compact derived project-context/index from verified authorities; repository/project-managed mutation still requires compatible task authority.
+- **Solution Design** — material requirements/architecture/state-ownership ambiguity.
+- **Execution Orchestrator** — decomposition, Sub Agents, safe parallelism, environment-aware delegation, recovery/integration.
+- **Agent Handoff** — standardized bounded cross-context cards/receipts with separate `CAPABILITY` and `MODE` dimensions.
+- **Evidence Audit** — formal read-only evidence/acceptance/readiness verdicts bound to identity and required claims; simple advisory inspection may remain in Project Governance.
+- **Domain Navigation** — unclear Domain/authority/source/symbol/test/runtime route.
+- **Incident Doctor** — blocking evidence gap requiring minimal diagnosis/probes.
 
-It also provides a **global routing/adoption contract** that can be installed by an authorized AI agent into the user's authoritative global `AGENTS.md`. The managed routing block selects among the three Skills; it is not a fourth Skill and it does not duplicate their procedures.
+Global routing is policy, not a ninth Skill.
 
-The Skills are source material. A target project keeps ownership of its product, domain, data, and runtime truth. Templates describe structure and required semantics; they are adapted rather than copied blindly.
+## Project information layers
 
-## What this repository is not
+- project `AGENTS.md` — normative project-specific MUST/MUST-NOT rules and durable boundaries;
+- Project Profile — concise descriptive context + pointers to authorities; one current projection surface or explicit primary + mirror;
+- Domain/navigation authority — detailed semantic ownership/source/test/runtime route;
+- durable planning — long-lived design/rationale/work packages when justified;
+- `CURRENT_STATUS.md` — concise current-state snapshot;
+- `CURRENT_TASK.md` — single active authorization;
+- implementation authority — canonical source/schema/config/workflow/persisted contract/state owner for the implementation class;
+- observed evidence — CI/test results, PR/host state, runtime/review/audit/probe observations.
 
-It is not a business product, governance runtime, installer executable, Bootstrap CLI, background service, central database, MCP server, or automatic enforcement/remediation system. It does not require an executable navigation helper and it does not automatically change a target project or the user's global files.
+A Profile or Domain Map is a derived projection. If it conflicts with its authority, the authority wins and the projection is stale.
 
-## AI-adapted use
+## Normal route
 
-1. Install/verify the Plugin payload and adopt or verify the managed global routing block when Engineering Governance is being installed for cross-project use. Installation is complete only when all three expected Skills are available **and** the authoritative global guidance has exactly one current managed routing block.
-2. For software, repository, or project engineering work, enter through **Project Governance** unless a higher-priority instruction explicitly selects another route. Project Governance scales down for simple low-risk work; this default does not require extra plans, worktrees, broad scans, or broad validation.
-3. Use **Domain Navigation** only when the responsible Domain/capability/authority/source/test/runtime route is unclear. If that focused work verifies that an existing accepted navigation projection is wrong, incomplete, or stale, refresh only the affected derived claim; do not churn correct routes or imply whole-map freshness.
-4. Use **Incident Doctor** only when a real problem blocks safe progress and existing evidence is insufficient for the next safe decision.
-5. Inspect the target repository's own controls, source, semantic authorities, and runtime evidence.
-6. Select and adapt only the relevant guidance and templates, keeping unsupported project facts explicit as unknown.
-7. During normal state-changing work, a small evidence-backed non-blocking adjacent issue may be kept concisely under `CURRENT_STATUS.md / Follow-ups`; it becomes executable only after explicit `CURRENT_TASK.md` scope authorization.
-8. Keep project-controlled durable development assets on the storage authority containing the canonical project root by default, unless the project explicitly assigns a different authority for a specific durable asset. Machine/runtime state and ephemeral OS/tool scratch remain separate classes.
-9. Verify the result at a level and cadence proportional to the actual change and closure boundary.
+Ordinary software/project work enters `project-governance`. Use `project-profile` only to create/rebuild/audit the compact project context/index. Other narrow Skills trigger only when their semantic condition applies.
 
-## Global routing adoption
+Changing agent/session/machine/context does not create a new task. Same-purpose continuation keeps the task and, when safe, the current PR/workspace. Handoffs transport authority references + fresh delta; they do not restate a second task contract.
 
-The reusable Project Governance payload contains:
+## Environment policy
 
-- `references/global-routing.md` — route-selection semantics;
-- `references/adoption.md` — idempotent agent-mediated install/upgrade contract;
-- `assets/templates/GLOBAL_AGENTS_ROUTING.md` — the exact marker-bounded global routing block.
+Concrete Sub Agent model/reasoning, parallel capacity, delegation limits, tools, and runtime/workspace constraints are resolved from the current execution environment only when decision-relevant. Reusable policy does not copy one environment's values into another.
 
-Adoption verifies the three Skill identities, inspects the existing authoritative global file, inserts or replaces exactly one managed block, preserves unrelated rules, and stops rather than guessing when multiple/conflicting managed regions exist. Project-local `AGENTS.md` files remain repository-specific and do not receive a duplicate global routing block by default.
+## Verification
 
-## Fixed principles
+Verification follows risk (`V0`–`V3`) and evidence identity. Semantic evidence and live repository-host gates are separate claims. Missing checks are not PASS. Installed/runtime acceptance is performed only after a frozen source candidate exists.
 
-- **Three control files:** `AGENTS.md` holds durable project rules, `CURRENT_STATUS.md` records verified current state (including a small optional set of still-material non-blocking Follow-ups), and `CURRENT_TASK.md` defines the one active authorization. Status never authorizes repair.
-- **Control identity:** provenance/transition parents, current control revisions, and explicit locked/execution heads are different semantic classes. Verify the relationship the task actually declares; do not treat every SHA as a current-head equality gate.
-- **Domain navigation:** discover accepted business/product/domain/capability maps already present, regardless of filename, and route from the task through those authorities to focused source/symbol/test evidence. Add a separate navigation projection only when it provides durable routing value; it remains derived and does not replace product/domain truth. Correct routes do not churn; verified corrections update only affected routing evidence.
-- **Project storage affinity:** resolve the canonical project root before choosing locations for project-controlled durable development state. Those durable assets follow the canonical project's storage authority by default; an explicit project-local asset/path rule overrides that default. Do not turn this into a universal host, volume, user-home, or machine rule.
-- **Doctor on demand:** normal product work is the default. Investigate through Doctor only when current evidence cannot answer a blocking question safely; add the minimum useful probe.
-- **Proportional verification:** `V0`–`V3` is the risk/scope dimension. Verification cadence is separate: focused construction checks, broader affected regression at corrective/task closure when justified, and exact integration/release evidence at the boundary whose claim it proves. Verification effort follows change risk, not change count.
+## Maintainer references
 
-## Maintainer notes
-
-`docs/superpowers/` holds maintainer-only design and implementation planning history for this repository. It is not part of the reusable Skill material for target projects.
+- `references/SKILL_ENGINEERING.md` — Skill design quality.
+- `references/V060_INTEGRATED_ACCEPTANCE.md` — consolidated acceptance matrix.
+- `skills/project-governance/references/global-routing.md` — capability selection.
+- `skills/project-governance/references/artifact-lifecycle.md` — artifact ownership/refresh lifecycle.
+- `skills/agent-handoff/references/handoff-contract.md` — card/receipt contract.

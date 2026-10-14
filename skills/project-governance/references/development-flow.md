@@ -1,42 +1,126 @@
 # Business-first development flow
 
-Use this flow for normal governed product and business work. When the current decision is **which task to do next**, consider any small current `CURRENT_STATUS.md / Follow-ups` section together with product priority, blockers, roadmap/milestones, durable planning context, and other accepted project state. A Follow-up becomes executable only after the chosen work is written into a new `CURRENT_TASK.md` objective/in-scope authorization.
+Use this flow for normal governed product/business engineering. It is a lifecycle, not a requirement to invoke every Skill or create a new task for every phase.
 
-1. Read applicable `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`, along with any relevant project authority. When `CURRENT_TASK.md` names a `Related document`, read the bounded planning section needed for the active task. When Engineering Governance global routing is adopted, this normal project/repository work enters through Project Governance; route to narrower Skills only when their triggers apply. Reading controls or a planning document does not imply rewriting them.
-2. Verify only the repository, ref/revision, runtime, and other baseline facts needed for the authorized work. When controls name Git identities or live Repository HEAD differs from recorded evidence, classify each identity and the changed path set under [Control identity and freshness](control-identity.md) before deciding that drift occurred. A recorded transition/control parent or planning-document revision basis is a relationship/provenance constraint unless the active task explicitly declares it as a semantic or literal equality gate. A `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only difference is `CONTROL_ONLY_DRIFT`: Repository HEAD changed, Delivery / Semantic HEAD did not. Planning-document changes are not included in that default exclusion.
-3. Before state-changing work, identify the canonical project root, then identify the selected task workspace (physical checkout/repository, branch or detached state, Repository HEAD, Delivery / Semantic HEAD when relevant, and working-tree state) and establish its relationship to the task's authorized repository/ref/revision. A project-looking path, symlink, branch or folder name, archived copy, or detached checkout alone does not establish that relationship; an authorized, aligned non-main task worktree is valid. Do not create a fresh construction branch or stop for HEAD drift merely because the repository advanced through proven `CONTROL_ONLY_DRIFT`; material task-content changes remain authoritative and must still be read and obeyed.
+## 1. Recover authority, task purpose, and planning context
 
-   Use the canonical project root as the default storage-routing signal for project-controlled durable development state. Determine the storage authority that contains that canonical root before selecting locations for Git worktrees, task staging that can contain unique work, durable diagnostic or migration evidence, project archives, retained release/acceptance artifacts, or other non-regenerable project development state. Unless a verified project-local rule explicitly assigns a different location/authority for a specific asset, keep those durable assets on the same storage authority as the canonical project. Do not replace this with a universal host, volume, home-directory, or machine rule, and do not require every ordinary project to maintain a separate storage manifest.
+Read applicable `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, and only the bounded related planning/design authority needed for the current decision. `CURRENT_TASK.md` is the single active execution authorization. Reading a source does not imply rewriting it.
 
-   Keep **machine/runtime state** separate: CI runner state, LaunchAgents, package-manager/runtime services, host caches, machine configuration, system temp, and similar host-operational state may remain machine-local unless the project explicitly owns them as portable project data. Keep **ephemeral scratch** separate as well: OS/tool-required temporary files, sockets, short-lived compiler scratch, and disposable temp files may use system temporary locations, but unique or durable project state must be retained under the project's storage authority before task closure rather than abandoned in an unrelated convenience/temp location.
+When useful, interpret `TASK_CLASS` as the current engineering purpose: DESIGN, EXECUTION, AUDIT, VERIFY, DIAGNOSIS, CORRECTIVE, CLOSEOUT, or project-equivalent. This metadata does not create a second authority.
 
-   When the project uses multiple task workspaces, apply [Workspace lifecycle and closeout](workspace-lifecycle.md) at the bounded lifecycle checkpoints defined there: workspace selection/creation, before a potentially overlapping successor writer, material retained-state transitions, terminal lifecycle events, and before a new overlapping task. Keep the check bounded to the active task: identify task-relevant predecessor writers whose write authority materially overlaps the proposed task, and establish their lifecycle, write-capability, unique-work state, and storage authority when durable placement is material. A broad capability or Domain label alone does not make two workspaces conflicting, and unrelated historical workspaces do not require routine full classification unless ambiguity, collision, unique work, lifecycle cleanup, or an explicit legacy-reconciliation task requires it.
+A written accepted solution/design is planning context for execution. Executors should reference it rather than re-derive the solution from chat history.
 
-   Preserve unknown staged, unstaged, untracked, or local-only work and do not mutate it merely to satisfy an execution card. If the selected workspace relationship, relevant predecessor disposition/write capability, storage authority, or authoritative baseline/control is materially unresolved, stop and reconcile before continuing. Keep discovery task-bounded; expand beyond the selected workspace and relevant repository metadata only when ambiguity, unique work, lifecycle cleanup, or the task decision materially requires it. If nothing material changed at a later checkpoint, do not repeat historical archaeology.
-4. Resolve durable planning context under [Durable planning documents and task linkage](planning-documents.md). Reuse an existing accepted planning/design authority when one exists. Create or use `documents/**` only when long-lived design context materially spans more than one bounded task or otherwise adds durable value. A self-contained task may remain standalone. A planning document does not authorize execution and must not become a live progress tracker.
-5. Identify the affected Domain/capability from accepted semantic authorities already present in the project and any useful navigation projection. Use [Domain Navigation](../../domain-navigation/SKILL.md) when the responsible Domain/capability, authority, code location, symbol, runtime entry, dependency, or relevant test is unclear. Do not require a literal `DOMAIN_MAP.md` just because a template exists. Return the verified route to Project Governance; Domain Navigation does not become a second task authority. If focused current-task navigation proves an accepted projection wrong/incomplete/stale and verifies the replacement, apply the affected-only refresh contract; a correct route does not churn, an unresolved replacement stays explicit, and strict read-only work reports a correction candidate without writing the projection. A bounded/historical snapshot result alone never refreshes the current projection.
-6. Confirm the requested work remains within the active objective and scope and, when linked, within the named planning section/work package. Ordinary evidence discovery that supports the accepted objective does not create a new task. A material objective or scope change requires updating `CURRENT_TASK.md` and re-authorization before continuing. If a durable-plan change materially alters a task-owned prerequisite, scope, acceptance, stop condition, dependency, allowed side effect, or authorization boundary, reconcile/re-authorize the task before further affected mutation. The task-file commit itself remains control identity; its new content is nevertheless authoritative for permission and scope.
-7. Apply [Code structure and canonical authority](code-structure.md) whenever a source edit would add/change an owner, backend, writer, shared behavior, module boundary, or materially new responsibility inside an existing module. Identify the existing canonical authority for each affected state or behavior class. If an edit would add a distinct Domain/capability/authority/lifecycle/reason-to-change to an existing file, establish the responsibility boundary before introducing that responsibility rather than knowingly accumulating mixed responsibility for a later size-driven cleanup. Reuse, extend, or explicitly replace an existing authority; reconcile independent writers instead of creating parallel truth. File length and edit size are never the split criteria. Re-run the structure check if implementation discoveries materially change the responsibility boundary, then implement the smallest authorized product or business outcome. If that authorized work materially changes a pointer in an already accepted derived navigation projection and the new route remains clear, reconcile only the affected claim before handoff; this normal governance-evidence maintenance does not require repeated per-task map-write boilerplate. If the route becomes genuinely unclear, return to Domain Navigation for bounded re-verification. Explicit metadata-write prohibitions and strict read-only mode still prevent the projection write.
-8. Choose the lightest safe `V0`–`V3` verification tier and a separate verification cadence under [Verification tiers and cadence](verification-tiers.md). During construction, prefer focused checks appropriate to the tier. Group related acceptance findings into one bounded corrective where practical, then run broader affected regression once the corrective stabilizes. Reserve task-close and merge/release checks for the boundary whose claim they prove; do not rerun unrelated full suites after every small edit. Reuse valid semantic CI/review/audit evidence across proven `CONTROL_ONLY_DRIFT`; require fresh semantic evidence for `DELIVERY_HEAD_CHANGE` when the accepted verification contract requires it. At merge/release time, separately read current repository-host gates and satisfy any required check/review/mergeability/current-base/latest-head rule bound to the literal identity the host governs.
-9. During execution, update only sources whose owned verified facts materially change: durable operating rules in `AGENTS.md`, durable planning/design in its owning planning document, the current snapshot in `CURRENT_STATUS.md`, and active authorization/handoff in `CURRENT_TASK.md`. Routine external evidence such as CI success, review/audit completion, mergeability changes, or workflow run identifiers does not force a control write merely because it occurred. During normal state-changing status reconciliation, when a small evidence-backed **non-blocking** adjacent problem materially deserves future consideration and therefore qualifies as a Follow-up, add or refresh one concise item under `CURRENT_STATUS.md / Follow-ups` without expanding the active task or authorizing its repair. Keep blockers in the blocker/current-task flow. Avoid duplicate Follow-up noise; preserve still-material Follow-ups through unrelated status refreshes and through mere selection into a future task, and remove an item only when current evidence shows it is resolved, obsolete, or no longer material. Strict read-only work may report a Follow-up candidate in its result but must not mutate project controls.
-10. Before any governed **state-changing** execution claims a final successful handoff, run the mandatory [Control Alignment Gate](control-plane.md). Obtain fresh outcome/lifecycle evidence; reread `CURRENT_STATUS.md` and `CURRENT_TASK.md`; when a linked planning document could have been materially affected, reread it; compare each source with the facts it owns; update only sources whose owned semantics are now inaccurate or incomplete. The check is mandatory even when every result is `UNCHANGED`.
-11. Leave a clean handoff or closeout with the baseline, changed paths, checks, unresolved evidence, next authorized milestone, and mandatory alignment result stated accurately. A successful state-changing receipt must report the semantic equivalents of `RELATED_DOCUMENT`, `DOCUMENT_ALIGNMENT`, `CURRENT_STATUS_RECONCILIATION`, `CURRENT_TASK_RECONCILIATION`, and `CONTROL_ALIGNMENT: PASS`. If the project uses task branches/worktrees, apply the lifecycle checkpoint before handoff when the task enters a retained review/QA/acceptance state and again when project/task controls establish that the task or phase is terminal. Safely close obsolete workspace/branch state or retain it with a verified reason, release condition, and known write capability. A merge or other named lifecycle event alone does not prove terminal authorization or local closeout. Unknown work must remain preserved until its disposition is verified, and any retained unique/durable state must not be left only in unrelated temporary/convenience storage. Once closeout is verified, a later control-only main advance must not reopen it.
+## 2. Distinguish task, execution unit, and context
 
-## Next-task reconciliation fallback
+- **Task** — engineering objective/authorization.
+- **Execution unit** — bounded work inside the task, possibly delegated to a Sub Agent.
+- **Execution context** — Web/local/cloud/subagent/session/machine/reviewer surface.
 
-Normal state-changing work should leave its own control-owned semantics aligned before final successful handoff. The following pattern is therefore a fallback for legacy stale controls, read-only discoveries, interrupted work, or pre-v0.5.5 state—not the preferred normal closeout path.
+Changing execution context does not by itself create a new task. Multiple Sub Agent units under one execution objective remain one task.
 
-When Task A has already reached a verified accepted/terminal state but `CURRENT_STATUS.md` / `CURRENT_TASK.md` still describe the prior planning boundary:
+## 3. Establish the safe baseline
 
-1. read the existing controls and any linked durable plan needed for the decision;
-2. verify fresh repository/lifecycle evidence for Task A;
-3. confirm there is no unresolved unique work, predecessor-writer conflict, authorization ambiguity, or other safety blocker;
-4. perform one control transition that reconciles Task A's accepted current state as needed and authorizes Task B when safe.
+Verify only the repository/ref/revision/runtime/workspace facts needed for safe action. Use `control-identity.md` to classify literal Repository HEAD, Delivery / Semantic HEAD, provenance/transition identities, explicit equality locks and `CONTROL_ONLY_DRIFT`.
 
-Do not require a cosmetic intermediate “close Task A” commit when one combined transition can safely restore alignment and authorize the next task. This fallback does not make delayed control reconciliation the normal sequence.
+For state-changing work identify the selected workspace, working-tree/unique-work state, and any task-relevant predecessor writer with overlapping authority. Preserve unknown local work. A project-looking path, branch name or execution card does not itself prove workspace authority.
 
-## Incident Doctor is on demand
+## 4. Confirm authorization and task boundary
 
-If a real bug or failure appears and existing evidence is sufficient to decide and act safely, address it within the current authorization and verify the change; do not build Doctor or diagnostic infrastructure by default. If the problem is outside the authorized scope, reconcile and re-authorize the task first.
+Compare the requested action with the active objective, in/out-of-scope boundary, allowed side effects, verification contract and STOP conditions.
 
-Enter [Incident Doctor](../../incident-doctor/SKILL.md) only when a real failure, unexplained behavior, or unsafe ambiguity blocks safe progress and an evidence gap prevents the needed decision. Keep routine feature delivery separate from diagnostic infrastructure work; add only the minimum diagnosis authorized for the blocked question. If Doctor needs Domain Navigation to locate evidence, return to Doctor after that bounded route is established.
+Keep the same task when the engineering purpose and authorization are materially unchanged across:
+
+- Web/local/session/machine continuation;
+- controller-to-Sub-Agent delegation;
+- sequential or parallel work units;
+- implementation-local verification supporting the task's own acceptance criteria.
+
+Reconcile or create a distinct task when engineering purpose/authorization materially changes, for example a separately commissioned independent acceptance audit, a distinct corrective objective after findings, or a new design decision that changes scope/interfaces/side effects/writer authority.
+
+## 5. Resolve material design ambiguity only when needed
+
+If implementation would require guessing about product intent, architecture, state ownership, contract/schema, responsibility boundaries or durable cross-task decisions, route to `solution-design`.
+
+Clear local work stays in this flow. Do not invoke Solution Design merely because the request is a feature.
+
+After design, return to Project Governance. If the accepted design changes scope, prerequisites, allowed side effects, dependency, acceptance or verification, reconcile/re-authorize `CURRENT_TASK.md` before implementation. If design was a separately authorized purpose, a later execution task may reference that accepted design directly.
+
+## 6. Resolve semantic/source route only when unclear
+
+Use `domain-navigation` when the responsible Domain/capability, accepted semantic authority, source location, symbol, runtime entry, dependency or relevant test cannot be established safely. Reuse accepted project maps/authorities; do not require a literal `DOMAIN_MAP.md`.
+
+Return the verified route or unresolved gap to the calling flow. Navigation does not own diagnosis or authorization.
+
+## 7. Resolve writer/code authority
+
+Before adding/changing a writer, backend, shared behavior, module boundary or materially new responsibility, apply `code-structure.md`. Reuse/extend/replace the canonical authority deliberately rather than creating parallel truth. File size alone is not a responsibility boundary.
+
+If the responsibility boundary becomes unclear, return to Domain Navigation or Solution Design according to whether the uncertainty is location/authority or design choice.
+
+## 8. Use execution topology to improve effective throughput
+
+Use `execution-orchestrator` when the authorized task benefits from decomposition, multiple agents/roles, parallelism, delegated-model policy, recovery state or controlled integration.
+
+Do not treat minimum agent count as the goal. If independent work units can safely run concurrently and concurrency materially improves throughput or context isolation, use available parallel capacity. Parallel readers/researchers/reviewers are often cheap to separate; parallel writers still require proven-disjoint semantic authority/workspaces plus an integration boundary.
+
+During the current v0.6.0 stabilization period, delegated Sub Agents follow `ENVIRONMENT_DEFAULT_ONLY`. Each delegated execution context resolves its own authoritative Sub Agent configuration/runtime default. Do not propagate concrete model/reasoning values from another context or infer an unobservable platform default. Do not switch a delegated unit to a stronger model merely because the work becomes harder; return a capability/environment gap to the controller if the current environment default is insufficient.
+
+One inline executor remains correct when decomposition provides no material benefit or dependencies/shared state make concurrency inefficient or unsafe.
+
+Orchestration never expands `CURRENT_TASK.md`.
+
+## 9. Transfer responsibility through context-neutral Agent Handoff
+
+Whenever responsibility crosses agents, sessions, machines or execution contexts, use `agent-handoff`.
+
+A same-task continuation preserves the same `TASK_ID` and references the same task/design authorities. The request carries authority references + fresh delta + immediate action boundary + return contract. It may record source/target context when useful, but Web/local identity does not define task purpose.
+
+Under environment-owned delegated-model policy, handoff carries the policy only. It does not make the sender's concrete model/reasoning configuration authoritative for the receiver.
+
+Do not paste complete task/status/rules into the card by default. If the receiver can read the authority, point to it. The task's own `Handoff / current stop point` is lifecycle/authorization state, not a transport card.
+
+## 10. Implement and verify proportionally
+
+Implement the smallest authorized outcome. Select the lightest safe `V0`–`V3` verification tier and a cadence appropriate to the construction/corrective/task/integration boundary.
+
+Implementation self-check, tests, lint, type-checks and focused verification remain part of the execution task unless an independent acceptance boundary is separately required.
+
+During a multi-part architecture/framework build, the active task may explicitly defer expensive integrated/runtime acceptance until the architecture is frozen so long as bounded construction sanity checks prevent uncontrolled breakage. This is a cadence decision, not permission to skip final required evidence.
+
+Universal mandatory TDD is not required. Regression-first/TDD is appropriate where behavior risk, regression history, contract changes or task requirements justify it.
+
+## 11. Diagnose only when a blocking evidence gap exists
+
+If a real failure/unexplained unsafe ambiguity blocks progress and current evidence cannot answer the next safe decision, enter `incident-doctor`. If existing evidence already supports the fix, stay in the current authorized delivery flow.
+
+Doctor may use Domain Navigation to locate evidence, then resumes diagnosis. If the supported fix is outside authorization, return to Project Governance before mutation.
+
+## 12. Obtain an independent evidence verdict when needed
+
+Use `evidence-audit` when a distinct implementation/code/PR/CI/release/merge-readiness verdict is required. Bind the audit to the exact target/range/identity and evidence freshness before saying PASS.
+
+Calling Evidence Audit from the implementation context does not by itself establish independence. When formal independent acceptance is part of the engineering boundary, authorize the appropriate AUDIT/VERIFY task purpose and state the independence basis required by risk/user/task.
+
+Audit/reviewer findings do not authorize fixes. Corrective mutation returns to Project Governance/task authorization. Read-only audit may report stale controls but must not change them solely to make the audit clean.
+
+## 13. Merge/release host boundary
+
+At a merge/release decision, keep semantic implementation evidence separate from live repository-host gates. Reuse semantic evidence across proven `CONTROL_ONLY_DRIFT` only when semantic equivalence and task conditions permit it. Re-read current required checks/reviews/conflicts/mergeability/merge queue/current-base/latest-head rules for the literal identity the host governs.
+
+## 14. Reconcile controls and close out
+
+Before a final successful governed state-changing handoff, run the mandatory Control Alignment Gate:
+
+1. obtain fresh outcome/lifecycle evidence;
+2. reread current `CURRENT_STATUS.md` and `CURRENT_TASK.md`;
+3. reread the linked durable planning/design authority when the outcome could have changed its owned semantics;
+4. update only sources whose owned semantics are materially stale;
+5. report document/status/task reconciliation and `CONTROL_ALIGNMENT` explicitly.
+
+The check is mandatory; writes are conditional.
+
+If task workspaces exist, separately reconcile physical workspace/branch disposition under `workspace-lifecycle.md`. A merge event does not by itself prove local closeout.
+
+## Cross-skill composition
+
+Use [Capability composition](capability-composition.md) for allowed return paths and artifact/writer boundaries. Do not create a second controller, a fourth control file, or a handoff/ledger/audit artifact that competes with project authority.

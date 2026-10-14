@@ -1,89 +1,87 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-13.
+Last verified: 2026-10-14.
 
-## Published release baseline
+## Published baseline
 
-Formal GitHub Plugin release is `plugin-v0.5.5`.
+Formal immutable GitHub release remains `plugin-v0.5.5` until Task `EG-V066-RELEASE-078` publishes `plugin-v0.6.6`.
 
-- Frozen publication source / tag target: `8871327915396b8de458f3e5709e3f67e36eff8f`.
-- GitHub Actions release run: `38395556087` — `success`.
-- ChatGPT Web Plugin: `0.5.5`.
-- Exactly three top-level Skills remain: `project-governance`, `domain-navigation`, `incident-doctor`.
+Previously accepted Web/Mac mini/MacBook Air baseline remains `0.5.5`; Local Codex acceptance for `0.6.6` is intentionally deferred until installation from the formal release asset.
 
-## Accepted governance semantics
+## v0.6.6 accepted Web candidate
 
-Task `EG-PLANNING-DOCUMENT-CONTROL-ALIGNMENT-058` remains the accepted v0.5.5 governance source baseline.
+The eight-Skill architecture remains accepted.
 
-Accepted semantics include durable planning-document linkage, a mandatory final Control Alignment Gate with conditional writes, explicit document/status/task reconciliation results, `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD separation, and separate live repository-host gates.
+Current Delivery / Semantic candidate:
 
-## Local Codex convergence — COMPLETE
+`edf20c44a5ec32b49d2494b7a1c9511af8ca32cd`
 
-Task `EG-PLUGIN-V0.5.5-LOCAL-CONVERGENCE-060` is complete.
+Current personal Web Plugin candidate:
 
-### Mac mini — PASS
+- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.6`;
+- Web release: `pluginrel_6acf45f2c8208191937f142f6c7198a8`;
+- scope/discoverability: `USER / PRIVATE`;
+- root/platform manifests read back as `0.6.6`;
+- Task-077 Skill/template/contract installed readback: PASS;
+- Task-077 overlay ZIP SHA-256: `bc714a64fde1b273e346db6632728b338329ef1953bffb404360b5a078a1af64`;
+- packaged Git-blob identities matched repository source for the corrected Profile files before Web upload.
 
-- Host: `Ox-Miless-Mac-mini.local`.
-- Codex CLI: `0.162.1`.
-- Canonical Plugin authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
-- Active authority count: `1`.
-- Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
-- Exactly three top-level Skills are present.
-- Planning-document linkage, Control Alignment Gate, `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and repository-host gate separation verify `PASS`.
-- Authoritative global guidance: `/Users/ox_miles/.codex/AGENTS.md`.
-- Global routing markers: exactly one BEGIN and one END.
-- Managed routing block exactly matches template blob `c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`.
-- Global routing reconciliation: `UNCHANGED`.
-- Unrelated global rules preserved: `PASS`.
-- Manual cache mutation: `NO`.
-- Plugin source-directory mutation: `NO`.
-- Final state: `PASS_LOCAL_PLUGIN_055`.
+## Web acceptance
 
-### MacBook Air — PASS
+Parent Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is closed for the Web boundary.
 
-- Host: `Yins-Air.local`.
-- Codex CLI: `0.160.0`.
-- Canonical Plugin authority: `engineering-governance@engineering-governance-personal / 0.5.5`.
-- Active authority count: `1`.
-- Marketplace source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
-- Exactly three top-level Skills are present.
-- Planning-document linkage, Control Alignment Gate, `CONTROL_ONLY_DRIFT`, Delivery / Semantic HEAD, and repository-host gate separation verify `PASS`.
-- Authoritative global guidance: `/Users/jack7788/.codex/AGENTS.md`.
-- Global routing markers: exactly one BEGIN and one END.
-- Managed routing block matches the current template.
-- Global routing reconciliation: `UNCHANGED`.
-- Unrelated global rules preserved: `PASS`.
-- Manual cache mutation: `NO`.
-- Plugin source-directory mutation: `NO`.
-- Final state: `PASS_LOCAL_PLUGIN_055`.
+Project Profile regressions:
 
-## Global routing conclusion
+- Gift: PASS;
+- Merloom: PASS;
+- MemoX: PASS;
+- FloatTabs: PASS.
 
-The v0.5.4 and v0.5.5 `GLOBAL_AGENTS_ROUTING.md` templates are byte-identical (`blob c54c84beb6ccfdb5ac1cbd3eb74d1c5e674f496e`). Both machines already had the current managed routing block, so no global `AGENTS.md` write was required.
+The previously blocking Profile classes no longer reproduce:
 
-Global `AGENTS.md` remains a Skill-routing authority. Planning-document, Control Alignment Gate, workspace-lifecycle, Delivery / Semantic HEAD, and other detailed Project Governance procedures remain Skill-owned rather than duplicated globally.
+- Memory/history backfill into Profile facts;
+- old Profile self-bootstrap;
+- current-stage/runtime detail promoted into durable identity;
+- temporary endpoint leakage;
+- Domain ownership mini-map under `Authority map`;
+- source/code map in `Environment`;
+- expanded per-Skill Engineering Governance routing.
 
-## Active problems and blockers
+Previously established Web routing/discovery acceptance remains valid. Later Tasks 072–077 were bounded Project Profile correctives except Task 071's Handoff template correction and did not introduce a new material routing failure. Current Web use continues to route ordinary engineering through Project Governance, Profile work through Project Profile, and formal release/readiness audit through Evidence Audit.
 
-No known v0.5.5 release, Web Plugin, Mac mini, MacBook Air, or global-routing blocker remains.
+Minor compression observations in generated Profiles remain non-blocking.
 
-## Current distribution state
+## Current release task
 
-- Formal GitHub release: `0.5.5` — PASS.
-- ChatGPT Web Plugin: `0.5.5` — PASS.
-- Mac mini Codex: `0.5.5` — PASS.
-- MacBook Air Codex: `0.5.5` — PASS.
-- Canonical active Engineering Governance authority on each local machine: exactly one.
-- Global Engineering Governance managed routing block on each local machine: current and singular.
+Task: `EG-V066-RELEASE-078`
 
-## Next intended milestone
+State: `ACTIVE`
 
-No further v0.5.5 distribution or routing work is required. Future work should begin from this converged baseline and receive separate task authorization.
+Authorized next actions:
 
-## Control alignment at Task 060 closeout
+1. add and audit a dedicated `0.6.6` release workflow;
+2. make PR #26 ready and merge only after release-readiness PASS;
+3. verify the main-triggered `plugin-v0.6.6` tag/release/package provenance;
+4. provide Local Codex update commands for installation from the formal release asset;
+5. run Local Codex integrated acceptance after update.
 
-- Related document: `documents/project-governance-planning-and-control-alignment-v0.5.5.md`.
-- Document alignment: `UNCHANGED` — local distribution did not change durable design.
-- `CURRENT_STATUS.md`: `UPDATED` — both Mini and Air are now accepted at 0.5.5.
-- `CURRENT_TASK.md`: `UPDATED` — Task 060 reached its terminal dual-machine convergence outcome.
-- Control alignment: `PASS`.
+## PR / host state before release workflow change
+
+- PR #26: OPEN / DRAFT / UNMERGED / mergeable at last fresh read;
+- base `main`: `3b8d99c3dba13ca01098abade5c6e696454ddd10`;
+- no required branch-protection status checks are configured on `main`;
+- no PR workflow/check result is being claimed as PASS where none exists.
+
+## Release boundary
+
+The formal GitHub Plugin asset must contain only:
+
+- `plugin.json`;
+- `skills/**`.
+
+Release version/tag:
+
+`0.6.6` / `plugin-v0.6.6`
+
+Local Codex is updated **after** publication from this immutable asset. Full Web+Local integrated acceptance remains pending until the local installation and acceptance succeed.
