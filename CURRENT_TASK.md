@@ -1,127 +1,89 @@
-# CURRENT TASK — Web Candidate Acceptance v0.6.x
+# CURRENT TASK — Project Profile Operational Adherence Corrective
 
 Date: 2026-10-14
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
+Task ID: `EG-V060-PROFILE-ADHERENCE-CORRECTIVE-076`
 
-Task class: `VERIFY`
+Task class: `EXECUTE`
 
-State: `WEB_PROFILE_DURABILITY_PARTIAL_FAIL`
+State: `ACTIVE`
+
+Parent task: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
 ## Objective
 
-Validate the corrected installed Engineering Governance Plugin across fresh Web discovery/routing/Profile behavior before formal GitHub release or PR merge. Use bounded source correctives only when fresh acceptance evidence exposes a reusable source defect not already adequately covered by the shipped contract.
+Harden `project-profile` so the already-defined grounding/durability/deduplication rules are executed as a mandatory pre-return compliance gate rather than remaining advisory prose.
 
-## Current source / Web identity
+Fresh Web `0.6.4` evidence showed three already-forbidden classes still leaking into generated Profiles:
 
-Current corrected Delivery / Semantic candidate:
+1. stage-only/current-work non-goals promoted into durable constraints (`storefront CMS` in Gift);
+2. implementation/source-directory responsibility maps copied into `Environment` (Merloom);
+3. per-Skill trigger prose copied into `Engineering Governance` instead of the compact reusable routing hook.
 
-`1b46159acfda4ec2c36af46b6da58ad26c1b5482`
+The previous decision to simply rerun the unchanged `0.6.4` candidate is superseded by Owner direction: change the reusable source before the next behavioral test.
 
-Current Web candidate:
+## Authorized scope
 
-- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.6.4`;
-- release: `pluginrel_6acf306eeacc8191814073d8973b3e39`;
-- scope/discoverability: `USER / PRIVATE`;
-- Task 075 source/package/readback verification: PASS.
+Only:
 
-Completed corrective chain remains 071–075. Task 075 introduced:
+- `skills/project-profile/SKILL.md`;
+- `skills/project-profile/references/profile-contract.md`;
+- `skills/project-profile/assets/templates/PROJECT_PROFILE.md`;
+- `references/V060_INTEGRATED_ACCEPTANCE.md`;
+- `plugin.json` patch version;
+- this task/status control reconciliation;
+- Web Plugin overlay/update/readback for the same existing Plugin identity.
+
+Do not change the eight-Skill architecture or other Skill contracts.
+
+## Required corrective
+
+### 1. Mandatory pre-return compliance gate
+
+Generation MUST NOT return the Profile until every substantive section passes:
 
 ```text
-Grounding Gate
-→ Durability Gate
-→ Classification / authority placement
-→ Compression / deduplication
-→ Project Profile
+GROUNDED
+AND DURABLE
+AND CORRECTLY CLASSIFIED
+AND DEDUPED
+AND TEMPLATE-COMPLIANT
 ```
 
-and explicitly requires `verified != durable` plus fixed metadata fields `Profile surface` and `Primary/mirror role`.
+A known violation is corrected/removed before output, not merely noted internally.
 
-## Fresh Web 0.6.4 evidence
+### 2. Current/stage-only non-goal rejection
 
-### Gift
+A non-goal phrased or owned as `current`, `current work`, `MVP`, `phase`, `wave`, `deferred until`, or equivalent current-delivery scope is not a durable Profile anti-goal unless a separate durable authority establishes it as product identity.
 
-PASS:
+### 3. Environment/source-map separation
 
-- Memory-only product/visual preferences excluded;
-- Mac mini/Air and `:3000` development acceptance details excluded;
-- live task/PR/CI/upstream blocker content excluded;
-- fixed metadata fields preserved;
-- durable Product-first / Inquiry / RFQ identity retained.
+`Environment` contains durable platform/environment roles only. Repository source paths, module directories, symbols, file ownership maps and code-responsibility lists are navigation/implementation detail and are omitted when an established Domain/navigation authority exists.
 
-PARTIAL FAIL:
+### 4. Fixed Engineering Governance hook
 
-- stage-only `storefront CMS` non-goal still appeared as a long-term constraint;
-- Authority section remained closer to a reduced Domain ownership map than required;
-- some detailed runtime/verification rules remained in Profile constraints.
+Generated Profile `Engineering Governance` should use the shipped compact hook. Do not add per-Skill trigger prose or enumerate conditional Skills unless the user explicitly asked for routing documentation rather than a Project Profile.
 
-### Merloom
+### 5. Established Domain map compression
 
-PASS:
+When detailed Domain/navigation authority exists, Profile may retain only the few broad product/authority distinctions needed to understand the project. Do not create ownership subcatalogs that effectively reconstruct the Domain map.
 
-- current task/PR/CI/progress excluded from Profile body;
-- fixed metadata fields preserved;
-- durable greenfield, single-Authority, AI-candidate, explicit Save/Publish and Merloom/Gift boundaries retained;
-- temporary acceptance/runtime details excluded.
+## Acceptance
 
-PARTIAL FAIL:
+Web candidate must demonstrate in fresh neutral prompts:
 
-- `Environment` included current code-responsibility/source directories, which are implementation/navigation detail rather than stable environment roles;
-- `Engineering Governance` repeated per-Skill trigger prose for `domain-navigation` / `incident-doctor` instead of using only the compact reusable routing hook.
-
-## Decision
-
-Do **not** open Task 076 yet.
-
-The current `0.6.4` Skill/contract/template already prohibit the observed classes. The present finding is therefore a behavioral-adherence regression, not yet evidence of a missing reusable source rule.
-
-## Required next verification
-
-Run fresh neutral Web `0.6.4` regressions without naming the failed content classes in the prompt:
-
-1. Gift regeneration:
-   - no stage-only storefront-work non-goals promoted into durable constraints;
-   - established Domain ownership reduced to only the broad distinctions needed for orientation;
-   - detailed runtime/verification rules omitted.
-2. Merloom regeneration:
-   - code-directory/source-responsibility map absent from `Environment`;
-   - Engineering Governance reduced to `project-governance` + reusable routing pointer;
-   - durable greenfield/Authority/Save-Publish facts retained.
-3. FloatTabs regeneration:
-   - old Project Instructions do not self-bootstrap;
-   - established Domain Map remains a pointer;
-   - current/runtime state stays out.
-4. If the same already-forbidden failure classes reproduce across fresh sessions, then audit why the installed contract is not operationally strong enough before authorizing any new source corrective.
-
-## Previously established acceptance that remains valid
-
-- exact eight top-level Skill discovery: PASS;
-- ordinary project status/progress -> `project-governance`: PASS;
-- advisory inspection avoids over-routing: PASS;
-- Profile routing/live-state exclusion: PASS;
-- Task 074 Memory/history grounding correction: materially PASS;
-- authority-class preservation: materially PASS;
-- Task 075 source/package correctness: PASS.
-
-## Out of scope
-
-- formal immutable GitHub v0.6.x release/tag;
-- PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web Profile/routing boundary passes;
-- changing ChatGPT Memory behavior;
-- adding another Profile source rule merely to restate an already explicit prohibition.
+- Gift: stage-only `storefront CMS` non-goal absent; no detailed ownership mini-map; durable B2B/Product-first/RFQ identity retained.
+- Merloom: code-directory responsibility list absent from `Environment`; fixed compact Engineering Governance hook; durable greenfield/single-Authority/Save-Publish identity retained.
+- FloatTabs: established Domain map remains a pointer and old Project Instructions do not self-bootstrap.
+- fixed metadata fields remain `Profile surface` and `Primary/mirror role`.
+- no regression of Task 074 Memory isolation or Task 075 durability/version-scope behavior.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance while Web Profile durability acceptance remains partial-fail.
+Stop before parent Task 070 release/merge progression if installed Web candidate does not contain the exact corrected source or if fresh neutral regressions still reproduce the same prohibited classes.
 
-Control Alignment:
+## Terminal boundary
 
-- `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
-- `DOCUMENT_ALIGNMENT`: `UNCHANGED — existing 0.6.4 acceptance already covers findings`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED_WITH_FRESH_WEB_EVIDENCE`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED_WITH_FRESH_WEB_EVIDENCE`
-- `CONTROL_ALIGNMENT`: `PASS`
+After focused source/package/readback verification, restore parent Task 070 to fresh Web regression state with the new semantic candidate and Web Plugin version.
