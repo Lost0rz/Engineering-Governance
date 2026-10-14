@@ -56,6 +56,10 @@ jobs:
           assert 'Mandatory cross-context handoff boundary' in project_governance
           assert 'route the transfer artifact through `agent-handoff` before returning it' in project_governance
 
+          global_routing = Path('skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md').read_text()
+          assert 'When the requested output itself is a construction/execution/audit/review/verify/diagnose Card' in global_routing
+          assert 'use `agent-handoff` for that transfer artifact' in global_routing
+
           handoff_skill = Path('skills/agent-handoff/SKILL.md').read_text()
           assert 'Mandatory pre-return compliance gate' in handoff_skill
           for marker in (
