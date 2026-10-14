@@ -4,51 +4,80 @@ Last verified: 2026-10-14.
 
 ## Published baseline
 
-Formal GitHub Plugin release remains `plugin-v0.6.7`.
+Formal GitHub Plugin release is now `plugin-v0.6.8`.
 
 Release provenance:
 
-- PR #27: `MERGED`;
-- merge/release source SHA: `53590bcec50c057d6c0fdd25b0e834133a808a93`;
-- release workflow run: `38552557416` — `success`;
-- tag: `plugin-v0.6.7`;
-- package version: `0.6.7`;
+- PR #28: `MERGED`;
+- merge/release source SHA: `7ac2d6262dd280df2b940fa75e9316db8a3615e7`;
+- release workflow: `Release Plugin v0.6.8`;
+- workflow run: `38572736330` — `success`;
+- tag: `plugin-v0.6.8`;
+- GitHub Release ID: `412755933`;
+- asset: `engineering-governance-plugin.zip`;
+- asset size: `106408` bytes;
+- asset SHA-256: `79f19bfec117d6f6c914f72f1504949f7158bbddf888c223ed41b1bf92ccba39`;
+- package entries: `52`;
 - package scope: `plugin.json` + `skills/**` only;
-- released top-level Skills: exactly `8`.
+- package version: `0.6.8`;
+- top-level Skills: exactly `9`.
 
-The existing private personal Web Plugin is still on the verified `0.6.7` release. Local installed/runtime `0.6.7` acceptance remains observational and must not be inferred from source state.
+The ninth Skill is `design`. Its active baseline bundles Anthropic `frontend-design` internally, with Apache-2.0 license/provenance preserved. Microsoft design-review/adaptation and UX heuristic/audit modules remain planned and inactive.
 
-## Active source work
+## Routing result
 
-Task: `EG-DESIGN-ANTHROPIC-BASELINE-080`
+Current routed boundaries:
 
-State: `ACTIVE`
+- `project-governance` — task/control authority, lifecycle, verification and closeout;
+- `solution-design` — material engineering requirements/architecture/state-ownership/API/data-flow/implementation-boundary ambiguity;
+- `design` — bounded UI/UX/frontend visual design and redesign, including aesthetic direction, typography, layout, hierarchy, density, composition, interface copy and visual critique.
 
-Branch: `codex/design-anthropic-baseline`
+A keyword alone does not select Design. Project Governance remains task/lifecycle owner when a governed implementation composes Solution Design and Design.
 
-Start main: `0c4c404e9b173b3f2e125bfa138bd68e76bf42f2`
+## Web Plugin distribution
 
-Authorized change:
+The existing private personal ChatGPT Web Plugin was updated in place:
 
-- expand the source capability model from eight to nine top-level Skills by adding stable routed `design`;
-- bundle Anthropic `frontend-design` as the first complete internal Design source module with Apache-2.0 license/provenance preserved;
-- route bounded UI/UX/frontend visual-design work through `design` while leaving task/lifecycle authority in `project-governance` and material engineering architecture/state-ownership ambiguity in `solution-design`;
-- prepare, but do not yet activate, future Microsoft design-review and UX-audit source modules.
+- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.8`;
+- Web release: `pluginrel_6acf859bece081918fb21009caec1fa2`;
+- scope/discoverability: `USER / PRIVATE` — unchanged;
+- root `plugin.json`: `0.6.8` read back;
+- platform `.codex-plugin/plugin.json`: `0.6.8` read back;
+- `skills/design/**`: present and readable;
+- Project Governance Design routing: read back from the installed Web release.
 
-## Distribution boundary
+`WEB_PLUGIN_SYNC`: `PASS`.
 
-No new Plugin version is published yet for task 080. `0.6.7` remains the only released/verified distribution identity until the design source candidate is accepted, merged, and separately released.
+## Regression preservation
 
-No Local cache/source mutation is authorized as part of source construction.
+The v0.6.8 release gate preserves the previously accepted v0.6.7 Project Profile and Agent Handoff checks in addition to the new Design checks.
+
+- Project Profile pre-return gate: `PASS`;
+- Handoff pre-return/request/receipt gates: `PASS`;
+- v0.6.7 Handoff regression markers: `PASS`;
+- Design source/routing/package checks: `PASS`.
+
+## Local distribution state
+
+No Local Codex cache/source was manually patched.
+
+The supported marketplace source remains this repository `main`, which now publishes `0.6.8`. A fresh Local installed/runtime `0.6.8` readback is still observational follow-up and is not claimed here.
+
+`LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`.
+`LOCAL_CACHE_MUTATION`: `NONE`.
+`LOCAL_068_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
+
+## Current task
+
+Task `EG-DESIGN-ANTHROPIC-BASELINE-080` is `COMPLETE`.
+
+Source integration, merge, formal release, Web Plugin update/readback, and control reconciliation are complete. Future Microsoft review/adaptation or UX-audit integration should be authorized as a separate follow-on task behind the stable `design` route.
 
 ## Control identity
 
-Published Delivery / Semantic Plugin identity remains:
+Released Delivery / Semantic Plugin identity:
 
-`53590bcec50c057d6c0fdd25b0e834133a808a93`
+`7ac2d6262dd280df2b940fa75e9316db8a3615e7`
 
-Active source construction identity begins from repository main:
-
-`0c4c404e9b173b3f2e125bfa138bd68e76bf42f2`
-
-Control-only commits and source-construction commits must not be represented as a published Plugin release before release evidence exists.
+Any subsequent commit limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is control-only Repository HEAD movement and does not alter the released Plugin payload or semantic release identity.

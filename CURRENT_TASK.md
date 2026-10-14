@@ -8,56 +8,92 @@ Task ID: `EG-DESIGN-ANTHROPIC-BASELINE-080`
 
 Task class: `CAPABILITY_EXPANSION`
 
-State: `ACTIVE`
+State: `COMPLETE`
 
 ## Objective
 
-Add a routed top-level `design` capability to Engineering Governance and bundle Anthropic's `frontend-design` Skill as the first complete design-source module, so UI/frontend design work can be selected through the existing Governance routing layer instead of requiring a separate external Plugin.
+Add a routed top-level `design` capability to Engineering Governance and bundle Anthropic's `frontend-design` Skill as the first complete design-source module, so UI/frontend design work is selected through the existing Governance routing layer instead of requiring a separate external Plugin.
 
-## Scope
+## Result
 
-- add `skills/design/SKILL.md` as the stable routed design capability;
-- preserve the current upstream Anthropic `frontend-design` Skill content and Apache-2.0 license inside the Design module with source provenance;
-- route bounded UI/UX/frontend visual-design requests from `project-governance` / global routing to `design`;
-- keep `solution-design` authority for engineering architecture/state-ownership ambiguity;
-- update capability composition, README/maintainer-facing capability inventory, package manifest/version, release validation, and acceptance evidence as required;
-- prepare the structure so future Microsoft design-review and UX-audit source modules can be incorporated without changing the external route.
+Completed.
 
-## Non-goals
+The repository now has exactly nine top-level Skills, including stable external route `design`.
 
-- do not yet merge Microsoft design-review rules or frontend-design-audit heuristics into active Design behavior;
-- do not introduce Figma, browser automation, runtime services, or a separate design Plugin dependency;
-- do not replace project-specific design authority, component libraries, tokens, content facts, or product requirements.
+Design v0.6.8 currently provides:
 
-## Source baseline
+- Anthropic `frontend-design` as the active internal visual-design baseline;
+- preserved Apache-2.0 license and source provenance;
+- explicit routing separation between UI/frontend visual design (`design`) and engineering architecture/state ownership (`solution-design`);
+- Project Governance task/lifecycle authority preserved;
+- Microsoft design-review/adaptation and UX heuristic/audit modules reserved as planned, not active.
 
-Anthropic upstream source:
+## Source / release evidence
+
+- PR #28: `MERGED`;
+- merge/release source SHA: `7ac2d6262dd280df2b940fa75e9316db8a3615e7`;
+- Plugin version: `0.6.8`;
+- release workflow run: `38572736330` — `success`;
+- tag: `plugin-v0.6.8`;
+- GitHub Release ID: `412755933`;
+- release asset size: `106408` bytes;
+- release asset SHA-256: `79f19bfec117d6f6c914f72f1504949f7158bbddf888c223ed41b1bf92ccba39`;
+- package entries: `52`;
+- exact top-level Skills: `9`.
+
+Anthropic upstream source identity:
 
 - repository: `anthropics/skills`;
 - path: `skills/frontend-design`;
 - upstream `SKILL.md` blob: `a5333457c414d20d625f307df945842c0952ecc3`;
-- upstream `LICENSE.txt` blob: `f433b1a53f5b830a205fd2df78e2b34974656c7b`;
-- license: Apache License 2.0.
+- local bundled `frontend-design.md` Git blob matches that source identity.
 
-## Verification / acceptance
+## Web Plugin synchronization
 
-At minimum verify:
+Existing private personal Plugin updated in place:
 
-- exact nine top-level Skill set including `design`;
-- `design` is selected for bounded frontend/UI visual design and redesign work;
-- ordinary engineering remains routed through `project-governance`;
-- material architecture/state-ownership ambiguity remains `solution-design`;
-- Anthropic source content and license/provenance are packaged and readable;
-- Design module does not claim Microsoft/Audit integration before those modules exist;
-- Plugin package remains `plugin.json` + `skills/**` only.
+- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.8`;
+- release ID: `pluginrel_6acf859bece081918fb21009caec1fa2`;
+- scope/discoverability remains `USER / PRIVATE`;
+- root and platform manifests read back as `0.6.8`;
+- Design source module and Project Governance routing files read back from the installed release.
 
-## Stop boundaries
+`WEB_PLUGIN_SYNC`: `PASS`.
 
-Stop rather than inventing behavior if routing creates competing task authority, Design duplicates Solution Design's architecture ownership, upstream licensing/provenance cannot be preserved, or release/package validation cannot distinguish the new ninth Skill.
+## Verification
+
+- exact nine-Skill capability model: `PASS`;
+- Anthropic source body identity: `PASS`;
+- Apache-2.0 license/provenance packaging: `PASS`;
+- UI/frontend Design vs Solution Design routing separation: `PASS`;
+- no separate Anthropic Plugin dependency: `PASS`;
+- no premature Microsoft/Audit behavior claim: `PASS`;
+- v0.6.7 Project Profile/Handoff release gates preserved: `PASS`;
+- formal merged-source release/package validation: `PASS`;
+- Web Plugin version/content readback: `PASS`;
+- Local installed/runtime v0.6.8 behavior: `PENDING_USER_TRIAL`, not claimed.
+
+## Terminal state
+
+Task 080 terminal conditions are satisfied:
+
+- source integration complete;
+- PR merged;
+- formal v0.6.8 release succeeded for the exact merged source;
+- existing Web Plugin updated/read back at `0.6.8`;
+- status/task controls reconciled;
+- Local can consume the published version without manual cache mutation.
+
+Future integration of Microsoft frontend design review/adaptation or UX heuristic/audit behavior should be authorized as a new follow-on task behind the existing stable `design` route.
 
 Control Alignment:
 
 - `PREDECESSOR_TASK`: `EG-HANDOFF-CARD-GENERATION-CORRECTIVE-079`
-- `START_MAIN`: `0c4c404e9b173b3f2e125bfa138bd68e76bf42f2`
-- `WORK_BRANCH`: `codex/design-anthropic-baseline`
-- `CONTROL_ALIGNMENT`: `ACTIVE`
+- `SOURCE_INTEGRATION`: `PASS`
+- `FORMAL_RELEASE`: `PASS`
+- `WEB_PLUGIN_SYNC`: `PASS`
+- `LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`
+- `LOCAL_CACHE_MUTATION`: `NONE`
+- `LOCAL_068_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`
+- `CONTROL_ALIGNMENT`: `PASS`
