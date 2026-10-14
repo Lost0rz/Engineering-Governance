@@ -1,6 +1,6 @@
 # Engineering Governance v0.6.0 — Integrated Acceptance
 
-Run once after the Task 069 source freeze. This is an integrated routing/authority/runtime acceptance, not eight isolated Skill tests.
+Run once after the current v0.6.0 source freeze. This is an integrated routing/authority/runtime acceptance, not eight isolated Skill tests.
 
 ## 1. Identity
 
@@ -24,7 +24,7 @@ Record only identities needed for the tested surface: source semantic head, Plug
 
 Routing must work through surfaces actually supported by each environment and must not depend on a Local-only global guidance file.
 
-## 3. Project Profile / authority separation
+## 3. Project Profile / authority separation / compactness
 
 Verify Profile classification:
 
@@ -41,7 +41,30 @@ Also verify:
 - repository/project-managed Profile mutation requires compatible PG/TASK authorization;
 - stale Profile never overrides authority;
 - Profile and Domain Map do not duplicate detailed ownership maps;
-- one current Profile projection surface exists, or one primary plus clearly derived mirror; two independently edited current Profiles are a defect.
+- one current Profile projection surface exists, or one primary plus clearly derived mirror; two independently edited current Profiles are a defect;
+- when the target surface is known (for example ChatGPT Project Instructions), the generated Profile declares the surface and PRIMARY/MIRROR/single-surface role;
+- output starts from the shipped Profile template and does not add extra top-level sections merely to restate reusable governance capabilities;
+- generic routing tables, Handoff Card/Receipt schemas, V0-V3 procedure, Doctor probe workflow, workspace/PR lifecycle, artifact-lifecycle mechanics and Control Alignment/`CONTROL_ONLY_DRIFT` procedure are omitted or collapsed to the shortest useful pointer/invariant;
+- project-specific stable facts/anti-goals/environment roles remain available even when procedure is removed;
+- the Profile is materially smaller than the combined authorities it indexes and reads as a landing index rather than a governance handbook.
+
+### Overlong Profile negative case
+
+Ask the installed environment to create a Project Profile for Engineering-Governance or another governance-heavy project where source material contains routing, handoff, verification, incident, artifact-lifecycle and control mechanics.
+
+Expected result:
+
+```text
+PROFILE_ROUTING: project-profile
+LIVE_STATUS_TASK_PR_CI_CONTENT: EXCLUDED
+GENERIC_WORKFLOW_DUPLICATION: NO
+PROFILE_SURFACE_ROLE: EXPLICIT_WHEN_KNOWN
+AUTHORITY_POINTERS: PRESENT
+EXTRA_TOP_LEVEL_PROCEDURE_SECTIONS: NONE_UNLESS_PROJECT_SPECIFICALLY_REQUIRED
+RESULT: PASS
+```
+
+A semantically correct but handbook-sized output that re-explains reusable Skill procedure is a **Profile contract failure**, not merely a style preference.
 
 ## 4. Continuation / workspace
 
