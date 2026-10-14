@@ -8,39 +8,45 @@ Formal immutable GitHub release remains `plugin-v0.5.5`; previously accepted Web
 
 No formal GitHub v0.6.0 release has been created yet.
 
-## v0.6.0 source architecture
+## v0.6.0 source architecture / current semantic candidate
 
-The eight-Skill architecture remains accepted; current acceptance exposed one bounded reusable Project Profile output-contract defect rather than an architecture/routing-model failure.
+The eight-Skill architecture remains accepted. Current acceptance-driven source candidate:
 
-- Previous frozen Semantic HEAD before this corrective: `d8bdf9da4094a0550d59afe33e02b179582150b2`.
-- Task `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` is COMPLETE.
-- Task `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` is ACTIVE on PR #26.
-- PR #26 remains OPEN / DRAFT / UNMERGED; host facts are reread at their own boundary.
-- CI/check PASS is not claimed without current evidence.
+`e08c77aaaeaadc95ab79d4bbd492d1beb1ec3df8`
 
-## Web Plugin candidate acceptance evidence
+Completed bounded correctives:
 
-The installed personal Web Plugin candidate is version `0.6.0` on the existing Plugin identity.
+- `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff templates aligned with Card/Receipt contract.
+- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile contract/template/acceptance hardened against generic-workflow duplication and handbook-sized output.
 
-Fresh Web session evidence now establishes:
+Task 072 focused source audit: PASS.
 
-- exact eight top-level Skill discovery: `PASS`;
-- ordinary project status/progress inspection routes to `project-governance` without over-routing to Audit/Navigation/Doctor: `PASS`;
-- Project Profile generation selects/uses the Project Profile capability and correctly excludes live PR/HEAD/CI/current-task state: `PASS` for routing/semantic boundary;
-- generated Profile still duplicated reusable routing, handoff, verification, incident, artifact-lifecycle procedure and became too long: `FAIL` for compactness/workflow deduplication.
+PR #26 remains OPEN / DRAFT / UNMERGED. Host facts are reread at their own boundary; CI/check PASS is not claimed without current evidence.
 
-This is a reusable source defect, so Task 070 Web acceptance is paused while Task 072 corrects source. Installed caches are not patched as source authority.
+## Web Plugin candidate acceptance
 
-## Accepted architecture preserved
+Task `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070` is ACTIVE.
 
-- Exactly eight top-level Skills; global routing is policy, not a ninth Skill.
-- Project Profile remains `DERIVED_PROJECT_CONTEXT`, not project/task/domain/design authority.
-- Project `AGENTS.md` is normative; STATUS/TASK own current state/authorization; Domain/navigation owns detailed routing; durable planning owns long-lived design.
-- Handoff keeps `CAPABILITY` and `MODE` separate.
-- Artifact lifecycle separates semantic owners, derived projections and observed evidence.
-- Advisory inspection remains distinct from formal Evidence Audit.
-- Same-purpose continuation preserves the active task; a bounded acceptance corrective may temporarily become the active task and then return to the parent acceptance purpose.
+Evidence already established in a fresh Web conversation:
+
+- exact eight top-level Skill discovery: PASS;
+- ordinary status/progress inspection -> `project-governance`: PASS;
+- advisory inspection does not over-route to formal Audit/Navigation/Doctor: PASS;
+- Project Profile request -> Project Profile capability: PASS for routing/authority/freshness boundary;
+- first generated Profile excluded live PR/HEAD/CI/current-task state but duplicated reusable governance procedure: FAIL, corrected in Task 072 source.
+
+The currently installed Web 0.6.0 candidate predates Task 072 and must be refreshed from Semantic candidate `e08c77aa...` before the Profile retest result can be accepted.
+
+## Project Profile corrected contract
+
+- Profile is a compact `DERIVED_PROJECT_CONTEXT` landing index, not a second governance manual.
+- Stable project-specific context, priorities/anti-goals, environment roles and authority pointers remain in Profile.
+- Current state/task/host evidence stays in STATUS/TASK/live evidence.
+- Project-specific normative MUST/MUST-NOT remains in AGENTS/accepted normative authority.
+- Detailed Domain/design content stays in its owning authority.
+- Reusable routing tables, Handoff schemas, verification tiers/procedure, Incident Doctor procedure, artifact/workspace/control mechanics are removed or reduced to the shortest useful pointer/invariant.
+- Generated output starts from the shipped template, declares known Profile surface/role, and does not add top-level procedure sections merely because a reusable Skill exists.
 
 ## Next milestone
 
-Complete Task 072 by hardening the Project Profile compactness/dedup contract and its integrated-acceptance scenario. After focused source audit and candidate refresh, resume Task 070 Web acceptance with a fresh Project Profile generation case before continuing Local Codex integrated acceptance.
+Refresh the personal Web Plugin 0.6.0 candidate from Semantic candidate `e08c77aa...`, then rerun the Project Profile generation negative case plus remaining Web routing scenarios. If Web passes, continue Local Codex integrated acceptance. Formal GitHub release/merge remains deferred.
