@@ -8,96 +8,120 @@ Task ID: `EG-V060-WEB-CANDIDATE-ACCEPTANCE-070`
 
 Task class: `VERIFY`
 
-State: `WAITING_FRESH_WEB_SESSION`
+State: `WEB_PROFILE_DURABILITY_PARTIAL_FAIL`
 
 ## Objective
 
-Validate the corrected installed Engineering Governance Plugin across fresh Web discovery/routing/Profile behavior before formal GitHub release or PR merge, using bounded source correctives only when real reusable defects are exposed.
+Validate the corrected installed Engineering Governance Plugin across fresh Web discovery/routing/Profile behavior before formal GitHub release or PR merge. Use bounded source correctives only when fresh acceptance evidence exposes a reusable source defect not already adequately covered by the shipped contract.
 
-## Corrective history / current source identity
-
-Completed acceptance-driven correctives:
-
-- `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` — shipped Handoff request/receipt templates aligned with the accepted Card/Receipt contract.
-- `EG-V060-PROFILE-COMPACTNESS-CORRECTIVE-072` — Project Profile output contract hardened so Profiles remain compact landing indexes and do not duplicate generic Engineering Governance procedure.
-- `EG-V060-PROFILE-BOUNDARY-CORRECTIVE-073` — surface-role evidence, established-Domain deduplication, meta-procedure exclusion and normative-rule compression hardened.
-- `EG-V060-PROFILE-GROUNDING-CORRECTIVE-074` — Profile claims require current fact grounding; Memory/history/old Profile are discovery context only; authority classes remain distinct.
-- `EG-V060-PROFILE-DURABILITY-CORRECTIVE-075` — grounded claims now pass a separate durability gate; current-stage delivery/runtime facts are excluded by default while explicit durable/version-scoped architecture remains eligible.
+## Current source / Web identity
 
 Current corrected Delivery / Semantic candidate:
 
 `1b46159acfda4ec2c36af46b6da58ad26c1b5482`
 
-Task 075 focused source/package verification: PASS.
+Current Web candidate:
 
-## Current Web candidate
+- Plugin identity: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.6.4`;
+- release: `pluginrel_6acf306eeacc8191814073d8973b3e39`;
+- scope/discoverability: `USER / PRIVATE`;
+- Task 075 source/package/readback verification: PASS.
 
-- existing personal Plugin identity preserved: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- current Web candidate version: `0.6.4`;
-- current Web release: `pluginrel_6acf306eeacc8191814073d8973b3e39`;
-- scope/discoverability remain `USER / PRIVATE`;
-- platform-managed `.codex-plugin/plugin.json` and root `plugin.json` both report `0.6.4`;
-- Task-075 overlay included only `plugin.json` and the three `project-profile` shipped files;
-- overlay ZIP SHA-256: `2188cfba9084a8c2a51319217bbb613c4c7de5290a506e998455053be6b2c535`;
-- overlay file Git-blob identities matched repository source before upload;
-- post-update installed-file readback confirms the Task-075 Skill/template/contract content is active.
+Completed corrective chain remains 071–075. Task 075 introduced:
 
-## Web acceptance evidence already established
+```text
+Grounding Gate
+→ Durability Gate
+→ Classification / authority placement
+→ Compression / deduplication
+→ Project Profile
+```
 
-- fresh Web session discovers the exact eight top-level Skills: PASS;
-- ordinary project status/progress inspection -> `project-governance`: PASS;
-- advisory inspection did not over-route to Evidence Audit / Domain Navigation / Incident Doctor: PASS;
-- Project Profile request reached `project-profile` and excluded live PR/HEAD/CI/current-task content: PASS for routing/live-state boundary;
-- Task 072 removed handbook-sized generic-governance duplication;
-- Task 073 corrected unsupported surface-role claims, reduced Domain-map duplication and Profile/startup meta-procedure;
-- Task 074 corrected fact-grounding/Memory contamination and authority-class flattening;
-- Task 075 corrected verified-vs-durable classification and fixed-template-field enforcement in source/package.
+and explicitly requires `verified != durable` plus fixed metadata fields `Profile surface` and `Primary/mirror role`.
 
-## Remaining Web boundary
+## Fresh Web 0.6.4 evidence
 
-Open fresh Web conversations/sessions against candidate `0.6.4` and exercise the Project Profile regressions defined in `references/V060_INTEGRATED_ACCEPTANCE.md`.
+### Gift
 
-Required durability regressions:
+PASS:
 
-- Gift-like current development/acceptance machines, ports/endpoints and stage-only non-goals are not emitted as durable Profile facts;
-- MemoX-like current MVP/wave/viewer/runtime delivery shape is not promoted into durable identity;
-- explicit durable/version-scoped architecture such as `V1 Local Store` and `long-term Core` survives with scope preserved;
-- `Profile surface` and `Primary/mirror role` fixed metadata fields are preserved.
+- Memory-only product/visual preferences excluded;
+- Mac mini/Air and `:3000` development acceptance details excluded;
+- live task/PR/CI/upstream blocker content excluded;
+- fixed metadata fields preserved;
+- durable Product-first / Inquiry / RFQ identity retained.
 
-Previously required grounding/boundary regressions remain:
+PARTIAL FAIL:
 
-- Memory/prior-chat-only project constraints absent current authority are not emitted;
-- previous Profile / Project Instructions claims are revalidated and do not self-bootstrap truth;
-- projects with separate storage/evidence/projection/canonical authorities preserve those distinctions;
-- established Domain/navigation authority is pointed to rather than recreated as a mini-map;
-- `Planning & navigation` contains durable pointers rather than numbered startup steps;
-- no Profile-maintenance/classification/freshness/grounding/durability meta-section in generated Profile;
-- detailed MUST/MUST-NOT execution rules are not copied from `AGENTS.md`;
-- live STATUS/TASK/PR/CI content stays excluded.
+- stage-only `storefront CMS` non-goal still appeared as a long-term constraint;
+- Authority section remained closer to a reduced Domain ownership map than required;
+- some detailed runtime/verification rules remained in Profile constraints.
 
-After these Profile regressions pass, continue the remaining routing positive/negative scenarios from `references/V060_INTEGRATED_ACCEPTANCE.md`.
+### Merloom
+
+PASS:
+
+- current task/PR/CI/progress excluded from Profile body;
+- fixed metadata fields preserved;
+- durable greenfield, single-Authority, AI-candidate, explicit Save/Publish and Merloom/Gift boundaries retained;
+- temporary acceptance/runtime details excluded.
+
+PARTIAL FAIL:
+
+- `Environment` included current code-responsibility/source directories, which are implementation/navigation detail rather than stable environment roles;
+- `Engineering Governance` repeated per-Skill trigger prose for `domain-navigation` / `incident-doctor` instead of using only the compact reusable routing hook.
+
+## Decision
+
+Do **not** open Task 076 yet.
+
+The current `0.6.4` Skill/contract/template already prohibit the observed classes. The present finding is therefore a behavioral-adherence regression, not yet evidence of a missing reusable source rule.
+
+## Required next verification
+
+Run fresh neutral Web `0.6.4` regressions without naming the failed content classes in the prompt:
+
+1. Gift regeneration:
+   - no stage-only storefront-work non-goals promoted into durable constraints;
+   - established Domain ownership reduced to only the broad distinctions needed for orientation;
+   - detailed runtime/verification rules omitted.
+2. Merloom regeneration:
+   - code-directory/source-responsibility map absent from `Environment`;
+   - Engineering Governance reduced to `project-governance` + reusable routing pointer;
+   - durable greenfield/Authority/Save-Publish facts retained.
+3. FloatTabs regeneration:
+   - old Project Instructions do not self-bootstrap;
+   - established Domain Map remains a pointer;
+   - current/runtime state stays out.
+4. If the same already-forbidden failure classes reproduce across fresh sessions, then audit why the installed contract is not operationally strong enough before authorizing any new source corrective.
+
+## Previously established acceptance that remains valid
+
+- exact eight top-level Skill discovery: PASS;
+- ordinary project status/progress -> `project-governance`: PASS;
+- advisory inspection avoids over-routing: PASS;
+- Profile routing/live-state exclusion: PASS;
+- Task 074 Memory/history grounding correction: materially PASS;
+- authority-class preservation: materially PASS;
+- Task 075 source/package correctness: PASS.
 
 ## Out of scope
 
 - formal immutable GitHub v0.6.x release/tag;
 - PR #26 merge;
-- Local Codex / Mac mini / MacBook Air acceptance until Web surface is ready;
-- patching installed caches as reusable source authority;
+- Local Codex / Mac mini / MacBook Air acceptance until Web Profile/routing boundary passes;
 - changing ChatGPT Memory behavior;
-- further source architecture expansion without a new real acceptance finding.
+- adding another Profile source rule merely to restate an already explicit prohibition.
 
 ## Stop conditions
 
-Stop before formal release/merge/local acceptance if fresh 0.6.4 regressions still reproduce Memory/history contamination, old-Profile self-inheritance, authority-class flattening, current-stage facts promoted into durable Profile context, fixed metadata field drift, unsupported surface-role claims, Domain-map duplication, Profile meta-procedure, generic-workflow duplication, or another reusable source defect.
-
-## Terminal boundary
-
-Task 070 closes only after required Web routing/Profile acceptance evidence is recorded. Formal GitHub release remains a later integrated-acceptance boundary.
+Stop before formal release/merge/local acceptance while Web Profile durability acceptance remains partial-fail.
 
 Control Alignment:
 
 - `RELATED_DOCUMENT`: `references/V060_INTEGRATED_ACCEPTANCE.md`
-- `DOCUMENT_ALIGNMENT`: `UPDATED_BY_TASK_075`
-- `CURRENT_STATUS_RECONCILIATION`: `UPDATED`
-- `CURRENT_TASK_RECONCILIATION`: `UPDATED`
+- `DOCUMENT_ALIGNMENT`: `UNCHANGED — existing 0.6.4 acceptance already covers findings`
+- `CURRENT_STATUS_RECONCILIATION`: `UPDATED_WITH_FRESH_WEB_EVIDENCE`
+- `CURRENT_TASK_RECONCILIATION`: `UPDATED_WITH_FRESH_WEB_EVIDENCE`
 - `CONTROL_ALIGNMENT`: `PASS`
