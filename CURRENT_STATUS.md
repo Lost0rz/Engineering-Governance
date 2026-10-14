@@ -16,7 +16,7 @@ Current frozen Architecture Delivery / Semantic HEAD:
 
 - Task `EG-CAPABILITY-CONTRACT-CORRECTIVE-069` is COMPLETE with V2 remote source-architecture audit PASS (`AUDIT_INDEPENDENCE: SELF_CHECK`).
 - Bounded corrective Task `EG-V060-HANDOFF-TEMPLATE-CORRECTIVE-071` is COMPLETE; shipped Handoff request/receipt templates now match the accepted Card/Receipt contract.
-- PR #26 remains OPEN / DRAFT / UNMERGED.
+- PR #26 remains OPEN / DRAFT / UNMERGED. Latest host observation reports `mergeable=false`; this is a separate merge-boundary fact and does not change the frozen semantic candidate.
 - No semantic-head CI/check PASS is claimed unless current host evidence reports it.
 
 ## Web Plugin candidate 0.6.0
@@ -57,4 +57,4 @@ Formal GitHub `plugin-v0.6.0` publication is intentionally deferred until the re
 
 ## Next milestone
 
-Open a fresh Web conversation/session against the updated Plugin and complete v0.6.0 eight-Skill discovery plus Web routing positive/negative scenarios. If Web passes, continue the remaining Local Codex integrated-acceptance surfaces before formal GitHub release/merge preparation.
+Open a fresh Web conversation/session against the updated Plugin and complete v0.6.0 eight-Skill discovery plus Web routing positive/negative scenarios. If Web passes, continue the remaining Local Codex integrated-acceptance surfaces. Separately reconcile PR #26's current mergeability before any formal release/merge preparation.
