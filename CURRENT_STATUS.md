@@ -47,25 +47,36 @@ Web routing/discovery acceptance is accepted for the release boundary.
 
 ## Current local distribution state
 
-Previously accepted Local Codex baseline on Mac mini and MacBook Air is `0.5.5`.
+MacBook Air local Codex Plugin installation is now updated to `0.6.6` through the supported plugin remove/add mechanism using marketplace `engineering-governance-personal`.
 
-Local `0.6.6` installation/acceptance is now the remaining boundary. The configured marketplace source is `engineering-governance-personal`, backed by this repository on `main`.
+Observed installation evidence supplied from the local terminal:
 
-Do not claim full Web+Local integrated acceptance until the local marketplace/plugin is refreshed to `0.6.6` and the required local checks pass.
+- installed Plugin: `engineering-governance@engineering-governance-personal`;
+- version: `0.6.6`;
+- enabled: `true`;
+- source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`;
+- installed path: `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.6.6`;
+- top-level Skill count: exactly `8`;
+- Skills: `agent-handoff`, `domain-navigation`, `evidence-audit`, `execution-orchestrator`, `incident-doctor`, `project-governance`, `project-profile`, `solution-design`.
+
+`LOCAL_PLUGIN_INSTALLATION`: `PASS`.
+
+Remaining local acceptance is behavioral/routing acceptance, not distribution installation.
+
+Do not claim full Web+Local integrated acceptance until the required local routing/continuation/handoff checks pass.
 
 ## Current task
 
 Task: `EG-V066-RELEASE-078`
 
-State: `WAITING_LOCAL_ACCEPTANCE`
+State: `LOCAL_INSTALL_PASS_ROUTING_ACCEPTANCE_PENDING`
 
 Next:
 
-1. refresh the local `engineering-governance-personal` marketplace from `main`;
-2. confirm the installed/cache Plugin version is `0.6.6` with exactly eight Skills;
-3. verify the authoritative global routing surface is singular/current where that environment uses it;
-4. run bounded Local Codex routing/behavior acceptance;
-5. reconcile controls after local acceptance.
+1. verify the authoritative local global routing surface is singular/current where that environment uses it;
+2. exercise bounded Local Codex routing/continuation/profile/handoff evidence from `references/V060_INTEGRATED_ACCEPTANCE.md`;
+3. return the local receipt for Web audit;
+4. reconcile controls and close Task 078 only if local acceptance passes.
 
 ## Control identity
 
