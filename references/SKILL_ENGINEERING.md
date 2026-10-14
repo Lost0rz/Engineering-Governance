@@ -1,6 +1,6 @@
 # Skill Engineering quality contract
 
-This repository-maintainer contract governs how Engineering Governance Skills are added or changed. It is not a top-level Skill and must not appear as an eighth route.
+This repository-maintainer contract governs how Engineering Governance Skills are added or changed. It is not a top-level Skill and must not appear as a ninth route.
 
 ## Distinct capability test
 
@@ -10,59 +10,37 @@ A top-level Skill is justified only when it has all of:
 2. a distinct semantic trigger that materially changes what the agent should do;
 3. one primary ownership boundary not already owned by another Skill;
 4. a clear output/return contract;
-5. negative/near-miss guidance that prevents routine overuse;
-6. positive guidance strong enough that a materially useful capability is not systematically suppressed merely for conservatism.
+5. negative/near-miss guidance preventing routine overuse;
+6. positive guidance strong enough to avoid material under-use.
 
-A topic, checklist or reference section alone does not justify a Skill.
+A topic, checklist, template or reference section alone does not justify a Skill.
 
-## Description contract
+`project-profile` qualifies because its requested output is a compact derived context/index produced by classification across project authorities; it neither owns normal engineering execution nor duplicates Domain Navigation.
 
-Frontmatter `description` should primarily answer **when to use this Skill**. Do not put the full workflow in the description; detailed procedure belongs in the body/references so the agent cannot shortcut the Skill from metadata alone.
+## Description / progressive disclosure
 
-## Progressive disclosure
+Frontmatter primarily answers **when to use this Skill**. Keep `SKILL.md` focused on trigger, authority boundary, core workflow and supporting references. Put detailed matrices/templates/examples under `references/` or `assets/`.
 
-Keep frequently loaded `SKILL.md` files focused on trigger, authority boundary, core workflow and supporting references. Put detailed matrices, templates, examples and edge cases under `references/` or `assets/`.
+## Composition
 
-## Composition contract
+A Skill may call another only for a bounded dependency. Preserve project task/control authority and return to the caller. Do not create recursive peer meshes or multiple implicit controllers.
 
-A Skill may call another Skill only for a bounded dependency. It must preserve task/control authority and return to its caller after the narrower capability finishes. Do not create recursive peer meshes or multiple implicit controllers.
-
-Task purpose and execution context remain separate. Moving work to another agent/session/machine does not create a new task merely to satisfy composition mechanics.
-
-Execution-context runtime configuration also remains environment-owned unless an accepted project authority explicitly defines a portable configuration artifact. A Skill or handoff must not turn one environment's runtime defaults into another environment's defaults by copying them into reusable policy.
+Task purpose and execution context remain separate. Runtime configuration remains environment-owned unless accepted project authority explicitly makes it portable.
 
 ## Route-quality scenarios
 
-Every materially changed routing/trigger contract should define both:
+Every materially changed trigger/routing contract defines positive scenarios and negative/near-miss scenarios. Over-triggering is a defect. Materially suppressing safe useful capability can also be a defect.
 
-- positive scenarios where the capability should apply because its semantic trigger is met and it materially helps the task;
-- negative/near-miss scenarios where it must **not** apply.
-
-Over-triggering is a defect. Material under-use can also be a defect—for example, serializing clearly independent work solely to minimize Sub Agents when safe parallelism would materially help.
-
-A deliberate environment/project capability policy is not under-use merely because stronger capability exists. During v0.6.0 `ENVIRONMENT_DEFAULT_ONLY` stabilization, not escalating Sub Agents to stronger models and keeping concrete model/reasoning defaults isolated to the execution environment that owns them are intentional policy constraints, not routing defects.
-
-Do not convert this into universal ceremony: the positive route still requires the Skill's actual semantic trigger and useful decision/execution value.
+Project Profile must not trigger merely because a project exists; normal development still enters Project Governance. Domain Navigation must not be replaced by a summary Profile.
 
 ## Authority discipline
 
-No Skill may create a hidden replacement for `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, accepted durable planning authority, product/domain truth or repository/runtime evidence sources.
+No Skill may create a hidden replacement for project `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, accepted product/domain/data/runtime truth or durable planning authority.
 
-Transport/evidence artifacts such as handoff cards, ledgers, audit reports or reviewer packages remain non-authoritative unless the target project's accepted authority explicitly promotes a durable record.
-
-Environment-specific runtime configuration observations remain evidence about that environment. They do not become reusable Plugin defaults or another execution context's configuration authority merely because an agent observed or reported them.
+Derived Profile/Domain projections and transport/evidence artifacts remain non-authoritative. Environment-specific runtime observations remain evidence about that environment, not reusable Plugin defaults.
 
 ## Verification of Skill changes
 
-During construction, use bounded static checks for names/frontmatter/references and obvious contradictions. For a multi-Skill architecture change, prefer freezing the complete architecture before expensive integrated installed-runtime acceptance when the active task explicitly defines that cadence.
+During construction use bounded static checks for names/frontmatter/references/contradictions. For multi-Skill architecture work, freeze the full source architecture before expensive installed/runtime acceptance when the task defines that cadence.
 
-Final acceptance should exercise:
-
-- positive routing/utilization;
-- negative/near-miss routing;
-- cross-Skill composition;
-- task-purpose vs execution-context separation;
-- authority preservation;
-- delegated-model/agent behavior and execution-environment configuration isolation where those semantics changed.
-
-Do not prove only that each Skill file can be loaded in isolation.
+Final acceptance exercises positive/negative routing, cross-Skill composition, authority preservation, task-vs-context separation, environment configuration isolation, and any new artifact/transport lifecycle semantics. Do not prove only that each Skill file loads independently.
