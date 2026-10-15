@@ -40,7 +40,32 @@ Do not require it for every bug, maintenance change, small refactor or self-cont
 
 Keep durable semantics only: purpose/outcome, material non-goals, accepted design/authority boundaries, durable constraints/dependencies, useful work packages/phases, whole-plan acceptance boundary, and assumptions/decisions whose later change materially alters future work.
 
-Do not store routine completion percentage, current CI/review state, branch/worktree state, or chronological logs.
+Do not store routine completion percentage, current CI/review state, branch/worktree state, chronological logs, machine-specific parallel capacity, concrete model names/reasoning effort, or a mandatory Sub Agent topology.
+
+## Executable structure for later orchestration
+
+For complex implementation plans, expose enough structure that execution can be decomposed without re-deriving the design. Use only fields that materially help:
+
+```text
+WORK_PACKAGE
+OBJECTIVE
+DEPENDENCIES
+WRITER_BOUNDARY
+ACCEPTANCE
+PARALLELIZABLE_WITH
+```
+
+This is **candidate execution structure**, not a runtime schedule.
+
+Planning answers:
+
+> What bounded outcomes exist, what depends on what, what may write where, and what proves each outcome?
+
+`execution-orchestrator` later answers, using current repository/runtime evidence:
+
+> Should these packages execute inline, sequentially, or through Sub Agents; how many units are useful; and what topology is safe now?
+
+Do not write `USE_SUBAGENT: YES`, concrete thread counts, or fixed role→model assignments into durable plans unless a separate portable project authority explicitly owns such runtime configuration.
 
 ## Task linkage
 
