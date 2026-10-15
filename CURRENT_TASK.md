@@ -1,73 +1,72 @@
-# CURRENT TASK — Engineering Governance Plugin v0.7.2 Formal Release
+# CURRENT TASK — Remote Delivery Closeout
 
 Date: 2026-10-15
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-PLUGIN-V0.7.2-FORMAL-RELEASE-086`
+Task ID: `EG-REMOTE-DELIVERY-CLOSEOUT-087`
 
-Task class: `RELEASE`
+Task class: `CAPABILITY_HARDENING`
 
-State: `COMPLETE`
+State: `ACTIVE`
+
+Target Plugin version: `0.7.3` candidate.
 
 ## Objective
 
-Publish the already accepted Engineering Governance Plugin `0.7.2` payload as a formal GitHub release with immutable tag `plugin-v0.7.2` and release asset `engineering-governance-plugin.zip`, then reconcile repository controls and release provenance.
+Close a Project Governance delivery gap where local commits can be reported as completed engineering work even when a configured repository remote exists but the task branch/ref was never pushed, leaving the work unavailable to remote/Web audit.
 
-## Release result
+Repository-backed engineering delivery must distinguish local commit creation from remote publication.
 
-- release PR: `#34 — release: publish Engineering Governance Plugin v0.7.2` — `MERGED`;
-- publication merge/source SHA: `229f9edc17a9a9c80dac3ac84f7ed45e097ce098`;
-- accepted semantic candidate: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
-- GitHub Actions workflow: `Release Plugin v0.7.2`;
-- workflow run: `38668545801` — `success`;
-- tag: `plugin-v0.7.2` -> `229f9edc17a9a9c80dac3ac84f7ed45e097ce098`;
-- release ID: `413342779`;
-- release title: `Engineering Governance Plugin v0.7.2`;
-- release state: published, non-draft, non-prerelease;
-- asset: `engineering-governance-plugin.zip`;
-- asset ID: `642334384`;
-- asset size: `140844` bytes;
-- asset SHA-256: `eba897ba8a9a9a40127e204cf42f44fa7a282a93692c773d6ebc6a5fda5b876b`;
-- package entries: `62`;
-- included top-level Skills: exactly `9`;
-- package boundary: `plugin.json` + `skills/**` only.
+## Required behavior
 
-The one-shot release workflow has been archived after successful publication at control/lifecycle commit `fd81a56790b8dbf62c2bb2e64b4c8e9d8f5888f6`.
+For a state-changing task that produces Git commits:
 
-## Acceptance basis retained
+- if the repository has an applicable configured remote and the task is not explicitly local-only, successful repository delivery requires pushing the authorized task branch/ref and verifying that the remote ref contains the final delivered commit;
+- the rule must not imply pushing `main`; push only the already-authorized branch/ref or project-defined delivery ref;
+- if no applicable remote exists, report `REMOTE_DELIVERY: NOT_APPLICABLE_NO_REMOTE` rather than inventing repository publication;
+- if project/task authority explicitly defines the work as local-only, report `REMOTE_DELIVERY: NOT_REQUIRED_LOCAL_ONLY`;
+- if a remote exists but push cannot be completed or verified, do not report full repository delivery/closeout as complete; preserve the local commit and report a remote-delivery pending/stop state with the blocking reason;
+- a local commit SHA is evidence of local source state, not proof of remote delivery.
 
-- v0.7.2 source validation: `PASS`;
-- Design acceptance: `PASS`;
-- private Web Plugin `0.7.2`: `PASS`;
-- Air Local Sub Agent runtime acceptance: `PASS`;
-- Air nine-Skill integrated routing acceptance: `PASS_WITH_FOLLOWUPS` with no Skill-source corrective required;
-- dual Local/account-synced Plugin distributions remain intentional projections of the same repository source.
+## Scope
 
-## PR / lifecycle closeout
+Update only the reusable contracts needed to make remote publication part of repository-backed successful closeout:
 
-- stale Draft PR #21: `CLOSED / UNMERGED / SUPERSEDED`;
-- release PR #34: `MERGED`;
-- open PR count after release: `0`;
-- release branch `release/plugin-v0.7.2-formal` may remain as merged branch history; it has no open PR and no active task authority.
+- `project-governance` normal development/closeout behavior;
+- workspace/local-vs-remote lifecycle evidence where relevant;
+- Project Governance user receipt;
+- cross-context EXECUTE Handoff Receipt;
+- focused acceptance specification/validation;
+- Plugin manifest/version as required for the new packaged behavior.
 
-## Boundaries after closeout
+Do not add a daemon, background sync, auto-push service, repository creator, credential manager, or global enforcement runtime.
 
-- Task 086 authorizes no further release mutation;
-- do not move or replace tag `plugin-v0.7.2`;
-- Local and account-synced distribution projections may coexist; repository source remains semantic authority;
-- Mac mini installation/update is a downstream distribution action and must be verified in that environment after execution.
+## Safety boundaries
 
-## Control Alignment
+- never create a remote merely because none exists;
+- never guess credentials or bypass remote permissions;
+- never force-push unless separately and explicitly authorized by project authority;
+- never select `main` merely because it exists;
+- preserve local/unique work when push fails;
+- remote publication remains bounded by the task's existing write/ref authority;
+- read-only tasks do not gain push side effects;
+- repository-host merge/review/CI gates remain separate from proof that a commit is remotely visible.
 
-- `TARGET_VERSION`: `0.7.2`
-- `SOURCE_VALIDATION`: `PASS`
-- `LOCAL_RUNTIME_ACCEPTANCE`: `PASS`
-- `NINE_SKILL_ROUTING_ACCEPTANCE`: `PASS_WITH_FOLLOWUPS`
-- `WEB_PLUGIN_UPDATE`: `PASS`
-- `FORMAL_GITHUB_RELEASE_072`: `PASS`
-- `RELEASE_RUN`: `38668545801 / success`
-- `RELEASE_TAG`: `plugin-v0.7.2`
-- `RELEASE_SOURCE_SHA`: `229f9edc17a9a9c80dac3ac84f7ed45e097ce098`
-- `OPEN_PRS`: `0`
-- `TASK_STATE`: `COMPLETE`
+## Acceptance
+
+At minimum the contract must distinguish and correctly handle:
+
+1. Git repo + configured remote + commit + authorized branch -> push and verify remote identity before `COMPLETE`;
+2. Git repo + no configured remote -> `NOT_APPLICABLE_NO_REMOTE`;
+3. explicit local-only task -> `NOT_REQUIRED_LOCAL_ONLY`;
+4. configured remote + push/network/auth failure -> local work preserved, remote delivery not complete;
+5. no implicit push to `main` or force push;
+6. receipts distinguish `LOCAL_COMMIT` from `REMOTE_DELIVERY` / remote ref identity;
+7. no change to read-only task behavior.
+
+## Lifecycle
+
+- formal `plugin-v0.7.2` remains immutable published baseline;
+- this task creates the next source candidate rather than mutating v0.7.2 release identity;
+- Web/local distribution update and formal v0.7.3 publication are later lifecycle decisions after source acceptance.
