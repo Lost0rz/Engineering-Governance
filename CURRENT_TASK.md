@@ -8,7 +8,7 @@ Task ID: `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084`
 
 Task class: `CAPABILITY_HARDENING`
 
-State: `ACTIVE — MERGED_TO_MAIN_FOR_LOCAL_TRIAL`
+State: `ACTIVE — DISTRIBUTED_FOR_RUNTIME_TRIAL`
 
 ## Objective
 
@@ -24,7 +24,7 @@ Complex plans may expose bounded work packages with objective, dependencies, wri
 
 ### Sub Agent value gate
 
-Before delegation, evaluate whether the work has genuinely independent units, dependency structure permits useful concurrency/context isolation, write boundaries are safe, expected value exceeds coordination cost, and the current Local Codex environment exposes enough capability.
+Before delegation, evaluate whether the work has genuinely independent units, dependency structure permits useful concurrency/context isolation, write boundaries are safe, expected value exceeds coordination cost, and the current execution environment exposes enough capability.
 
 Emit:
 
@@ -46,13 +46,14 @@ Default writer rule: one writer per overlapping semantic authority. Parallel wri
 
 ### Model / reasoning boundary
 
-Engineering Governance selects role/topology, not a fixed provider/model. The receiving Local Codex environment owns concrete Sub Agent model/reasoning resolution.
+Engineering Governance selects role/topology, not a fixed provider/model. The receiving execution environment owns concrete Sub Agent model/reasoning resolution.
 
 Internal evidence may use:
 
 ```text
 MODEL_SOURCE: <parent inheritance | agents default | role/custom config | runtime/platform | UNKNOWN>
 MODEL_CONFIG: <configured value | PLATFORM_DEFAULT | UNKNOWN>
+REASONING_CONFIG: <configured value | PLATFORM_DEFAULT | UNKNOWN>
 MODEL_EFFECTIVE: <observed value | UNKNOWN>
 REASONING_EFFECTIVE: <observed value | UNKNOWN>
 ```
@@ -61,7 +62,7 @@ Never report an effective model/reasoning value solely because configuration sug
 
 ### Receipt observability
 
-Governed execution and cross-context EXECUTE receipts report Sub Agent usage when execution occurred:
+Governed execution and cross-context EXECUTE receipts report:
 
 ```text
 Execution topology:
@@ -71,22 +72,27 @@ Subagent runtime:
 
 If no Sub Agent was used, `Subagents: NO` is sufficient. If used, report bounded role/count and observable model/reasoning identity; unknown effective runtime values remain `UNKNOWN`.
 
-## Source implementation result
+## Source / distribution result
 
-- source hardening complete enough for Local trial;
 - Plugin manifest: `0.7.2`;
 - semantic candidate HEAD: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
 - latest pre-merge validation run: `38663053412` — `success`;
 - PR `#33 — feat: harden local execution and Sub Agent orchestration` merged to `main`;
-- merge commit: `29f7b7581a904b81f1e6ada8ec4fe0266cd6bfe1`.
+- merge commit: `29f7b7581a904b81f1e6ada8ec4fe0266cd6bfe1`;
+- Air Local Codex cache readback: `0.7.2` present at `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.7.2`;
+- private Web Plugin updated in place to `0.7.2`;
+- Web Plugin ID unchanged: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- Web release ID: `pluginrel_6ad02855852c8191a7addd05d6026361`;
+- Web readback confirmed both manifests plus Execution Orchestrator, Sub Agent execution, Project Governance receipt, and Handoff execution evidence contracts.
 
 `V072_SOURCE_READY_FOR_LOCAL_TRIAL`: `PASS`.
+`WEB_PLUGIN_SYNC_072`: `PASS`.
 
-## Local runtime acceptance
+## Runtime acceptance
 
-Source merge does not establish runtime PASS. Refresh/install Local Codex from `main` and test:
+Distribution/install does not establish runtime PASS. Next verify in a fresh Local Codex session:
 
-- installed plugin identity;
+- loaded plugin identity;
 - local Sub Agent configuration/default source;
 - `INLINE / Subagents: NO` negative case;
 - useful delegated read-only case;
@@ -98,23 +104,21 @@ Source merge does not establish runtime PASS. Refresh/install Local Codex from `
 
 - do not create a new top-level Skill;
 - do not make Engineering Governance a model router;
-- do not hardcode one Local machine's model/capacity into reusable policy;
+- do not hardcode one machine's model/capacity into reusable policy;
 - do not force Sub Agent use for ordinary small tasks;
-- do not create a formal GitHub v0.7.2 release/tag until separately authorized after runtime acceptance;
-- do not update the private Web Plugin in this task phase;
-- do not claim Local runtime acceptance until a real local install/readback/test is performed.
+- do not claim Local runtime acceptance until a real local session/readback/test is performed;
+- formal GitHub tag/release remains a separate lifecycle step.
 
 ## Control Alignment
 
 - `PREDECESSOR_TASK`: `EG-DESIGN-ROUTING-HARDENING-083` (`COMPLETE`)
-- `START_MAIN_HEAD`: `0a2febb5cc294609d5ebfe54a4e84da1216de2dd`
 - `PR`: `#33` (`MERGED`)
 - `MERGE_COMMIT`: `29f7b7581a904b81f1e6ada8ec4fe0266cd6bfe1`
 - `TARGET_VERSION`: `0.7.2`
 - `SEMANTIC_CANDIDATE_HEAD`: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`
-- `PREMERGE_VALIDATION_RUN`: `38663053412`
 - `SOURCE_VALIDATION`: `PASS`
-- `FORMAL_RELEASE`: `NOT_AUTHORIZED_THIS_PHASE`
-- `WEB_PLUGIN_UPDATE`: `NOT_AUTHORIZED_THIS_PHASE`
+- `LOCAL_PLUGIN_CACHE_072`: `OBSERVED`
+- `WEB_PLUGIN_UPDATE`: `PASS`
+- `WEB_RELEASE_ID`: `pluginrel_6ad02855852c8191a7addd05d6026361`
 - `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING`
-- `TASK_STATE`: `ACTIVE — MERGED_TO_MAIN_FOR_LOCAL_TRIAL`
+- `TASK_STATE`: `ACTIVE — DISTRIBUTED_FOR_RUNTIME_TRIAL`
