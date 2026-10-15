@@ -18,8 +18,12 @@ Verify only relevant surfaces:
 - intended Plugin identity/version and exact nine-Skill availability;
 - Project Governance remains normal engineering entry;
 - Project Profile triggers for profile/context-index work, not normal development;
-- Design triggers for bounded UI/UX/frontend visual design or redesign, while Solution Design remains engineering architecture/state-ownership authority;
-- other narrow Skills remain conditional and semantic/outcome-based;
+- Design triggers for bounded UI/UX/frontend interaction/visual design while Solution Design remains engineering architecture/state-ownership authority;
+- mixed frontend workflow routing distinguishes interaction workflow from business/state workflow;
+- selected Skills may make bounded evidence-triggered calls to another capability when a concrete unresolved dependency requires it;
+- each such call has a specific dependency, decision impact, bounded expected return and a return/resume owner or stage;
+- no Skill is invoked merely for enrichment, completeness, a generic second opinion or because it is installed;
+- bounded nested calls return to the originating capability instead of restarting an all-Skill pipeline;
 - routing does not duplicate Skill procedure or project facts;
 - supported global-guidance environments have one current block; environments without it remain functional.
 
