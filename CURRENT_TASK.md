@@ -8,7 +8,7 @@ Task ID: `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084`
 
 Task class: `CAPABILITY_HARDENING`
 
-State: `ACTIVE — SOURCE_READY_FOR_LOCAL_TRIAL`
+State: `ACTIVE — MAIN_MERGE_AUTHORIZED_FOR_LOCAL_TRIAL`
 
 ## Objective
 
@@ -103,7 +103,7 @@ Before any release/Web synchronization claim for this task, test Local Codex run
 - disjoint writer case when safely testable;
 - compact receipt with topology, Sub Agent use, and runtime identity evidence.
 
-Repository policy alone does not establish runtime PASS.
+Repository policy or a source merge does not establish runtime PASS.
 
 ## Source implementation result
 
@@ -117,18 +117,24 @@ Source hardening is complete enough for Local trial:
 - Project Governance compact receipts expose execution topology, Sub Agent use and runtime identity evidence;
 - cross-context EXECUTE Handoff Receipts preserve the same execution evidence;
 - `references/V072_LOCAL_EXECUTION_SUBAGENT_ACCEPTANCE.md` defines source and Local runtime acceptance;
-- Plugin manifest on the candidate branch is `0.7.2`;
+- Plugin manifest is `0.7.2`;
 - v0.7.1 release workflow is archived and the v0.7.2 candidate workflow performs validation/build only, with no publication step.
 
-Candidate validation:
+Validated identities:
 
-- Draft PR: `#33 — feat: harden local execution and Sub Agent orchestration`;
 - semantic candidate HEAD: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
+- current pre-merge branch HEAD before this control reconciliation: `0ae5cb83e8243ebed771da505c2fc39034b3cf32`;
 - workflow: `Validate Plugin v0.7.2 Candidate`;
-- run: `38662974492`;
+- latest pre-merge run: `38663053412`;
 - result: `success`.
 
 `V072_SOURCE_READY_FOR_LOCAL_TRIAL`: `PASS`.
+
+## Distribution decision
+
+The user has explicitly authorized merging PR #33 to `main` before Local runtime acceptance so the repo-backed Local Codex plugin can refresh from `main` and exercise the new execution/receipt behavior.
+
+This merge is a **local distribution/testing step**, not a formal release or runtime acceptance result.
 
 ## Explicit boundaries
 
@@ -136,15 +142,16 @@ Candidate validation:
 - do not make Engineering Governance a model router;
 - do not hardcode one Local machine's model/capacity into reusable policy;
 - do not force Sub Agent use for ordinary small tasks;
+- merge PR #33 to `main` is authorized for Local plugin refresh/testing;
+- do not create a formal GitHub release/tag from this merge unless separately authorized after runtime acceptance;
 - do not update the private Web Plugin in this task phase;
-- do not merge/release merely from source validation;
-- do not claim Local runtime acceptance until a real local test/readback is performed.
+- do not claim Local runtime acceptance until a real local install/readback/test is performed.
 
 ## Next acceptance boundary
 
-Run Task 084 against Local Codex using the exact candidate/source identity and capture:
+After merge, refresh/install the `0.7.2` plugin from `main` in Local Codex and capture:
 
-1. installed/candidate identity;
+1. installed plugin identity;
 2. local Sub Agent configuration source;
 3. an `INLINE / Subagents: NO` negative case;
 4. a useful delegated read-only case;
@@ -157,11 +164,12 @@ Run Task 084 against Local Codex using the exact candidate/source identity and c
 - `PREDECESSOR_TASK`: `EG-DESIGN-ROUTING-HARDENING-083` (`COMPLETE`)
 - `START_MAIN_HEAD`: `0a2febb5cc294609d5ebfe54a4e84da1216de2dd`
 - `TASK_BRANCH`: `codex/local-execution-subagent-hardening-v072`
-- `PR`: `#33` (`DRAFT / UNMERGED`)
-- `TARGET_VERSION`: `0.7.2-candidate`
+- `PR`: `#33` (`MERGE_AUTHORIZED_FOR_LOCAL_TRIAL`)
+- `TARGET_VERSION`: `0.7.2`
 - `SEMANTIC_CANDIDATE_HEAD`: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`
-- `SOURCE_VALIDATION_RUN`: `38662974492`
+- `PREMERGE_VALIDATION_RUN`: `38663053412`
 - `SOURCE_VALIDATION`: `PASS`
+- `FORMAL_RELEASE`: `NOT_AUTHORIZED_THIS_PHASE`
 - `WEB_PLUGIN_UPDATE`: `NOT_AUTHORIZED_THIS_PHASE`
 - `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING`
-- `TASK_STATE`: `ACTIVE — SOURCE_READY_FOR_LOCAL_TRIAL`
+- `TASK_STATE`: `ACTIVE — MAIN_MERGE_AUTHORIZED_FOR_LOCAL_TRIAL`
