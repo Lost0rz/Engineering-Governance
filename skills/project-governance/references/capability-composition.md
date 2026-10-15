@@ -49,7 +49,7 @@ EXPECTED_RETURN:
 RESUME_OWNER_OR_STAGE:
 ```
 
-The called capability returns a bounded answer. The originating capability then resumes from the named stage.
+The called capability returns a bounded answer. After that bounded result is sufficient, **resume at the declared stage** in the originating capability.
 
 Do not call another Skill for:
 
