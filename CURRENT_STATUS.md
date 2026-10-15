@@ -22,51 +22,72 @@ Release provenance:
 
 ## Active capability hardening
 
-Task `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084` is `ACTIVE` on branch:
+Task `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084` is:
+
+`ACTIVE — SOURCE_READY_FOR_LOCAL_TRIAL`
+
+Branch:
 
 `codex/local-execution-subagent-hardening-v072`
+
+Draft PR:
+
+`#33 — feat: harden local execution and Sub Agent orchestration`
 
 Start main HEAD:
 
 `0a2febb5cc294609d5ebfe54a4e84da1216de2dd`
 
-Purpose:
+Accepted semantic candidate for Local trial:
 
-- make Sub Agent use explicitly efficiency-first rather than agent-count-first;
-- connect planning work-package structure to execution-time topology selection without freezing runtime-specific choices in durable plans;
-- add a concrete Sub Agent value gate, stable execution roles, dependency/writer-boundary analysis, and bounded redelegation behavior;
-- distinguish configured Sub Agent model/reasoning values from observed effective runtime identity;
-- expose execution topology, Sub Agent use, and observable model/reasoning evidence in governed execution receipts;
-- add Local Codex runtime acceptance before any release/Web synchronization claim.
+`23b05c7f8847dd1868f05dd3fe5257aed94f635a`
 
-This task does **not** authorize a Web Plugin update in the current phase.
+Candidate source validation:
 
-## Current execution capability baseline
+- workflow: `Validate Plugin v0.7.2 Candidate`;
+- run: `38662974492`;
+- result: `success`;
+- publication: none.
 
-The existing `execution-orchestrator` already supports:
+`V072_SOURCE_READY_FOR_LOCAL_TRIAL`: `PASS`.
 
-- `INLINE`;
-- `SEQUENTIAL_DELEGATED`;
-- `PARALLEL_READ_ONLY`;
-- `PARALLEL_DISJOINT_WRITERS`;
-- environment-owned delegated-model policy;
-- one-writer safety for overlapping semantic authority;
-- bounded cross-context Agent Handoff and controller-side integration.
+## Task 084 source behavior
 
-Task 084 hardens efficiency selection, planning/execution linkage, runtime model observability, role semantics, and receipts; it does not create a new top-level Skill or model-router runtime.
+The v0.7.2 source candidate now establishes:
 
-## Local distribution state
+- Sub Agent use is efficiency-first, not mandatory;
+- planning may expose bounded work packages, dependencies, writer boundaries, acceptance and useful parallelizability without selecting runtime topology;
+- `execution-orchestrator` performs `SUBAGENT_DECISION: USE | DO_NOT_USE` at execution time;
+- stable execution roles are `EXPLORER`, `WORKER`, `VERIFIER`, `REVIEWER`;
+- overlapping semantic authority defaults to one writer;
+- parallel writers require proven-disjoint authority/workspaces plus an integration boundary;
+- Sub Agent redelegation is disabled by default;
+- configured/default model/reasoning values are distinct from observed effective runtime identity;
+- Project Governance execution receipts expose `Execution topology`, `Subagents`, and `Subagent runtime`;
+- cross-context EXECUTE Handoff Receipts can preserve the same execution evidence;
+- effective model/reasoning remains `UNKNOWN` when the Local runtime does not expose it.
+
+Task 084 does not create a new top-level Skill or a reusable model router.
+
+## Local distribution / runtime state
 
 The last directly observed Air Local Codex installation remains `0.6.8` at:
 
 `/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.6.8`
 
-No local v0.7.x runtime freshness is inferred without a fresh local readback.
+The repository candidate manifest is now `0.7.2`, but that is **not** evidence that Local Codex has installed or executed it.
 
-`LOCAL_PLUGIN_UPDATE_AVAILABLE`: `YES`.
+Next evidence boundary is real Local Codex trial of the exact candidate/source identity, including:
+
+- candidate/install identity readback;
+- local Sub Agent configuration/default source;
+- an inline negative case (`Subagents: NO`);
+- a useful delegated read-only case;
+- writer-safety behavior;
+- model/reasoning effective runtime observation where available, otherwise explicit `UNKNOWN`;
+- execution/Handoff receipt readback.
+
 `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING`.
-
-The source hardening will be prepared as a v0.7.2 candidate and tested locally before any release/Web Plugin synchronization decision.
 
 ## Published Web Plugin
 
@@ -76,7 +97,7 @@ The existing private personal Web Plugin remains v0.7.1:
 - current Web release ID: `pluginrel_6ad01a9215e88191829245c5571fd160`;
 - scope/discoverability: `USER / PRIVATE`.
 
-No Task 084 Web synchronization has been performed or authorized.
+`WEB_PLUGIN_UPDATE_084`: `NOT_PERFORMED / NOT_AUTHORIZED_THIS_PHASE`.
 
 ## Control identity
 
@@ -84,4 +105,8 @@ Released semantic Plugin identity remains:
 
 `208279e5f3b7974c13a3446a3db2e8f27de7b688`
 
-Active Task 084 branch is an unreleased source candidate. Branch/source commits must not be reported as a released or installed runtime identity until the corresponding lifecycle step is actually verified.
+Task 084 semantic candidate identity for Local trial is:
+
+`23b05c7f8847dd1868f05dd3fe5257aed94f635a`
+
+Later STATUS/TASK-only commits on the task branch are control-only and do not change that semantic candidate identity.
