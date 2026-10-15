@@ -102,7 +102,7 @@ Next evidence boundary is Local Codex refresh/install from `main` followed by ru
 The existing private personal Web Plugin remains v0.7.1:
 
 - Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- current Web release ID: `pluginrel_6ad01a92191829245c5571fd160`;
+- current Web release ID: `pluginrel_6ad01a9215e88191829245c5571fd160`;
 - scope/discoverability: `USER / PRIVATE`.
 
 `WEB_PLUGIN_UPDATE_084`: `NOT_PERFORMED / NOT_AUTHORIZED_THIS_PHASE`.
