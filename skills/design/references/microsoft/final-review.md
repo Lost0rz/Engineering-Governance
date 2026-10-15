@@ -1,19 +1,21 @@
 # Final frontend Design review
 
-This module adapts the **Design Review** function of Microsoft's `frontend-design-review` Skill as the final internal quality gate inside Engineering Governance `design`.
+This module adapts the **Design Review** function of Microsoft's `frontend-design-review` Skill as the downstream internal quality gate inside Engineering Governance `design`.
 
-It is intentionally downstream. Do not use Microsoft's Creative Frontend Design mode here to reopen the visual direction after Anthropic reasoning, admin-pattern composition and design-spec synthesis have already established the bounded design.
+It is intentionally review-oriented. Do not use Microsoft's Creative Frontend Design mode here to reopen the visual direction after Anthropic reasoning, admin-pattern composition and design-spec synthesis have already established the bounded design.
 
 ## Review input
 
 Review the strongest evidence actually available:
 
 - project purpose/audience/context and materially relevant authority;
-- the bounded Design intent/composition/specification;
+- the bounded Design intent/composition/specification when one exists;
 - target-project design system / brand / component / token authority when it truly exists;
 - concrete prototype or implementation source;
 - rendered surface/screenshots/browser evidence when supported;
-- representative states/viewports that are actually available.
+- representative states/viewports actually available.
+
+When the environment supports rendered inspection, capture that evidence **before** this review so the Microsoft review can evaluate the actual surface rather than only source/specification.
 
 Never invent Figma, Storybook, token, browser, accessibility-test or viewport evidence. If evidence is unavailable, mark that part of the review `LIMITED` / unknown instead of converting it to PASS.
 
@@ -33,19 +35,19 @@ Evidence reviewed:
 Evidence unavailable:
 ```
 
-The final audit must judge whether the interface helps the user complete the real job, not merely whether individual components look polished.
+The final audit judges whether the interface helps the user complete the real job, not merely whether individual components look polished.
 
 ### 2. Design-system / project-authority compliance
 
 When a real project design system/component library/brand authority exists, check:
 
-- existing approved component is reused/adapted where appropriate;
+- existing approved components are reused/adapted where appropriate;
 - project tokens/variables are used rather than unnecessary one-off values;
 - variants and states match real project conventions;
 - spacing/type/color/surface decisions do not silently fork the established system;
 - deviations are intentional, scoped and documented by the bounded Design decision.
 
-If no such authority exists, do **not** fail the work for lacking Figma/Storybook. Instead review consistency against the synthesized bounded Design specification and actual project conventions.
+If no such authority exists, do **not** fail the work for lacking Figma/Storybook. Review consistency against the bounded Design specification and actual project conventions instead.
 
 ### 3. Pillar A — Frictionless insight to action
 
@@ -60,7 +62,7 @@ Check:
 - forms, tables, editors and settings follow the user's working sequence;
 - empty/error/disabled/permission states still expose a viable next action.
 
-The upstream “≤3 interactions” idea is a heuristic, not an absolute rule. A legitimate complex workflow may require more steps when each step carries necessary meaning or safety.
+The upstream “≤3 interactions” idea is a heuristic, not an absolute rule. A legitimate complex workflow may require more steps when each carries necessary meaning or safety.
 
 ### 4. Pillar B — Quality is craft
 
@@ -184,9 +186,10 @@ Do not list empty severity sections verbosely; `None` is sufficient.
 - Any open `Blocking` finding => `BLOCKED`; correct before Design completion.
 - Any open `Major` finding => `NEEDS_WORK`; correct in the current Design pass and re-review.
 - `Minor` findings may remain if explicitly accepted as non-blocking refinement.
-- After correction, re-review the affected surface rather than merely asserting that the issue was fixed.
-- `LIMITED_BY_EVIDENCE` is allowed when required visual/runtime evidence genuinely cannot be obtained in the current environment; state exactly what remains unverified.
+- After a Blocking/Major correction, re-render the affected surface when rendering is supported before rerunning this review.
+- Do not treat a source-only correction assertion as equivalent to re-review of the corrected rendered result when rendered evidence is available.
+- `LIMITED_BY_EVIDENCE` is allowed when required visual/runtime evidence genuinely cannot be obtained; state exactly what remains unverified.
 
 The Design completion gate may report `MICROSOFT_FINAL_REVIEW: PASS | LIMITED_BY_EVIDENCE`, but it must also report `MICROSOFT_BLOCKING_FINDINGS_OPEN: NO` and `MICROSOFT_MAJOR_FINDINGS_OPEN: NO`.
 
-This is Design's internal final-review loop. It is not a formal release/readiness Evidence Audit unless that separate outcome is explicitly requested and routed accordingly.
+Final visual acceptance happens **after** the last Microsoft review/corrective cycle and confirms the final corrected surface. This Microsoft module remains Design's internal review loop; it is not a formal release/readiness Evidence Audit unless that separate outcome is explicitly requested and routed accordingly.
