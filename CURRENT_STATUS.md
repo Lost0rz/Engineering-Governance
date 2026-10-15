@@ -23,44 +23,84 @@ The published v0.7.2 release is immutable historical evidence and is not modifie
 
 ## Active development
 
-Task `EG-REMOTE-DELIVERY-CLOSEOUT-087` is `ACTIVE`.
+Task `EG-REMOTE-DELIVERY-CLOSEOUT-087` is:
+
+`SOURCE_MERGED — RUNTIME_ACCEPTANCE_PENDING`
 
 Target source version: `0.7.3` candidate.
 
-Observed gap:
+Source result:
 
-- current governance can distinguish local branch/commit state from remote branch identity;
-- however, successful state-changing closeout does not currently require a configured repository remote to contain the final delivered commit;
-- a local commit can therefore be returned as apparent completion while remote/Web audit cannot see the produced engineering work.
+- PR `#35 — feat: require verified remote repository delivery at closeout` — `MERGED`;
+- validated semantic/source head: `7a5c256b4bdf09768645d252df340870f8d8ef82`;
+- `Validate Plugin v0.7.3 Candidate` run `38677775327` — `success`;
+- merge commit: `998a8cae62546ed8a2551c1fb54aded037c62985`;
+- root `plugin.json` is now `0.7.3` candidate on `main`;
+- obsolete v0.7.2 candidate validator was archived after the formal v0.7.2 release.
 
-Required correction:
+## v0.7.3 remote-delivery behavior
 
-- local commit creation and remote repository delivery become separate evidence claims;
-- when an applicable configured remote exists and work is not explicitly local-only, successful repository delivery requires push of the authorized branch/ref plus remote-ref verification;
-- no remote -> `NOT_APPLICABLE_NO_REMOTE`;
-- explicit local-only authority -> `NOT_REQUIRED_LOCAL_ONLY`;
-- push/network/auth failure -> preserve local work and report remote delivery incomplete rather than full completion;
-- never infer that `main` or force-push is authorized.
+Project Governance now treats local commit creation and remote repository delivery as separate evidence claims.
 
-## Accepted v0.7.2 capability state retained
+For state-changing work that produced or advanced commits:
+
+- applicable configured remote + not explicitly local-only -> push only the already-authorized task/project ref and verify the fresh remote ref before claiming full repository delivery;
+- local commit / clean working tree / local branch SHA alone does not establish remote delivery;
+- no applicable remote -> `REMOTE_DELIVERY: NOT_APPLICABLE_NO_REMOTE`;
+- explicit local-only authority -> `REMOTE_DELIVERY: NOT_REQUIRED_LOCAL_ONLY`;
+- applicable remote but push/verification failure -> preserve local work and report `PENDING` / `FAILED`, not remotely delivered completion;
+- normal closeout does not authorize remote creation, force-push, credential bypass, branch substitution, or an implicit push to `main`.
+
+Project Governance and EXECUTE Handoff receipts can now expose:
+
+```text
+LOCAL_COMMIT
+REMOTE_DELIVERY
+REMOTE_REF
+REMOTE_COMMIT
+```
+
+## Acceptance state
+
+Accepted prior baseline retained:
 
 - Design acceptance: `PASS`;
 - Web Plugin 0.7.2 readback: `PASS`;
 - Air Local Sub Agent runtime acceptance: `PASS`;
-- Air nine-Skill routing acceptance: `PASS_WITH_FOLLOWUPS` with no Skill-source corrective;
-- Local Git-backed and account-synced Plugin projections may intentionally coexist when version/content equivalent.
+- Air nine-Skill routing acceptance: `PASS_WITH_FOLLOWUPS` with no Skill-source corrective.
+
+Task 087:
+
+- v0.7.3 source validation: `PASS`;
+- source merge: `PASS`;
+- Local runtime acceptance of remote/no-remote/local-only/push-failure cases: `PENDING`;
+- Web Plugin 0.7.3 sync: `NOT_PERFORMED`;
+- formal GitHub `plugin-v0.7.3` release: `NOT_PERFORMED`.
+
+## Distribution model
+
+Source authority:
+
+`Lost0rz/Engineering-Governance`
+
+Intentional distribution projections:
+
+1. persistent Local Git-backed Plugin installation;
+2. account-synced Web/remote Plugin projection.
+
+The currently published/distributed accepted baseline remains 0.7.2 until Task 087 runtime acceptance and a later distribution decision.
 
 ## Repository lifecycle
 
 - stale PR #21: `CLOSED / UNMERGED / SUPERSEDED`;
 - release PR #34: `MERGED`;
-- open PR count before Task 087 source branch: `0`;
+- Task 087 PR #35: `MERGED`;
 - Task 086: `COMPLETE`;
-- Task 087: `ACTIVE`.
+- Task 087: `SOURCE_MERGED — RUNTIME_ACCEPTANCE_PENDING`.
 
 ## Downstream installation state
 
 - private Web Plugin: `0.7.2`;
-- Air Local Plugin/runtime: `0.7.2` accepted;
+- Air Local Plugin/runtime accepted baseline: `0.7.2`;
 - Mac mini Local Plugin update to `0.7.2`: not yet observed;
-- no v0.7.3 distribution or release is authorized until Task 087 source acceptance is complete.
+- v0.7.3 runtime/distribution acceptance is pending and must not be conflated with the existing formal 0.7.2 release.
