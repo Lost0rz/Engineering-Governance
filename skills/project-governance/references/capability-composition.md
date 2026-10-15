@@ -8,7 +8,7 @@ The nine Skills cooperate without competing controllers.
 
 Do **not** walk the Skill catalog from top to bottom. Do **not** invoke a Skill merely because it is installed or adjacent to the problem.
 
-Start with Project Governance for ordinary engineering work, then select the **smallest materially necessary set of bounded capabilities** for the actual unresolved problem. A single narrow Skill is often sufficient.
+Start with Project Governance for ordinary engineering work, then select the smallest materially necessary bounded owner for the actual unresolved problem.
 
 ```text
 request
@@ -16,33 +16,96 @@ request
   v
 project-governance
   |
-  +--> design                when the bounded problem is UI/UX/frontend visual design
+  +--> design                 UI/UX/frontend interaction + visual design
   |
-  +--> solution-design       when material engineering architecture/state ownership is unresolved
+  +--> solution-design        material architecture/state/API/data-flow ambiguity
   |
-  +--> domain-navigation     when the relevant semantic/source/test/runtime route is genuinely unclear
+  +--> domain-navigation      unclear authority/source/symbol/test/runtime route
   |
-  +--> execution-orchestrator when decomposition/delegation itself is useful
+  +--> execution-orchestrator decomposition/delegation materially useful
   |
-  +--> incident-doctor       when a blocking evidence gap prevents safe progress
+  +--> incident-doctor        blocking evidence gap
   |
-  +--> evidence-audit        when a formal independent/read-only verdict is the requested boundary
+  +--> evidence-audit         formal independent/read-only verdict
   |
-  +--> agent-handoff         when responsibility/evidence must cross execution contexts
+  +--> agent-handoff          cross-context transfer
   |
-  `--> project-profile       when the requested artifact is compact derived project context/index
-
-bounded capability completes
-  |
-  v
-project-governance alignment / closeout
+  `--> project-profile        requested compact derived project context/index
 ```
 
-Branches are gates, not stages. More branches are not better.
+These are bounded owners, not mandatory stages.
 
-When `design` owns an already-understood interface problem, let Design perform its complete bounded design/implementation/visual-critique loop. Ordinary access to known project authorities does not additionally require Domain Navigation; Design's own visual critique does not additionally require Evidence Audit.
+## Evidence-triggered nested composition
 
-`solution-design` and `design` may both participate in one governed task only when there are **two distinct material problems**: unresolved engineering architecture/state ownership **and** bounded interface/frontend design. Project Governance remains the task/lifecycle owner.
+A selected capability may call another capability when a **specific unresolved dependency** crosses the second capability's real boundary and the answer materially affects the current decision.
+
+Every nested call should make these explicit:
+
+```text
+UNRESOLVED_DEPENDENCY:
+DECISION_IMPACT:
+CAPABILITY:
+EXPECTED_RETURN:
+RESUME_OWNER_OR_STAGE:
+```
+
+The called capability returns a bounded answer. After that bounded result is sufficient, **resume at the declared stage** in the originating capability.
+
+Do not call another Skill for:
+
+- general enrichment;
+- completeness;
+- a generic second opinion;
+- re-reading an authority/route already reliably known;
+- the mere fact that a page/system spans multiple domains;
+- the mere fact that the Skill is installed.
+
+If the returned result materially changes task scope or authorization, return to Project Governance for reconciliation before mutation. Otherwise resume the originating capability directly.
+
+## Design composition example
+
+```text
+project-governance
+      |
+      v
+    design
+      |
+      |  backend authority/source route genuinely unclear
+      +------> domain-navigation
+      |             |
+      |        verified route
+      |             |
+      <-------------+
+      |
+      |  route known, but state/API ownership materially ambiguous
+      +------> solution-design
+      |             |
+      |        bounded decision
+      |             |
+      <-------------+
+      |
+      v
+resume suspended Design stage
+```
+
+This is valid composition. It is different from shotgun routing because each detour answers one concrete dependency and returns.
+
+## Design vs Solution Design
+
+Use this discriminator for mixed frontend work:
+
+```text
+INTERACTION_WORKFLOW
+How users see, understand, navigate, edit, act and receive feedback.
+Owner: design
+
+BUSINESS_STATE_WORKFLOW
+Canonical state transitions, data/state ownership, API/data-flow responsibility,
+persistence semantics and implementation boundaries.
+Owner: solution-design when materially ambiguous
+```
+
+`solution-design` and `design` may both participate only when both material problems actually exist. A blocking business/state prerequisite should be resolved before the affected interface decision proceeds.
 
 ## Handoff dimensions
 

@@ -12,17 +12,48 @@ Use this Skill as the normal engineering entry. It owns task/control authority, 
 Use a narrower Skill only for the bounded capability it owns, then return here when task authority/lifecycle decisions are required:
 
 - `project-profile` — create/rebuild/audit compact derived project context/index;
-- `solution-design` — material engineering requirements/architecture/state-ownership ambiguity;
-- `design` — bounded UI/UX/frontend visual design, redesign, aesthetic direction, typography/layout/visual hierarchy, or visual execution critique;
+- `solution-design` — material engineering requirements/architecture/state-ownership/API/data-flow/implementation-boundary ambiguity;
+- `design` — bounded UI/UX/frontend interaction workflow, visual design/redesign, hierarchy, composition, design specification, implementation review;
 - `execution-orchestrator` — decomposition, agents, parallelism, environment-aware delegation, recovery/integration;
 - `agent-handoff` — standardized cross-context cards/receipts;
 - `evidence-audit` — formal read-only acceptance/readiness verdict;
-- `domain-navigation` — unclear semantic/source/test/runtime route;
+- `domain-navigation` — unclear semantic/source/symbol/test/runtime/dependency route;
 - `incident-doctor` — blocking evidence gap.
 
-Do not route to `design` merely because an engineering task uses the word “design.” `solution-design` remains the owner for material architecture/state-ownership/API/data-flow/implementation-boundary choices; `design` owns bounded product-interface/frontend visual-design choices. A governed implementation can use both while Project Governance remains task/lifecycle owner.
+Do not route by keyword alone. In particular:
 
-Do not treat the installed Skill set as a checklist. Each narrower Skill requires its own material trigger. Prefer one deep bounded capability over shotgun-routing several Skills around the same already-understood problem. In particular, when `design` owns an interface/design problem and relevant project/design authorities are already identifiable, ordinary context lookup does not by itself trigger `domain-navigation`, and Design's own rendered visual critique does not by itself trigger `evidence-audit`.
+```text
+INTERACTION_WORKFLOW
+How users see, understand, navigate, edit, act and receive feedback.
+Owner: design
+
+BUSINESS_STATE_WORKFLOW
+Canonical state transitions, data/state ownership, API/data-flow responsibility,
+persistence semantics and implementation boundaries.
+Owner: solution-design when materially ambiguous
+```
+
+A governed implementation can use both only when both material problems actually exist. Project Governance remains task/lifecycle owner.
+
+## Evidence-triggered composition
+
+Routing is selective, but **not isolationist**. Once a bounded Skill owns a problem, let it lead that workflow. It may call another Engineering Governance capability when a concrete unresolved dependency crosses that capability's real boundary and the answer can materially change the current decision.
+
+Before a cross-capability call, identify:
+
+```text
+UNRESOLVED_DEPENDENCY:
+DECISION_IMPACT:
+CAPABILITY:
+EXPECTED_RETURN:
+RESUME_OWNER_OR_STAGE:
+```
+
+Use the smallest capable owner. The called Skill returns a bounded result; then resume the originating capability/stage unless task scope/authorization itself changed and requires Project Governance reconciliation.
+
+Do **not** invoke Skills for general enrichment, completeness, second opinions without an unresolved dependency, or because they are installed. Do not repeat an authority/source route that is already reliably known.
+
+Example: Design may call Domain Navigation when a backend/product authority or source route needed for the interface decision is genuinely unclear, then resume Design once the verified route returns. That is valid composition, not shotgun routing.
 
 A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal acceptance/readiness verdict is requested. See `references/global-routing.md` and `references/capability-composition.md`.
 
@@ -41,7 +72,7 @@ Do not substitute an informal/legacy execution-card schema merely because the un
 3. Keep task purpose, execution unit and execution context distinct. Context/agent changes do not create tasks.
 4. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
 5. Confirm mutation remains inside authorized objective/scope/side effects/verification/STOP boundary; reconcile material changes before mutation.
-6. Keep one canonical writer/authority per semantic class. Use narrower Skills only when their trigger materially applies. Once routed, let that Skill complete its bounded workflow rather than collapsing it into a reference-reading step.
+6. Keep one canonical writer/authority per semantic class. Use narrower Skills only when their trigger materially applies. Once routed, let that Skill complete its bounded workflow; bounded evidence-triggered calls to another Skill return to the originating capability instead of restarting the catalog.
 7. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
 8. Implement the smallest authorized outcome and choose risk-proportional verification.
 9. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
@@ -77,9 +108,9 @@ PR / workspace:
 Next:
 ```
 
-`Governance route` reports the actual ordered capability path used for the response, not the route that theoretically could have been used.
+`Governance route` reports the actual ordered capability path used for the response, including bounded detours and returns when material, not the route that theoretically could have been used.
 
-`Skills used` reports every top-level Engineering Governance Skill whose bounded instructions materially governed the work, and no others. Do not list installed/discovered Skills, Skills merely mentioned in routing documentation, or Skills whose files were inspected only to decide that they were not applicable.
+`Skills used` reports every top-level Engineering Governance Skill whose bounded instructions materially governed the work, and no others. Do not list installed/discovered Skills, Skills merely mentioned in routing documentation, or Skills inspected only to decide they were not applicable.
 
 When a Skill materially applies an internal source module, `Capability modules` may expose that module for observability, for example `design → Anthropic frontend-design`. Internal source modules do not become peer top-level Skills.
 

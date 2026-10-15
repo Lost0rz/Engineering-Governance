@@ -1,126 +1,128 @@
-# CURRENT TASK — Design Multi-Module Closed Loop
+# CURRENT TASK — Design Routing Hardening
 
 Date: 2026-10-15
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-DESIGN-MULTI-MODULE-CLOSED-LOOP-082`
+Task ID: `EG-DESIGN-ROUTING-HARDENING-083`
 
-Task class: `CAPABILITY_EXTENSION`
+Task class: `CAPABILITY_HARDENING`
 
-State: `COMPLETE`
+State: `ACTIVE`
 
 ## Objective
 
-Extend the stable routed `design` capability from the Anthropic-only baseline into one coherent internal design pipeline that uses project context first and then applies specialized internal modules without exposing them as peer top-level Skills.
+Harden the published `design` capability so it remains the primary owner of bounded UI/UX/frontend design work without becoming artificially isolated from other Engineering Governance capabilities.
 
-Published sequence for qualifying UI/UX/frontend design or redesign work:
+The target behavior is **evidence-triggered composition**:
 
-`project/profile context intake → actual interface audit → Anthropic design reasoning → admin pattern composition when applicable → DESIGN.md visual-system synthesis → implementation/prototype → Microsoft final design review → corrective pass/re-review → rendered visual acceptance when supported`.
+- stay inside Design by default;
+- cross a Skill boundary only for a concrete unresolved dependency that materially affects the Design decision;
+- state the question and expected bounded return before crossing;
+- use the smallest capability that owns that dependency;
+- return the bounded result to Design and resume from the suspended Design stage rather than restarting the whole pipeline.
 
-## Completed behavior
+## Required routing behavior
 
-### Project context intake
+### Design vs Solution Design discriminator
 
-- Available Project Profile / Project Instructions are consumed as compact derived context for product purpose, audience, constraints and authority pointers.
-- The Profile remains derived context, not canonical authority.
-- Only project-specific authorities materially needed by the bounded design problem are verified.
-- Reading an existing Profile does not itself route through `project-profile`.
-- Design does not cross unrelated Skills merely to reacquire already-known context.
+- `design` owns interaction workflow: how users understand, navigate, edit, review, act, receive feedback and complete a frontend task.
+- `solution-design` owns business/state workflow when material ambiguity exists: canonical state transitions, data/state ownership, API/data-flow responsibility, persistence semantics and implementation boundaries.
+- A mixed problem may use both, but only when both material problems actually exist. Resolve a blocking business/state prerequisite before continuing the affected Design decision.
 
-### Anthropic reasoning layer
+### Evidence-triggered cross-Skill composition
 
-- Accepted Anthropic `frontend-design` source identity/provenance/license is preserved.
-- Anthropic owns subject grounding, visual direction, hierarchy, typography/composition, anti-template reasoning and pre-build critique.
+A cross-Skill call from Design is valid only when it has all of:
 
-### Admin pattern layer
+1. `UNRESOLVED_DEPENDENCY` — a specific question Design cannot safely answer from current reliable context;
+2. `DESIGN_IMPACT` — why the answer can materially change the current Design decision;
+3. `CAPABILITY` — the smallest Skill that owns the missing answer;
+4. `EXPECTED_RETURN` — the bounded result needed back;
+5. `RESUME_STAGE` — where Design continues after the capability returns.
 
-- A curated `satnaing/shadcn-admin`-informed admin pattern module is active behind `design`.
-- It applies conditionally to admin/back-office/productivity surfaces.
-- It does not make Shadcn styling project authority and is not forced onto storefront/landing/marketing surfaces.
+Examples:
 
-### DESIGN.md synthesis layer
+- use `domain-navigation` when relevant backend/product authority, source, symbol, state owner, runtime entry or test route is not reliably identifiable;
+- use `solution-design` when the route is known but material business/state/API ownership semantics remain unresolved;
+- use `agent-handoff` when a bounded transfer must cross agent/session/machine/context;
+- use `evidence-audit` only when a separate formal acceptance/readiness verdict is actually requested;
+- use `execution-orchestrator` only when decomposition/delegation materially improves execution;
+- use `incident-doctor` only when a blocking evidence gap prevents a safe next action.
 
-- A curated `VoltAgent/awesome-design-md`-informed visual-system synthesis module is active behind `design`.
-- It produces bounded implementation-ready design guidance covering visual character, semantic color roles, typography, layout/spacing, component/state treatment, surfaces/elevation, responsive behavior, Do/Don't rules and implementation mapping as applicable.
-- Existing project design-system/brand authority wins.
-- External brand DESIGN.md examples remain optional reference/inspiration, not authority or cloning instructions.
-- Durable project `DESIGN.md` is created/updated only when project-wide design authority is explicitly in scope; bounded task-level specification remains the default.
+Do not invoke another Skill for general enrichment, completeness, a second opinion, or merely because it is installed.
 
-### Microsoft final review layer
+## Design execution modes
 
-- Microsoft `frontend-design-review` is active as the final internal Design review module.
-- Review covers design-system/project-authority compliance, frictionless insight-to-action, quality craft, trustworthy building, accessibility/responsive evidence and severity-prioritized findings.
-- Creative Frontend Design mode is intentionally not rerun as a competing downstream aesthetic direction.
-- `Blocking / Major / Minor` severity is used.
-- Open Blocking/Major findings require a bounded corrective pass and re-review before Design completion.
-- Missing Figma/Storybook/token/render evidence may not be fabricated.
+Add an explicit internal mode so not every Design request is forced through a full implementation pipeline:
 
-## Routing boundary
+- `AUDIT_ONLY` — context + actual interface audit + design findings; no implementation unless separately authorized/requested;
+- `DESIGN_SPEC` — audit + Anthropic + conditional admin pattern + bounded design-spec synthesis + pre-build gate; stop before implementation;
+- `DESIGN_IMPLEMENT` — full design-to-implementation closed loop;
+- `FINAL_REVIEW` — review an existing concrete implementation/prototype without reopening the upstream design direction unless a material defect requires bounded correction.
 
-- External route remains the single top-level `design` Skill.
-- No top-level Skills were created for Anthropic, shadcn-admin, awesome-design-md or Microsoft.
-- Project Governance remains task/lifecycle authority.
-- Design owns its internal module sequence and visual acceptance loop.
-- `project-profile`, `domain-navigation`, `solution-design`, `evidence-audit`, and `execution-orchestrator` are not automatic stages; they remain separately triggered capabilities.
+## Full implementation sequence
 
-## Source / provenance
+For `DESIGN_IMPLEMENT` when rendered evidence is supported:
 
-Published source/license boundaries:
+`project/profile context intake → actual interface audit → Anthropic reasoning → admin patterns when applicable → bounded design-spec synthesis → pre-build gate → implementation/prototype → rendered evidence capture → Microsoft final review → corrective pass → re-render → Microsoft re-review as needed → final visual acceptance`.
 
-- `anthropics/skills` frontend-design — existing bundled Apache-2.0 source;
-- `satnaing/shadcn-admin` — MIT-informed compact adaptation;
-- `VoltAgent/awesome-design-md` — MIT-informed compact adaptation;
-- `microsoft/skills` frontend-design-review — MIT-informed compact adaptation.
+If rendered evidence is unavailable, Microsoft review must state the evidence limit rather than fabricate it.
 
-The whole upstream repositories were not vendored. Local provenance/license records are retained adjacent to the adapted modules.
+## Preserve
 
-## Acceptance and release evidence
+- exactly nine top-level Skills;
+- the single external `design` route;
+- Anthropic / shadcn-admin / awesome-design-md / Microsoft as internal Design modules;
+- Project Profile as derived context, not authority;
+- Project Governance as task/lifecycle owner;
+- existing source provenance/license boundaries;
+- release payload `plugin.json + skills/**` only;
+- existing receipt and handoff contracts.
 
-- source PR: `#31 — feat: complete multi-module Design closed loop` — `MERGED`;
-- start main HEAD: `366989b63e3c12707b3535eff89d306bf21b48c8`;
-- pre-merge semantic candidate: `8ced8f3ddc455da1228887867c94e5c8c2f01cda`;
-- pre-merge workflow: `Release Plugin v0.7.0` run `38655255661` — `PASS`;
-- merge / released semantic source SHA: `8284f0f138427dd329cd50983046baf78ec110ce`;
-- main release workflow: `Release Plugin v0.7.0` run `38655371941` / run #6 — `PASS`;
-- GitHub tag: `plugin-v0.7.0`;
-- GitHub Release ID: `413275429`;
-- asset: `engineering-governance-plugin.zip`;
-- asset size: `130963` bytes;
-- asset SHA-256: `7cd695bc8b7f8302de06a8b36c1e5f5d8afabb8b874416a40ca42b6481fcf06b`;
-- package entries: `61`;
-- package scope: `plugin.json + skills/**` only;
-- top-level Skills: exactly `9`.
+## Acceptance
 
-## Web Plugin synchronization
+The change is complete only when:
 
-Existing Web Plugin updated in place:
+- routing contracts use evidence-triggered composition instead of hard anti-cross-Skill wording;
+- Design/Solution Design workflow ownership is explicitly discriminated;
+- all four Design modes have clear stop/continue behavior;
+- cross-Skill calls carry question/impact/capability/expected-return/resume-stage;
+- Domain Navigation remains a legitimate Design dependency when the relevant backend/product route is genuinely unclear;
+- return-to-Design behavior is explicit and does not restart the whole pipeline unnecessarily;
+- rendered evidence is available to Microsoft final review when the environment supports it;
+- final visual acceptance remains the terminal Design gate;
+- v0.7.1 acceptance/regression checks pass;
+- source is merged/released and the existing private Web Plugin is updated/read back in place.
 
-- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.7.0`;
-- Web release ID: `pluginrel_6ad01392fbec81919fb25c380af12954`;
-- scope/discoverability: `USER / PRIVATE` — unchanged;
-- root/platform manifests: `0.7.0` read back;
-- Design closed-loop source, all three new adapted modules/provenance records and Project Profile → Design routing rule: read back.
+## Current progress
 
-`WEB_PLUGIN_SYNC_070`: `PASS`.
+Source implementation and pre-merge self-review are complete.
 
-## Local distribution note
+- PR: `#32 — feat: harden Design routing composition` — Draft;
+- accepted semantic candidate HEAD: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`;
+- PR workflow: `Release Plugin v0.7.1`;
+- successful PR run: `38658235439` / run #2;
+- verification: `Verify release source` PASS;
+- payload construction: `Build exact Plugin payload` PASS;
+- release publication step: skipped on PR as intended;
+- earlier run `38658175876` failed only on an overly strict wording assertion (`resume at the declared stage`) and was corrected before the accepted semantic candidate.
 
-Last directly observed Local Codex runtime remains `0.6.8`. Task 082 does not claim local refresh to `0.7.0` without a fresh local runtime readback.
+`V071_PREMERGE_ACCEPTANCE`: `PASS`.
 
-`LOCAL_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
+Release and Web Plugin synchronization remain pending until merge/main release succeeds.
 
 ## Control Alignment
 
-- `PREDECESSOR_TASK`: `EG-DESIGN-ANTHROPIC-CLOSED-LOOP-081` (`COMPLETE`)
-- `TASK_BRANCH`: `codex/design-multi-module-closed-loop-v070`
-- `PR`: `#31` (`MERGED`)
-- `TARGET_VERSION`: `0.7.0`
-- `TOP_LEVEL_SKILLS`: `9`
+- `PREDECESSOR_TASK`: `EG-DESIGN-MULTI-MODULE-CLOSED-LOOP-082` (`COMPLETE`)
+- `START_MAIN_HEAD`: `06301c8ff5c074ea16e26a4e01a0755d52d43e24`
+- `TASK_BRANCH`: `codex/design-routing-hardening-v071`
+- `PR`: `#32` (`DRAFT / UNMERGED`)
+- `TARGET_VERSION`: `0.7.1`
+- `TOP_LEVEL_SKILLS_TARGET`: `9`
 - `DESIGN_EXTERNAL_ROUTE`: `design`
+- `PREMERGE_SEMANTIC_HEAD`: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`
+- `PREMERGE_CI_RUN`: `38658235439`
 - `PREMERGE_CI`: `PASS`
-- `FORMAL_RELEASE_070`: `PASS`
-- `WEB_PLUGIN_SYNC_070`: `PASS`
-- `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`
-- `TASK_STATE`: `COMPLETE`
+- `FORMAL_RELEASE_071`: `PENDING`
+- `WEB_PLUGIN_SYNC_071`: `PENDING`
+- `TASK_STATE`: `ACTIVE`
