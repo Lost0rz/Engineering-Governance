@@ -8,7 +8,7 @@ Task ID: `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084`
 
 Task class: `CAPABILITY_HARDENING`
 
-State: `ACTIVE`
+State: `ACTIVE — SOURCE_READY_FOR_LOCAL_TRIAL`
 
 ## Objective
 
@@ -81,7 +81,7 @@ Never report an effective model/reasoning value solely because configuration sug
 
 ### Receipt observability
 
-Governed execution receipts must report Sub Agent usage when execution occurred:
+Governed execution and cross-context EXECUTE receipts report Sub Agent usage when execution occurred:
 
 ```text
 Execution topology:
@@ -105,18 +105,30 @@ Before any release/Web synchronization claim for this task, test Local Codex run
 
 Repository policy alone does not establish runtime PASS.
 
-## Scope
+## Source implementation result
 
-Primary source changes:
+Source hardening is complete enough for Local trial:
 
-- `skills/execution-orchestrator/SKILL.md`;
-- `skills/execution-orchestrator/references/execution-contract.md`;
-- `skills/execution-orchestrator/references/environment-capabilities.md`;
-- new bounded Sub Agent execution reference;
-- `skills/project-governance/references/planning-documents.md`;
-- `skills/project-governance/SKILL.md` receipt contract;
-- integrated acceptance reference for the new local execution behavior;
-- manifests/version only as needed for a testable v0.7.2 candidate.
+- `execution-orchestrator` now has an explicit Sub Agent value gate;
+- execution roles are `EXPLORER / WORKER / VERIFIER / REVIEWER`;
+- planning exposes candidate work-package/dependency/writer structure without selecting runtime topology;
+- configured model/reasoning and observed effective runtime identity are separated;
+- nested delegation is disabled by default;
+- Project Governance compact receipts expose execution topology, Sub Agent use and runtime identity evidence;
+- cross-context EXECUTE Handoff Receipts preserve the same execution evidence;
+- `references/V072_LOCAL_EXECUTION_SUBAGENT_ACCEPTANCE.md` defines source and Local runtime acceptance;
+- Plugin manifest on the candidate branch is `0.7.2`;
+- v0.7.1 release workflow is archived and the v0.7.2 candidate workflow performs validation/build only, with no publication step.
+
+Candidate validation:
+
+- Draft PR: `#33 — feat: harden local execution and Sub Agent orchestration`;
+- semantic candidate HEAD: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
+- workflow: `Validate Plugin v0.7.2 Candidate`;
+- run: `38662974492`;
+- result: `success`.
+
+`V072_SOURCE_READY_FOR_LOCAL_TRIAL`: `PASS`.
 
 ## Explicit boundaries
 
@@ -125,28 +137,31 @@ Primary source changes:
 - do not hardcode one Local machine's model/capacity into reusable policy;
 - do not force Sub Agent use for ordinary small tasks;
 - do not update the private Web Plugin in this task phase;
+- do not merge/release merely from source validation;
 - do not claim Local runtime acceptance until a real local test/readback is performed.
 
-## Acceptance
+## Next acceptance boundary
 
-Source hardening is ready for local trial when:
+Run Task 084 against Local Codex using the exact candidate/source identity and capture:
 
-- planning and execution responsibilities are separated;
-- the Sub Agent value gate is explicit;
-- the four execution roles and writer safety are explicit;
-- topology choice is efficiency-first rather than agent-count-first;
-- configured vs effective model/reasoning evidence is distinguished;
-- execution receipts expose topology/Sub Agent/runtime information;
-- acceptance scenarios cover positive and negative delegation cases;
-- source consistency checks pass;
-- Web Plugin remains unchanged.
+1. installed/candidate identity;
+2. local Sub Agent configuration source;
+3. an `INLINE / Subagents: NO` negative case;
+4. a useful delegated read-only case;
+5. writer-safety behavior;
+6. effective model/reasoning evidence where exposed, otherwise explicit `UNKNOWN`;
+7. final receipt shape.
 
 ## Control Alignment
 
 - `PREDECESSOR_TASK`: `EG-DESIGN-ROUTING-HARDENING-083` (`COMPLETE`)
 - `START_MAIN_HEAD`: `0a2febb5cc294609d5ebfe54a4e84da1216de2dd`
 - `TASK_BRANCH`: `codex/local-execution-subagent-hardening-v072`
+- `PR`: `#33` (`DRAFT / UNMERGED`)
 - `TARGET_VERSION`: `0.7.2-candidate`
+- `SEMANTIC_CANDIDATE_HEAD`: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`
+- `SOURCE_VALIDATION_RUN`: `38662974492`
+- `SOURCE_VALIDATION`: `PASS`
 - `WEB_PLUGIN_UPDATE`: `NOT_AUTHORIZED_THIS_PHASE`
 - `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING`
-- `TASK_STATE`: `ACTIVE`
+- `TASK_STATE`: `ACTIVE — SOURCE_READY_FOR_LOCAL_TRIAL`
