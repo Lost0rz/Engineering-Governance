@@ -63,6 +63,8 @@ AUDIT_INDEPENDENCE
 
 Do not omit required core fields. Do not duplicate the full objective/scope/acceptance/STOP/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
 
+When an EXECUTE handoff may materially benefit from orchestration, the Card may point the receiver to `execution-orchestrator`; it must not predeclare that Sub Agents are required. The receiving environment decides through its execution value gate.
+
 ## Card generation rules
 
 Before returning a generated Card, check and correct all of the following in the same pass:
@@ -84,6 +86,8 @@ A Card that knowingly fails one of these checks is not returned with a warning; 
 ### EXECUTE
 
 Focus on mutation target, fresh delta, allowed mutation boundary, transfer-specific STOP and return evidence. Use `PURPOSE: DIAGNOSTIC_PROBE` or `PURPOSE: TEST_IMPLEMENTATION` when those state changes are specifically authorized.
+
+When execution topology is material, the return contract may request the **observed** execution topology, whether Sub Agents were actually used, their bounded roles/count, and observable effective runtime model/reasoning evidence. It must not require delegation merely to satisfy the receipt.
 
 ### AUDIT / REVIEW
 
@@ -111,6 +115,8 @@ Read-only diagnostic question/evidence/hypothesis transfer. State-changing probe
 
 Runtime/model/tool/capacity values belong to the receiving environment unless an accepted portable project artifact owns them. Sender observations never become receiver defaults merely through the Card.
 
+Configured/default model values and observed effective runtime identity are separate evidence classes. If the receiver cannot observe the effective Sub Agent model/reasoning, it returns `UNKNOWN` rather than promoting configuration into runtime evidence.
+
 ## Standard receipt core
 
 Every structured handoff receipt starts with:
@@ -134,12 +140,17 @@ Then add only mode-relevant evidence.
 START_IDENTITY
 FINAL_IDENTITY
 CHANGED_PATHS
+EXECUTION_TOPOLOGY          # when materially decided/executed
+SUBAGENTS                   # NO, or YES + bounded role/count summary
+SUBAGENT_RUNTIME            # when SUBAGENTS=YES: observed effective identity, configured-vs-effective caveat, or UNKNOWN
 VERIFICATION
 LIFECYCLE
 UNRESOLVED
 CONTROL_ALIGNMENT
 NEXT_SAFE_ACTION
 ```
+
+`EXECUTION_TOPOLOGY` / `SUBAGENTS` / `SUBAGENT_RUNTIME` are execution evidence, not authorization. Do not fabricate them and do not spawn Sub Agents solely so these fields are non-empty.
 
 ### AUDIT / REVIEW
 
