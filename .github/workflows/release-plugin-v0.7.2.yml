@@ -59,10 +59,13 @@ jobs:
           ):
               assert token in orchestrator, token
 
+          execution_contract = Path('skills/execution-orchestrator/references/execution-contract.md').read_text()
+          assert 'SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY' in execution_contract
+          assert 'SUBAGENT_REDELEGATION: DISABLED_BY_DEFAULT' in execution_contract
+
           subagent = Path('skills/execution-orchestrator/references/subagent-execution.md')
           assert subagent.is_file(), subagent
           subagent_text = subagent.read_text()
-          assert 'SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY' in subagent_text
           assert 'MODEL_EFFECTIVE' in subagent_text
           assert 'REASONING_EFFECTIVE' in subagent_text
 
