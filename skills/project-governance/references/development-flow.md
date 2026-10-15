@@ -63,7 +63,7 @@ Use `execution-orchestrator` when the authorized task benefits from decompositio
 
 Do not treat minimum agent count as the goal. If independent work units can safely run concurrently and concurrency materially improves throughput or context isolation, use available parallel capacity. Parallel readers/researchers/reviewers are often cheap to separate; parallel writers still require proven-disjoint semantic authority/workspaces plus an integration boundary.
 
-During the current v0.6.0 stabilization period, delegated Sub Agents follow `ENVIRONMENT_DEFAULT_ONLY`. Each delegated execution context resolves its own authoritative Sub Agent configuration/runtime default. Do not propagate concrete model/reasoning values from another context or infer an unobservable platform default. Do not switch a delegated unit to a stronger model merely because the work becomes harder; return a capability/environment gap to the controller if the current environment default is insufficient.
+Delegated Sub Agents follow `ENVIRONMENT_DEFAULT_ONLY`. Each delegated execution context resolves its own authoritative Sub Agent configuration/runtime default. Do not propagate concrete model/reasoning values from another context or infer an unobservable platform default. Do not switch a delegated unit to a stronger model merely because the work becomes harder; return a capability/environment gap to the controller if the current environment default is insufficient.
 
 One inline executor remains correct when decomposition provides no material benefit or dependencies/shared state make concurrency inefficient or unsafe.
 
@@ -89,13 +89,30 @@ During a multi-part architecture/framework build, the active task may explicitly
 
 Universal mandatory TDD is not required. Regression-first/TDD is appropriate where behavior risk, regression history, contract changes or task requirements justify it.
 
-## 11. Diagnose only when a blocking evidence gap exists
+## 11. Publish repository-backed work when applicable
+
+For state-changing work that produced or advanced Git commits, apply [Remote repository delivery](remote-delivery.md) before reporting successful repository delivery.
+
+A local commit, clean working tree, or local branch SHA proves only local state.
+
+Classify the delivery boundary:
+
+- applicable configured remote + not explicitly local-only -> push the already-authorized task/project ref and verify the fresh remote ref contains the delivered commit before reporting full repository completion;
+- no applicable configured remote -> `REMOTE_DELIVERY: NOT_APPLICABLE_NO_REMOTE`;
+- accepted project/task authority explicitly requires local-only work -> `REMOTE_DELIVERY: NOT_REQUIRED_LOCAL_ONLY`;
+- applicable remote but push/verification cannot complete -> preserve local work and report `PENDING` or `FAILED`; do not claim remotely available completion.
+
+This rule does not authorize a new remote, force-push, credential bypass, branch substitution, or an implicit push to `main`. If the correct remote/ref is ambiguous, remote delivery remains unresolved.
+
+Remote availability is also not merge/CI/release evidence. Repository-host gates remain separate.
+
+## 12. Diagnose only when a blocking evidence gap exists
 
 If a real failure/unexplained unsafe ambiguity blocks progress and current evidence cannot answer the next safe decision, enter `incident-doctor`. If existing evidence already supports the fix, stay in the current authorized delivery flow.
 
 Doctor may use Domain Navigation to locate evidence, then resumes diagnosis. If the supported fix is outside authorization, return to Project Governance before mutation.
 
-## 12. Obtain an independent evidence verdict when needed
+## 13. Obtain an independent evidence verdict when needed
 
 Use `evidence-audit` when a distinct implementation/code/PR/CI/release/merge-readiness verdict is required. Bind the audit to the exact target/range/identity and evidence freshness before saying PASS.
 
@@ -103,15 +120,15 @@ Calling Evidence Audit from the implementation context does not by itself establ
 
 Audit/reviewer findings do not authorize fixes. Corrective mutation returns to Project Governance/task authorization. Read-only audit may report stale controls but must not change them solely to make the audit clean.
 
-## 13. Merge/release host boundary
+## 14. Merge/release host boundary
 
 At a merge/release decision, keep semantic implementation evidence separate from live repository-host gates. Reuse semantic evidence across proven `CONTROL_ONLY_DRIFT` only when semantic equivalence and task conditions permit it. Re-read current required checks/reviews/conflicts/mergeability/merge queue/current-base/latest-head rules for the literal identity the host governs.
 
-## 14. Reconcile controls and close out
+## 15. Reconcile controls and close out
 
 Before a final successful governed state-changing handoff, run the mandatory Control Alignment Gate:
 
-1. obtain fresh outcome/lifecycle evidence;
+1. obtain fresh outcome/lifecycle evidence, including the applicable remote-delivery state for repository-backed commits;
 2. reread current `CURRENT_STATUS.md` and `CURRENT_TASK.md`;
 3. reread the linked durable planning/design authority when the outcome could have changed its owned semantics;
 4. update only sources whose owned semantics are materially stale;
@@ -119,7 +136,7 @@ Before a final successful governed state-changing handoff, run the mandatory Con
 
 The check is mandatory; writes are conditional.
 
-If task workspaces exist, separately reconcile physical workspace/branch disposition under `workspace-lifecycle.md`. A merge event does not by itself prove local closeout.
+If task workspaces exist, separately reconcile physical workspace/branch disposition under `workspace-lifecycle.md`. A merge event does not by itself prove local closeout. Likewise, local workspace cleanup does not convert an unpushed required deliverable into remote delivery.
 
 ## Cross-skill composition
 

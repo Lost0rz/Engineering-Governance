@@ -1,0 +1,105 @@
+name: Validate Plugin v0.7.3 Candidate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - plugin.json
+      - skills/project-governance/**
+      - skills/agent-handoff/**
+      - references/V074_REMOTE_DELIVERY_ACCEPTANCE.md
+      - .github/workflows/validate-plugin-v0.7.3.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Verify v0.7.3 remote delivery contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path('plugin.json').read_text())
+          assert manifest['name'] == 'engineering-governance'
+          assert manifest['version'] == '0.7.3'
+
+          expected = {
+              'project-governance',
+              'project-profile',
+              'solution-design',
+              'design',
+              'execution-orchestrator',
+              'agent-handoff',
+              'evidence-audit',
+              'domain-navigation',
+              'incident-doctor',
+          }
+          actual = {p.name for p in Path('skills').iterdir() if p.is_dir()}
+          assert actual == expected, (actual, expected)
+
+          governance = Path('skills/project-governance/SKILL.md').read_text()
+          flow = Path('skills/project-governance/references/development-flow.md').read_text()
+          remote = Path('skills/project-governance/references/remote-delivery.md').read_text()
+          handoff = Path('skills/agent-handoff/references/handoff-contract.md').read_text()
+          acceptance = Path('references/V074_REMOTE_DELIVERY_ACCEPTANCE.md').read_text()
+
+          required = (
+              'PUSHED_VERIFIED',
+              'NOT_APPLICABLE_NO_REMOTE',
+              'NOT_REQUIRED_LOCAL_ONLY',
+              'REMOTE_DELIVERY',
+              'REMOTE_REF',
+              'REMOTE_COMMIT',
+          )
+          for marker in required:
+              assert marker in remote or marker in governance or marker in handoff or marker in acceptance, marker
+
+          assert 'A local Git commit proves local source state' in remote
+          assert 'Do not create a remote merely because none exists' in remote
+          assert 'force-push' in remote
+          assert 'push only the already-authorized task/project ref' in governance
+          assert 'A local commit, clean working tree, or local branch SHA proves only local state.' in flow
+          assert 'Remote delivery:' in governance
+          assert 'REMOTE_DELIVERY_REPORTED_IF_APPLICABLE: YES' in governance
+          assert 'LOCAL_COMMIT' in handoff
+          assert 'remote-delivery success' in handoff
+          assert 'failure to push or verify remote delivery prevents a full `COMPLETE`' in acceptance
+          PY
+
+      - name: Build exact plugin payload candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          mkdir -p dist/plugin
+          cp plugin.json dist/plugin/plugin.json
+          cp -R skills dist/plugin/skills
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          root = Path('dist/plugin')
+          out = Path('dist/engineering-governance-plugin-v0.7.3-candidate.zip')
+          files = [p for p in root.rglob('*') if p.is_file()]
+          with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED) as z:
+              for path in sorted(files):
+                  z.write(path, path.relative_to(root))
+
+          with zipfile.ZipFile(out) as z:
+              names = z.namelist()
+              assert 'plugin.json' in names
+              assert all(name == 'plugin.json' or name.startswith('skills/') for name in names)
+              assert 'skills/project-governance/references/remote-delivery.md' in names
+          print(out)
+          PY

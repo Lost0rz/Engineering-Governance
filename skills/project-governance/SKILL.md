@@ -1,11 +1,11 @@
 ---
 name: project-governance
-description: Use as the normal Engineering Governance entry for software/project/repository engineering work, especially task/control authority, continuation/scope reconciliation, proportional verification, workspace/writer lifecycle, cross-repository coordination, final alignment, and closeout.
+description: Use as the normal Engineering Governance entry for software/project/repository engineering work, especially task/control authority, continuation/scope reconciliation, proportional verification, remote repository delivery, workspace/writer lifecycle, cross-repository coordination, final alignment, and closeout.
 ---
 
 # Project Governance
 
-Use this Skill as the normal engineering entry. It owns task/control authority, lifecycle, writer/workspace boundaries, proportional verification, and closeout. Keep clear work lightweight.
+Use this Skill as the normal engineering entry. It owns task/control authority, lifecycle, writer/workspace boundaries, proportional verification, repository delivery, and closeout. Keep clear work lightweight.
 
 ## Capability routing
 
@@ -72,8 +72,9 @@ This is not a new task and does not create new authority. Preserve the current `
 7. For materially decomposable execution, route to `execution-orchestrator`. Sub Agent use is efficiency-driven, not mandatory: plans may expose work-package/dependency/writer structure, while the current execution environment decides inline vs delegated topology through the Sub Agent value gate.
 8. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
 9. Implement the smallest authorized outcome and choose risk-proportional verification.
-10. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
-11. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
+10. If state-changing work produced or advanced Git commits, apply `references/remote-delivery.md` before claiming successful repository delivery. A local commit SHA is not remote-delivery evidence. When an applicable configured remote exists and the work is not explicitly local-only, push only the already-authorized task/project ref and verify the remote ref contains the delivered commit. No applicable remote is `NOT_APPLICABLE_NO_REMOTE`; explicit local-only authority is `NOT_REQUIRED_LOCAL_ONLY`; applicable push/verification failure keeps remote delivery incomplete and must not be reported as full completion.
+11. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
+12. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
 
 Repository/project-managed Project Profile mutation is state-changing and therefore requires compatible task authorization. The Profile Skill may still be used read-only to draft/audit profile content.
 
@@ -103,6 +104,7 @@ Subagents:            # required for governed execution: NO or YES + bounded rol
 Subagent runtime:     # when Subagents=YES; observed effective model/reasoning, configured-vs-effective caveat, or UNKNOWN
 Outcome:
 Changes:
+Remote delivery:      # required for repository-backed state-changing work that produced/advanced commits
 Control alignment:
 PR / workspace:
 Next:
@@ -120,9 +122,10 @@ For execution responses:
 - `Subagents: NO` is expected when delegation did not create material value;
 - when Sub Agents were used, report role/count compactly, for example `YES — explorer ×2, worker ×1, verifier ×1`;
 - `Subagent runtime` must distinguish observed effective identity from configuration. Never report a configured model/reasoning value as effective unless runtime evidence supports it;
-- if effective model/reasoning is not exposed, say `UNKNOWN` or `configured <value>; effective runtime identity UNKNOWN`.
+- if effective model/reasoning is not exposed, say `UNKNOWN` or `configured <value>; effective runtime identity UNKNOWN`;
+- `Remote delivery` distinguishes local commit state from remote availability. When applicable, report `PUSHED_VERIFIED`, `NOT_APPLICABLE_NO_REMOTE`, `NOT_REQUIRED_LOCAL_ONLY`, `PENDING`, or `FAILED`, plus remote ref/commit detail when material. Never infer remote delivery merely from `git commit`, a clean working tree, or a local branch SHA.
 
-The receipt is observational, not a reason to spawn Sub Agents.
+The receipt is observational, not a reason to spawn Sub Agents or create a remote.
 
 Keep the receipt status-oriented and do not copy task scope/history. If the response already contains a detailed machine/context Handoff Receipt, do not duplicate that full receipt; provide only the compact human summary needed for the user-facing response.
 
@@ -138,6 +141,8 @@ ROUTE_AND_SKILLS_CONSISTENT: YES
 EXECUTION_TOPOLOGY_REPORTED_IF_APPLICABLE: YES
 SUBAGENT_USAGE_REPORTED_IF_APPLICABLE: YES
 SUBAGENT_RUNTIME_NOT_INVENTED: YES
+REMOTE_DELIVERY_REPORTED_IF_APPLICABLE: YES
+REMOTE_DELIVERY_NOT_INFERRED_FROM_LOCAL_COMMIT: YES
 LEGACY_RECEIPT_REPLACED: YES
 ```
 
@@ -151,6 +156,7 @@ Read only what the current decision needs:
 - `references/artifact-lifecycle.md` — authority/projection refresh lifecycle;
 - `references/control-identity.md` — HEAD/provenance/control-only drift;
 - `references/development-flow.md` — full governed flow;
+- `references/remote-delivery.md` — local commit vs remote repository delivery gate;
 - `references/code-structure.md` — canonical writer/authority;
 - `references/workspace-lifecycle.md` — workspace/branch closeout;
 - `references/verification-tiers.md` — proportional verification;

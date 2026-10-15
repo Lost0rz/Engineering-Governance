@@ -65,6 +65,8 @@ Do not omit required core fields. Do not duplicate the full objective/scope/acce
 
 When an EXECUTE handoff may materially benefit from orchestration, the Card may point the receiver to `execution-orchestrator`; it must not predeclare that Sub Agents are required. The receiving environment decides through its execution value gate.
 
+Repository publication follows Project Governance remote-delivery authority. A Handoff Card may request the receiver to perform the already-authorized repository push/verification boundary, but it cannot invent a remote, grant force-push, choose `main`, or create publication authority absent from the owning task/project.
+
 ## Card generation rules
 
 Before returning a generated Card, check and correct all of the following in the same pass:
@@ -75,9 +77,9 @@ Before returning a generated Card, check and correct all of the following in the
 4. **Task identity** — preserve the current `TASK_ID` for the same engineering purpose. Context changes alone do not create tasks.
 5. **Authority compression** — `AUTHORITY` points to the current task/rules/design sources; do not re-copy the entire task contract.
 6. **Fresh delta** — `DELTA` contains only transfer-specific facts/instructions that are not recoverable by rereading those authorities.
-7. **Boundary** — the Card cannot grant writes, scope, side effects, or repository authority beyond the owning task.
+7. **Boundary** — the Card cannot grant writes, scope, side effects, remote publication, or repository authority beyond the owning task.
 8. **Identity semantics** — sender-observed commits/refs belong in `OBSERVED_BASIS` by default. Promote an identity to `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or an equivalent lock only when an owning authority explicitly defines that lock and the Card is merely referencing it.
-9. **Outcome-neutral return** — `RETURN_CONTRACT` requests actual evidence/outcome. Do not predeclare `FINAL_STATE: READY`, `PASS`, merge/release completion, or another success that the receiver has not observed.
+9. **Outcome-neutral return** — `RETURN_CONTRACT` requests actual evidence/outcome. Do not predeclare `FINAL_STATE: READY`, `PASS`, merge/release completion, remote-delivery success, or another success that the receiver has not observed.
 
 A Card that knowingly fails one of these checks is not returned with a warning; revise it until compliant or return to Project Governance when the owning authority itself is ambiguous/conflicting.
 
@@ -88,6 +90,8 @@ A Card that knowingly fails one of these checks is not returned with a warning; 
 Focus on mutation target, fresh delta, allowed mutation boundary, transfer-specific STOP and return evidence. Use `PURPOSE: DIAGNOSTIC_PROBE` or `PURPOSE: TEST_IMPLEMENTATION` when those state changes are specifically authorized.
 
 When execution topology is material, the return contract may request the **observed** execution topology, whether Sub Agents were actually used, their bounded roles/count, and observable effective runtime model/reasoning evidence. It must not require delegation merely to satisfy the receipt.
+
+For repository-backed state-changing work that produces or advances commits, the return contract should also request the applicable Project Governance remote-delivery evidence. Local commit identity and remote delivery are separate claims.
 
 ### AUDIT / REVIEW
 
@@ -140,15 +144,21 @@ Then add only mode-relevant evidence.
 START_IDENTITY
 FINAL_IDENTITY
 CHANGED_PATHS
-EXECUTION_TOPOLOGY          # when materially decided/executed
-SUBAGENTS                   # NO, or YES + bounded role/count summary
-SUBAGENT_RUNTIME            # when SUBAGENTS=YES: observed effective identity, configured-vs-effective caveat, or UNKNOWN
+LOCAL_COMMIT                 # when repository-backed mutation produced/advanced a commit
+REMOTE_DELIVERY              # PUSHED_VERIFIED | NOT_APPLICABLE_NO_REMOTE | NOT_REQUIRED_LOCAL_ONLY | PENDING | FAILED, when applicable
+REMOTE_REF                   # remote/ref | NONE | UNKNOWN, when remote delivery is material
+REMOTE_COMMIT                # sha | NONE | UNKNOWN, when remote delivery is material
+EXECUTION_TOPOLOGY           # when materially decided/executed
+SUBAGENTS                    # NO, or YES + bounded role/count summary
+SUBAGENT_RUNTIME             # when SUBAGENTS=YES: observed effective identity, configured-vs-effective caveat, or UNKNOWN
 VERIFICATION
 LIFECYCLE
 UNRESOLVED
 CONTROL_ALIGNMENT
 NEXT_SAFE_ACTION
 ```
+
+A local `FINAL_IDENTITY`/`LOCAL_COMMIT` does not imply `REMOTE_DELIVERY: PUSHED_VERIFIED`. When remote publication is applicable but push or readback fails, preserve the local identity and return a pending/failed remote-delivery result rather than a full remotely delivered success.
 
 `EXECUTION_TOPOLOGY` / `SUBAGENTS` / `SUBAGENT_RUNTIME` are execution evidence, not authorization. Do not fabricate them and do not spawn Sub Agents solely so these fields are non-empty.
 
