@@ -8,121 +8,107 @@ Task ID: `EG-DESIGN-ROUTING-HARDENING-083`
 
 Task class: `CAPABILITY_HARDENING`
 
-State: `ACTIVE`
+State: `COMPLETE`
 
 ## Objective
 
 Harden the published `design` capability so it remains the primary owner of bounded UI/UX/frontend design work without becoming artificially isolated from other Engineering Governance capabilities.
 
-The target behavior is **evidence-triggered composition**:
+The published behavior is **evidence-triggered composition**:
 
 - stay inside Design by default;
-- cross a Skill boundary only for a concrete unresolved dependency that materially affects the Design decision;
-- state the question and expected bounded return before crossing;
-- use the smallest capability that owns that dependency;
-- return the bounded result to Design and resume from the suspended Design stage rather than restarting the whole pipeline.
+- cross a Skill boundary only for a concrete unresolved dependency that materially affects the current decision;
+- state the missing question and bounded expected return before crossing;
+- use the smallest capability that owns the dependency;
+- return the bounded result to the originating Design stage rather than restarting the whole pipeline.
 
-## Required routing behavior
+## Published routing behavior
 
-### Design vs Solution Design discriminator
+### Design vs Solution Design
 
-- `design` owns interaction workflow: how users understand, navigate, edit, review, act, receive feedback and complete a frontend task.
-- `solution-design` owns business/state workflow when material ambiguity exists: canonical state transitions, data/state ownership, API/data-flow responsibility, persistence semantics and implementation boundaries.
-- A mixed problem may use both, but only when both material problems actually exist. Resolve a blocking business/state prerequisite before continuing the affected Design decision.
+- `design` owns interaction workflow: how users see, understand, navigate, edit, review, act, receive feedback and complete a frontend task.
+- `solution-design` owns materially ambiguous business/state workflow: canonical state transitions, data/state ownership, API/data-flow responsibility, persistence semantics and implementation boundaries.
+- Mixed tasks may use both only when both material problems actually exist.
 
 ### Evidence-triggered cross-Skill composition
 
-A cross-Skill call from Design is valid only when it has all of:
+A Design cross-Skill call carries:
 
-1. `UNRESOLVED_DEPENDENCY` — a specific question Design cannot safely answer from current reliable context;
-2. `DESIGN_IMPACT` — why the answer can materially change the current Design decision;
-3. `CAPABILITY` — the smallest Skill that owns the missing answer;
-4. `EXPECTED_RETURN` — the bounded result needed back;
-5. `RESUME_STAGE` — where Design continues after the capability returns.
+- `UNRESOLVED_DEPENDENCY`;
+- `DESIGN_IMPACT`;
+- `CAPABILITY`;
+- `EXPECTED_RETURN`;
+- `RESUME_STAGE`.
 
-Examples:
+`domain-navigation` remains a valid bounded dependency when backend/product authority/source/symbol/state-owner/runtime/test routing is genuinely unclear. Other capabilities remain callable only on their own real triggers.
 
-- use `domain-navigation` when relevant backend/product authority, source, symbol, state owner, runtime entry or test route is not reliably identifiable;
-- use `solution-design` when the route is known but material business/state/API ownership semantics remain unresolved;
-- use `agent-handoff` when a bounded transfer must cross agent/session/machine/context;
-- use `evidence-audit` only when a separate formal acceptance/readiness verdict is actually requested;
-- use `execution-orchestrator` only when decomposition/delegation materially improves execution;
-- use `incident-doctor` only when a blocking evidence gap prevents a safe next action.
+General enrichment, completeness, generic second opinions, or mere Skill availability do not justify a call.
 
-Do not invoke another Skill for general enrichment, completeness, a second opinion, or merely because it is installed.
+## Design modes
 
-## Design execution modes
+Published modes:
 
-Add an explicit internal mode so not every Design request is forced through a full implementation pipeline:
+- `AUDIT_ONLY` — audit/findings only;
+- `DESIGN_SPEC` — design package through pre-build gate, no forced implementation;
+- `DESIGN_IMPLEMENT` — full design-to-implementation/review/visual-acceptance loop;
+- `FINAL_REVIEW` — review/correct an existing implementation without automatically reopening upstream design direction.
 
-- `AUDIT_ONLY` — context + actual interface audit + design findings; no implementation unless separately authorized/requested;
-- `DESIGN_SPEC` — audit + Anthropic + conditional admin pattern + bounded design-spec synthesis + pre-build gate; stop before implementation;
-- `DESIGN_IMPLEMENT` — full design-to-implementation closed loop;
-- `FINAL_REVIEW` — review an existing concrete implementation/prototype without reopening the upstream design direction unless a material defect requires bounded correction.
+For full implementation with rendering support:
 
-## Full implementation sequence
+`context/audit → Anthropic reasoning → admin pattern when applicable → bounded design spec → pre-build gate → implementation/prototype → rendered evidence capture → Microsoft final review → corrective pass → re-render → Microsoft re-review as needed → final visual acceptance`.
 
-For `DESIGN_IMPLEMENT` when rendered evidence is supported:
+## Acceptance / release result
 
-`project/profile context intake → actual interface audit → Anthropic reasoning → admin patterns when applicable → bounded design-spec synthesis → pre-build gate → implementation/prototype → rendered evidence capture → Microsoft final review → corrective pass → re-render → Microsoft re-review as needed → final visual acceptance`.
-
-If rendered evidence is unavailable, Microsoft review must state the evidence limit rather than fabricate it.
-
-## Preserve
-
-- exactly nine top-level Skills;
-- the single external `design` route;
-- Anthropic / shadcn-admin / awesome-design-md / Microsoft as internal Design modules;
-- Project Profile as derived context, not authority;
-- Project Governance as task/lifecycle owner;
-- existing source provenance/license boundaries;
-- release payload `plugin.json + skills/**` only;
-- existing receipt and handoff contracts.
-
-## Acceptance
-
-The change is complete only when:
-
-- routing contracts use evidence-triggered composition instead of hard anti-cross-Skill wording;
-- Design/Solution Design workflow ownership is explicitly discriminated;
-- all four Design modes have clear stop/continue behavior;
-- cross-Skill calls carry question/impact/capability/expected-return/resume-stage;
-- Domain Navigation remains a legitimate Design dependency when the relevant backend/product route is genuinely unclear;
-- return-to-Design behavior is explicit and does not restart the whole pipeline unnecessarily;
-- rendered evidence is available to Microsoft final review when the environment supports it;
-- final visual acceptance remains the terminal Design gate;
-- v0.7.1 acceptance/regression checks pass;
-- source is merged/released and the existing private Web Plugin is updated/read back in place.
-
-## Current progress
-
-Source implementation and pre-merge self-review are complete.
-
-- PR: `#32 — feat: harden Design routing composition` — Draft;
-- accepted semantic candidate HEAD: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`;
-- PR workflow: `Release Plugin v0.7.1`;
+- PR: `#32 — feat: harden Design routing composition` — `MERGED`;
+- accepted pre-merge semantic candidate: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`;
+- pre-merge workflow: `Release Plugin v0.7.1`;
 - successful PR run: `38658235439` / run #2;
-- verification: `Verify release source` PASS;
-- payload construction: `Build exact Plugin payload` PASS;
-- release publication step: skipped on PR as intended;
-- earlier run `38658175876` failed only on an overly strict wording assertion (`resume at the declared stage`) and was corrected before the accepted semantic candidate.
+- source / merge SHA: `208279e5f3b7974c13a3446a3db2e8f27de7b688`;
+- main release run: `38658367623` / run #5 — `success`;
+- tag: `plugin-v0.7.1`;
+- GitHub Release ID: `413290156`;
+- release asset ID: `642098498`;
+- asset size: `134882` bytes;
+- asset SHA-256: `8a2482eb4c0e28c642b5d27ffe34c0e64c0b8d64afbf9c51c6b83325013055db`;
+- package entries: `61`;
+- top-level Skills: exactly `9`;
+- Plugin payload: `plugin.json + skills/**` only.
 
 `V071_PREMERGE_ACCEPTANCE`: `PASS`.
+`FORMAL_RELEASE_071`: `PASS`.
 
-Release and Web Plugin synchronization remain pending until merge/main release succeeds.
+## Web Plugin result
+
+Existing private Web Plugin updated in place:
+
+- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.7.1`;
+- Web release ID: `pluginrel_6ad01a9215e88191829245c5571fd160`;
+- scope/discoverability: `USER / PRIVATE` unchanged;
+- root/platform manifests and routing/Design hardening files read back successfully.
+
+`WEB_PLUGIN_SYNC_071`: `PASS`.
+
+## Local runtime boundary
+
+The last directly observed Air Local Codex installation remains `0.6.8`. No newer local runtime state is inferred without a fresh readback.
+
+`LOCAL_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
 
 ## Control Alignment
 
 - `PREDECESSOR_TASK`: `EG-DESIGN-MULTI-MODULE-CLOSED-LOOP-082` (`COMPLETE`)
 - `START_MAIN_HEAD`: `06301c8ff5c074ea16e26a4e01a0755d52d43e24`
 - `TASK_BRANCH`: `codex/design-routing-hardening-v071`
-- `PR`: `#32` (`DRAFT / UNMERGED`)
+- `PR`: `#32` (`MERGED`)
 - `TARGET_VERSION`: `0.7.1`
 - `TOP_LEVEL_SKILLS_TARGET`: `9`
 - `DESIGN_EXTERNAL_ROUTE`: `design`
 - `PREMERGE_SEMANTIC_HEAD`: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`
 - `PREMERGE_CI_RUN`: `38658235439`
 - `PREMERGE_CI`: `PASS`
-- `FORMAL_RELEASE_071`: `PENDING`
-- `WEB_PLUGIN_SYNC_071`: `PENDING`
-- `TASK_STATE`: `ACTIVE`
+- `RELEASE_SEMANTIC_HEAD`: `208279e5f3b7974c13a3446a3db2e8f27de7b688`
+- `RELEASE_CI_RUN`: `38658367623`
+- `FORMAL_RELEASE_071`: `PASS`
+- `WEB_PLUGIN_SYNC_071`: `PASS`
+- `TASK_STATE`: `COMPLETE`
