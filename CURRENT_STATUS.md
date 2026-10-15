@@ -4,33 +4,19 @@ Last verified: 2026-10-15.
 
 ## Published baseline
 
-Formal GitHub Plugin release remains `plugin-v0.7.1`.
+Formal GitHub tagged release remains `plugin-v0.7.1`.
 
-Release provenance:
-
-- Task: `EG-DESIGN-ROUTING-HARDENING-083`;
-- source / merge SHA: `208279e5f3b7974c13a3446a3db2e8f27de7b688`;
-- source PR: `#32 — feat: harden Design routing composition` — merged;
-- main release run: `38658367623` — success;
-- tag: `plugin-v0.7.1`;
-- asset SHA-256: `8a2482eb4c0e28c642b5d27ffe34c0e64c0b8d64afbf9c51c6b83325013055db`;
-- package scope: `plugin.json` + `skills/**` only;
-- top-level Skills: exactly `9`.
-
-`V071_RELEASE_ACCEPTANCE`: `PASS`.
-`WEB_PLUGIN_SYNC_071`: `PASS`.
+Task 084 source is now on `main` as Plugin manifest version `0.7.2` for Local/Web runtime trial. This source merge and Web Plugin update are distribution steps; they do not by themselves establish Local runtime acceptance or a formal GitHub v0.7.2 tag/release.
 
 ## Active capability hardening
 
 Task `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084` is:
 
-`ACTIVE — MERGED_TO_MAIN_FOR_LOCAL_TRIAL`
+`ACTIVE — DISTRIBUTED_FOR_RUNTIME_TRIAL`
 
 PR #33 is merged. Main delivery merge:
 
 `29f7b7581a904b81f1e6ada8ec4fe0266cd6bfe1`
-
-Post-merge control-only alignment may move literal `main` without changing the v0.7.2 semantic source.
 
 Accepted semantic candidate:
 
@@ -45,7 +31,7 @@ Latest pre-merge candidate validation:
 
 `V072_SOURCE_READY_FOR_LOCAL_TRIAL`: `PASS`.
 
-## Task 084 source behavior now on main
+## Task 084 behavior now distributed
 
 - Sub Agent use is efficiency-first, not mandatory;
 - planning may expose bounded work packages/dependencies/writer boundaries/acceptance without selecting runtime topology;
@@ -57,49 +43,61 @@ Latest pre-merge candidate validation:
 - configured/default model/reasoning values are distinct from observed effective runtime identity;
 - execution receipts expose `Execution topology`, `Subagents`, and `Subagent runtime`;
 - cross-context EXECUTE Handoff Receipts preserve the same execution evidence;
-- effective model/reasoning remains `UNKNOWN` when the Local runtime does not expose it.
+- effective model/reasoning remains `UNKNOWN` when the runtime does not expose it.
 
 ## Local distribution / runtime state
 
-The repository `main` manifest is now `0.7.2`, enabling repo-backed Local Codex refresh/install testing.
+Air Local Codex marketplace has been converted to a Git-backed marketplace for `engineering-governance-personal`, refreshed from `main`, and the plugin cache readback shows:
 
-The last directly observed Air Local Codex installation remains `0.6.8` at:
+`/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.7.2`
 
-`/Users/jack7788/.codex/plugins/cache/engineering-governance-personal/engineering-governance/0.6.8`
+`LOCAL_PLUGIN_CACHE_072`: `OBSERVED`.
 
-That local installation remains stale until a real refresh/install readback proves otherwise.
+This proves local distribution/cache freshness, not runtime behavior inside a fresh Codex session.
 
-Next evidence boundary:
+Next Local evidence boundary:
 
-- refresh/install the repo-backed plugin from current `main`;
-- read back installed version/path;
-- inspect local Sub Agent config/default source;
-- run inline/delegated/writer-safety/model-observation/receipt acceptance.
+- fresh session loaded plugin identity;
+- local Sub Agent config/default source;
+- inline negative case (`Subagents: NO`);
+- useful delegated read-only case;
+- writer-safety behavior;
+- model/reasoning effective runtime observation where available, otherwise explicit `UNKNOWN`;
+- execution/Handoff receipt readback.
 
 `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING`.
 
-## Published Web Plugin
+## Web Plugin
 
-The existing private personal Web Plugin remains v0.7.1:
+The existing private personal Web Plugin has been updated **in place** to v0.7.2:
 
 - Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- current Web release ID: `pluginrel_6ad01a9215e88191829245c5571fd160`;
-- scope/discoverability: `USER / PRIVATE`.
+- version: `0.7.2`;
+- current Web release ID: `pluginrel_6ad02855852c8191a7addd05d6026361`;
+- scope/discoverability: `USER / PRIVATE` unchanged;
+- root `plugin.json`: `0.7.2` read back;
+- platform `.codex-plugin/plugin.json`: `0.7.2` read back;
+- `execution-orchestrator`: Sub Agent value gate, stable roles and configured-vs-effective model evidence read back;
+- `subagent-execution.md`: present and read back;
+- Project Governance receipt: `Execution topology`, `Subagents`, `Subagent runtime` read back;
+- Agent Handoff EXECUTE receipt: execution topology/Sub Agent/runtime evidence fields read back.
 
-`WEB_PLUGIN_UPDATE_084`: `NOT_PERFORMED / NOT_AUTHORIZED_THIS_PHASE`.
+`WEB_PLUGIN_SYNC_072`: `PASS`.
 
 ## Control identity
 
-Formal released Plugin identity remains:
+Formal tagged release identity remains the v0.7.1 release source until a later formal v0.7.2 release lifecycle is authorized.
 
-`208279e5f3b7974c13a3446a3db2e8f27de7b688`
-
-Task 084 semantic candidate identity is:
+Task 084 semantic candidate identity:
 
 `23b05c7f8847dd1868f05dd3fe5257aed94f635a`
 
-Main merge carrying v0.7.2 source for Local trial:
+Main merge carrying v0.7.2 source:
 
 `29f7b7581a904b81f1e6ada8ec4fe0266cd6bfe1`
+
+Web runtime release identity:
+
+`pluginrel_6ad02855852c8191a7addd05d6026361`
 
 Later STATUS/TASK-only commits are control-only.
