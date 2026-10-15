@@ -1,13 +1,13 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-governance",
-  "version": "0.7.1",
-  "description": "Reusable engineering governance, project context/profile, solution design, evidence-triggered multi-module UI/frontend design, execution orchestration, handoff, evidence audit, domain navigation, and evidence-gated incident investigation Skills.",
+  "version": "0.7.2",
+  "description": "Reusable engineering governance, project context/profile, solution design, evidence-triggered UI/frontend design, efficiency-first execution and Sub Agent orchestration, handoff, evidence audit, domain navigation, and evidence-gated incident investigation Skills.",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Engineering Governance",
-        "shortDescription": "Governance, project context, solution/UI design, orchestration, handoff, audit, navigation, and incident Skills."
+        "shortDescription": "Governance, design, efficiency-first execution, handoff, audit, navigation, and incident Skills."
       }
     }
   }
