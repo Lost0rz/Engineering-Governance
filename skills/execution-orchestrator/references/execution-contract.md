@@ -4,9 +4,43 @@
 
 Use orchestration when execution topology itself needs a decision: decomposition, roles/agents, parallelism, environment-aware delegation, recovery, cancellation/supersession, or controlled integration. Do not invoke it when one executor is clearly sufficient.
 
+## Planning-to-execution boundary
+
+Planning may provide executable structure such as work packages, dependencies, writer boundaries, acceptance and useful parallelizability. Treat that as input, not as a preselected runtime topology.
+
+Do not freeze concrete model names, reasoning effort, machine-specific capacity, thread counts, or mandatory Sub Agent use into durable planning. Resolve those at execution time from the current environment.
+
 ## Work units and roles
 
-Delegated units stay inside the active `TASK_ID` unless they discover a materially different purpose/authorization need. Roles such as controller, implementer, scout, reviewer, and verifier do not grant permission by name; write authority remains explicit.
+Delegated units stay inside the active `TASK_ID` unless they discover a materially different purpose/authorization need.
+
+Stable roles:
+
+- `EXPLORER` — read-only investigation;
+- `WORKER` — authorized mutation inside an explicit writer boundary;
+- `VERIFIER` — read-only targeted verification;
+- `REVIEWER` — read-only review/regression/acceptance analysis.
+
+Role names do not grant permission. Write authority remains explicit.
+
+## Sub Agent value gate
+
+Before delegation, decide:
+
+```text
+SUBAGENT_DECISION: USE | DO_NOT_USE
+REASON: <bounded rationale>
+```
+
+Evaluate:
+
+1. **Unit independence** — are there real bounded units rather than artificial sequential fragments?
+2. **Dependencies** — can units proceed usefully in parallel or with useful context isolation?
+3. **Writer safety** — are read/write boundaries explicit and integrable?
+4. **Net value** — is expected throughput/context/verification value greater than coordination cost?
+5. **Environment capability** — is the selected topology supported by the current runtime?
+
+If the answer is materially negative, use `INLINE`.
 
 ## Topology
 
@@ -17,7 +51,17 @@ Choose from dependency/authority/integration needs:
 3. `PARALLEL_READ_ONLY`
 4. `PARALLEL_DISJOINT_WRITERS`
 
-Use parallel capacity when independence and coordination value justify it. Concurrent writers require proven-disjoint semantic authority/workspaces and a defined integration check.
+Prefer read-only parallelism before multi-writer parallelism. Concurrent writers require proven-disjoint semantic authority/workspaces and a defined integration check.
+
+A common high-value pattern is:
+
+```text
+parallel EXPLORER units
+→ controller synthesis
+→ one WORKER for overlapping semantic state
+→ parallel VERIFIER / REVIEWER units when independent
+→ controller integration
+```
 
 When material, track only:
 
@@ -28,20 +72,26 @@ WRITE_AUTHORITY_PER_UNIT
 INTEGRATION_BOUNDARY
 ```
 
-Resolve `AVAILABLE_PARALLELISM` and other runtime-specific constraints from `environment-capabilities.md`; do not hardcode them in reusable policy.
-
-## Delegated-model stabilization
+## Delegated-model policy
 
 ```text
 SUBAGENT_MODEL_POLICY: ENVIRONMENT_DEFAULT_ONLY
-MODEL_OVERRIDE: NONE
 CROSS_CONTEXT_MODEL_PROPAGATION: DISABLED
-STRONGER_MODEL_ESCALATION: DISABLED_UNTIL_EXPLICIT_REAUTHORIZATION
+REUSABLE_GOVERNANCE_MODEL_ROUTING: DISABLED
 ```
 
-The receiving/current execution environment resolves its own authoritative Sub Agent default. Concrete provider/model/reasoning settings are environment facts. If not observable, keep them `PLATFORM_DEFAULT` / `UNKNOWN`. `LOW / STANDARD / HIGH` remain inactive future vocabulary only.
+The receiving/current execution environment owns concrete Sub Agent model/reasoning resolution. Governance may observe configuration/runtime evidence but does not choose provider/model names.
 
-If the current default/capability is unavailable or insufficient, return the capability/environment gap; do not silently substitute a stronger model or another context's configuration.
+Distinguish:
+
+```text
+MODEL_SOURCE
+MODEL_CONFIG
+MODEL_EFFECTIVE
+REASONING_EFFECTIVE
+```
+
+Configured/default values are not automatically proof of effective runtime identity. If the environment does not expose an effective value, keep it `UNKNOWN`.
 
 ## Delegation package
 
@@ -62,7 +112,21 @@ STOP_CONDITIONS
 RETURN_CONTRACT
 ```
 
-Add environment capability information only when the unit actually needs it. Use Agent Handoff for cross-context transfer.
+Do not dump the full task/plan when authority references plus fresh delta are sufficient.
+
+## Redelegation
+
+`SUBAGENT_REDELEGATION: DISABLED_BY_DEFAULT`.
+
+Nested delegation requires all of:
+
+- material complexity that a flat topology cannot handle efficiently;
+- explicit bounded nested objective;
+- runtime support/capacity;
+- preserved writer/authority boundaries;
+- controller-visible integration path.
+
+Otherwise delegated units return to the controller rather than spawning more units.
 
 ## Retry / cancellation / recovery
 
@@ -72,6 +136,6 @@ Use an ephemeral recovery ledger only when restart/context-loss is realistic; it
 
 ## Integration
 
-Controller integration verifies returned identity/paths/scope, rejects unknown/stale results, resolves conflicts centrally, runs affected verification, and returns material design/scope/environment gaps to the owning authority before further mutation.
+Controller integration verifies returned identity/paths/scope, rejects unknown/stale results, resolves conflicts centrally, runs affected integrated verification, and returns material design/scope/environment gaps to the owning authority before further mutation.
 
 A unit saying `PASS` does not establish integrated task PASS.

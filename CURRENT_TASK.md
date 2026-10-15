@@ -1,114 +1,175 @@
-# CURRENT TASK — Design Routing Hardening
+# CURRENT TASK — Local Execution / Sub Agent Hardening
 
 Date: 2026-10-15
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-DESIGN-ROUTING-HARDENING-083`
+Task ID: `EG-LOCAL-EXECUTION-SUBAGENT-HARDENING-084`
 
 Task class: `CAPABILITY_HARDENING`
 
-State: `COMPLETE`
+State: `ACTIVE — MAIN_MERGE_AUTHORIZED_FOR_LOCAL_TRIAL`
 
 ## Objective
 
-Harden the published `design` capability so it remains the primary owner of bounded UI/UX/frontend design work without becoming artificially isolated from other Engineering Governance capabilities.
+Harden Local Codex execution so Sub Agents are used only when they materially improve throughput, context isolation, or verification quality.
 
-The published behavior is **evidence-triggered composition**:
+Sub Agent use is an execution optimization, not a goal. Planning exposes executable structure; `execution-orchestrator` decides at execution time whether delegation is worthwhile in the current environment.
 
-- stay inside Design by default;
-- cross a Skill boundary only for a concrete unresolved dependency that materially affects the current decision;
-- state the missing question and bounded expected return before crossing;
-- use the smallest capability that owns the dependency;
-- return the bounded result to the originating Design stage rather than restarting the whole pipeline.
+## Required behavior
 
-## Published routing behavior
+### Planning / execution boundary
 
-### Design vs Solution Design
+Complex plans may expose bounded work packages with:
 
-- `design` owns interaction workflow: how users see, understand, navigate, edit, review, act, receive feedback and complete a frontend task.
-- `solution-design` owns materially ambiguous business/state workflow: canonical state transitions, data/state ownership, API/data-flow responsibility, persistence semantics and implementation boundaries.
-- Mixed tasks may use both only when both material problems actually exist.
+- objective;
+- dependencies;
+- writer boundary;
+- acceptance;
+- parallelizability when materially useful.
 
-### Evidence-triggered cross-Skill composition
+Planning must not freeze machine-specific parallel capacity, concrete model names, reasoning effort, or a mandatory Sub Agent topology.
 
-A Design cross-Skill call carries:
+### Sub Agent value gate
 
-- `UNRESOLVED_DEPENDENCY`;
-- `DESIGN_IMPACT`;
-- `CAPABILITY`;
-- `EXPECTED_RETURN`;
-- `RESUME_STAGE`.
+Before delegation, evaluate whether:
 
-`domain-navigation` remains a valid bounded dependency when backend/product authority/source/symbol/state-owner/runtime/test routing is genuinely unclear. Other capabilities remain callable only on their own real triggers.
+1. the work has genuinely independent units rather than artificial step splitting;
+2. dependency structure permits useful concurrency or context isolation;
+3. write boundaries are safe and explicit;
+4. expected value exceeds coordination/integration cost;
+5. the current Local Codex environment exposes enough capability for the selected topology.
 
-General enrichment, completeness, generic second opinions, or mere Skill availability do not justify a call.
+Emit:
 
-## Design modes
+```text
+SUBAGENT_DECISION: USE | DO_NOT_USE
+REASON: <bounded execution rationale>
+```
 
-Published modes:
+Small, tightly coupled, single-writer work should normally remain `INLINE`.
 
-- `AUDIT_ONLY` — audit/findings only;
-- `DESIGN_SPEC` — design package through pre-build gate, no forced implementation;
-- `DESIGN_IMPLEMENT` — full design-to-implementation/review/visual-acceptance loop;
-- `FINAL_REVIEW` — review/correct an existing implementation without automatically reopening upstream design direction.
+### Stable execution roles
 
-For full implementation with rendering support:
+Use the smallest useful role set:
 
-`context/audit → Anthropic reasoning → admin pattern when applicable → bounded design spec → pre-build gate → implementation/prototype → rendered evidence capture → Microsoft final review → corrective pass → re-render → Microsoft re-review as needed → final visual acceptance`.
+- `EXPLORER` — read-only code/authority/test/runtime investigation;
+- `WORKER` — authorized state-changing implementation inside an explicit writer boundary;
+- `VERIFIER` — read-only targeted verification/runtime checks;
+- `REVIEWER` — read-only diff/regression/acceptance review.
 
-## Acceptance / release result
+Default writer rule: one writer per overlapping semantic authority. Parallel writers require proven-disjoint authority/workspaces plus a defined integration boundary.
 
-- PR: `#32 — feat: harden Design routing composition` — `MERGED`;
-- accepted pre-merge semantic candidate: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`;
-- pre-merge workflow: `Release Plugin v0.7.1`;
-- successful PR run: `38658235439` / run #2;
-- source / merge SHA: `208279e5f3b7974c13a3446a3db2e8f27de7b688`;
-- main release run: `38658367623` / run #5 — `success`;
-- tag: `plugin-v0.7.1`;
-- GitHub Release ID: `413290156`;
-- release asset ID: `642098498`;
-- asset size: `134882` bytes;
-- asset SHA-256: `8a2482eb4c0e28c642b5d27ffe34c0e64c0b8d64afbf9c51c6b83325013055db`;
-- package entries: `61`;
-- top-level Skills: exactly `9`;
-- Plugin payload: `plugin.json + skills/**` only.
+Sub Agent redelegation is disabled by default unless a concrete high-complexity execution need and runtime capability justify it.
 
-`V071_PREMERGE_ACCEPTANCE`: `PASS`.
-`FORMAL_RELEASE_071`: `PASS`.
+### Model / reasoning boundary
 
-## Web Plugin result
+Engineering Governance selects role/topology, not a fixed provider/model.
 
-Existing private Web Plugin updated in place:
+The receiving Local Codex environment owns concrete Sub Agent model/reasoning resolution. Runtime acceptance must distinguish configured defaults from observed effective runtime identity.
 
-- Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.7.1`;
-- Web release ID: `pluginrel_6ad01a9215e88191829245c5571fd160`;
-- scope/discoverability: `USER / PRIVATE` unchanged;
-- root/platform manifests and routing/Design hardening files read back successfully.
+Internal evidence may use:
 
-`WEB_PLUGIN_SYNC_071`: `PASS`.
+```text
+MODEL_SOURCE: <parent inheritance | agents default | role/custom config | runtime/platform | UNKNOWN>
+MODEL_CONFIG: <configured value | PLATFORM_DEFAULT | UNKNOWN>
+MODEL_EFFECTIVE: <observed value | UNKNOWN>
+REASONING_EFFECTIVE: <observed value | UNKNOWN>
+```
 
-## Local runtime boundary
+Never report an effective model/reasoning value solely because configuration suggests it.
 
-The last directly observed Air Local Codex installation remains `0.6.8`. No newer local runtime state is inferred without a fresh readback.
+### Receipt observability
 
-`LOCAL_RUNTIME_ACCEPTANCE`: `PENDING_USER_TRIAL`.
+Governed execution and cross-context EXECUTE receipts report Sub Agent usage when execution occurred:
+
+```text
+Execution topology:
+Subagents:
+Subagent runtime:
+```
+
+If no Sub Agent was used, `Subagents: NO` is sufficient. If used, report bounded role/count and observable model/reasoning identity; unknown effective runtime values remain `UNKNOWN`.
+
+## Local runtime acceptance
+
+Before any release/Web synchronization claim for this task, test Local Codex runtime behavior on the target local environment, including where observable:
+
+- no explicit Sub Agent override -> parent/default inheritance behavior;
+- `[agents]` defaults -> delegated resolution;
+- role/custom agent override -> precedence when used;
+- useful parallel read-only delegation;
+- overlapping writer prevention;
+- disjoint writer case when safely testable;
+- compact receipt with topology, Sub Agent use, and runtime identity evidence.
+
+Repository policy or a source merge does not establish runtime PASS.
+
+## Source implementation result
+
+Source hardening is complete enough for Local trial:
+
+- `execution-orchestrator` now has an explicit Sub Agent value gate;
+- execution roles are `EXPLORER / WORKER / VERIFIER / REVIEWER`;
+- planning exposes candidate work-package/dependency/writer structure without selecting runtime topology;
+- configured model/reasoning and observed effective runtime identity are separated;
+- nested delegation is disabled by default;
+- Project Governance compact receipts expose execution topology, Sub Agent use and runtime identity evidence;
+- cross-context EXECUTE Handoff Receipts preserve the same execution evidence;
+- `references/V072_LOCAL_EXECUTION_SUBAGENT_ACCEPTANCE.md` defines source and Local runtime acceptance;
+- Plugin manifest is `0.7.2`;
+- v0.7.1 release workflow is archived and the v0.7.2 candidate workflow performs validation/build only, with no publication step.
+
+Validated identities:
+
+- semantic candidate HEAD: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
+- current pre-merge branch HEAD before this control reconciliation: `0ae5cb83e8243ebed771da505c2fc39034b3cf32`;
+- workflow: `Validate Plugin v0.7.2 Candidate`;
+- latest pre-merge run: `38663053412`;
+- result: `success`.
+
+`V072_SOURCE_READY_FOR_LOCAL_TRIAL`: `PASS`.
+
+## Distribution decision
+
+The user has explicitly authorized merging PR #33 to `main` before Local runtime acceptance so the repo-backed Local Codex plugin can refresh from `main` and exercise the new execution/receipt behavior.
+
+This merge is a **local distribution/testing step**, not a formal release or runtime acceptance result.
+
+## Explicit boundaries
+
+- do not create a new top-level Skill;
+- do not make Engineering Governance a model router;
+- do not hardcode one Local machine's model/capacity into reusable policy;
+- do not force Sub Agent use for ordinary small tasks;
+- merge PR #33 to `main` is authorized for Local plugin refresh/testing;
+- do not create a formal GitHub release/tag from this merge unless separately authorized after runtime acceptance;
+- do not update the private Web Plugin in this task phase;
+- do not claim Local runtime acceptance until a real local install/readback/test is performed.
+
+## Next acceptance boundary
+
+After merge, refresh/install the `0.7.2` plugin from `main` in Local Codex and capture:
+
+1. installed plugin identity;
+2. local Sub Agent configuration source;
+3. an `INLINE / Subagents: NO` negative case;
+4. a useful delegated read-only case;
+5. writer-safety behavior;
+6. effective model/reasoning evidence where exposed, otherwise explicit `UNKNOWN`;
+7. final receipt shape.
 
 ## Control Alignment
 
-- `PREDECESSOR_TASK`: `EG-DESIGN-MULTI-MODULE-CLOSED-LOOP-082` (`COMPLETE`)
-- `START_MAIN_HEAD`: `06301c8ff5c074ea16e26a4e01a0755d52d43e24`
-- `TASK_BRANCH`: `codex/design-routing-hardening-v071`
-- `PR`: `#32` (`MERGED`)
-- `TARGET_VERSION`: `0.7.1`
-- `TOP_LEVEL_SKILLS_TARGET`: `9`
-- `DESIGN_EXTERNAL_ROUTE`: `design`
-- `PREMERGE_SEMANTIC_HEAD`: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`
-- `PREMERGE_CI_RUN`: `38658235439`
-- `PREMERGE_CI`: `PASS`
-- `RELEASE_SEMANTIC_HEAD`: `208279e5f3b7974c13a3446a3db2e8f27de7b688`
-- `RELEASE_CI_RUN`: `38658367623`
-- `FORMAL_RELEASE_071`: `PASS`
-- `WEB_PLUGIN_SYNC_071`: `PASS`
-- `TASK_STATE`: `COMPLETE`
+- `PREDECESSOR_TASK`: `EG-DESIGN-ROUTING-HARDENING-083` (`COMPLETE`)
+- `START_MAIN_HEAD`: `0a2febb5cc294609d5ebfe54a4e84da1216de2dd`
+- `TASK_BRANCH`: `codex/local-execution-subagent-hardening-v072`
+- `PR`: `#33` (`MERGE_AUTHORIZED_FOR_LOCAL_TRIAL`)
+- `TARGET_VERSION`: `0.7.2`
+- `SEMANTIC_CANDIDATE_HEAD`: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`
+- `PREMERGE_VALIDATION_RUN`: `38663053412`
+- `SOURCE_VALIDATION`: `PASS`
+- `FORMAL_RELEASE`: `NOT_AUTHORIZED_THIS_PHASE`
+- `WEB_PLUGIN_UPDATE`: `NOT_AUTHORIZED_THIS_PHASE`
+- `LOCAL_RUNTIME_ACCEPTANCE`: `PENDING`
+- `TASK_STATE`: `ACTIVE — MAIN_MERGE_AUTHORIZED_FOR_LOCAL_TRIAL`

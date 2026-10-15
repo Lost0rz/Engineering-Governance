@@ -53,8 +53,6 @@ Use the smallest capable owner. The called Skill returns a bounded result; then 
 
 Do **not** invoke Skills for general enrichment, completeness, second opinions without an unresolved dependency, or because they are installed. Do not repeat an authority/source route that is already reliably known.
 
-Example: Design may call Domain Navigation when a backend/product authority or source route needed for the interface decision is genuinely unclear, then resume Design once the verified route returns. That is valid composition, not shotgun routing.
-
 A simple advisory read-only status/evidence inspection can remain in Project Governance when no formal acceptance/readiness verdict is requested. See `references/global-routing.md` and `references/capability-composition.md`.
 
 ### Mandatory cross-context handoff boundary
@@ -62,8 +60,6 @@ A simple advisory read-only status/evidence inspection can remain in Project Gov
 When the requested output itself is an execution/audit/review/verify/diagnose card, construction card, instructions, or structured receipt intended for **another agent, session, machine, reviewer, or execution context**, route the transfer artifact through `agent-handoff` before returning it.
 
 This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten `CURRENT_TASK.md`.
-
-Do not substitute an informal/legacy execution-card schema merely because the underlying task is corrective, implementation-heavy, or already has a detailed plan. Action adjectives such as `CORRECTIVE` describe purpose/delta; Handoff `MODE` remains the receiver side-effect class defined by Agent Handoff.
 
 ## Governed development
 
@@ -73,10 +69,11 @@ Do not substitute an informal/legacy execution-card schema merely because the un
 4. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
 5. Confirm mutation remains inside authorized objective/scope/side effects/verification/STOP boundary; reconcile material changes before mutation.
 6. Keep one canonical writer/authority per semantic class. Use narrower Skills only when their trigger materially applies. Once routed, let that Skill complete its bounded workflow; bounded evidence-triggered calls to another Skill return to the originating capability instead of restarting the catalog.
-7. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
-8. Implement the smallest authorized outcome and choose risk-proportional verification.
-9. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
-10. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
+7. For materially decomposable execution, route to `execution-orchestrator`. Sub Agent use is efficiency-driven, not mandatory: plans may expose work-package/dependency/writer structure, while the current execution environment decides inline vs delegated topology through the Sub Agent value gate.
+8. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
+9. Implement the smallest authorized outcome and choose risk-proportional verification.
+10. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
+11. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
 
 Repository/project-managed Project Profile mutation is state-changing and therefore requires compatible task authorization. The Profile Skill may still be used read-only to draft/audit profile content.
 
@@ -99,8 +96,11 @@ For governed engineering/execution/audit/CI/PR/merge/status responses, emit **on
 ```text
 Governance route:
 Skills used:
-Capability modules:   # optional; use when an invoked Skill materially applied named internal source modules
+Capability modules:   # optional
 Task state:
+Execution topology:   # required when execution topology was materially decided/executed
+Subagents:            # required for governed execution: NO or YES + bounded role/count summary
+Subagent runtime:     # when Subagents=YES; observed effective model/reasoning, configured-vs-effective caveat, or UNKNOWN
 Outcome:
 Changes:
 Control alignment:
@@ -112,23 +112,36 @@ Next:
 
 `Skills used` reports every top-level Engineering Governance Skill whose bounded instructions materially governed the work, and no others. Do not list installed/discovered Skills, Skills merely mentioned in routing documentation, or Skills inspected only to decide they were not applicable.
 
-When a Skill materially applies an internal source module, `Capability modules` may expose that module for observability, for example `design → Anthropic frontend-design`. Internal source modules do not become peer top-level Skills.
+When a Skill materially applies an internal source module, `Capability modules` may expose that module for observability. Internal source modules do not become peer top-level Skills.
+
+For execution responses:
+
+- `Execution topology` reports the topology actually selected/used, such as `INLINE`, `SEQUENTIAL_DELEGATED`, `PARALLEL_READ_ONLY`, or `PARALLEL_DISJOINT_WRITERS`;
+- `Subagents: NO` is expected when delegation did not create material value;
+- when Sub Agents were used, report role/count compactly, for example `YES — explorer ×2, worker ×1, verifier ×1`;
+- `Subagent runtime` must distinguish observed effective identity from configuration. Never report a configured model/reasoning value as effective unless runtime evidence supports it;
+- if effective model/reasoning is not exposed, say `UNKNOWN` or `configured <value>; effective runtime identity UNKNOWN`.
+
+The receipt is observational, not a reason to spawn Sub Agents.
 
 Keep the receipt status-oriented and do not copy task scope/history. If the response already contains a detailed machine/context Handoff Receipt, do not duplicate that full receipt; provide only the compact human summary needed for the user-facing response.
 
 ### Mandatory pre-return receipt compliance gate
 
-Before returning any governed user-facing response, verify all of the following:
+Before returning any governed user-facing response, verify all applicable items:
 
 ```text
 GOVERNANCE_ROUTE_REPORTED: YES
 SKILLS_USED_REPORTED: YES
 SKILLS_USED_ACTUAL_ONLY: YES
 ROUTE_AND_SKILLS_CONSISTENT: YES
+EXECUTION_TOPOLOGY_REPORTED_IF_APPLICABLE: YES
+SUBAGENT_USAGE_REPORTED_IF_APPLICABLE: YES
+SUBAGENT_RUNTIME_NOT_INVENTED: YES
 LEGACY_RECEIPT_REPLACED: YES
 ```
 
-If any check would be `NO`, correct the response before returning it. Do not return a legacy/custom receipt that omits `Governance route` or `Skills used` and then explain the omission in prose.
+If any applicable check would be `NO`, correct the response before returning it.
 
 ## Supporting contracts
 
@@ -141,5 +154,5 @@ Read only what the current decision needs:
 - `references/code-structure.md` — canonical writer/authority;
 - `references/workspace-lifecycle.md` — workspace/branch closeout;
 - `references/verification-tiers.md` — proportional verification;
-- `references/planning-documents.md` — durable design linkage;
+- `references/planning-documents.md` — durable design/work-package linkage;
 - `references/adoption.md` — environment-aware routing adoption.
