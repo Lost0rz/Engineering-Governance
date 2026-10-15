@@ -94,12 +94,35 @@ The change is complete only when:
 - v0.7.1 acceptance/regression checks pass;
 - source is merged/released and the existing private Web Plugin is updated/read back in place.
 
+## Current progress
+
+Source implementation and pre-merge self-review are complete.
+
+- PR: `#32 — feat: harden Design routing composition` — Draft;
+- accepted semantic candidate HEAD: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`;
+- PR workflow: `Release Plugin v0.7.1`;
+- successful PR run: `38658235439` / run #2;
+- verification: `Verify release source` PASS;
+- payload construction: `Build exact Plugin payload` PASS;
+- release publication step: skipped on PR as intended;
+- earlier run `38658175876` failed only on an overly strict wording assertion (`resume at the declared stage`) and was corrected before the accepted semantic candidate.
+
+`V071_PREMERGE_ACCEPTANCE`: `PASS`.
+
+Release and Web Plugin synchronization remain pending until merge/main release succeeds.
+
 ## Control Alignment
 
 - `PREDECESSOR_TASK`: `EG-DESIGN-MULTI-MODULE-CLOSED-LOOP-082` (`COMPLETE`)
 - `START_MAIN_HEAD`: `06301c8ff5c074ea16e26a4e01a0755d52d43e24`
 - `TASK_BRANCH`: `codex/design-routing-hardening-v071`
+- `PR`: `#32` (`DRAFT / UNMERGED`)
 - `TARGET_VERSION`: `0.7.1`
 - `TOP_LEVEL_SKILLS_TARGET`: `9`
 - `DESIGN_EXTERNAL_ROUTE`: `design`
+- `PREMERGE_SEMANTIC_HEAD`: `f0f1ebf6a9c7c49c106955cfb84940a645635dc4`
+- `PREMERGE_CI_RUN`: `38658235439`
+- `PREMERGE_CI`: `PASS`
+- `FORMAL_RELEASE_071`: `PENDING`
+- `WEB_PLUGIN_SYNC_071`: `PENDING`
 - `TASK_STATE`: `ACTIVE`
