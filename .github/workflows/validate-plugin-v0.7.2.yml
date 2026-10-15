@@ -1,0 +1,109 @@
+name: Validate Plugin v0.7.2 Candidate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - plugin.json
+      - skills/**
+      - references/V072_LOCAL_EXECUTION_SUBAGENT_ACCEPTANCE.md
+      - .github/workflows/validate-plugin-v0.7.2.yml
+      - .github/workflows/release-plugin-v0.7.1.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Verify v0.7.2 source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path('plugin.json').read_text())
+          assert manifest['name'] == 'engineering-governance'
+          assert manifest['version'] == '0.7.2'
+
+          expected = {
+              'project-governance',
+              'project-profile',
+              'solution-design',
+              'design',
+              'execution-orchestrator',
+              'agent-handoff',
+              'evidence-audit',
+              'domain-navigation',
+              'incident-doctor',
+          }
+          actual = {p.name for p in Path('skills').iterdir() if p.is_dir()}
+          assert actual == expected, (actual, expected)
+
+          orchestrator = Path('skills/execution-orchestrator/SKILL.md').read_text()
+          contract = Path('skills/execution-orchestrator/references/execution-contract.md').read_text()
+          subagent = Path('skills/execution-orchestrator/references/subagent-execution.md').read_text()
+          environment = Path('skills/execution-orchestrator/references/environment-capabilities.md').read_text()
+          governance = Path('skills/project-governance/SKILL.md').read_text()
+          planning = Path('skills/project-governance/references/planning-documents.md').read_text()
+          acceptance = Path('references/V072_LOCAL_EXECUTION_SUBAGENT_ACCEPTANCE.md').read_text()
+
+          for marker in (
+              'SUBAGENT_DECISION: USE | DO_NOT_USE',
+              'EXPLORER', 'WORKER', 'VERIFIER', 'REVIEWER',
+              'MODEL_CONFIG', 'MODEL_EFFECTIVE', 'REASONING_EFFECTIVE',
+          ):
+              assert marker in orchestrator or marker in contract or marker in subagent or marker in environment, marker
+
+          assert 'SUBAGENT_REDELEGATION: DISABLED_BY_DEFAULT' in contract
+          assert 'Subagents:' in governance
+          assert 'Subagent runtime:' in governance
+          assert 'Execution topology:' in governance
+          assert 'USE_SUBAGENT: YES' in planning
+          assert 'Do not write `USE_SUBAGENT: YES`' in planning
+          assert 'PLAN_FORCES_SUBAGENT_USE: NO' in acceptance
+          assert 'WEB_PLUGIN_UPDATED_FOR_084: NO' in acceptance
+
+          # Preserve core prior routing/receipt semantics.
+          for marker in (
+              '## Evidence-triggered composition',
+              'Governance route:',
+              'Skills used:',
+              'Mandatory cross-context handoff boundary',
+          ):
+              assert marker in governance, marker
+          PY
+
+      - name: Build exact plugin payload candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          mkdir -p dist/plugin
+          cp plugin.json dist/plugin/plugin.json
+          cp -R skills dist/plugin/skills
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          root = Path('dist/plugin')
+          out = Path('dist/engineering-governance-plugin-v0.7.2-candidate.zip')
+          with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED) as z:
+              for path in sorted(root.rglob('*')):
+                  if path.is_file():
+                      z.write(path, path.relative_to(root))
+
+          with zipfile.ZipFile(out) as z:
+              names = z.namelist()
+              assert 'plugin.json' in names
+              assert all(name == 'plugin.json' or name.startswith('skills/') for name in names)
+          print(out)
+          PY
