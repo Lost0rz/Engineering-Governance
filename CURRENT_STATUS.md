@@ -2,77 +2,53 @@
 
 Last verified: 2026-10-15.
 
-## Published / distributed baseline
+## Published baseline
 
-Formal GitHub tagged release remains `plugin-v0.7.1` until Task 086 publication completes.
+Formal GitHub Plugin release is now `plugin-v0.7.2`.
 
-Current source/distribution state:
+Publication identity:
 
-- root Plugin manifest: `0.7.2`;
-- exactly nine top-level Skills;
-- PR #33 merged the v0.7.2 source;
-- semantic candidate: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
-- latest source validation run: `38663053412` — `success`;
-- private Web Plugin: `0.7.2`, release ID `pluginrel_6ad02855852c8191a7addd05d6026361`;
+- release PR: `#34` — `MERGED`;
+- publication source SHA: `229f9edc17a9a9c80dac3ac84f7ed45e097ce098`;
+- accepted semantic candidate: `23b05c7f8847dd1868f05dd3fe5257aed94f635a`;
+- GitHub Actions run: `38668545801` — `success`;
+- tag: `plugin-v0.7.2` -> `229f9edc17a9a9c80dac3ac84f7ed45e097ce098`;
+- release ID: `413342779`;
+- asset: `engineering-governance-plugin.zip`;
+- asset ID: `642334384`;
+- asset size: `140844` bytes;
+- SHA-256: `eba897ba8a9a9a40127e204cf42f44fa7a282a93692c773d6ebc6a5fda5b876b`;
+- package entries: `62`;
+- package contains only `plugin.json` and `skills/**`;
+- included top-level Skills: exactly `9`.
+
+The release workflow source verification, package build, immutable tag creation and GitHub release creation all passed. The one-shot release workflow was then archived at `fd81a56790b8dbf62c2bb2e64b4c8e9d8f5888f6`.
+
+## v0.7.2 accepted capability state
+
+- Project Governance remains the normal engineering entry;
+- Project Profile remains derived compact context, not authority;
+- Solution Design owns material engineering architecture/state/API/data-flow ambiguity;
+- Design owns bounded UI/UX/frontend interaction and visual design;
+- Execution Orchestrator uses an explicit Sub Agent value gate;
+- Agent Handoff governs cross-context cards/receipts;
+- Evidence Audit owns formal read-only acceptance/readiness verdicts;
+- Domain Navigation remains conditional for unclear authority/source/test/runtime routes;
+- Incident Doctor remains evidence-gated for blocking unexplained failures;
+- routing is selective capability composition, not an all-Skill pipeline.
+
+## Acceptance state
+
+- v0.7.2 source validation: `PASS`;
+- Design acceptance: `PASS`;
+- Web Plugin 0.7.2 readback: `PASS`;
 - Air Local Sub Agent runtime acceptance: `PASS`;
-- Air nine-Skill integrated routing acceptance: `PASS_WITH_FOLLOWUPS` with no Skill-source corrective required.
+- Air nine-Skill routing acceptance: `PASS_WITH_FOLLOWUPS`;
+- no Skill-source corrective remained after integrated routing acceptance.
 
-## Active release task
+The only Local follow-up was runtime cache-path observability: the session did not expose which of two same-version cache paths supplied the active Skills. This is non-blocking because both observed distributions identify `0.7.2` and no relevant routing-content divergence was found.
 
-Task `EG-PLUGIN-V0.7.2-FORMAL-RELEASE-086` is:
-
-`ACTIVE — FORMAL_RELEASE`
-
-Objective: publish the already accepted 0.7.2 payload as immutable GitHub tag/release without changing Skill semantics.
-
-## Acceptance evidence
-
-### Local execution / Sub Agent
-
-`LOCAL_RUNTIME_ACCEPTANCE`: `PASS`.
-
-Observed Air fixture for Task 084:
-
-- final fixture HEAD: `0e0b6512af2b67b6cc689ba650597bf308d53b8d`;
-- inline negative control: `PASS`;
-- parallel read-only `EXPLORER ×2`: `PASS`;
-- shared-writer safety with one `WORKER`: `PASS`;
-- configured/effective runtime identity remained correctly separated.
-
-### Nine-Skill routing
-
-User-returned Air fixture for Task 085:
-
-- final fixture HEAD: `1e4008896a06566f25720da4e0eb69166c96a0c0`;
-- Project Governance default route: `PASS`;
-- Solution Design positive/negative: `PASS`;
-- Evidence Audit positive/negative: `PASS` / required `UNKNOWN` correctly yields `STOP`;
-- Agent Handoff generation: `PASS`;
-- Domain Navigation positive/negative: `PASS`;
-- Incident Doctor positive/negative: `PASS`;
-- Project Profile smoke: `PASS`;
-- selective composition: `SELECTIVE_CAPABILITY_ROUTING`;
-- unnecessary Skill invocations: none;
-- missed required Skill invocations: none;
-- route-return failures: none.
-
-`NINE_SKILL_ROUTING_ACCEPTANCE`: `PASS_WITH_FOLLOWUPS`.
-
-Only follow-up: the runtime did not expose which of two same-version local cache paths supplied the active Skills. Both distributions identify `0.7.2`; no relevant routing-content divergence was found. The dual distribution is intentional because the user requires a persistent Local installation independent of account-synced Plugin availability.
-
-## PR / lifecycle state
-
-- PR #33: `MERGED`;
-- stale Draft PR #21: `CLOSED / UNMERGED / SUPERSEDED`;
-- no further Skill corrective is currently required before formal release.
-
-## Release state
-
-`FORMAL_GITHUB_RELEASE_072`: `IN_PROGRESS`.
-
-Task 086 may add only the bounded one-shot release workflow and publication/control evidence required for formal release. Skill semantics remain frozen at the accepted 0.7.2 source.
-
-## Authority / distribution model
+## Distribution model
 
 Source authority:
 
@@ -80,7 +56,21 @@ Source authority:
 
 Intentional distribution projections:
 
-1. Local Git-backed Plugin installation — persistent across account switching;
+1. persistent Local Git-backed Plugin installation, required because the user switches accounts;
 2. account-synced Web/remote Plugin projection.
 
-Runtime cache-path selection is not semantic authority. Release correctness depends on version/content equivalence to repository source, not on forcing a single physical cache path.
+These projections may coexist. Release/distribution correctness depends on source/version/content equivalence rather than forcing one physical runtime cache path.
+
+## PR / lifecycle state
+
+- stale PR #21: `CLOSED / UNMERGED / SUPERSEDED`;
+- release PR #34: `MERGED`;
+- open PR count: `0`;
+- Task `EG-PLUGIN-V0.7.2-FORMAL-RELEASE-086`: `COMPLETE`;
+- release branch `release/plugin-v0.7.2-formal` is merged history only and has no active authority.
+
+## Downstream installation state
+
+- private Web Plugin: `0.7.2`;
+- Air Local Plugin/runtime: `0.7.2` accepted;
+- Mac mini Local Plugin update to `0.7.2`: not yet observed in this release task and should be verified after the user updates that machine.
