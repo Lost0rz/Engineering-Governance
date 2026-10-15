@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-governance",
-  "version": "0.7.0",
-  "description": "Reusable engineering governance, project context/profile, solution design, multi-module UI/frontend design, execution orchestration, handoff, evidence audit, domain navigation, and evidence-gated incident investigation Skills.",
+  "version": "0.7.1",
+  "description": "Reusable engineering governance, project context/profile, solution design, evidence-triggered multi-module UI/frontend design, execution orchestration, handoff, evidence audit, domain navigation, and evidence-gated incident investigation Skills.",
   "extensions": {
     "com.openai": {
       "interface": {
