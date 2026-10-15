@@ -1,0 +1,56 @@
+name: Release Plugin v0.7.3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/release-plugin-v0.7.3.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Verify and package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, zipfile
+          from pathlib import Path
+          m=json.loads(Path('plugin.json').read_text())
+          assert m['name']=='engineering-governance'
+          assert m['version']=='0.7.3'
+          expected={'project-governance','project-profile','solution-design','design','execution-orchestrator','agent-handoff','evidence-audit','domain-navigation','incident-doctor'}
+          assert {p.name for p in Path('skills').iterdir() if p.is_dir()}==expected
+          rd=Path('skills/project-governance/references/remote-delivery.md').read_text()
+          for t in ('PUSHED_VERIFIED','NOT_APPLICABLE_NO_REMOTE','NOT_REQUIRED_LOCAL_ONLY','PENDING','FAILED'):
+              assert t in rd
+          files=[Path('plugin.json')]+sorted(p for p in Path('skills').rglob('*') if p.is_file())
+          with zipfile.ZipFile('engineering-governance-plugin.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.as_posix())
+          Path('release.entries').write_text(str(len(files)))
+          PY
+          sha256sum engineering-governance-plugin.zip | tee release.sha256
+          wc -c < engineering-governance-plugin.zip | tr -d ' ' > release.size
+      - name: Publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=plugin-v0.7.3
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "refs/tags/$TAG"
+          SHA256="$(cut -d' ' -f1 release.sha256)"
+          SIZE="$(cat release.size)"
+          ENTRIES="$(cat release.entries)"
+          printf 'Engineering Governance Plugin v0.7.3\n\nSource: %s\nValidation: run 38677775327 success\nAdditional Local runtime acceptance: WAIVED_BY_USER\nAsset SHA-256: %s\nSize: %s bytes\nEntries: %s\nSkills: 9\n' "$GITHUB_SHA" "$SHA256" "$SIZE" "$ENTRIES" > release-notes.txt
+          gh release create "$TAG" engineering-governance-plugin.zip --verify-tag --title 'Engineering Governance Plugin v0.7.3' --notes-file release-notes.txt
