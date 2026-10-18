@@ -66,6 +66,34 @@ AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
 
 Evidence Audit profiles include `CODE_DIFF`, `PR_MERGE`, `CI`, `RELEASE_PROVENANCE`, and `POST_CHANGE`. A PASS for one profile does not automatically prove another.
 
+## Automated browser evidence vs human product-interface acceptance
+
+Keep browser-based engineering verification, AI rendered inspection, and human product-interface acceptance as separate evidence classes.
+
+Automated browser verification remains fully valid engineering evidence. This includes Playwright, Cypress, other E2E suites, DOM/state assertions, accessibility checks, scripted browser flows, screenshot/visual-regression systems, and comparable deterministic automation. Do not disable or downgrade these checks merely because a task also requires human UI acceptance.
+
+AI-driven browser inspection — including Computer Use/manual-style clicking, opening pages, navigating flows, or inspecting screenshots/renders — may be used for debugging, diagnosis, evidence gathering, internal Design review, and bounded corrective work. It is **machine-observed rendered evidence**, not human acceptance.
+
+Therefore:
+
+- AI rendered inspection must not be reported as `AUDIT_INDEPENDENCE: HUMAN`;
+- an AI must not satisfy a human UI/UX/product acceptance gate by imitating a person in a browser;
+- automated browser PASS does not by itself establish subjective human product acceptance;
+- human acceptance may be recorded only from an explicit human reviewer/user decision about the actual interface;
+- if human product-interface acceptance is required and has not occurred, report it as pending rather than inferring PASS from screenshots, Computer Use, Playwright, or another machine-driven check.
+
+When applicable, keep the evidence visible as separate fields:
+
+```text
+AUTOMATED_BROWSER_VERIFICATION: PASS | FAIL | NOT_RUN | NOT_APPLICABLE
+AI_RENDERED_INSPECTION: PASS | FINDINGS | LIMITED | NOT_RUN | NOT_APPLICABLE
+HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
+```
+
+`HUMAN_UI_ACCEPTANCE: PASS` or `FAIL` requires an explicit human decision. `PENDING` means implementation/testing may be otherwise complete, but no final human product-interface acceptance claim may be made yet. Use `NOT_REQUIRED` only when the owning task/project acceptance contract does not require a human UI gate.
+
+This boundary does not prevent AI from viewing the interface. It prevents machine observation from being promoted into a human acceptance claim.
+
 ## Required-claim coverage
 
 For a material audit/acceptance boundary, identify the claims that must be established before verdict:
@@ -102,10 +130,12 @@ complete bounded architecture/implementation
 -> freeze semantic candidate when ready
 -> required integrated verification
 -> independent audit/acceptance task where required
+-> human UI acceptance when required by the product-interface contract
 -> read current host gates
 -> bounded corrective task if findings create a distinct objective
 -> rerun affected integrated scenarios/evidence
--> merge/release only when semantic evidence + live host gates satisfy the boundary
+-> repeat human UI acceptance after material interface corrections when required
+-> merge/release only when semantic evidence + required human acceptance + live host gates satisfy the boundary
 ```
 
 For multi-Skill architecture work, prefer testing composition and positive/negative routing behavior on the frozen architecture rather than proving only that each Skill file loads independently.
