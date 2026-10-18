@@ -80,19 +80,25 @@ These projections may coexist. Release/distribution correctness depends on sourc
 
 ## Active task
 
-Task `EG-HUMAN-UI-ACCEPTANCE-089` is `ACTIVE` on branch `codex/human-ui-acceptance-boundary` from control parent `bb72d3aae0f98b312700dff3ee527301e9e55991`.
+Task `EG-HUMAN-UI-ACCEPTANCE-089` is `IMPLEMENTED / DRAFT_REVIEW` on branch `codex/human-ui-acceptance-boundary`.
 
-Draft PR `#37 — feat: make product UI acceptance human-owned` is `OPEN / DRAFT / UNMERGED`.
+Draft PR `#37 — feat: make product UI acceptance human-owned` is `OPEN / DRAFT / UNMERGED`; source head `905dfe7c3901581491c3ea59271bb7cf204aeeee` was observed mergeable.
 
-Current source objective:
+Implemented reusable boundary:
 
-- preserve Playwright/Cypress/E2E, accessibility, DOM/state, screenshot/visual-regression and other automated browser verification;
-- allow AI browser/Computer Use inspection for debugging, evidence gathering, internal Design review, and corrective work;
-- prevent AI browser/manual-style clicking or screenshot inspection from satisfying a required human UI/UX/product acceptance gate;
-- keep `AUTOMATED_BROWSER_VERIFICATION`, `AI_RENDERED_INSPECTION`, `INTERNAL_VISUAL_REVIEW`, and `HUMAN_UI_ACCEPTANCE` distinct;
-- preserve the human acceptance owner across cross-context Handoff cards/receipts.
+- automated browser verification remains valid: Playwright/Cypress/E2E, DOM/state, accessibility, screenshot/visual regression and comparable scripted checks are not disabled or downgraded;
+- AI browser/Computer Use inspection remains allowed for debugging, diagnosis, evidence gathering, internal Design review and corrective work;
+- machine-driven clicking/screenshots cannot be reported as human acceptance or `AUDIT_INDEPENDENCE: HUMAN`;
+- material real-product interface changes default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human decision;
+- omission of a human-acceptance field does not waive the gate;
+- `NOT_REQUIRED` requires an explicit owning waiver or a task with no product-interface acceptance surface;
+- Handoff cards/receipts preserve separate `AUTOMATED_BROWSER_VERIFICATION`, `AI_RENDERED_INSPECTION`, and `HUMAN_UI_ACCEPTANCE` evidence.
 
-No new Plugin release is authorized by Task 089. Published/runtime Plugin baseline remains `0.7.3` until a later explicit release decision.
+V0 diff/self-check: `PASS`.
+
+No pull-request workflow runs were observed for source head `905dfe7c3901581491c3ea59271bb7cf204aeeee`; no CI PASS is claimed or required by the current V0 documentation/rule task.
+
+No new Plugin release is authorized by Task 089. Published/runtime Plugin baseline remains `0.7.3` until a later explicit merge/release decision.
 
 ## Repository lifecycle
 
@@ -101,7 +107,7 @@ No new Plugin release is authorized by Task 089. Published/runtime Plugin baseli
 - v0.7.3 source PR #35: `MERGED`;
 - v0.7.3 release PR #36: `MERGED`;
 - Task `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`: `COMPLETE`;
-- Task `EG-HUMAN-UI-ACCEPTANCE-089`: `ACTIVE`;
+- Task `EG-HUMAN-UI-ACCEPTANCE-089`: `IMPLEMENTED / DRAFT_REVIEW`;
 - PR #37: `OPEN / DRAFT / UNMERGED`;
 - open PR count: `1`.
 
