@@ -66,6 +66,38 @@ AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
 
 Evidence Audit profiles include `CODE_DIFF`, `PR_MERGE`, `CI`, `RELEASE_PROVENANCE`, and `POST_CHANGE`. A PASS for one profile does not automatically prove another.
 
+## Automated browser evidence vs human product-interface acceptance
+
+Keep browser-based engineering verification, AI rendered inspection, and human product-interface acceptance as separate evidence classes.
+
+Automated browser verification remains fully valid engineering evidence. This includes Playwright, Cypress, other E2E suites, DOM/state assertions, accessibility checks, scripted browser flows, screenshot/visual-regression systems, and comparable deterministic automation. Do not disable or downgrade these checks merely because a task also requires human UI acceptance.
+
+AI-driven browser inspection — including Computer Use/manual-style clicking, opening pages, navigating flows, or inspecting screenshots/renders — may be used for debugging, diagnosis, evidence gathering, internal Design review, and bounded corrective work. It is **machine-observed rendered evidence**, not human acceptance.
+
+For a state-changing task that materially changes a real product interface's rendered layout, visual hierarchy, content presentation, interaction behavior, or responsive behavior, **human UI acceptance is required by default**. Omission of a human-acceptance field from a task/card does not waive this gate.
+
+The default state is `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human reviewer/user decision is observed. `NOT_REQUIRED` is valid only when an owning user/project authority explicitly waives the human UI gate for that change, or when the task does not produce a product-interface result that needs visual/interaction acceptance.
+
+Therefore:
+
+- AI rendered inspection must not be reported as `AUDIT_INDEPENDENCE: HUMAN`;
+- an AI must not satisfy a human UI/UX/product acceptance gate by imitating a person in a browser;
+- automated browser PASS does not by itself establish subjective human product acceptance;
+- human acceptance may be recorded only from an explicit human reviewer/user decision about the actual interface;
+- if human product-interface acceptance is required and has not occurred, report it as pending rather than inferring PASS from screenshots, Computer Use, Playwright, or another machine-driven check.
+
+When applicable, keep the evidence visible as separate fields:
+
+```text
+AUTOMATED_BROWSER_VERIFICATION: PASS | FAIL | NOT_RUN | NOT_APPLICABLE
+AI_RENDERED_INSPECTION: PASS | FINDINGS | LIMITED | NOT_RUN | NOT_APPLICABLE
+HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
+```
+
+`HUMAN_UI_ACCEPTANCE: PASS` or `FAIL` requires an explicit human decision. `PENDING` means implementation/testing may be otherwise complete, but no final human product-interface acceptance claim may be made yet. `NOT_REQUIRED` must be supported by the owning acceptance authority; it must not be inferred merely because the task forgot to mention a human UI gate.
+
+This boundary does not prevent AI from viewing the interface. It prevents machine observation from being promoted into a human acceptance claim.
+
 ## Required-claim coverage
 
 For a material audit/acceptance boundary, identify the claims that must be established before verdict:
@@ -102,10 +134,12 @@ complete bounded architecture/implementation
 -> freeze semantic candidate when ready
 -> required integrated verification
 -> independent audit/acceptance task where required
+-> human UI acceptance for material product-interface changes unless explicitly waived
 -> read current host gates
 -> bounded corrective task if findings create a distinct objective
 -> rerun affected integrated scenarios/evidence
--> merge/release only when semantic evidence + live host gates satisfy the boundary
+-> repeat human UI acceptance after material interface corrections when required
+-> merge/release only when semantic evidence + required human acceptance + live host gates satisfy the boundary
 ```
 
 For multi-Skill architecture work, prefer testing composition and positive/negative routing behavior on the frozen architecture rather than proving only that each Skill file loads independently.

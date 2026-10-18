@@ -40,7 +40,25 @@ BOUNDARY
 RETURN_CONTRACT
 ```
 
-Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, and claim/evidence fields. See `references/handoff-contract.md`.
+Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, claim/evidence fields, and human-acceptance state when product-interface acceptance is material. See `references/handoff-contract.md`.
+
+## Human UI acceptance preservation
+
+For state-changing work that materially changes a real product interface, human UI/UX/product acceptance is the default final product-interface gate unless an owning user/project authority explicitly waives it. A missing field or silent task does not imply `NOT_REQUIRED`.
+
+The receiving AI may still run Playwright/Cypress/E2E or other automated browser verification and may use browser/Computer Use/screenshots for debugging, evidence gathering, internal Design review, or corrective work. Those machine-driven checks must not be promoted into final human acceptance.
+
+The Card/receipt should keep these claims separate when material:
+
+```text
+AUTOMATED_BROWSER_VERIFICATION
+AI_RENDERED_INSPECTION
+HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
+```
+
+For a material product-interface change, default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human decision is observed. `NOT_REQUIRED` needs an explicit owning waiver or a clearly non-product-interface acceptance surface.
+
+A receiver must not return `HUMAN_UI_ACCEPTANCE: PASS` merely because it opened the page, clicked through the workflow, or inspected screenshots/renders itself. `PASS`/`FAIL` requires an explicit human decision.
 
 ## Mandatory pre-return compliance gate
 
@@ -56,6 +74,7 @@ DELTA_IS_TRANSFER_SPECIFIC: YES
 BOUNDARY_DOES_NOT_EXPAND_AUTHORITY: YES
 OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES
 RETURN_CONTRACT_OUTCOME_NEUTRAL: YES
+HUMAN_UI_ACCEPTANCE_OWNER_PRESERVED_IF_APPLICABLE: YES
 ```
 
 Interpretation:
@@ -67,11 +86,12 @@ Interpretation:
 - `DELTA` carries only new context the receiver would not recover from the referenced authorities;
 - a Card never expands mutation/write authority;
 - a SHA/ref observed by the sender belongs in `OBSERVED_BASIS` unless an owning authority explicitly declares an equality/lock requirement; the Card must not invent `EXPECTED_HEAD`, `MUST_EQUAL`, or equivalent lock semantics;
-- `RETURN_CONTRACT` requests the actual result/evidence. Do not prefill a successful `FINAL_STATE`, `READY`, `PASS`, or merge/release outcome that has not yet been observed.
+- `RETURN_CONTRACT` requests the actual result/evidence. Do not prefill a successful `FINAL_STATE`, `READY`, `PASS`, or merge/release outcome that has not yet been observed;
+- when human product-interface acceptance is required, the Card keeps it human-owned and does not delegate that final acceptance to AI Computer Use or screenshot inspection.
 
 A known `NO` is a generation failure and must be fixed before the Card is returned. Do not return the noncompliant draft with an explanatory note.
 
-Before returning a structured Handoff Receipt, likewise verify that its required core fields are present and that `OUTCOME` reports the observed result rather than a predetermined success state.
+Before returning a structured Handoff Receipt, likewise verify that its required core fields are present, that `OUTCOME` reports the observed result rather than a predetermined success state, and that any human UI acceptance field reflects an explicit human decision rather than machine observation.
 
 ## Modes
 

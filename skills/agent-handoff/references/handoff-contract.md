@@ -59,6 +59,9 @@ STOP
 CLAIM
 EXPECTED_EVIDENCE
 AUDIT_INDEPENDENCE
+AUTOMATED_BROWSER_VERIFICATION
+AI_RENDERED_INSPECTION
+HUMAN_UI_ACCEPTANCE
 ```
 
 Do not omit required core fields. Do not duplicate the full objective/scope/acceptance/STOP/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
@@ -66,6 +69,38 @@ Do not omit required core fields. Do not duplicate the full objective/scope/acce
 When an EXECUTE handoff may materially benefit from orchestration, the Card may point the receiver to `execution-orchestrator`; it must not predeclare that Sub Agents are required. The receiving environment decides through its execution value gate.
 
 Repository publication follows Project Governance remote-delivery authority. A Handoff Card may request the receiver to perform the already-authorized repository push/verification boundary, but it cannot invent a remote, grant force-push, choose `main`, or create publication authority absent from the owning task/project.
+
+## Human product-interface acceptance boundary
+
+For state-changing work that materially changes a real product interface's rendered layout, visual hierarchy, content presentation, interaction behavior, or responsive behavior, human UI/UX/product acceptance is the default final product-interface gate. The absence of an explicit acceptance field does not waive the gate.
+
+The receiver may still:
+
+- run Playwright, Cypress, E2E, DOM/state assertions, accessibility checks, screenshot/visual-regression systems, and other automated browser verification;
+- open and inspect the rendered interface with browser tooling or Computer Use for debugging, diagnosis, evidence gathering, internal Design review, and corrective implementation;
+- return machine-observed findings from screenshots, rendered states, or browser interaction.
+
+The receiver must **not**:
+
+- treat its own manual-style browser clicking or screenshot inspection as human acceptance;
+- report `AUDIT_INDEPENDENCE: HUMAN` from AI/browser observation;
+- convert automated browser PASS or AI rendered inspection into `HUMAN_UI_ACCEPTANCE: PASS`;
+- claim final UI/UX/product acceptance when the required human decision is still pending;
+- infer `NOT_REQUIRED` merely because the sender omitted the human-acceptance field.
+
+When material, the Card boundary and receipt keep the evidence classes explicit:
+
+```text
+AUTOMATED_BROWSER_VERIFICATION: PASS | FAIL | NOT_RUN | NOT_APPLICABLE
+AI_RENDERED_INSPECTION: PASS | FINDINGS | LIMITED | NOT_RUN | NOT_APPLICABLE
+HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
+```
+
+For a material product-interface change, default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human reviewer/user decision is observed. `NOT_REQUIRED` is valid only when an owning user/project authority explicitly waives the human UI gate for that change, or when the task clearly does not produce a product-interface result that needs visual/interaction acceptance.
+
+`HUMAN_UI_ACCEPTANCE: PASS` or `FAIL` requires an explicit human reviewer/user decision about the actual interface. A receiver may propagate an already-observed human result when its authority/provenance is clear, but it may not manufacture that result through Computer Use.
+
+A pending human gate does not invalidate otherwise valid automated verification or AI internal review; it only prevents a final human-acceptance claim.
 
 ## Card generation rules
 
@@ -80,6 +115,7 @@ Before returning a generated Card, check and correct all of the following in the
 7. **Boundary** — the Card cannot grant writes, scope, side effects, remote publication, or repository authority beyond the owning task.
 8. **Identity semantics** — sender-observed commits/refs belong in `OBSERVED_BASIS` by default. Promote an identity to `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or an equivalent lock only when an owning authority explicitly defines that lock and the Card is merely referencing it.
 9. **Outcome-neutral return** — `RETURN_CONTRACT` requests actual evidence/outcome. Do not predeclare `FINAL_STATE: READY`, `PASS`, merge/release completion, remote-delivery success, or another success that the receiver has not observed.
+10. **Human acceptance ownership** — for material product-interface changes, default the human gate to pending unless owning authority explicitly waives it; never delegate the final decision to the receiving AI or equate automated/AI browser evidence with human acceptance.
 
 A Card that knowingly fails one of these checks is not returned with a warning; revise it until compliant or return to Project Governance when the owning authority itself is ambiguous/conflicting.
 
@@ -93,9 +129,13 @@ When execution topology is material, the return contract may request the **obser
 
 For repository-backed state-changing work that produces or advances commits, the return contract should also request the applicable Project Governance remote-delivery evidence. Local commit identity and remote delivery are separate claims.
 
+For material product-interface work, the return contract should request automated browser evidence, AI-rendered findings if any, and human acceptance state separately. Unless owning authority explicitly waives the human gate, the receiver may finish implementation/self-check and return `HUMAN_UI_ACCEPTANCE: PENDING`; it must not self-approve that field.
+
 ### AUDIT / REVIEW
 
 Read-only. Add target/range/observed identity and, when material, required claims or independence expectation. Findings do not authorize fixes.
+
+An AI/browser REVIEW of a rendered product surface remains machine review. For a material product-interface change, return the machine findings plus `HUMAN_UI_ACCEPTANCE: PENDING` unless an explicit human result or explicit waiver is already available.
 
 ### VERIFY
 
@@ -110,6 +150,8 @@ EXPECTED_EVIDENCE
 ```
 
 If the job changes test/source/config, it is EXECUTE instead.
+
+Automated browser verification is valid `VERIFY` evidence. It does not become human product-interface acceptance merely because the test uses a real browser.
 
 ### DIAGNOSE
 
@@ -151,6 +193,9 @@ REMOTE_COMMIT                # sha | NONE | UNKNOWN, when remote delivery is mat
 EXECUTION_TOPOLOGY           # when materially decided/executed
 SUBAGENTS                    # NO, or YES + bounded role/count summary
 SUBAGENT_RUNTIME             # when SUBAGENTS=YES: observed effective identity, configured-vs-effective caveat, or UNKNOWN
+AUTOMATED_BROWSER_VERIFICATION # when product-interface browser verification is material
+AI_RENDERED_INSPECTION       # when machine-rendered inspection was performed
+HUMAN_UI_ACCEPTANCE          # PENDING | PASS | FAIL | NOT_REQUIRED when product-interface acceptance is material
 VERIFICATION
 LIFECYCLE
 UNRESOLVED
@@ -162,11 +207,16 @@ A local `FINAL_IDENTITY`/`LOCAL_COMMIT` does not imply `REMOTE_DELIVERY: PUSHED_
 
 `EXECUTION_TOPOLOGY` / `SUBAGENTS` / `SUBAGENT_RUNTIME` are execution evidence, not authorization. Do not fabricate them and do not spawn Sub Agents solely so these fields are non-empty.
 
+When present, `HUMAN_UI_ACCEPTANCE` is also evidence, not authorization. A receiving AI cannot set it to `PASS`/`FAIL` from its own browser/Computer Use activity, and cannot set `NOT_REQUIRED` merely from omission of the gate.
+
 ### AUDIT / REVIEW
 
 ```text
 OBSERVED_IDENTITY / RANGE
 EVIDENCE / FINDINGS
+AUTOMATED_BROWSER_VERIFICATION   # when material
+AI_RENDERED_INSPECTION           # when material
+HUMAN_UI_ACCEPTANCE              # when material
 UNKNOWN
 VERDICT
 CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
@@ -184,5 +234,7 @@ PROVES
 DOES_NOT_PROVE
 NEXT_SAFE_ACTION
 ```
+
+For browser test verification, `DOES_NOT_PROVE` should explicitly include human product-interface acceptance when that distinction is material.
 
 Keep receipts decision-oriented and explicitly report legitimate no-change/no-output success. Human-facing conversational status receipts are a Project Governance concern and do not replace cross-context receipts.

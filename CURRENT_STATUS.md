@@ -1,10 +1,10 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-15.
+Last verified: 2026-10-18.
 
 ## Published baseline
 
-Formal GitHub Plugin release is now `plugin-v0.7.3`.
+Formal GitHub Plugin release remains `plugin-v0.7.3`.
 
 Publication identity:
 
@@ -29,7 +29,7 @@ The prior `plugin-v0.7.2` release remains immutable historical evidence.
 
 ## v0.7.3 behavior
 
-Project Governance now distinguishes local commit creation from remote repository delivery.
+Project Governance distinguishes local commit creation from remote repository delivery.
 
 For state-changing repository work that produced or advanced commits:
 
@@ -53,14 +53,15 @@ Project Governance and EXECUTE Handoff receipts expose local and remote delivery
 
 ## Web Plugin
 
-The existing private personal Web Plugin is synchronized in place to `0.7.3`:
+The existing private personal Web Plugin remains synchronized in place to `0.7.3`:
 
 - Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
 - version: `0.7.3`;
 - current Web release ID: `pluginrel_6ad04f006d348191928277d9a0e82c15`;
 - scope/discoverability: `USER / PRIVATE` unchanged;
 - root and platform manifests read back as `0.7.3`;
-- new remote-delivery contract and Project Governance / Agent Handoff changes read back.
+- v0.7.3 remote-delivery contract and Project Governance / Agent Handoff changes were read back;
+- `skills/project-governance/references/remote-delivery.md` is present.
 
 `WEB_PLUGIN_SYNC_073`: `PASS`.
 
@@ -77,14 +78,38 @@ Intentional distribution projections:
 
 These projections may coexist. Release/distribution correctness depends on source/version/content equivalence rather than forcing one physical runtime cache path.
 
+## Active task
+
+Task `EG-HUMAN-UI-ACCEPTANCE-089` is `IMPLEMENTED / DRAFT_REVIEW` on branch `codex/human-ui-acceptance-boundary`.
+
+Draft PR `#37 — feat: make product UI acceptance human-owned` is `OPEN / DRAFT / UNMERGED`; source head `905dfe7c3901581491c3ea59271bb7cf204aeeee` was observed mergeable.
+
+Implemented reusable boundary:
+
+- automated browser verification remains valid: Playwright/Cypress/E2E, DOM/state, accessibility, screenshot/visual regression and comparable scripted checks are not disabled or downgraded;
+- AI browser/Computer Use inspection remains allowed for debugging, diagnosis, evidence gathering, internal Design review and corrective work;
+- machine-driven clicking/screenshots cannot be reported as human acceptance or `AUDIT_INDEPENDENCE: HUMAN`;
+- material real-product interface changes default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human decision;
+- omission of a human-acceptance field does not waive the gate;
+- `NOT_REQUIRED` requires an explicit owning waiver or a task with no product-interface acceptance surface;
+- Handoff cards/receipts preserve separate `AUTOMATED_BROWSER_VERIFICATION`, `AI_RENDERED_INSPECTION`, and `HUMAN_UI_ACCEPTANCE` evidence.
+
+V0 diff/self-check: `PASS`.
+
+No pull-request workflow runs were observed for source head `905dfe7c3901581491c3ea59271bb7cf204aeeee`; no CI PASS is claimed or required by the current V0 documentation/rule task.
+
+No new Plugin release is authorized by Task 089. Published/runtime Plugin baseline remains `0.7.3` until a later explicit merge/release decision.
+
 ## Repository lifecycle
 
 - stale PR #21: `CLOSED / UNMERGED / SUPERSEDED`;
 - v0.7.2 release PR #34: `MERGED`;
 - v0.7.3 source PR #35: `MERGED`;
 - v0.7.3 release PR #36: `MERGED`;
-- open PR count: `0`;
-- Task `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`: `COMPLETE`.
+- Task `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`: `COMPLETE`;
+- Task `EG-HUMAN-UI-ACCEPTANCE-089`: `IMPLEMENTED / DRAFT_REVIEW`;
+- PR #37: `OPEN / DRAFT / UNMERGED`;
+- open PR count: `1`.
 
 ## Downstream installation state
 

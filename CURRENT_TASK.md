@@ -1,96 +1,91 @@
-# CURRENT TASK — Engineering Governance Plugin v0.7.3 Formal Release
+# CURRENT TASK — Human UI Acceptance Boundary
 
-Date: 2026-10-15
+Date: 2026-10-18
 
 Repository: `Lost0rz/Engineering-Governance`
 
-Task ID: `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`
+Task ID: `EG-HUMAN-UI-ACCEPTANCE-089`
 
-Task class: `RELEASE`
+Task class: `CORRECTIVE`
 
-State: `COMPLETE`
+State: `IMPLEMENTED / DRAFT_REVIEW`
+
+Branch: `codex/human-ui-acceptance-boundary`
+
+Control parent: `bb72d3aae0f98b312700dff3ee527301e9e55991`
 
 ## Objective
 
-Publish the accepted Engineering Governance Plugin `0.7.3` source as a formal GitHub release, synchronize the existing private Web Plugin in place to `0.7.3`, and leave Local Git-backed installation as a downstream user-executed update with explicit verification commands.
+Make human product-interface acceptance an explicit reusable Engineering Governance boundary without weakening automated browser testing.
 
-## Source basis
+AI/browser tooling may still inspect rendered pages for debugging, evidence gathering, design self-review, and implementation correction, but AI-driven Computer Use/manual-style clicking or screenshot inspection must not be treated as the final human UI/UX/product acceptance gate.
 
-Task `EG-REMOTE-DELIVERY-CLOSEOUT-087` source work completed with:
+## Required behavior
 
-- PR `#35 — feat: require verified remote repository delivery at closeout` — `MERGED`;
-- source merge commit: `998a8cae62546ed8a2551c1fb54aded037c62985`;
-- validated semantic/source head: `7a5c256b4bdf09768645d252df340870f8d8ef82`;
-- `Validate Plugin v0.7.3 Candidate` run `38677775327` — `success`;
-- root manifest: `0.7.3`;
-- exactly nine top-level Skills retained.
+1. Preserve Playwright/Cypress/E2E, DOM, accessibility, screenshot-regression, and other automated browser verification as valid engineering evidence.
+2. Allow AI/browser/Computer Use inspection for diagnosis, debugging, bounded design review, and corrective implementation support.
+3. Prohibit machine-driven rendered inspection from being reported as human acceptance.
+4. Separate internal Design review from final human acceptance.
+5. For state-changing work that materially changes a real product interface, default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human decision; omission of the field does not waive the gate.
+6. Allow `HUMAN_UI_ACCEPTANCE: NOT_REQUIRED` only when an owning user/project authority explicitly waives the human gate or the task does not produce a product-interface result needing visual/interaction acceptance.
+7. Cross-context execution/review cards must preserve this boundary rather than instructing the receiving AI to self-approve the final product interface through Computer Use.
 
-## Runtime-acceptance decision
+## Scope
 
-The user explicitly waived an additional disposable Local runtime acceptance round for this bounded correction and authorized direct publication/distribution.
+Reusable-source changes:
 
-- `LOCAL_RUNTIME_ACCEPTANCE_073`: `WAIVED_BY_USER`;
-- no runtime PASS claim is inferred from the waiver.
+- `skills/design/SKILL.md`
+- `skills/project-governance/references/verification-tiers.md`
+- `skills/agent-handoff/SKILL.md`
+- `skills/agent-handoff/references/handoff-contract.md`
+- control/status files required by the repository lifecycle
 
-## Formal release result
+Do not disable browser automation or automated tests. Do not ban rendered inspection as engineering evidence. Do not introduce runtime enforcement, daemons, or tool blocking.
 
-- release PR: `#36 — release: publish Engineering Governance Plugin v0.7.3` — `MERGED`;
-- publication merge/source SHA: `25c7607de18a5ae70f9be48e2faca8b4723fed4c`;
-- GitHub Actions workflow: `Release Plugin v0.7.3`;
-- workflow run: `38678260676` — `success`;
-- tag: `plugin-v0.7.3` -> `25c7607de18a5ae70f9be48e2faca8b4723fed4c`;
-- release ID: `413399094`;
-- release title: `Engineering Governance Plugin v0.7.3`;
-- release state: published, non-draft, non-prerelease;
-- asset: `engineering-governance-plugin.zip`;
-- asset ID: `642580127`;
-- asset size: `144317` bytes;
-- asset SHA-256: `d5cee00ff2aacdbe1010f09d0ae706388ef7f62ec1935838da6f3d5f5e2597a6`;
-- package entries: `63`;
-- included top-level Skills: exactly `9`;
-- package boundary: `plugin.json` + `skills/**` only.
+## Implementation result
 
-The one-shot release workflow was archived after successful publication at commit `3dd2aa94bb9f16097f606735f3aff4399adbd171`.
+Draft PR: `#37 — feat: make product UI acceptance human-owned`
 
-## Web Plugin result
+Source semantic head after the final reusable-rule edit: `905dfe7c3901581491c3ea59271bb7cf204aeeee`.
 
-The existing private personal Web Plugin was updated in place:
+The implemented contracts now separate:
 
-- Plugin ID unchanged: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.7.3`;
-- Web release ID: `pluginrel_6ad04f006d348191928277d9a0e82c15`;
-- scope/discoverability: `USER / PRIVATE` unchanged;
-- root and platform manifests read back as `0.7.3`;
-- Project Governance remote-delivery contract and Agent Handoff receipt fields read back;
-- new `skills/project-governance/references/remote-delivery.md` is present.
+```text
+AUTOMATED_BROWSER_VERIFICATION
+AI_RENDERED_INSPECTION
+INTERNAL_VISUAL_REVIEW
+HUMAN_UI_ACCEPTANCE
+```
 
-`WEB_PLUGIN_SYNC_073`: `PASS`.
+Key behavior:
 
-## Repository lifecycle
+- Playwright/Cypress/E2E and comparable browser automation remain valid engineering verification;
+- AI browser/Computer Use inspection remains allowed for debugging, evidence gathering, internal Design review and corrective work;
+- AI/manual-style browser inspection cannot become `AUDIT_INDEPENDENCE: HUMAN` or `HUMAN_UI_ACCEPTANCE: PASS`;
+- material real-product interface changes default to human acceptance `PENDING`;
+- `NOT_REQUIRED` cannot be inferred from omission and requires an owning waiver or a non-product-interface acceptance surface;
+- Handoff cards/receipts preserve the same boundary across agents, sessions and machines.
 
-- stale PR #21: `CLOSED / UNMERGED / SUPERSEDED`;
-- v0.7.2 release PR #34: `MERGED`;
-- v0.7.3 source PR #35: `MERGED`;
-- v0.7.3 release PR #36: `MERGED`;
-- open PR count after release: `0`.
+## Verification
 
-## Boundaries after closeout
+Risk tier: `V0` — reusable rule/contract correction.
 
-- do not move or replace tags `plugin-v0.7.2` or `plugin-v0.7.3`;
-- Local runtime acceptance for v0.7.3 remains `WAIVED_BY_USER`, not PASS;
-- Local Git-backed installation/update is downstream and must be executed/verified on the user's machines;
-- Local Git-backed and account-synced Plugin projections may coexist; repository source remains semantic authority.
+Self-check against the PR diff: `PASS`.
 
-## Control Alignment
+Verified:
 
-- `TARGET_VERSION`: `0.7.3`
-- `SOURCE_VALIDATION`: `PASS`
-- `LOCAL_RUNTIME_ACCEPTANCE_073`: `WAIVED_BY_USER`
-- `WEB_PLUGIN_UPDATE`: `PASS`
-- `WEB_RELEASE_ID`: `pluginrel_6ad04f006d348191928277d9a0e82c15`
-- `FORMAL_GITHUB_RELEASE_073`: `PASS`
-- `RELEASE_RUN`: `38678260676 / success`
-- `RELEASE_TAG`: `plugin-v0.7.3`
-- `RELEASE_SOURCE_SHA`: `25c7607de18a5ae70f9be48e2faca8b4723fed4c`
-- `OPEN_PRS`: `0`
-- `TASK_STATE`: `COMPLETE`
+- source wording clearly distinguishes automated browser verification, AI rendered inspection, internal Design review, and human UI acceptance;
+- no contract disables or downgrades Playwright/E2E/browser automation;
+- machine-driven rendered evidence cannot satisfy human acceptance;
+- material product-interface changes default to a pending human gate rather than silently becoming `NOT_REQUIRED`;
+- Design no longer treats its machine visual review as final product acceptance;
+- Agent Handoff preserves the acceptance owner across contexts;
+- changed reusable-source paths remain within the nine-Skill capability model.
+
+PR `#37` at source head `905dfe7c3901581491c3ea59271bb7cf204aeeee` was observed `OPEN / DRAFT / UNMERGED / MERGEABLE`.
+
+No pull-request workflow runs were observed for that exact source head. No CI PASS is claimed; the task's V0 contract did not require runtime/browser execution for this documentation/rule correction.
+
+## Delivery boundary
+
+Implementation is remotely present on the task branch and Draft PR #37 is open. Do not merge or publish a new Plugin release without a later explicit merge/release decision.
