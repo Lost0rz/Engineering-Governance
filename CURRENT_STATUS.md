@@ -16,18 +16,19 @@ Publication identity:
 - asset: `engineering-governance-plugin.zip`;
 - included top-level Skills: exactly `9`.
 
-The formal GitHub release is not being moved or replaced by the current Web/local distribution task.
+The formal GitHub release/tag was not moved by the current Web/local distribution task.
 
-## Source state
+## Source / distribution state
 
-Task `EG-HUMAN-UI-ACCEPTANCE-089` source work is merged.
+Task `EG-HUMAN-UI-ACCEPTANCE-089` is merged and distributed as Plugin source version `0.7.4`.
 
-- PR `#37 — feat: make product UI acceptance human-owned`: `MERGED`;
-- merge commit / current source basis: `ae149990e0b86105642f2df3c1e50efd9f61e73c`;
-- V0 documentation/rule self-check: `PASS`;
-- no CI PASS was claimed or required for that bounded rule correction.
+- PR `#37 — feat: make product UI acceptance human-owned`: `MERGED` at `ae149990e0b86105642f2df3c1e50efd9f61e73c`;
+- PR `#38 — chore: prepare plugin v0.7.4 web/local sync`: `MERGED`;
+- v0.7.4 distribution source/merge commit: `57d118ae807414b593d39561653c0a5ee586587d`;
+- root `plugin.json`: `0.7.4`;
+- top-level Skills remain exactly `9`.
 
-Merged behavior:
+Distributed behavior:
 
 - Playwright/Cypress/E2E, DOM/state, accessibility and screenshot/visual-regression automation remain valid engineering verification;
 - AI browser/Computer Use inspection remains allowed for debugging, diagnosis, evidence gathering, internal Design review and corrective work;
@@ -36,14 +37,18 @@ Merged behavior:
 - `NOT_REQUIRED` cannot be inferred from omission and requires an owning waiver or a non-product-interface acceptance surface;
 - cross-context Handoff cards/receipts preserve the same acceptance owner.
 
-## Web Plugin baseline
+## Web Plugin
 
-Before Task 090 synchronization, the existing private personal Web Plugin remains:
+The existing private personal Web Plugin is synchronized in place to `0.7.4`:
 
 - Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.7.3`;
-- current Web release ID: `pluginrel_6ad04f006d348191928277d9a0e82c15`;
-- scope/discoverability: `USER / PRIVATE` unchanged.
+- version: `0.7.4`;
+- current Web release ID: `pluginrel_6ad448c957ec8191836973db40769c44`;
+- scope/discoverability: `USER / PRIVATE` unchanged;
+- root and `.codex-plugin` manifests read back as `0.7.4`;
+- Design, Project Governance verification, Agent Handoff, and Handoff contract human-acceptance changes read back from the current release.
+
+`WEB_PLUGIN_SYNC_074`: `PASS`.
 
 ## Distribution model
 
@@ -63,29 +68,23 @@ Local marketplace/source remains:
 
 Because the marketplace itself is local rather than a Git marketplace, local refresh uses plugin remove/add rather than `codex plugin marketplace upgrade`.
 
-## Active task
+## Current task
 
-Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090` is `ACTIVE` on branch `codex/plugin-v0.7.4-web-local-sync` from source/control parent `ae149990e0b86105642f2df3c1e50efd9f61e73c`.
+Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_PENDING`.
 
-Target:
-
-- source manifest: `0.7.4`;
-- merge version bump to `main`;
-- update existing Web Plugin in place to `0.7.4` with identity/scope unchanged;
-- provide user-executed Local refresh/verification commands for `0.7.4`;
-- do not claim Local runtime acceptance until observed on the user's machine.
-
-Formal GitHub release/tag remains `plugin-v0.7.3` unless a separate formal-release task is requested.
+Web synchronization is complete. Local installation/runtime acceptance remains pending user execution on the target machine; no local PASS is inferred from the Web result.
 
 ## Repository lifecycle
 
 - Task `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`: `COMPLETE`;
-- Task `EG-HUMAN-UI-ACCEPTANCE-089`: `MERGED`;
-- PR #37: `MERGED` at `ae149990e0b86105642f2df3c1e50efd9f61e73c`;
-- Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `ACTIVE`.
+- Task `EG-HUMAN-UI-ACCEPTANCE-089`: `MERGED / DISTRIBUTED_AS_0.7.4`;
+- PR #37: `MERGED`;
+- PR #38: `MERGED`;
+- Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_PENDING`.
 
 ## Downstream installation state
 
-- private Web Plugin: `0.7.3` pending Task 090 sync;
-- Air Local Git-backed Plugin: `0.7.4` update not yet observed;
-- Mac mini Local Git-backed Plugin: `0.7.4` update not yet observed.
+- private Web Plugin: `0.7.4` — `PASS`;
+- Air Local Git-backed Plugin: `0.7.4` update pending observation;
+- Mac mini Local Git-backed Plugin: `0.7.4` update pending observation;
+- local update must be followed by a new Codex/Desktop session before loaded-version verification.
