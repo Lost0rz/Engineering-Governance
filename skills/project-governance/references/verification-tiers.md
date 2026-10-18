@@ -74,6 +74,10 @@ Automated browser verification remains fully valid engineering evidence. This in
 
 AI-driven browser inspection — including Computer Use/manual-style clicking, opening pages, navigating flows, or inspecting screenshots/renders — may be used for debugging, diagnosis, evidence gathering, internal Design review, and bounded corrective work. It is **machine-observed rendered evidence**, not human acceptance.
 
+For a state-changing task that materially changes a real product interface's rendered layout, visual hierarchy, content presentation, interaction behavior, or responsive behavior, **human UI acceptance is required by default**. Omission of a human-acceptance field from a task/card does not waive this gate.
+
+The default state is `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human reviewer/user decision is observed. `NOT_REQUIRED` is valid only when an owning user/project authority explicitly waives the human UI gate for that change, or when the task does not produce a product-interface result that needs visual/interaction acceptance.
+
 Therefore:
 
 - AI rendered inspection must not be reported as `AUDIT_INDEPENDENCE: HUMAN`;
@@ -90,7 +94,7 @@ AI_RENDERED_INSPECTION: PASS | FINDINGS | LIMITED | NOT_RUN | NOT_APPLICABLE
 HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
 ```
 
-`HUMAN_UI_ACCEPTANCE: PASS` or `FAIL` requires an explicit human decision. `PENDING` means implementation/testing may be otherwise complete, but no final human product-interface acceptance claim may be made yet. Use `NOT_REQUIRED` only when the owning task/project acceptance contract does not require a human UI gate.
+`HUMAN_UI_ACCEPTANCE: PASS` or `FAIL` requires an explicit human decision. `PENDING` means implementation/testing may be otherwise complete, but no final human product-interface acceptance claim may be made yet. `NOT_REQUIRED` must be supported by the owning acceptance authority; it must not be inferred merely because the task forgot to mention a human UI gate.
 
 This boundary does not prevent AI from viewing the interface. It prevents machine observation from being promoted into a human acceptance claim.
 
@@ -130,7 +134,7 @@ complete bounded architecture/implementation
 -> freeze semantic candidate when ready
 -> required integrated verification
 -> independent audit/acceptance task where required
--> human UI acceptance when required by the product-interface contract
+-> human UI acceptance for material product-interface changes unless explicitly waived
 -> read current host gates
 -> bounded corrective task if findings create a distinct objective
 -> rerun affected integrated scenarios/evidence
