@@ -44,7 +44,7 @@ Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target
 
 ## Human UI acceptance preservation
 
-When a handoff concerns a product interface and the owning task/project requires human UI/UX/product acceptance, the Card must preserve that acceptance owner across contexts.
+For state-changing work that materially changes a real product interface, human UI/UX/product acceptance is the default final product-interface gate unless an owning user/project authority explicitly waives it. A missing field or silent task does not imply `NOT_REQUIRED`.
 
 The receiving AI may still run Playwright/Cypress/E2E or other automated browser verification and may use browser/Computer Use/screenshots for debugging, evidence gathering, internal Design review, or corrective work. Those machine-driven checks must not be promoted into final human acceptance.
 
@@ -55,6 +55,8 @@ AUTOMATED_BROWSER_VERIFICATION
 AI_RENDERED_INSPECTION
 HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
 ```
+
+For a material product-interface change, default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human decision is observed. `NOT_REQUIRED` needs an explicit owning waiver or a clearly non-product-interface acceptance surface.
 
 A receiver must not return `HUMAN_UI_ACCEPTANCE: PASS` merely because it opened the page, clicked through the workflow, or inspected screenshots/renders itself. `PASS`/`FAIL` requires an explicit human decision.
 
