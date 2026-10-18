@@ -35,6 +35,7 @@ Expected reusable-source changes:
 
 - `skills/design/SKILL.md`
 - `skills/project-governance/references/verification-tiers.md`
+- `skills/agent-handoff/SKILL.md`
 - `skills/agent-handoff/references/handoff-contract.md`
 - control/status files required by the repository lifecycle
 
