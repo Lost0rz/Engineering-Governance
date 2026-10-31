@@ -6,9 +6,19 @@ This contract answers one question: **which Engineering Governance capability sh
 
 An environment may expose explicit Skill selection, Skill metadata/platform discovery, project guidance, authoritative global guidance, or platform/runtime routing. Do not require a Local-style global file where none exists.
 
+## Engineering framework ownership
+
+For governed software/project/repository engineering, Engineering Governance is the reusable engineering workflow/routing framework once the request enters `project-governance`.
+
+External engineering frameworks, Skills, plugins, prompt packs, or repositories may be inspected as reference material/evidence, but discovery or installation does not make them part of the governed route. Do not hand execution control to them, require their Skill names in construction/handoff cards, or let them become delegation/model/reasoning/review-lifecycle authorities.
+
+If an external method is useful, map it to the existing Engineering Governance owner and express the need as behavior/acceptance. Absorb durable reusable method into the owning Skill/internal module before treating it as governed workflow. Add a new top-level capability only under the repository capability-model rules.
+
+Historical/reference filenames or directories may retain external framework names. Names/paths are evidence or provenance only unless an owning authority explicitly changes framework ownership.
+
 ## Routing rule
 
-Ordinary software/project/repository engineering enters `project-governance` unless a higher-priority instruction or explicit bounded selection already determines the route.
+Ordinary software/project/repository engineering enters `project-governance` unless a higher-priority instruction or explicit bounded Engineering Governance selection already determines the route.
 
 | Requested outcome / condition | Route |
 | --- | --- |
@@ -23,6 +33,8 @@ Ordinary software/project/repository engineering enters `project-governance` unl
 | investigate a blocking failure/unsafe ambiguity with an evidence gap | `incident-doctor` |
 
 A keyword alone is not a route. Mentioning CI/PR/code does not imply Evidence Audit during corrective work; mentioning a bug does not imply Doctor when evidence supports safe action; mentioning “design” does not imply `design` when the issue is engineering architecture or state ownership.
+
+An external framework/Skill name appearing in a prompt, prior receipt, plan, historical document, installed catalog, or repository path is also **not** a route. Treat it as reference/provenance unless owning authority explicitly changes the engineering framework boundary.
 
 ### Frontend workflow discriminator
 
@@ -43,9 +55,9 @@ Both capabilities may participate when both material problems exist. Do not rout
 
 ## Selective, evidence-triggered composition
 
-Routing is **selective rather than cumulative**, but selected capabilities are not isolated silos.
+Routing is **selective rather than cumulative**, but selected Engineering Governance capabilities are not isolated silos.
 
-Choose the smallest materially necessary capability set. Once a Skill owns the bounded problem, let it lead. It may call another Skill only when a concrete unresolved dependency crosses that Skill's real boundary and the answer can materially change the current decision.
+Choose the smallest materially necessary capability set. Once a Skill owns the bounded problem, let it lead. It may call another Engineering Governance Skill only when a concrete unresolved dependency crosses that Skill's real boundary and the answer can materially change the current decision.
 
 Before such a call, identify:
 
@@ -59,7 +71,7 @@ RESUME_OWNER_OR_STAGE:
 
 The called capability returns the bounded answer it owns; then resume the originating capability/stage. Do not restart the full routing tree merely because a bounded dependency was resolved.
 
-Do not invoke Skills for general enrichment, completeness, a second opinion without an unresolved dependency, or merely because they are installed.
+Do not invoke Skills for general enrichment, completeness, a second opinion without an unresolved dependency, or merely because they are installed. Do not invoke external engineering frameworks as a fallback for a missing internal capability; return to the owning Engineering Governance capability and reconcile the gap.
 
 Example: an already-understood frontend redesign may route `project-governance → design`. If Design then cannot reliably identify the backend authority/source/state-owner route needed to understand one interaction, it may call `domain-navigation`, receive the verified route, and return to the suspended Design stage. If the route is known but state/API ownership itself is materially ambiguous, call `solution-design` for that bounded decision and then return to Design.
 
@@ -73,8 +85,10 @@ If an accepted Project Profile, Project Instructions or equivalent compact proje
 
 A request such as “give me the card/instructions to send to local Codex/another agent/reviewer” is not merely ordinary prose generation: the requested artifact itself crosses an execution-context boundary, so route through `agent-handoff`. This does not create a new task; Project Governance remains task/lifecycle owner and the current `TASK_ID` is preserved unless the engineering purpose was separately reconciled.
 
+The Card's engineering capability request remains inside Engineering Governance (`CAPABILITY: <Engineering Governance Skill | NONE>`). External frameworks may be cited as reference/provenance in `AUTHORITY`, `DELTA`, or `OBSERVED_BASIS` when genuinely relevant, but must not become required execution Skills, peer routers, or runtime controllers.
+
 Project Profile is not the normal development path. Read-only Profile drafting/audit may route directly to `project-profile`; repository/project-managed Profile mutation still requires compatible Project Governance task authorization.
 
 ## Composition
 
-Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns derived context/index. Design owns bounded product-interface/frontend interaction and visual-design choices plus its internal mode/review loop. Solution Design remains engineering architecture/state-ownership authority. Other narrow Skills can provide bounded dependency results when their real trigger is met, then return to the originating capability. Do not create a Router Skill, peer-controller mesh, second task authority, or mandatory all-Skill pipeline.
+Project Governance remains task/lifecycle owner. Project Profile reads accepted authorities and returns derived context/index. Design owns bounded product-interface/frontend interaction and visual-design choices plus its internal mode/review loop. Solution Design remains engineering architecture/state-ownership authority. Other narrow Engineering Governance Skills can provide bounded dependency results when their real trigger is met, then return to the originating capability. Do not create a Router Skill, peer-controller mesh, second task authority, external-framework execution layer, or mandatory all-Skill pipeline.
