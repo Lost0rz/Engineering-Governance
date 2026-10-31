@@ -4,11 +4,24 @@ The nine Skills cooperate without competing controllers.
 
 `project-governance` owns task/control authority, lifecycle/reconciliation, workspace boundaries, verification choice and closeout. A narrower Skill owns only its bounded capability.
 
+## Engineering framework boundary
+
+The composition graph below is the reusable engineering workflow graph for governed work. External engineering frameworks, Skills, plugins, prompt packs, or repositories may provide reference material, patterns, or evidence, but they are not peer capabilities in this graph and do not become execution controllers because they are installed or discoverable.
+
+If a useful external method is missing internally:
+
+1. identify the existing Engineering Governance owner for the underlying need;
+2. express the immediate requirement as behavior/acceptance rather than an external Skill invocation;
+3. extend the owning Skill/internal module when the method is reusable and stable;
+4. add a new top-level capability only when the capability-model rules actually require one.
+
+Do not route out to an external framework as a convenience fallback.
+
 ## Composition is selective, not a pipeline
 
 Do **not** walk the Skill catalog from top to bottom. Do **not** invoke a Skill merely because it is installed or adjacent to the problem.
 
-Start with Project Governance for ordinary engineering work, then select the smallest materially necessary bounded owner for the actual unresolved problem.
+Start with Project Governance for ordinary engineering work, then select the smallest materially necessary bounded Engineering Governance owner for the actual unresolved problem.
 
 ```text
 request
@@ -35,9 +48,11 @@ project-governance
 
 These are bounded owners, not mandatory stages.
 
+External frameworks do not appear as additional nodes around or inside this graph unless owning user/project authority explicitly changes the engineering framework boundary for that task.
+
 ## Evidence-triggered nested composition
 
-A selected capability may call another capability when a **specific unresolved dependency** crosses the second capability's real boundary and the answer materially affects the current decision.
+A selected capability may call another Engineering Governance capability when a **specific unresolved dependency** crosses the second capability's real boundary and the answer materially affects the current decision.
 
 Every nested call should make these explicit:
 
@@ -58,7 +73,8 @@ Do not call another Skill for:
 - a generic second opinion;
 - re-reading an authority/route already reliably known;
 - the mere fact that a page/system spans multiple domains;
-- the mere fact that the Skill is installed.
+- the mere fact that the Skill is installed;
+- importing a second engineering framework to supply planning, TDD, debugging, review, completion, Sub Agent, or model-routing control.
 
 If the returned result materially changes task scope or authorization, return to Project Governance for reconciliation before mutation. Otherwise resume the originating capability directly.
 
@@ -111,13 +127,16 @@ Owner: solution-design when materially ambiguous
 
 Handoff `CAPABILITY` and `MODE` are separate:
 
-- `CAPABILITY` identifies the bounded Skill/capability the receiver should use, or `NONE`;
+- `CAPABILITY` identifies the bounded Engineering Governance Skill/capability the receiver should use, or `NONE`;
 - `MODE` identifies receiver action/side-effect class.
 
-A mode name never replaces Skill routing or grants mutation authority.
+A mode name never replaces Skill routing or grants mutation authority. An external Skill/plugin/framework name is not a valid `CAPABILITY` value for a governed Engineering Governance Handoff Card.
+
+External references may still appear as evidence/provenance in a handoff when genuinely relevant. That mention does not authorize the receiver to invoke or defer to the external framework.
 
 ## Artifact roles
 
 - Normative/current/design/implementation authorities own project rules, current authorization/state, durable decisions, project-specific design facts, or implementation semantics for their class.
 - Derived projections include Project Profile and Domain/navigation maps; authority wins when they are stale.
 - Observed evidence/transport includes handoffs, briefs, ledgers, audits, CI/test/runtime/review observations; these cannot expand scope or replace authority.
+- External framework documents and historical artifacts are reference/provenance unless owning authority explicitly promotes them; reference status alone never makes them workflow authority.
