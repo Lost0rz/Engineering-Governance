@@ -6,12 +6,30 @@ A Card is transport, not a second task contract. Reference current authority and
 
 If the requested output itself will be sent to another agent, session, machine, reviewer, or execution context as engineering instructions/evidence, the transfer artifact uses this Handoff contract. A free-form “execution card” is not an alternate schema.
 
+## Engineering framework boundary
+
+For governed Engineering Governance work, a Handoff Card transports work within the Engineering Governance framework boundary.
+
+The card may name an Engineering Governance capability or `NONE`; it must not prescribe an external engineering framework/Skill/plugin as a required execution dependency, peer router, planning/TDD/debugging/review/completion controller, Sub Agent orchestrator, or model/reasoning authority.
+
+External framework names may appear only when genuinely needed as reference/provenance/evidence, for example an upstream design document path or an observed historical session. Such mention is not execution authorization.
+
+Do not copy external Skill names into execution requirements merely because they appear in:
+
+- a prior card/receipt/chat/session;
+- an installed/discovered Skill catalog;
+- a historical plan/spec/path;
+- reference material being evaluated;
+- an older execution framework previously used by the project.
+
+If the receiving work needs TDD, debugging rigor, planning, review, verification, or completion evidence, state the behavior/acceptance requirement or the owning Engineering Governance capability. If a reusable method is genuinely missing, return the gap to Project Governance/the owning capability for incorporation rather than exporting execution to another framework.
+
 ## Capability vs Mode
 
 These are orthogonal:
 
 ```text
-CAPABILITY = bounded Skill/capability requested of the receiver, or NONE
+CAPABILITY = bounded Engineering Governance Skill/capability requested of the receiver, or NONE
 MODE       = receiver action / side-effect class
 ```
 
@@ -66,6 +84,8 @@ HUMAN_UI_ACCEPTANCE
 
 Do not omit required core fields. Do not duplicate the full objective/scope/acceptance/STOP/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
 
+Do not add an alternate external-framework field such as `SKILLS_REQUIRED`, `USE_SUPERPOWERS`, `EXTERNAL_WORKFLOW`, or equivalent to bypass `CAPABILITY`. If an external artifact is only reference material, keep it in the normal authority/delta/evidence surfaces and preserve its non-authoritative status.
+
 When an EXECUTE handoff may materially benefit from orchestration, the Card may point the receiver to `execution-orchestrator`; it must not predeclare that Sub Agents are required. The receiving environment decides through its execution value gate.
 
 Repository publication follows Project Governance remote-delivery authority. A Handoff Card may request the receiver to perform the already-authorized repository push/verification boundary, but it cannot invent a remote, grant force-push, choose `main`, or create publication authority absent from the owning task/project.
@@ -115,7 +135,8 @@ Before returning a generated Card, check and correct all of the following in the
 7. **Boundary** — the Card cannot grant writes, scope, side effects, remote publication, or repository authority beyond the owning task.
 8. **Identity semantics** — sender-observed commits/refs belong in `OBSERVED_BASIS` by default. Promote an identity to `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or an equivalent lock only when an owning authority explicitly defines that lock and the Card is merely referencing it.
 9. **Outcome-neutral return** — `RETURN_CONTRACT` requests actual evidence/outcome. Do not predeclare `FINAL_STATE: READY`, `PASS`, merge/release completion, remote-delivery success, or another success that the receiver has not observed.
-10. **Human acceptance ownership** — for material product-interface changes, default the human gate to pending unless owning authority explicitly waives it; never delegate the final decision to the receiving AI or equate automated/AI browser evidence with human acceptance.
+10. **Engineering framework ownership** — `CAPABILITY` is an Engineering Governance capability or `NONE`; external engineering framework/Skill/plugin names are absent from required execution directives. Reference-only mentions remain reference-only.
+11. **Human acceptance ownership** — for material product-interface changes, default the human gate to pending unless owning authority explicitly waives it; never delegate the final decision to the receiving AI or equate automated/AI browser evidence with human acceptance.
 
 A Card that knowingly fails one of these checks is not returned with a warning; revise it until compliant or return to Project Governance when the owning authority itself is ambiguous/conflicting.
 
@@ -126,6 +147,8 @@ A Card that knowingly fails one of these checks is not returned with a warning; 
 Focus on mutation target, fresh delta, allowed mutation boundary, transfer-specific STOP and return evidence. Use `PURPOSE: DIAGNOSTIC_PROBE` or `PURPOSE: TEST_IMPLEMENTATION` when those state changes are specifically authorized.
 
 When execution topology is material, the return contract may request the **observed** execution topology, whether Sub Agents were actually used, their bounded roles/count, and observable effective runtime model/reasoning evidence. It must not require delegation merely to satisfy the receipt.
+
+The Card may require behavior such as red/green regression proof, focused verification, or scoped re-review, but it must describe that behavior directly or route to the owning Engineering Governance capability rather than require an external framework Skill to implement it.
 
 For repository-backed state-changing work that produces or advances commits, the return contract should also request the applicable Project Governance remote-delivery evidence. Local commit identity and remote delivery are separate claims.
 
@@ -162,6 +185,8 @@ Read-only diagnostic question/evidence/hypothesis transfer. State-changing probe
 Runtime/model/tool/capacity values belong to the receiving environment unless an accepted portable project artifact owns them. Sender observations never become receiver defaults merely through the Card.
 
 Configured/default model values and observed effective runtime identity are separate evidence classes. If the receiver cannot observe the effective Sub Agent model/reasoning, it returns `UNKNOWN` rather than promoting configuration into runtime evidence.
+
+An external engineering framework may not use a Card as a vehicle to escalate model/reasoning values, replace environment defaults, or take over Engineering Governance execution topology/review lifecycle. If runtime actually applies an external configuration for independent platform reasons, report that as observed runtime/config evidence rather than treating it as Engineering Governance policy.
 
 ## Standard receipt core
 
