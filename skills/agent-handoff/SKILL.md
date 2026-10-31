@@ -7,13 +7,24 @@ description: Use when engineering responsibility crosses agents, sessions, machi
 
 `HANDOFF = authority references + fresh delta + action boundary + return contract`
 
-A handoff transports responsibility/evidence; it does not create task authority or copy sender runtime configuration into the receiver.
+A handoff transports responsibility/evidence; it does not create task authority, import a second engineering framework, or copy sender runtime configuration into the receiver.
 
 ## Trigger
 
 Use this Skill whenever the requested output itself is intended to transfer engineering responsibility or evidence to another agent, session, machine, reviewer, or execution context. This includes requests to generate an execution/construction card, audit card, review card, verification/test-run card, diagnostic card, or structured return receipt for another context.
 
 Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or `CURRENT_TASK.md` already contains extensive implementation detail.
+
+## Engineering framework ownership
+
+A governed Engineering Governance Handoff Card transfers work **inside the Engineering Governance framework boundary**.
+
+- `CAPABILITY` may name only a bounded Engineering Governance Skill/capability, or `NONE`.
+- Do not add `SKILLS_REQUIRED`, `USE_SKILLS`, workflow steps, or equivalent directives that require external engineering framework/Skill/plugin names.
+- External frameworks may be cited only as reference/provenance/evidence when genuinely relevant; mentioning them does not authorize the receiver to invoke or defer to them.
+- Do not copy historical external Skill names from plans, prior receipts, chat/session history, installed catalogs, repository paths, or reference documents into a new execution requirement.
+- TDD, debugging, review, planning, verification, or completion expectations belong as behavior/acceptance requirements or to the owning Engineering Governance capability, not as external Skill dependencies.
+- If the card exposes a reusable capability gap, return to Project Governance/owning capability for reconciliation rather than routing the receiver into another engineering framework.
 
 ## Two independent dimensions
 
@@ -32,7 +43,7 @@ Required core fields:
 CARD_ID
 TASK_ID
 MODE
-CAPABILITY: <skill | NONE>
+CAPABILITY: <Engineering Governance skill | NONE>
 TARGET
 AUTHORITY
 DELTA: <fresh transfer delta | NONE>
@@ -74,6 +85,8 @@ DELTA_IS_TRANSFER_SPECIFIC: YES
 BOUNDARY_DOES_NOT_EXPAND_AUTHORITY: YES
 OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES
 RETURN_CONTRACT_OUTCOME_NEUTRAL: YES
+ENGINEERING_FRAMEWORK_OWNERSHIP_PRESERVED: YES
+EXTERNAL_ENGINEERING_SKILL_REQUIREMENTS_ABSENT: YES
 HUMAN_UI_ACCEPTANCE_OWNER_PRESERVED_IF_APPLICABLE: YES
 ```
 
@@ -87,11 +100,13 @@ Interpretation:
 - a Card never expands mutation/write authority;
 - a SHA/ref observed by the sender belongs in `OBSERVED_BASIS` unless an owning authority explicitly declares an equality/lock requirement; the Card must not invent `EXPECTED_HEAD`, `MUST_EQUAL`, or equivalent lock semantics;
 - `RETURN_CONTRACT` requests the actual result/evidence. Do not prefill a successful `FINAL_STATE`, `READY`, `PASS`, or merge/release outcome that has not yet been observed;
+- `CAPABILITY` is an Engineering Governance capability or `NONE`, and no external engineering framework/Skill/plugin is prescribed as required execution workflow;
+- external framework names may remain only where they are genuinely reference/provenance/evidence, never as routing/execution authority;
 - when human product-interface acceptance is required, the Card keeps it human-owned and does not delegate that final acceptance to AI Computer Use or screenshot inspection.
 
 A known `NO` is a generation failure and must be fixed before the Card is returned. Do not return the noncompliant draft with an explanatory note.
 
-Before returning a structured Handoff Receipt, likewise verify that its required core fields are present, that `OUTCOME` reports the observed result rather than a predetermined success state, and that any human UI acceptance field reflects an explicit human decision rather than machine observation.
+Before returning a structured Handoff Receipt, likewise verify that its required core fields are present, that `OUTCOME` reports the observed result rather than a predetermined success state, that reported `Skills used`/capability route does not promote external reference Skills into Engineering Governance execution, and that any human UI acceptance field reflects an explicit human decision rather than machine observation.
 
 ## Modes
 
@@ -103,4 +118,4 @@ Before returning a structured Handoff Receipt, likewise verify that its required
 
 Changing test code or diagnostic instrumentation is state-changing and therefore uses `EXECUTE` with an explicit `PURPOSE`/boundary.
 
-Same-purpose continuation preserves the same `TASK_ID`. The receiver resolves its own runtime/configuration capabilities. A Card cannot expand authorization.
+Same-purpose continuation preserves the same `TASK_ID`. The receiver resolves its own runtime/configuration capabilities. A Card cannot expand authorization or import a second engineering framework.
