@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-18.
+Last verified: 2026-10-31.
 
 ## Formal published baseline
 
@@ -16,39 +16,33 @@ Publication identity:
 - asset: `engineering-governance-plugin.zip`;
 - included top-level Skills: exactly `9`.
 
-The formal GitHub release/tag was not moved by the current Web/local distribution task.
+The formal GitHub release/tag is not being moved by the current Web/local distribution task.
 
-## Source / distribution state
+## Distributed source baseline before current task
 
-Task `EG-HUMAN-UI-ACCEPTANCE-089` is merged and distributed as Plugin source version `0.7.4`.
+Task `EG-HUMAN-UI-ACCEPTANCE-089` was merged and distributed as Plugin source version `0.7.4`.
 
 - PR `#37 — feat: make product UI acceptance human-owned`: `MERGED` at `ae149990e0b86105642f2df3c1e50efd9f61e73c`;
 - PR `#38 — chore: prepare plugin v0.7.4 web/local sync`: `MERGED`;
 - v0.7.4 distribution source/merge commit: `57d118ae807414b593d39561653c0a5ee586587d`;
 - root `plugin.json`: `0.7.4`;
-- top-level Skills remain exactly `9`.
+- top-level Skills: exactly `9`.
 
-Distributed behavior:
-
-- Playwright/Cypress/E2E, DOM/state, accessibility and screenshot/visual-regression automation remain valid engineering verification;
-- AI browser/Computer Use inspection remains allowed for debugging, diagnosis, evidence gathering, internal Design review and corrective work;
-- AI/manual-style browser inspection cannot become `AUDIT_INDEPENDENCE: HUMAN` or `HUMAN_UI_ACCEPTANCE: PASS`;
-- material real-product interface changes default to `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human decision;
-- `NOT_REQUIRED` cannot be inferred from omission and requires an owning waiver or a non-product-interface acceptance surface;
-- cross-context Handoff cards/receipts preserve the same acceptance owner.
-
-## Web Plugin
-
-The existing private personal Web Plugin is synchronized in place to `0.7.4`:
+The existing private Web Plugin was synchronized in place to `0.7.4`:
 
 - Plugin ID: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.7.4`;
-- current Web release ID: `pluginrel_6ad448c957ec8191836973db40769c44`;
-- scope/discoverability: `USER / PRIVATE` unchanged;
-- root and `.codex-plugin` manifests read back as `0.7.4`;
-- Design, Project Governance verification, Agent Handoff, and Handoff contract human-acceptance changes read back from the current release.
+- Web release ID: `pluginrel_6ad448c957ec8191836973db40769c44`;
+- scope/discoverability: `USER / PRIVATE`.
 
-`WEB_PLUGIN_SYNC_074`: `PASS`.
+## Current task
+
+Task `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`: `AUTHORIZED / IN_PROGRESS`.
+
+Purpose: harden Engineering Governance so governed engineering remains inside the Engineering Governance capability graph. External engineering frameworks/Skills/plugins may be reference inputs but must not become execution dependencies, routing owners, model/delegation authorities, review-lifecycle controllers, or required Skill names in generated construction/handoff cards.
+
+Planned distribution target: Plugin source/Web version `0.7.5`.
+
+Task 090's pending local 0.7.4 refresh is superseded by Task 091; local users should refresh directly to 0.7.5 after the new source/Web delivery is complete.
 
 ## Distribution model
 
@@ -68,23 +62,16 @@ Local marketplace/source remains:
 
 Because the marketplace itself is local rather than a Git marketplace, local refresh uses plugin remove/add rather than `codex plugin marketplace upgrade`.
 
-## Current task
-
-Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_PENDING`.
-
-Web synchronization is complete. Local installation/runtime acceptance remains pending user execution on the target machine; no local PASS is inferred from the Web result.
-
 ## Repository lifecycle
 
 - Task `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`: `COMPLETE`;
 - Task `EG-HUMAN-UI-ACCEPTANCE-089`: `MERGED / DISTRIBUTED_AS_0.7.4`;
-- PR #37: `MERGED`;
-- PR #38: `MERGED`;
-- Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_PENDING`.
+- Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_0.7.4_REFRESH_SUPERSEDED_BY_091`;
+- Task `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`: `AUTHORIZED / IN_PROGRESS`.
 
 ## Downstream installation state
 
-- private Web Plugin: `0.7.4` — `PASS`;
-- Air Local Git-backed Plugin: `0.7.4` update pending observation;
-- Mac mini Local Git-backed Plugin: `0.7.4` update pending observation;
-- local update must be followed by a new Codex/Desktop session before loaded-version verification.
+- private Web Plugin: `0.7.4` before Task 091 update;
+- Air Local Git-backed Plugin: 0.7.5 refresh not yet observed;
+- Mac mini Local Git-backed Plugin: 0.7.5 refresh not yet observed;
+- local refresh must be followed by a new Codex/Desktop session before loaded-version verification.
