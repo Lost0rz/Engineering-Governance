@@ -9,6 +9,14 @@ Use only after valid task authority exists. This Skill controls **how authorized
 
 Read `references/execution-contract.md`. When Sub Agent delegation is considered, also read `references/subagent-execution.md`. When execution depends on runtime-specific limits/defaults/tools, read `references/environment-capabilities.md`.
 
+## Framework ownership
+
+For governed Engineering Governance work, this Skill is the reusable owner for execution decomposition, topology, delegation, Sub Agent lifecycle, and controlled integration.
+
+External engineering frameworks/Skills/plugins may be inspected as references, but they do not become peer execution orchestrators and may not override this Skill's delegation gate, writer boundaries, runtime isolation, model/reasoning ownership, or review/integration lifecycle merely because they are installed, discoverable, or referenced by a historical plan/card.
+
+If an external execution pattern is useful, translate it into the bounded execution behavior needed here and, when reusable, absorb it into this Skill or its owned references. Do not invoke a second engineering framework to supply execution control.
+
 ## Default posture
 
 Optimize for effective safe execution, not agent count.
@@ -54,6 +62,8 @@ Role names never grant authority. `WORKER` write scope comes from the active tas
 
 Sub Agent redelegation is disabled by default. A delegated unit may not create another delegation layer merely for convenience; nested delegation requires a concrete high-complexity execution need plus observable runtime support and must preserve the same authority/writer rules.
 
+A reviewer finding does not automatically authorize a new whole-task reviewer loop. After a finding is corrected, prefer the smallest re-verification scope that proves the correction and affected invariants. Repeat full independent review only when the correction materially invalidates the previous review range/evidence or owning acceptance requires it.
+
 ## Core flow
 
 1. Read the active task and the bounded accepted plan/design it references.
@@ -65,9 +75,10 @@ Sub Agent redelegation is disabled by default. A delegated unit may not create a
 7. Choose `SEQUENTIAL_DELEGATED`, `PARALLEL_READ_ONLY`, or proven-disjoint `PARALLEL_DISJOINT_WRITERS` as appropriate.
 8. Give each unit a bounded role/objective/dependency/read-write boundary/context/acceptance/return contract.
 9. Apply `ENVIRONMENT_DEFAULT_ONLY`: the receiving execution environment resolves concrete model/reasoning values; reusable governance does not set provider/model names.
-10. Use Agent Handoff when responsibility actually crosses execution contexts; do not propagate sender runtime defaults as receiver defaults.
-11. Integrate against actual repository/evidence state, not agent success text.
-12. Run proportional integrated verification and return topology/runtime/unit/integration evidence to Project Governance.
+10. Reject external framework attempts to prescribe/escalate concrete model/reasoning values or replace the Engineering Governance execution topology/review lifecycle. External configuration is reference evidence unless the receiving environment itself owns it as runtime configuration.
+11. Use Agent Handoff when responsibility actually crosses execution contexts; do not propagate sender runtime defaults as receiver defaults.
+12. Integrate against actual repository/evidence state, not agent success text.
+13. Run proportional integrated verification and return topology/runtime/unit/integration evidence to Project Governance.
 
 ## Model/runtime observability
 
@@ -82,16 +93,32 @@ REASONING_EFFECTIVE: <observed runtime value | UNKNOWN>
 
 Never report a configured model/reasoning value as effective runtime evidence unless the current environment actually exposes or otherwise verifies it.
 
+When a delegated unit is used, record enough provenance to explain an exception when observable:
+
+```text
+SPAWN_OWNER: <Engineering Governance execution-orchestrator | runtime/platform | UNKNOWN>
+ROLE: <EXPLORER | WORKER | VERIFIER | REVIEWER>
+MODEL_SOURCE:
+MODEL_CONFIG:
+MODEL_EFFECTIVE:
+REASONING_EFFECTIVE:
+```
+
+Do not invent missing runtime fields.
+
 ## Hard rules
 
 - No authority by delegation.
+- No external engineering framework as peer/parent execution orchestrator for governed Engineering Governance work unless owning authority explicitly changes the framework boundary.
+- No external Skill/plugin/framework name as a required Sub Agent/model/review dependency merely because it is installed, discoverable, or historically referenced.
 - No Sub Agent use solely because capability exists.
 - No blind model/tool/runtime inference from another context.
-- No stronger-model escalation by reusable governance.
+- No stronger-model escalation by reusable governance or by an external framework layered around it.
 - No overlapping concurrent writers without proof.
 - No full-context dumping by default.
 - No stale/cancelled result integration without revalidation.
 - No recursive Sub Agent trees by default.
+- No repeated whole-task final-review loop when a scoped re-review can prove the corrected finding and affected invariants.
 
 ## Output contract
 
@@ -108,4 +135,4 @@ UNRESOLVED:
 RESUME_POINT:
 ```
 
-Project Governance converts this into the compact user-facing receipt without inventing unobserved runtime identity.
+Project Governance converts this into the compact user-facing receipt without inventing unobserved runtime identity or listing external framework Skills as governed Skills used.
