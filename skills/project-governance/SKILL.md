@@ -35,6 +35,26 @@ Owner: solution-design when materially ambiguous
 
 A governed implementation can use both only when both material problems actually exist. Project Governance remains task/lifecycle owner.
 
+## Engineering framework ownership
+
+For governed software/project/repository engineering, Engineering Governance is the reusable workflow/routing framework once `project-governance` owns the task. Stay inside the Engineering Governance capability graph unless an owning user/project authority deliberately changes that framework boundary.
+
+External engineering frameworks, Skills, plugins, prompts, plans, or repositories may be inspected as reference material or evidence. They do **not** become runtime workflow owners merely because they are installed, discoverable, historically referenced, or useful.
+
+Do not turn an external engineering framework into any of the following without explicit owning authority changing the framework boundary:
+
+- a required execution dependency or required Skill invocation;
+- a peer/parent router around Engineering Governance;
+- a Sub Agent/delegation/model/reasoning authority;
+- a review-loop, completion-loop, debugging-loop, TDD-loop, or planning-loop controller;
+- a required capability name in a governed Handoff/Construction Card.
+
+If an external method has durable value, first map it to the existing Engineering Governance owner. Express the immediate need as a behavior/acceptance requirement, extend the owning Skill/internal module when reusable value is proven, and add a new top-level capability only under this repository's capability-model rules. Do not jump frameworks to fill a gap by convenience.
+
+Historical/reference paths may retain external framework names. A path/name/reference alone is not an execution dependency.
+
+See `references/global-routing.md` and `references/capability-composition.md`.
+
 ## Evidence-triggered composition
 
 Routing is selective, but **not isolationist**. Once a bounded Skill owns a problem, let it lead that workflow. It may call another Engineering Governance capability when a concrete unresolved dependency crosses that capability's real boundary and the answer can materially change the current decision.
@@ -59,7 +79,7 @@ A simple advisory read-only status/evidence inspection can remain in Project Gov
 
 When the requested output itself is an execution/audit/review/verify/diagnose card, construction card, instructions, or structured receipt intended for **another agent, session, machine, reviewer, or execution context**, route the transfer artifact through `agent-handoff` before returning it.
 
-This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten `CURRENT_TASK.md`.
+This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten `CURRENT_TASK.md` or import a second engineering framework.
 
 ## Governed development
 
@@ -68,10 +88,10 @@ This is not a new task and does not create new authority. Preserve the current `
 3. Keep task purpose, execution unit and execution context distinct. Context/agent changes do not create tasks.
 4. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
 5. Confirm mutation remains inside authorized objective/scope/side effects/verification/STOP boundary; reconcile material changes before mutation.
-6. Keep one canonical writer/authority per semantic class. Use narrower Skills only when their trigger materially applies. Once routed, let that Skill complete its bounded workflow; bounded evidence-triggered calls to another Skill return to the originating capability instead of restarting the catalog.
+6. Keep one canonical writer/authority per semantic class. Use narrower Engineering Governance Skills only when their trigger materially applies. Once routed, let that Skill complete its bounded workflow; bounded evidence-triggered calls to another Engineering Governance Skill return to the originating capability instead of restarting the catalog or handing control to an external framework.
 7. For materially decomposable execution, route to `execution-orchestrator`. Sub Agent use is efficiency-driven, not mandatory: plans may expose work-package/dependency/writer structure, while the current execution environment decides inline vs delegated topology through the Sub Agent value gate.
 8. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
-9. Implement the smallest authorized outcome and choose risk-proportional verification.
+9. Implement the smallest authorized outcome and choose risk-proportional verification. Requirements such as TDD, debugging rigor, review, or completion verification are behavior/acceptance requirements; do not translate them into external Skill dependencies.
 10. If state-changing work produced or advanced Git commits, apply `references/remote-delivery.md` before claiming successful repository delivery. A local commit SHA is not remote-delivery evidence. When an applicable configured remote exists and the work is not explicitly local-only, push only the already-authorized task/project ref and verify the remote ref contains the delivered commit. No applicable remote is `NOT_APPLICABLE_NO_REMOTE`; explicit local-only authority is `NOT_REQUIRED_LOCAL_ONLY`; applicable push/verification failure keeps remote delivery incomplete and must not be reported as full completion.
 11. Before final successful state-changing handoff, reconcile affected semantic owners under `references/artifact-lifecycle.md`. No semantic change means no write/commit.
 12. At merge/release, keep semantic evidence separate from live host gates for the literal host-governed identity.
@@ -110,9 +130,9 @@ PR / workspace:
 Next:
 ```
 
-`Governance route` reports the actual ordered capability path used for the response, including bounded detours and returns when material, not the route that theoretically could have been used.
+`Governance route` reports the actual ordered Engineering Governance capability path used for the response, including bounded detours and returns when material, not the route that theoretically could have been used.
 
-`Skills used` reports every top-level Engineering Governance Skill whose bounded instructions materially governed the work, and no others. Do not list installed/discovered Skills, Skills merely mentioned in routing documentation, or Skills inspected only to decide they were not applicable.
+`Skills used` reports every top-level Engineering Governance Skill whose bounded instructions materially governed the work, and no others. Do not list installed/discovered Skills, external framework Skills, Skills merely mentioned in routing documentation, or Skills inspected only as reference/evidence.
 
 When a Skill materially applies an internal source module, `Capability modules` may expose that module for observability. Internal source modules do not become peer top-level Skills.
 
@@ -138,6 +158,7 @@ GOVERNANCE_ROUTE_REPORTED: YES
 SKILLS_USED_REPORTED: YES
 SKILLS_USED_ACTUAL_ONLY: YES
 ROUTE_AND_SKILLS_CONSISTENT: YES
+ENGINEERING_FRAMEWORK_OWNERSHIP_PRESERVED: YES
 EXECUTION_TOPOLOGY_REPORTED_IF_APPLICABLE: YES
 SUBAGENT_USAGE_REPORTED_IF_APPLICABLE: YES
 SUBAGENT_RUNTIME_NOT_INVENTED: YES
