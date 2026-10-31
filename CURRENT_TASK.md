@@ -8,7 +8,7 @@ Task ID: `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`
 
 Task class: `CORRECTIVE / DISTRIBUTION`
 
-State: `AUTHORIZED / IN_PROGRESS`
+State: `SOURCE_WEB_COMPLETE / LOCAL_REFRESH_PENDING`
 
 ## Objective
 
@@ -16,40 +16,59 @@ Make Engineering Governance the sole reusable engineering workflow/routing frame
 
 External frameworks may be inspected as reference input. Reusable methods that are worth keeping must be absorbed into the owning Engineering Governance Skill/module before they become part of governed execution.
 
-## Authorized source scope
+## Delivered source behavior
 
-May update only the files needed to establish and distribute this boundary, including:
+Implemented in Plugin source version `0.7.5`:
 
-- `skills/project-governance/**` routing/composition contracts;
-- `skills/execution-orchestrator/**` execution ownership/runtime boundary;
-- `skills/agent-handoff/**` construction-card/handoff rules and acceptance checks;
-- one focused acceptance specification under `references/**`;
-- Plugin manifests/version metadata;
-- `CURRENT_STATUS.md` / `CURRENT_TASK.md` lifecycle state.
+- `project-governance` now owns the engineering framework boundary and keeps governed execution inside the Engineering Governance capability graph;
+- `global-routing` and `capability-composition` define external frameworks as reference/provenance/evidence rather than peer runtime controllers;
+- `execution-orchestrator` is the reusable owner for decomposition, Sub Agent topology, delegation, environment-owned model/reasoning resolution, review/integration lifecycle, and proportional scoped re-review;
+- `agent-handoff` and `handoff-contract` reject external engineering Skill/plugin/framework names as required execution dependencies while allowing genuine reference-only mentions;
+- global routing template carries the same framework-ownership boundary into adopted environments;
+- `references/V075_ENGINEERING_FRAMEWORK_OWNERSHIP_ACCEPTANCE.md` covers routing, handoff-card, historical-path, capability-gap, execution/model, and review-loop regression cases;
+- top-level Skill count remains exactly `9`.
 
-Do not add a new top-level Skill. Do not create a runtime model router, daemon, automatic enforcement service, or second control plane.
+Source semantic/plugin head before final control closeout:
 
-## Required behavior
+`109763036328e9616e417ebba3f075dc64212459`
 
-1. Ordinary governed engineering stays inside the Engineering Governance capability graph once `project-governance` owns the task.
-2. External engineering frameworks/Skills/plugins are reference material only; they cannot become runtime workflow owners, required execution dependencies, model/delegation authorities, or review-lifecycle controllers.
-3. A Handoff/Construction Card may name only an Engineering Governance `CAPABILITY` (or `NONE`) as its engineering capability request. It must not emit external Skill/plugin/framework names as required execution steps.
-4. TDD, verification, review, debugging, planning, or similar methods are expressed as behavior/acceptance requirements owned by Engineering Governance or the project authority, not as external Skill dependencies.
-5. If a missing reusable capability is discovered, return to the owning Engineering Governance capability, extend an existing Skill/module when appropriate, and add a new capability only under the repository's existing capability-model rules.
-6. `execution-orchestrator` remains the owner for Engineering Governance delegation/topology. Concrete model/reasoning values remain environment-owned and external frameworks cannot override or escalate them.
-7. Existing external documents/paths may remain as historical/reference artifacts; path names alone do not create an execution dependency.
+## Web Plugin result
 
-## Acceptance / distribution
+Existing private Web Plugin updated in place:
 
-- Add focused acceptance cases proving external framework names cannot enter a governed engineering Handoff Card as execution requirements and cannot take over execution/model/review routing.
-- Bump the distributed Plugin source to `0.7.5` without moving the formal `plugin-v0.7.3` GitHub release/tag.
-- Update the existing private Web Plugin in place, preserving plugin identity, scope and discoverability.
-- Local Git-backed marketplace remains `engineering-governance-personal` -> `Lost0rz/Engineering-Governance@main`; local runtime refresh is a separate installation observation and must not be claimed without target-machine evidence.
+- Plugin ID unchanged: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
+- version: `0.7.5`;
+- Web release ID: `pluginrel_6ae578380c8c8191a7c1f7175fded5a4`;
+- scope/discoverability: `USER / PRIVATE` unchanged;
+- root and `.codex-plugin` manifests read back as `0.7.5`;
+- Project Governance, global routing/composition, Execution Orchestrator, Agent Handoff, and Handoff contract changes read back from the current release.
 
-## Prior task reconciliation
+`WEB_PLUGIN_SYNC_075`: `PASS`.
 
-Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090` completed its Web 0.7.4 synchronization. Its still-pending local 0.7.4 refresh is superseded by this 0.7.5 distribution; users should refresh directly to the new source after Task 091 source/Web delivery is complete.
+## Local update boundary
+
+Local marketplace/source remains:
+
+- marketplace: `engineering-governance-personal`;
+- plugin/source: `engineering-governance`;
+- source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
+
+Task 090's pending 0.7.4 local refresh is superseded. Refresh directly to 0.7.5 with:
+
+```bash
+codex plugin remove engineering-governance@engineering-governance-personal --json
+codex plugin add engineering-governance@engineering-governance-personal --json
+codex plugin list --marketplace engineering-governance-personal --json
+```
+
+After refresh, start a new Codex/Desktop session and verify the loaded/cache manifest reports `0.7.5` and the current Skill catalog no longer contains any removed external framework plugin that should not participate in governed engineering.
+
+Local runtime/install acceptance remains `PENDING_USER_EXECUTION`; no local PASS is inferred from source/Web synchronization.
+
+## Release boundary
+
+This task does not create or move a formal GitHub Release/tag. Formal GitHub release remains `plugin-v0.7.3` unless a separate formal-release task is requested.
 
 ## Stop boundary
 
-Stop after source/remote delivery, Web Plugin 0.7.5 readback, control alignment, and local refresh instructions are established. Do not claim local installed/runtime 0.7.5 acceptance without fresh target-machine evidence.
+Source and Web distribution are complete. Stop here pending local refresh evidence from the target machine.
