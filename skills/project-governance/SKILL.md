@@ -85,6 +85,10 @@ This is not a new task and does not create new authority. Preserve the current `
 
 Before creating any branch, Git worktree/checkout, or PR, apply the **reuse-first creation gate** in `references/workspace-lifecycle.md`. A command, same-task continuation, correction, control-only transition, new session, or delegated Sub Agent is not a reason to allocate a new physical worktree or PR. Branch, worktree, and PR are separate choices; preserve target-project requirements (including explicit fresh branch/Draft PR) and the unique-work/overlapping-writer safety gate. Read-only tasks normally need no new worktree/PR. Do not infer machine-local worktree state from GitHub evidence.
 
+## Control alignment versus standalone PR creation
+
+Apply `references/control-plane.md` to distinguish **mandatory freshness checks**, **conditional control file writes**, and **separate PR creation**. A verified external PR merge may leave an accurate pre-merge Task/Status snapshot as bounded `POST_MERGE_DRIFT`; report that stale persisted state honestly without auto-opening a control-only PR. The next *normally authorized* development PR can combine previous-task terminal reconciliation and new-task authorization in its **first control-only commit**, before product/source changes. Do not reuse a terminal/stale Task to write code, bypass project main/PR rules, or call stale controls `PASS`; a material safety or authorization ambiguity requires `RECONCILE_BEFORE_MUTATION` STOP. Worktree creation remains governed by the size/isolation-based reuse-first gate, not by control file updates.
+
 ## Governed development
 
 1. Read applicable project authority and only bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
