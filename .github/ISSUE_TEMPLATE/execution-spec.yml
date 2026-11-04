@@ -9,7 +9,7 @@ body:
   - type: input
     id: task_id
     attributes:
-      label: Stable task ID
+      label: TASK_ID
       description: Existing task ID when continuing or migrating; context changes do not create new tasks.
       placeholder: PROJECT-BOUNDED-WORK-001
     validations:
@@ -17,46 +17,46 @@ body:
   - type: input
     id: revision
     attributes:
-      label: Execution spec revision
+      label: SPEC_REVISION
       placeholder: "1"
     validations:
       required: true
   - type: textarea
     id: baseline
     attributes:
-      label: Verified baseline and code/design authorities
+      label: VERIFIED_BASELINE
       description: Exact inspected paths/functions/interfaces/ref and evidence; write UNKNOWN when not yet verified.
     validations:
       required: true
   - type: textarea
     id: objective
     attributes:
-      label: Objective, target behavior, scope and non-goals
+      label: OBJECTIVE_TARGET_SCOPE
     validations:
       required: true
   - type: textarea
     id: work_packages
     attributes:
-      label: Detailed ordered Work Packages
+      label: WORK_PACKAGES
       description: Each WP needs source targets, precise actions, dependencies, edge cases, verification and done conditions.
     validations:
       required: true
   - type: textarea
     id: deviation
     attributes:
-      label: L0/L1/L2/L3 deviation and STOP policy
+      label: DEVIATION_POLICY
     validations:
       required: true
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance, human UI gate and Issue receipt contract
+      label: ACCEPTANCE_RETURN_CONTRACT
     validations:
       required: true
   - type: textarea
     id: authorization
     attributes:
-      label: Explicit approval provenance for this revision
+      label: AUTHORIZATION_BASIS
       description: An unverified value does not confer authority; a verified decision is still required.
     validations:
       required: true
