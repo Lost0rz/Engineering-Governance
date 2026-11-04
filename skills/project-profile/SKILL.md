@@ -11,9 +11,9 @@ Create or refresh a **derived project context/index**, not a new authority or a 
 
 A Project Profile answers: what is this project, what stable concepts/constraints matter, and where should an agent go for authoritative detail?
 
-It must not replace project `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, detailed Domain/navigation authority, durable design/planning authority, reusable Engineering Governance Skill contracts, or implementation/runtime/host truth. If Profile text conflicts with an authority, the authority wins and the Profile is stale.
+It must not replace project `AGENTS.md`, the mode-selected FILE_CONTROL Task/Status or ISSUE_CONTROL approved Issue, detailed Domain/navigation authority, durable design/planning authority, reusable Engineering Governance Skill contracts, or implementation/runtime/host truth. If Profile text conflicts with an authority, the authority wins and the Profile is stale.
 
-Generating or auditing Profile content may be read-only/output-only. **Writing or refreshing a repository/project-managed Profile is state-changing and requires compatible Project Governance / `CURRENT_TASK.md` authorization.** This Skill never creates that authorization by itself.
+Generating or auditing Profile content may be read-only/output-only. **Writing or refreshing a repository/project-managed Profile is state-changing and requires compatible Project Governance / mode-selected Task or approved Issue authorization.** This Skill never creates that authorization by itself.
 
 ## Grounding gate
 

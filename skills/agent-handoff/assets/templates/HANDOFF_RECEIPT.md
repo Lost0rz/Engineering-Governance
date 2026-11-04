@@ -1,3 +1,5 @@
+<!-- ISSUE_CONTROL: post meaningful final/PAUSE/TERMINATE execution receipts to the selected GitHub Issue using EXECUTION_RECEIPT_V1, with TASK_ID, SPEC_REVISION and RECEIPT_DELIVERY. Do not write a parallel Task/Status control file. -->
+
 # Handoff Receipt
 
 A Receipt reports the actual result/evidence of one Card. It is transport/evidence, not project authority.

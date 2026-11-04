@@ -11,6 +11,10 @@ A simple advisory read-only inspection that only reports current evidence/status
 
 Calling this Skill from an implementation context does not make the result independent. When independence matters, report the actual basis: `SELF_CHECK`, `FRESH_CONTEXT`, `SEPARATE_AGENT`, or `HUMAN`.
 
+## Issue specification / execution readiness audits
+
+An expressly authorized Issue-readiness audit binds verdict to exact repository, Issue, SPEC_REVISION, approver provenance and verified code authority. Audit detailed WPs (actual paths/functions/contracts, dependencies, edges and focused checks), L0–L3 decision behavior, resume, receipt and human UI acceptance. A filled form/READY label is not verified approval. Report separately `SPEC_QUALITY`, `ISSUE_AUTHORITY`, source/PR/CI/host evidence and actual installed runtime; findings do not authorize correction.
+
 ## Profiles
 
 - `CODE_DIFF`

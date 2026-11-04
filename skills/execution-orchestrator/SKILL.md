@@ -5,7 +5,7 @@ description: Use when an already-authorized engineering task materially benefits
 
 # Execution Orchestrator
 
-Use only after valid task authority exists. This Skill controls **how authorized work executes**, not what is authorized. Delegated units normally remain inside the same `TASK_ID`.
+Use only after valid task authority exists (FILE_CONTROL Task or ISSUE_CONTROL exact approved Issue/spec revision). This Skill controls **how authorized work executes**, not what is authorized. Delegated units normally remain inside the same `TASK_ID`.
 
 Read `references/execution-contract.md`. When Sub Agent delegation is considered, also read `references/subagent-execution.md`. When execution depends on runtime-specific limits/defaults/tools, read `references/environment-capabilities.md`.
 
@@ -64,6 +64,10 @@ Role names never grant authority. `WORKER` write scope comes from the active tas
 Sub Agent redelegation is disabled by default. A delegated unit may not create another delegation layer merely for convenience; nested delegation requires a concrete high-complexity execution need plus observable runtime support and must preserve the same authority/writer rules.
 
 A reviewer finding does not automatically authorize a new whole-task reviewer loop. After a finding is corrected, prefer the smallest re-verification scope that proves the correction and affected invariants. Repeat full independent review only when the correction materially invalidates the previous review range/evidence or owning acceptance requires it.
+
+## ISSUE_CONTROL deterministic execution units
+
+Each unit operates within an approved Issue Work Package; delegation and subagents do not expand authority. L2 PAUSE_AND_ASK blocks the affected WP and its dependencies, while strictly disjoint WPs may continue under the current approved plan. L3 TERMINATE preserves unique work without unapproved rollback. Comments/spec revisions never automatically create new physical worktrees, PRs, agents or model upgrades.
 
 ## Core flow
 

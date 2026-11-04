@@ -1,3 +1,7 @@
+## ISSUE_CONTROL design reauthorization
+
+A material accepted design change never silently changes the executable Issue. Project Governance updates the Issue's material spec revision, obtains verified reapproval and checks dependencies before the affected WP resumes. A Solution Design result alone is not permission to mutate source.
+
 # Design contract
 
 ## Trigger
@@ -51,7 +55,7 @@ When an accepted durable decision is replaced, mark the old record/section clear
 
 ## Task reconciliation
 
-Before implementation compare the accepted design with `CURRENT_TASK.md`:
+Before implementation compare the accepted design with selected FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision:
 
 ```text
 TASK_RECONCILIATION_REQUIRED: YES | NO

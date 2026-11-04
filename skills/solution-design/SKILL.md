@@ -7,9 +7,13 @@ description: Use when authorized engineering work has materially ambiguous requi
 
 Use this Skill only when implementation would otherwise require material guessing about what should be built or where responsibility should live. Clear bounded changes stay in Project Governance.
 
-Solution Design does not authorize implementation. `CURRENT_TASK.md` remains active authorization and project semantic authorities remain product/domain truth.
+Solution Design does not authorize implementation. the FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision remains the selected active authorization and project semantic authorities remain product/domain truth.
 
 Read [Design contract](references/design-contract.md).
+
+## Detailed Issue design responsibility
+
+For ISSUE_CONTROL, resolve architecture, state ownership and required API/data decisions before proposing READY_TO_EXECUTE. Translate accepted decisions into grounded Work Packages with verified code targets, ordered steps, dependencies, error cases, tests and STOP conditions; unknown source locations remain UNKNOWN rather than fabricated. A local L2 pause returns unresolved decisions here, then to Project Governance for revised approval, not to the local small model for architectural guessing.
 
 ## Core workflow
 

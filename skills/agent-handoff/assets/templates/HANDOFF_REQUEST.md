@@ -10,7 +10,7 @@ TASK_ID: <same authorized task unless Project Governance changed the task bounda
 MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
 CAPABILITY: <Engineering Governance Skill | NONE>
 TARGET: <immediate requested outcome / object>
-AUTHORITY: <current task + other decision-relevant authority references>
+AUTHORITY: <FILE_CONTROL Task or ISSUE_CONTROL approved Issue URL/revision/provenance, plus relevant project/design pointers>
 DELTA: <fresh transfer-specific delta | NONE>
 BOUNDARY: <allowed read/write/action boundary>
 RETURN_CONTRACT: <actual evidence/result required for the next decision; do not predeclare success>
@@ -27,6 +27,8 @@ Use only when decision-relevant:
 ```text
 PURPOSE: <for example CORRECTIVE | DIAGNOSTIC_PROBE | TEST_IMPLEMENTATION>
 PROFILE: <for example TEST_RUN>
+ISSUE: <owner/repo#number when ISSUE_CONTROL EXECUTE>
+SPEC_REVISION: <approved material spec revision when ISSUE_CONTROL EXECUTE>
 OBSERVED_BASIS: <sender-observed revision/observation/head; not automatically a lock>
 SOURCE_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
 TARGET_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
@@ -36,7 +38,7 @@ EXPECTED_EVIDENCE: <what would establish the claim>
 AUDIT_INDEPENDENCE: <SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN>
 ```
 
-Do not duplicate the full objective, scope, acceptance, STOP conditions or workspace policy already owned by `CURRENT_TASK.md`. If accessible authority conflicts materially with the Card, return to Project Governance rather than following the stale Card.
+Do not duplicate objective, scope, acceptance, STOP conditions or workspace policy already owned by the mode-selected Task/Issue. If accessible authority conflicts materially with the Card, return to Project Governance rather than following the stale Card.
 
 A sender-observed SHA/ref belongs in `OBSERVED_BASIS` by default. Use `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or another equality-lock field only when the referenced owning authority explicitly defines that lock.
 

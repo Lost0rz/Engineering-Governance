@@ -13,7 +13,7 @@ A handoff transports responsibility/evidence; it does not create task authority,
 
 Use this Skill whenever the requested output itself is intended to transfer engineering responsibility or evidence to another agent, session, machine, reviewer, or execution context. This includes requests to generate an execution/construction card, audit card, review card, verification/test-run card, diagnostic card, or structured return receipt for another context.
 
-Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or `CURRENT_TASK.md` already contains extensive implementation detail.
+Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or a FILE_CONTROL Task / approved ISSUE_CONTROL Issue already contains extensive implementation detail.
 
 ## Engineering framework ownership
 
@@ -51,7 +51,11 @@ BOUNDARY
 RETURN_CONTRACT
 ```
 
-Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, claim/evidence fields, and human-acceptance state when product-interface acceptance is material. Carry verification details only when they change the receiver's next decision; otherwise reference the task's verification contract rather than triggering another broad test/audit loop. See `references/handoff-contract.md`.
+Conditional fields include `PURPOSE`, `PROFILE`, `ISSUE`, `SPEC_REVISION`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, claim/evidence fields, and human-acceptance state when product-interface acceptance is material. Carry verification details only when they change the receiver's next decision; otherwise reference the task's verification contract rather than triggering another broad test/audit loop. See `references/handoff-contract.md`.
+
+## Issue execution transfer and durable receipt
+
+For ISSUE_CONTROL, hand off only the verified repository/Issue/approved SPEC_REVISION and transfer-specific delta; do not copy the long Issue body. The local receiver retrieves the current approved spec via `gh`/connector and follows deterministic WPs and L0/L1/L2/L3 deviation policy. PAUSE/TERMINATE/final execution receipts must be posted as comments on the **same Issue** and the actual comment receipt verified. Comment evidence cannot reauthorize a new scope or new model topology. See Project Governance `issue-control.md` and `issue-execution-contract.md`.
 
 ## Human UI acceptance preservation
 
@@ -95,7 +99,7 @@ Interpretation:
 - every required core field is present;
 - `MODE` is exactly one accepted side-effect class;
 - same-purpose transfer keeps the current `TASK_ID` unless Project Governance already changed task authority;
-- `AUTHORITY` points to current task/rules/design authorities instead of copying their full objective/scope/acceptance/STOP/workspace policy;
+- `AUTHORITY` points to FILE_CONTROL Task or ISSUE_CONTROL approved Issue/rules/design authorities instead of copying their full objective/scope/acceptance/STOP/workspace policy;
 - `DELTA` carries only new context the receiver would not recover from the referenced authorities;
 - a Card never expands mutation/write authority;
 - a SHA/ref observed by the sender belongs in `OBSERVED_BASIS` unless an owning authority explicitly declares an equality/lock requirement; the Card must not invent `EXPECTED_HEAD`, `MUST_EQUAL`, or equivalent lock semantics;
