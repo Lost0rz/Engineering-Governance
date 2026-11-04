@@ -4,11 +4,11 @@ Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `ACTIVE / SOURCE_CONSTRUCTION`
+Status: `SOURCE_COMPLETE / SELF_AUDITED / CI_LEGACY_FAILURE`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
-PR: `DRAFT_PENDING / UNMERGED`
+PR: `#39 / OPEN / DRAFT / UNMERGED`
 Verification tier: `V2` (cross-Skill contract/composition; no runtime/source product behavior)
 
 ## Objective
@@ -43,6 +43,20 @@ No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests
 - Frozen source: read back exact PR changes; verify V0/V1/V2/V3, stage, correction, evidence reuse, literal-host gate and cross-context positive/negative cases.
 - After implementation, perform a read-only `CODE_DIFF` evidence audit with honest independence basis (`SELF_CHECK` if same context).
 - Keep Draft / unmerged; only report source and repository delivery evidence actually seen. Formal plugin release/Web/local install acceptance is out of scope.
+
+## Observed source/audit evidence
+
+- Baseline: `main@ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`.
+- Frozen semantic source: `66af1ff5447ba1d7deeae17ea3827cfc3a1b3de7`.
+- Changed source: 4 existing Skill files + 1 compact acceptance matrix; separate control-only task activation commit.
+- Focused cross-Skill static contract check: `21/21 PASS` before V0 wording correction; affected post-corrective checks: `11/11 PASS`.
+- `CODE_DIFF`: `PASS_WITH_FOLLOWUPS` at semantic source HEAD, `AUDIT_INDEPENDENCE: SELF_CHECK` only, not independent installed/runtime acceptance.
+- Existing `.github/workflows/validate-plugin-v0.7.3.yml` triggers on these Skill paths but hardcodes `manifest[\'version\'] == \'0.7.3\'`; current manifest is `0.7.5`. Latest PR CI run `41745425207` failed at this legacy version assertion before building the candidate. This is a CI/host blocker, not a proven Skill source regression.
+- `PR_MERGE_READY: NO`; no merge, no Web/local plugin sync and no downstream CI mutation.
+
+## Next safe boundary
+
+A separately authorized project CI corrective should reconcile the stale v0.7.3 candidate validator trigger/version contract to current release policy, followed by appropriate fresh CI and PR merge readiness evidence. Preserve current source changes and keep #39 Draft until explicit authorization.
 
 ## STOP
 
