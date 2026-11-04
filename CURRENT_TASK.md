@@ -4,7 +4,7 @@ Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `CI_ARCHIVE_CORRECTIVE_AUTHORIZED / IMPLEMENTATION_PENDING`
+Status: `SOURCE_CI_ARCHIVED / SELF_AUDITED / DRAFT_UNMERGED`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
@@ -47,12 +47,13 @@ No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests
 ## Observed source/audit evidence
 
 - Baseline: `main@ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`.
-- Frozen semantic source: `66af1ff5447ba1d7deeae17ea3827cfc3a1b3de7`.
+- Skill rule semantic source: `66af1ff5447ba1d7deeae17ea3827cfc3a1b3de7` (prior to CI corrective).
+- Combined Skill + archived CI workflow semantic source: `4af1aa95a38abfb1c1adc22a1287821a2fc6253f`.
 - Changed source: 4 existing Skill files + 1 compact acceptance matrix; separate control-only task activation commit.
 - Focused cross-Skill static contract check: `21/21 PASS` before V0 wording correction; affected post-corrective checks: `11/11 PASS`.
 - `CODE_DIFF`: `PASS_WITH_FOLLOWUPS` at semantic source HEAD, `AUDIT_INDEPENDENCE: SELF_CHECK` only, not independent installed/runtime acceptance.
 - Existing `.github/workflows/validate-plugin-v0.7.3.yml` triggers on these Skill paths but hardcodes `manifest[\'version\'] == \'0.7.3\'`; current manifest is `0.7.5`. Latest PR CI run `41745425207` failed at this legacy version assertion before building the candidate. This is a CI/host blocker, not a proven Skill source regression.
-- `PR_MERGE_READY: NO`; no merge, no Web/local plugin sync and no downstream CI mutation.
+- `PR_MERGE_READY: NO`; no merge, no Web/local plugin sync and no downstream product CI mutation.
 
 ## Authorized legacy CI closeout (user approved 2026-11-04)
 
@@ -63,11 +64,14 @@ The user authorized retiring the redundant, failing **old validation** of publis
 - Preserve published release/tag/asset history and `.github/workflows/release-plugin-*.yml`; do not modify the current version, create a replacement full-suite workflow, disable GitHub Actions globally, or change other repositories.
 - Verification: exact workflow readback and diff; check zero `pull_request` / `push` / `schedule` triggers for archived validator, no candidate-build/version-gated job, archived validator remains manually inspectable, and untouched release/other workflows.
 - GitHub rulesets API returned an empty array; branch-protection endpoint was inaccessible to the integration (403). Therefore required-check availability is not proven and PR merge-readiness remains unresolved until live host gates can be verified.
+- Archived source committed at `4af1aa95a38abfb1c1adc22a1287821a2fc6253f`; exact diff modifies **only** `.github/workflows/validate-plugin-v0.7.3.yml` and replaces the legacy validator with a dispatch-only archived echo stub.
+- Focused readback/trigger validation: `10/10 PASS`. No PR workflow runs returned for that semantic HEAD. The archived v0.7.2 validator and v0.7.3 release workfIow are unchanged. 
+- Formal `CODE_DIFF` source archival verdict: `PASS` (`AUDIT_INDEPENDENCE=SELF_CHECK`). `PR_MERGE` readiness: `STOP`/not evaluated as PASS; Draft, host-required checks UNKNOWN due 403 protection endpoint.
 - Keep PR #39 Draft and unmerged. A branch-only source change does not alter behavior on `main` before merge.
 
 ## Next safe boundary
 
-Perform the newly authorized archived/dispatch-only CI corrective on #39, then perform read-only scoped source/trigger audit and reconcile task/status. Preserve current Skill source changes and keep #39 Draft pending explicit merge authorization.
+CI archiving and scoped source audit are complete on #39. Preserve the frozen semantic source; do not rerun historical full CI. Before any merge, obtain the user's explicit merge decision and verify live host-required status/reviews/protection with adequate access. After merge, verify main contains the archived workflow so ordinary Skill PRs no longer trigger it.
 
 ## STOP
 
