@@ -4,7 +4,7 @@ Use this flow for normal governed product/business engineering. It is a lifecycl
 
 ## 1. Recover authority, task purpose, and planning context
 
-Read applicable `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, and only the bounded related planning/design authority needed for the current decision. `CURRENT_TASK.md` is the single active execution authorization. Reading a source does not imply rewriting it.
+Read `AGENTS.md` mode and the applicable task authority: FILE_CONTROL reads Task/Status; ISSUE_CONTROL fetches the exact selected approved GitHub Issue/spec revision and relevant approval/decision receipts. Read bounded design and live PR evidence when needed. A stale file, unapproved Issue, incidental comment or READY label cannot expand task authorization.
 
 When useful, interpret `TASK_CLASS` as the current engineering purpose: DESIGN, EXECUTION, AUDIT, VERIFY, DIAGNOSIS, CORRECTIVE, CLOSEOUT, or project-equivalent. This metadata does not create a second authority.
 
@@ -26,9 +26,9 @@ For state-changing work identify the selected workspace, working-tree/unique-wor
 
 Run the **reuse-first creation gate** in `workspace-lifecycle.md` before allocating another checkout, Git worktree, branch or PR. These are separate decisions: a newly authorized task/branch does not inherently need a new physical worktree, and an agent/command/handoff does not inherit permission to create any of them. Reuse the existing safe authorized task ref/PR for related corrections and control alignment; honor any explicit project fresh-branch/PR rules. Read-only investigation normally uses existing source with no new workspace.
 
-### Post-merge status reconciliation without another PR
+### FILE_CONTROL post-merge status reconciliation without another PR
 
-A GitHub merge may occur **after** the last valid pre-merge `CURRENT_STATUS.md`/`CURRENT_TASK.md` commit. Do not predict the merge in those files and do not automatically create a new PR or physical Worktree just to record `MERGED`. At the final post-merge read-only observation, verify the actual host merge/ref identity, report `POST_MERGE_DRIFT` and `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` where persisted controls are still pre-merge, and treat the old Task as unable to authorize further product/source writes. The observed host fact is not a new control authority.
+Under FILE_CONTROL, a GitHub merge may occur **after** the last valid pre-merge `CURRENT_STATUS.md`/`CURRENT_TASK.md` commit. Do not predict the merge in those files and do not automatically create a new PR or physical Worktree just to record `MERGED`. At the final post-merge read-only observation, verify the actual host merge/ref identity, report `POST_MERGE_DRIFT` and `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` where persisted controls are still pre-merge, and treat the old Task as unable to authorize further product/source writes. The observed host fact is not a new control authority.
 
 At the **next normal, user/project-authorized development task**, read fresh project rules and evidence, reuse an eligible checkout, create the task branch/PR only if required, and commit preceding-task closure + new-task authorization as the **first control-only commit** on that ordinary carrier, before implementing the next product change. A separate closure-only PR is not required unless the host/project explicitly demands one or an independently authorized urgent control correction has no permitted normal carrier. Follow `control-plane.md` for STOP conditions and for the difference between checking, persisting, and opening a PR. Never write directly to protected `main` merely to avoid PR churn.
 
@@ -51,7 +51,7 @@ If implementation would require guessing about product intent, architecture, sta
 
 Clear local work stays in this flow. Do not invoke Solution Design merely because the request is a feature.
 
-After design, return to Project Governance. If the accepted design changes scope, prerequisites, allowed side effects, dependency, acceptance or verification, reconcile/re-authorize `CURRENT_TASK.md` before implementation. If design was a separately authorized purpose, a later execution task may reference that accepted design directly.
+After design, return to Project Governance. Material authorization changes require FILE_CONTROL Task reconciliation or ISSUE_CONTROL edited material spec revision with explicit verified reapproval before affected mutation. If design was a separately authorized purpose, a later execution task may reference that accepted design directly.
 
 ## 6. Resolve semantic/source route only when unclear
 
@@ -75,7 +75,7 @@ Delegated Sub Agents follow `ENVIRONMENT_DEFAULT_ONLY`. Each delegated execution
 
 One inline executor remains correct when decomposition provides no material benefit or dependencies/shared state make concurrency inefficient or unsafe.
 
-Orchestration never expands `CURRENT_TASK.md`.
+Orchestration never expands the selected FILE_CONTROL Task or ISSUE_CONTROL approved Issue execution scope.
 
 ## 9. Transfer responsibility through context-neutral Agent Handoff
 
@@ -137,10 +137,10 @@ At a merge/release decision, keep semantic implementation evidence separate from
 Before a final successful governed state-changing handoff, run the mandatory Control Alignment Gate:
 
 1. obtain fresh outcome/lifecycle evidence, including the applicable remote-delivery state for repository-backed commits;
-2. reread current `CURRENT_STATUS.md` and `CURRENT_TASK.md`;
+2. FILE_CONTROL: reread Task/Status; ISSUE_CONTROL: reread approved Issue revision, meaningful decisions/receipts and current host evidence;
 3. reread the linked durable planning/design authority when the outcome could have changed its owned semantics;
-4. update only sources whose owned semantics are materially stale;
-5. report document/status/task reconciliation and `CONTROL_ALIGNMENT` explicitly.
+4. update only the actual semantic owner: file controls in FILE_CONTROL or approved spec/decision/final Issue receipt in ISSUE_CONTROL; no Issue-progress Git commits;
+5. report FILE_CONTROL document/status/task reconciliation and `CONTROL_ALIGNMENT`, or ISSUE_CONTROL `ISSUE_AUTHORITY_ALIGNMENT` plus `RECEIPT_DELIVERY`, without inventing successful delivery.
 
 The check is mandatory; writes are conditional.
 

@@ -34,8 +34,7 @@ This lets the design capability evolve without installing multiple overlapping d
 - Project Profile — concise descriptive context + pointers to authorities; one current projection surface or explicit primary + mirror;
 - Domain/navigation authority — detailed semantic ownership/source/test/runtime route;
 - durable planning — long-lived design/rationale/work packages when justified;
-- `CURRENT_STATUS.md` — concise current-state snapshot;
-- `CURRENT_TASK.md` — single active authorization;
+- active task control, selected explicitly by `AGENTS.md`: FILE_CONTROL uses legacy Task/Status files; ISSUE_CONTROL uses an approved GitHub Issue/spec revision with comments for decisions and execution receipts;
 - implementation authority — canonical source/schema/config/workflow/persisted contract/state owner for the implementation class;
 - observed evidence — CI/test results, PR/host state, runtime/review/audit/probe observations.
 
@@ -44,6 +43,8 @@ A Profile or Domain Map is a derived projection. If it conflicts with its author
 ## Normal route
 
 Ordinary software/project work enters `project-governance`. Use narrower capabilities only when their semantic trigger applies. `solution-design` handles engineering architecture/state ownership; `design` handles bounded UI/UX/frontend visual direction and execution. They may compose under one Project Governance task without becoming parallel task authorities.
+
+In ISSUE_CONTROL, high-reasoning design and review creates a verified detailed `EXECUTION_SPEC_V1`, local Codex reads the approved revision via `gh`, executes bounded work packages and posts `EXECUTION_RECEIPT_V1` or pause/termination comments; PR/CI remain code evidence. See `skills/project-governance/references/issue-control.md`, `issue-execution-contract.md` and `issue-control-migration.md`.
 
 Changing agent/session/machine/context does not create a new task. Same-purpose continuation keeps the task and, when safe, the current PR/workspace. Handoffs transport authority references + fresh delta; they do not restate a second task contract.
 

@@ -7,9 +7,10 @@ This repository is the source for reusable Engineering Governance Skills, routin
 ## Repository authority
 
 - `AGENTS.md` contains durable rules for maintaining this source repository.
-- `CURRENT_STATUS.md` is the concise verified current snapshot.
-- `CURRENT_TASK.md` is the single active execution authorization.
-- Reusable engineering workflow belongs in `skills/**`; do not duplicate Skill procedure here.
+- `CONTROL_MODE: ISSUE_CONTROL` takes effect only upon verified merge of the migration PR into `main`; before cutover accepted main remains FILE_CONTROL.
+- In ISSUE_CONTROL, the selected approved GitHub Issue/spec revision (initial Issue [#40](https://github.com/Lost0rz/Engineering-Governance/issues/40)) is the only task authorization; Issue comments carry decision/receipt evidence, not new scope. A label/body assertion alone never proves approval.
+- `CURRENT_TASK.md` and `CURRENT_STATUS.md` cease to be live controls after cutover and remain recoverable via Git history. PR/CI/merge truth belongs to the GitHub host.
+- Reusable engineering workflow belongs in `skills/**`; do not duplicate Skill procedure here. Issue approval, execution, receipt and migration behavior belongs to `skills/project-governance/references/issue-*.md`.
 - `documents/**` may preserve durable design rationale, but does not replace live controls.
 
 ## Capability model
@@ -41,7 +42,7 @@ Reusable source defines what environment capability must be resolved, not concre
 - Do not add runtime/daemon/database/model-router/automatic-enforcement behavior unless repository purpose explicitly changes.
 - A routed capability must execute the bounded workflow it owns when materially triggered; merely reading a source/reference file is not sufficient evidence of capability use.
 - Governed user-facing receipts must make the actual routing/Skill composition observable and must not claim Skills that were not actually used.
-- No-op reconciliation means no write and no commit.
+- No-op reconciliation means no write and no commit. Issue progress/receipts must not trigger status-only Git commits or PRs; migration is a single approved source transition.
 
 ## Release / acceptance boundary
 

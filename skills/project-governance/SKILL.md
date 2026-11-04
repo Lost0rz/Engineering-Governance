@@ -79,23 +79,27 @@ A simple advisory read-only status/evidence inspection can remain in Project Gov
 
 When the requested output itself is an execution/audit/review/verify/diagnose card, construction card, instructions, or structured receipt intended for **another agent, session, machine, reviewer, or execution context**, route the transfer artifact through `agent-handoff` before returning it.
 
-This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten `CURRENT_TASK.md` or import a second engineering framework.
+This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten governing Task or Issue spec, or import a second engineering framework.
 
 ## Task workspace creation boundary
 
 Before creating any branch, Git worktree/checkout, or PR, apply the **reuse-first creation gate** in `references/workspace-lifecycle.md`. A command, same-task continuation, correction, control-only transition, new session, or delegated Sub Agent is not a reason to allocate a new physical worktree or PR. Branch, worktree, and PR are separate choices; preserve target-project requirements (including explicit fresh branch/Draft PR) and the unique-work/overlapping-writer safety gate. Read-only tasks normally need no new worktree/PR. Do not infer machine-local worktree state from GitHub evidence.
 
+## Task-control mode selection
+
+Read `AGENTS.md` and select exactly one mode: `FILE_CONTROL` (legacy CURRENT_TASK/STATUS) or `ISSUE_CONTROL` (selected approved GitHub Issue/spec revision). In Issue mode use `references/issue-control.md` and `references/issue-execution-contract.md` for approval, detailed deterministic Work Packages, L0/L1/L2/L3 deviation handling, resume and Issue comment receipts. `references/issue-control-migration.md` governs safe per-project cutover. An issue label, vague prompt, stale snapshot or unverified approver never grants writes. GitHub access failure is STOP, not permission to infer authority.
+
 ## Control alignment versus standalone PR creation
 
-Apply `references/control-plane.md` to distinguish **mandatory freshness checks**, **conditional control file writes**, and **separate PR creation**. A verified external PR merge may leave an accurate pre-merge Task/Status snapshot as bounded `POST_MERGE_DRIFT`; report that stale persisted state honestly without auto-opening a control-only PR. The next *normally authorized* development PR can combine previous-task terminal reconciliation and new-task authorization in its **first control-only commit**, before product/source changes. Do not reuse a terminal/stale Task to write code, bypass project main/PR rules, or call stale controls `PASS`; a material safety or authorization ambiguity requires `RECONCILE_BEFORE_MUTATION` STOP. Worktree creation remains governed by the size/isolation-based reuse-first gate, not by control file updates.
+Apply `references/control-plane.md` to distinguish mode-specific mandatory authority freshness checks, conditional writes to the correct owner (File Control vs Issue comments/revisions), and separate PR creation. A verified external PR merge may leave an accurate pre-merge Task/Status snapshot as bounded `POST_MERGE_DRIFT`; report that stale persisted state honestly without auto-opening a control-only PR. The next *normally authorized* development PR can combine previous-task terminal reconciliation and new-task authorization in its **first control-only commit**, before product/source changes. Do not reuse a terminal/stale Task to write code, bypass project main/PR rules, or call stale controls `PASS`; a material safety or authorization ambiguity requires `RECONCILE_BEFORE_MUTATION` STOP. Worktree creation remains governed by the size/isolation-based reuse-first gate, not by control file updates.
 
 ## Governed development
 
-1. Read applicable project authority and only bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
+1. Read `AGENTS.md` and only relevant authority: `CURRENT_TASK.md` for FILE_CONTROL, or exact selected approved Issue/spec revision for ISSUE_CONTROL. No other artifact silently authorizes execution.
 2. If the user says continue/resume/start and the active task remains accurate, **continue it directly**. Do not create a new task, plan, handoff card, branch/worktree/PR, or execution contract solely because work resumed.
 3. Keep task purpose, execution unit and execution context distinct. Context/agent changes do not create tasks.
 4. Establish only repository/ref/workspace/runtime facts needed for safe action. Preserve unknown/unique work.
-5. Confirm mutation remains inside authorized objective/scope/side effects/verification/STOP boundary; reconcile material changes before mutation.
+5. Confirm mutation remains inside approved scope, side effects and STOP boundaries. In ISSUE_CONTROL apply L0 CONTINUE/L1 LOCAL_CORRECT/L2 PAUSE_AND_ASK/L3 TERMINATE; material decisions require a newly approved spec revision before affected mutation.
 6. Keep one canonical writer/authority per semantic class. Use narrower Engineering Governance Skills only when their trigger materially applies. Once routed, let that Skill complete its bounded workflow; bounded evidence-triggered calls to another Engineering Governance Skill return to the originating capability instead of restarting the catalog or handing control to an external framework.
 7. For materially decomposable execution, route to `execution-orchestrator`. Sub Agent use is efficiency-driven, not mandatory: plans may expose work-package/dependency/writer structure, while the current execution environment decides inline vs delegated topology through the Sub Agent value gate.
 8. If a correction remains inside the current task objective and current PR/workspace remains safe/valid, **prefer continuing it**; do not create a successor merely because a correction was discovered.
@@ -110,13 +114,13 @@ Repository/project-managed Project Profile mutation is state-changing and theref
 
 A multi-repository objective may record only decision-relevant coordination facts: primary task authority, participating repositories, per-repo write authority, shared contract authority, integration order, acceptance owner. A task never automatically grants writes in another governed repository.
 
-## Three-file boundary
+## Mutually exclusive task authority
 
-- `AGENTS.md` — durable normative project/repository rules;
-- `CURRENT_STATUS.md` — concise verified current state;
-- `CURRENT_TASK.md` — active authorization.
+- `AGENTS.md` is always durable project policy and explicit mode selection.
+- FILE_CONTROL: `CURRENT_STATUS.md` is the concise snapshot; `CURRENT_TASK.md` alone authorizes work.
+- ISSUE_CONTROL: an approved, uniquely selected GitHub Issue/spec revision alone authorizes work; Issue comments hold bounded decision/receipt evidence. Retired Task/Status files are historical only.
 
-Project Profile, planning, Domain maps, handoffs, audits, CI/test output and runtime observations do not become a fourth control source.
+Project Profile, durable planning, Domain maps, handoffs, audits and CI/test/PR/runtime observations never become a second task authority.
 
 ## Compact Engineering Status Receipt
 
@@ -181,7 +185,10 @@ If any applicable check would be `NO`, correct the response before returning it.
 
 Read only what the current decision needs:
 
-- `references/control-plane.md` — control ownership/alignment;
+- `references/control-plane.md` — mode-aware authority and alignment;
+- `references/issue-control.md` — approved Issue authority and provenance;
+- `references/issue-execution-contract.md` — deterministic plan, deviations and receipts;
+- `references/issue-control-migration.md` — safe migration/cutover;
 - `references/artifact-lifecycle.md` — authority/projection refresh lifecycle;
 - `references/control-identity.md` — HEAD/provenance/control-only drift;
 - `references/development-flow.md` — full governed flow;
