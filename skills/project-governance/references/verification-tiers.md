@@ -18,7 +18,7 @@ Semantic equivalence does not make a current host gate pass. Re-read applicable 
 
 ## Risk/scope tiers
 
-- **V0 — documentation/control/layout:** diff/content/link/frontmatter/tree/scope consistency.
+- **V0 — documentation/control-only and non-product formatting:** diff/content/link/frontmatter/tree/scope consistency, provided no implementation-relevant rule/contract changed. Product UI layout change is not automatically V0.
 - **V1 — localized behavior:** focused tests plus directly relevant lint/type/runtime checks.
 - **V2 — domain/integration boundary:** focused tests, affected-domain evidence and required integration checks.
 - **V3 — broad/high-consequence/release:** broad relevant integration/build/runtime/security/concurrency/release evidence appropriate to the claim.
