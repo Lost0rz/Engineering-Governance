@@ -1,10 +1,10 @@
-# CURRENT TASK — Proportional Verification Cadence / Skill Efficiency
+# CURRENT TASK — Engineering Workflow Efficiency: Verification + Workspace Creation
 
 Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `SOURCE_CI_ARCHIVED / SELF_AUDITED / DRAFT_UNMERGED`
+Status: `WORKSPACE_CREATION_CORRECTIVE_AUTHORIZED / SOURCE_PENDING`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
@@ -24,7 +24,7 @@ Amend existing Engineering Governance Skills so small changes do not provoke rep
 - `references/**` only for one focused cross-Skill scenario/acceptance matrix if useful.
 - `CURRENT_STATUS.md` / `CURRENT_TASK.md` for control reconciliation.
 
-No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests/version, release/tag, production projects, downstream product CI/runner topology, or installed Web/local plugin. This task now explicitly permits the single Engineering-Governance repository CI archival below.
+No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests/version, release/tag, production projects, downstream product CI/runner topology, or installed Web/local plugin. This task also explicitly permits the previously authorized repository legacy-CI archival and the workspace-efficiency source extension below.
 
 ## Required behavior
 
@@ -69,9 +69,33 @@ The user authorized retiring the redundant, failing **old validation** of publis
 - Formal `CODE_DIFF` source archival verdict: `PASS` (`AUDIT_INDEPENDENCE=SELF_CHECK`). `PR_MERGE` readiness: `STOP`/not evaluated as PASS; Draft, host-required checks UNKNOWN due 403 protection endpoint.
 - Keep PR #39 Draft and unmerged. A branch-only source change does not alter behavior on `main` before merge.
 
+## Authorized workspace / PR creation efficiency extension (user approved 2026-11-04)
+
+Same Engineering Governance **workflow-efficiency** Task 092, same existing Draft PR #39, no merge and no new PR/worktree just for this extension. The user requests a cross-project read-only assessment of recent Worktree and PR proliferation and a proportional correction to existing reusable Skills. Preserve the earlier Skill-verification and legacy-CI closeout evidence.
+
+### Cross-project evidence boundary
+
+- `InvestDesk` Task141 PRs #169, #171, #173 and #175: each changed only `CURRENT_STATUS.md` / `CURRENT_TASK.md`, demonstrating repeated control-only PR overhead; this does **not** prove four machine-local Git worktrees.
+- `FloatTabs` #192 and `VideoOs` #13: additional independent two-control-file PRs. FloatTabs has numerous historical `codex/*` remote branches; remote refs are **not** physical local worktrees.
+- `Merloom` AGENTS defaults material work to a fresh branch/Draft PR; `InvestDesk` AGENTS constrains one active task/PR to one authoritative worktree, while same-PR iteration is already proven by current `Merloom` #611, `FloatTabs` #195 and `RemoteOrbit` #40.
+- GitHub cannot verify `git worktree list --porcelain`, local checkout existence/dirty state, or per-command local worktree spawning. Preserve `LOCAL_WORKTREE_COUNT=UNKNOWN`, `LOCAL_OVERUSE=UNVERIFIED`; do not clean any physical workspace.
+
+### Authorized source
+
+- `skills/project-governance/references/workspace-lifecycle.md`: introduce a narrow explicit **creation gate** distinct for task / local checkout / branch / Git worktree / PR; default reuse, permit new worktree only on a demonstrated isolation or concurrency need, preserve project-specific normative branch/PR obligations and unique work.
+- `skills/project-governance/SKILL.md` and `references/development-flow.md`: concise hooks preventing command/session/subagent/checkpoint from automatically creating new workspace/branch/PR.
+- `skills/execution-orchestrator/SKILL.md` and `skills/agent-handoff/references/handoff-contract.md` only if necessary to prevent delegation/handoff from manufacturing workspace authority.
+- One compact scenario matrix under `references/**` for positive/negative workspace creation cases; current controls for authority/alignment.
+
+No multi-project rules/code changes, no local worktree cleanup, no implicit PR close/merge, no forced push, no plugin release/sync. The target project's `AGENTS.md` and task-specific explicit fresh-branch/PR constraints remain higher authority than reusable defaults.
+
+### Verification and stop
+
+Class `V2` (cross-Skill workflow-contract integration), targeted static diff/readback, scenarios: read-only task, no-op, same-task correction, control-only alignment, one-writer active branch, legitimate isolated concurrent disjoint writers, dirty/unique-work protection, project explicit fresh branch/PR, handoff/subagents, PR review vs merge, remote vs local worktree inference. Run only affected checks after corrections. Audit read-only, with honest `AUDIT_INDEPENDENCE=SELF_CHECK` in the same context. Final PR #39 must remain `OPEN / DRAFT / UNMERGED`; no release or installed acceptance claims.
+
 ## Next safe boundary
 
-CI archiving and scoped source audit are complete on #39. Preserve the frozen semantic source; do not rerun historical full CI. Before any merge, obtain the user's explicit merge decision and verify live host-required status/reviews/protection with adequate access. After merge, verify main contains the archived workflow so ordinary Skill PRs no longer trigger it.
+CI archiving is complete on #39. Continue same PR with the newly authorized workspace-creation efficiency source changes and bounded audit. User explicitly prohibits merging now; verify main remains unchanged. Reconcile task/status at closeout without restarting unrelated product tests.
 
 ## STOP
 

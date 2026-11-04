@@ -75,7 +75,7 @@ The marketplace definition is Git-backed to `main` but the installed local plugi
 
 ## Current task
 
-Task `EG-VERIFICATION-CADENCE-EFFICIENCY-092`: `SOURCE_CI_ARCHIVED / SELF_AUDITED / DRAFT_UNMERGED`; PR `#39` remains `OPEN / DRAFT / UNMERGED` on `codex/verification-cadence-efficiency-092`. Baseline main `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`, source semantic HEAD `66af1ff5447ba1d7deeae17ea3827cfc3a1b3de7`. Four existing Skill files plus one scenario matrix updated; no new Skill, version bump, release, Web/local plugin distribution or downstream CI change.
+Task `EG-VERIFICATION-CADENCE-EFFICIENCY-092`: `WORKSPACE_CREATION_CORRECTIVE_AUTHORIZED / SOURCE_PENDING`; PR `#39` remains `OPEN / DRAFT / UNMERGED` on `codex/verification-cadence-efficiency-092`. Baseline main `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`, source semantic HEAD `66af1ff5447ba1d7deeae17ea3827cfc3a1b3de7`. Four existing Skill files plus one scenario matrix updated; no new Skill, version bump, release, Web/local plugin distribution or downstream CI change.
 
 Source contract checks: initial `21/21` PASS, post-corrective affected `11/11` PASS; read-only `CODE_DIFF` assessment `PASS_WITH_FOLLOWUPS` (`AUDIT_INDEPENDENCE=SELF_CHECK`). GitHub's obsolete `Validate Plugin v0.7.3 Candidate` CI fails because it asserts `plugin.json.version == 0.7.3` although unchanged main/current source is `0.7.5` (run `41745425207` on semantic HEAD). `PR_MERGE_READY=NO`; The user authorized archiving the stale `.github/workflows/validate-plugin-v0.7.3.yml` auto-PR validator within Task 092. Workflow semantic HEAD `4af1aa95a38abfb1c1adc22a1287821a2fc6253f` now has **manual-only `workflow_dispatch`**; the obsolete version assertion, candidate build and automatic PR trigger were removed. `10/10` focused readback/trigger checks PASS; no automatic runs returned for that HEAD. Old release workflows and installed plugin/distribution are unchanged. Formal `CODE_DIFF=PASS` for archival (`AUDIT_INDEPENDENCE=SELF_CHECK`); `PR_MERGE_READY=NO`, as #39 remains Draft and host required-check status is unverified (protection endpoint 403). **Main is not yet changed.**
 
@@ -90,7 +90,9 @@ Task 090's pending local 0.7.4 refresh is superseded; local users should refresh
 - Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_0.7.4_REFRESH_SUPERSEDED_BY_091`;
 - Task `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`: `SOURCE_WEB_COMPLETE / LOCAL_REFRESH_PENDING` (prior source/distribution task).
 
-- Task `EG-VERIFICATION-CADENCE-EFFICIENCY-092`: `SOURCE_CI_ARCHIVED / SELF_AUDITED / PR_39_DRAFT`.
+- Task `EG-VERIFICATION-CADENCE-EFFICIENCY-092`: `WORKSPACE_CREATION_CORRECTIVE_AUTHORIZED / PR_39_DRAFT`.
+
+Cross-project read-only evidence: InvestDesk control-only PRs #169/#171/#173/#175, FloatTabs #192, VideoOS #13 show unnecessary-looking PR granularity. Same-PR progression in Merloom #611, FloatTabs #195, RemoteOrbit #40 shows reuse works. Physical local Git Worktrees and actual local spawn counts remain UNKNOWN from GitHub; no deletion was authorized. The same Task 092 / PR #39 now covers a proportional workspace/branch/PR **creation gate** without changing project-specific rules; user expressly requested no merge.
 
 ## Downstream installation state
 
