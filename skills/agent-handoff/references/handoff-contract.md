@@ -90,6 +90,10 @@ When an EXECUTE handoff may materially benefit from orchestration, the Card may 
 
 Repository publication follows Project Governance remote-delivery authority. A Handoff Card may request the receiver to perform the already-authorized repository push/verification boundary, but it cannot invent a remote, grant force-push, choose `main`, or create publication authority absent from the owning task/project.
 
+## Workspace/PR creation is not a handoff side effect
+
+A cross-context Card transfers the **already authorized** task/ref/workspace/PR boundary; it does not generate an authorization to create a fresh Git worktree, branch or PR for the receiver, and must not insert generic `create worktree`/ `open Draft PR` boilerplate. Name a new workspace/PR only when the target project's accepted task/rules explicitly require it or the receiving Project Governance workspace creation gate verifies a material isolation/branch/PR need. An existing valid PR/worktree remains the default for same-task continuation. Do not copy a sender's machine-local checkout path as a valid receiver path without fresh verification; when local identity matters and is unseen, return `UNKNOWN`.
+
 ## Proportional verification transfer
 
 Project Governance and the owning `CURRENT_TASK.md` govern risk tier, required checks, cadence and accepted evidence. The Handoff Card is **not** a second test plan. Include only fresh verification details that materially change the receiver's next action: affected checks now, construction/corrective/closeout boundary, justified deferred checks, or prior valid semantic evidence with identity and coverage. If unchanged and already documented in the task, reference that authority instead of copying test lists or adding mandatory fields to every Card.

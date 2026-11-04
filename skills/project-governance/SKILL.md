@@ -81,6 +81,10 @@ When the requested output itself is an execution/audit/review/verify/diagnose ca
 
 This is not a new task and does not create new authority. Preserve the current `TASK_ID` unless Project Governance has already reconciled a materially different engineering purpose. The Handoff Card must reference current authority and carry only fresh transfer-specific delta; it must not become a rewritten `CURRENT_TASK.md` or import a second engineering framework.
 
+## Task workspace creation boundary
+
+Before creating any branch, Git worktree/checkout, or PR, apply the **reuse-first creation gate** in `references/workspace-lifecycle.md`. A command, same-task continuation, correction, control-only transition, new session, or delegated Sub Agent is not a reason to allocate a new physical worktree or PR. Branch, worktree, and PR are separate choices; preserve target-project requirements (including explicit fresh branch/Draft PR) and the unique-work/overlapping-writer safety gate. Read-only tasks normally need no new worktree/PR. Do not infer machine-local worktree state from GitHub evidence.
+
 ## Governed development
 
 1. Read applicable project authority and only bounded context needed. `CURRENT_TASK.md` remains the single active execution authorization.
