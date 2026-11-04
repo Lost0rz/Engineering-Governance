@@ -123,6 +123,24 @@ class IssueContractTests(unittest.TestCase):
         with self.assertRaisesRegex(mod.SpecError, "WP_FIELD_MISSING"):
             mod.digest(x["body"], repo=REPO, number=40)
 
+    def test_duplicate_wp_ids_stop(self):
+        x = issue()
+        x["body"] = x["body"].replace("### VERIFICATION_PLAN",
+            "#### WP01 — duplicated unit\nTargets: second target\n"
+            "Preconditions: verified\nActions: actual edit\n"
+            "Dependencies: NONE\nEdge cases: known\n"
+            "Verification: pass check\nDone: complete\n"
+            "### VERIFICATION_PLAN")
+        with self.assertRaisesRegex(mod.SpecError, "WORK_PACKAGE_IDS_NOT_UNIQUE"):
+            mod.digest(x["body"], repo=REPO, number=40)
+
+    def test_wp_placeholder_stops(self):
+        x = issue()
+        x["body"] = x["body"].replace("Actions: change one documented rule; preserve old mode",
+                                     "Actions: <decide implementation later>")
+        with self.assertRaisesRegex(mod.SpecError, "WP_FIELD_UNRESOLVED"):
+            mod.digest(x["body"], repo=REPO, number=40)
+
     def test_reused_revision_ambiguous_stops(self):
         x = approve(issue())
         approve(x, hash_value="a" * 64)

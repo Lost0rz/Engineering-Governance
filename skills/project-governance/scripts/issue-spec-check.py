@@ -82,6 +82,9 @@ def parse_fields(body: str) -> dict[str, str]:
     packages = list(WP_HEADER.finditer(result["WORK_PACKAGES"]))
     if not packages:
         raise SpecError("NO_DETAILED_WORK_PACKAGES")
+    names = [re.search(r"WP\d+", item.group()).group() for item in packages]
+    if names != [f"WP{i:02d}" for i in range(1, len(names) + 1)]:
+        raise SpecError("WORK_PACKAGE_IDS_NOT_UNIQUE_AND_ORDERED")
     for index, match in enumerate(packages):
         start = match.end()
         end = packages[index + 1].start() if index + 1 < len(packages) else len(result["WORK_PACKAGES"])
@@ -90,6 +93,8 @@ def parse_fields(body: str) -> dict[str, str]:
             line = re.search(r"(?mi)^" + re.escape(key) + r":[ \t]*(.*)$", block)
             if not line or not line.group(1).strip():
                 raise SpecError("WP_FIELD_MISSING: " + match.group().strip() + ":" + key)
+            if re.search(r"\b(?:TODO|TBD|UNKNOWN)\b|<[^>\n]+>|\.\.\.", line.group(1), re.I):
+                raise SpecError("WP_FIELD_UNRESOLVED: " + match.group().strip() + ":" + key)
     return result
 
 
