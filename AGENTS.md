@@ -1,5 +1,9 @@
 # Engineering-Governance Repository Rules
 
+CONTROL_MODE: ISSUE_CONTROL
+
+This mode declaration is the intended state **after verified migration PR merge into main**; until the migration PR is merged, the accepted `main` remains FILE_CONTROL. This repository's initial Issue #40 is grounded by the user's direct migration request, the Task 093 FILE_CONTROL transitional commit, and the eventual migration PR merge. Subsequent Issues require their own explicit verified approval for the actual spec revision.
+
 ## Purpose
 
 This repository is the source for reusable Engineering Governance Skills, routing contracts, templates, and acceptance specifications. It is not a governance runtime, daemon, scheduler, database, installer service, or automatic remediation system.

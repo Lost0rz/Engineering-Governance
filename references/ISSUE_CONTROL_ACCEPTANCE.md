@@ -39,3 +39,7 @@ Source contract acceptance matrix for EG-ISSUE-CONTROL-MIGRATION-093 (Issue #40)
 - [ ] Source / remote / Web Plugin / local installed and release acceptance reported separately.
 
 Verdict fields: SOURCE_CONTRACT, CROSS_SKILL_CONSISTENCY, GITHUB_REF, PR_HOST_GATES, WEB_PLUGIN, LOCAL_PLUGIN, RELEASE; no implicit PASS.
+
+- [ ] Issue Form `###` headings map to canonical spec fields only through known validated names; missing fields fail closed.
+- [ ] Unmigrated source still has no duplicate task authority; first control-only Task 093 commit precedes source writes.
+- [ ] Cutover source removes live Task/Status files and retains Git history.

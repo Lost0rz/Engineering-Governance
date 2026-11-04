@@ -22,6 +22,10 @@ A task may have multiple approved open Issues in a repository; each proposed wri
  
 Do not mirror every Issue comment into Git. No standalone control PR for progress, receipts, Issue edits, approvals, merge observation or status synchronization.
 
+## Issue Form and Markdown body representations
+
+The bundled `.github/ISSUE_TEMPLATE/execution-spec.yml` produces `###`-headed GitHub form responses rather than the plain Markdown `KEY: VALUE` template. A receiving implementation may normalize only **known** form field names into the corresponding `EXECUTION_SPEC_V1` fields and must still validate all mandatory values, actual verified targets, provenance and approval. An unrecognized/missing field cannot be guessed from prose; a completed form is not authorization. The full Markdown `assets/templates/EXECUTION_SPEC.md` is the canonical explicit-key alternative for issues created through Web connector or `gh issue create --body-file`. Neither format overrides repository AGENTS rules.
+
 ## Approval and executable identity
 
 Required selectors: `TASK_ID`, repository and Issue number, `SPEC_REVISION` (monotonically increasing integer), task purpose/mode, decision/approval provenance, explicit `APPROVED_FOR_EXECUTION` decision by an authorized human/project authority, actionable scope, acceptance and STOP boundary. Define approvers in project rules or verify provenance of an explicit direct user authorization. **A checkbox, label, self-written APPROVED string, bot comment or unverified actor is never sufficient** to confer execution rights. The executor must verify authorization provenance and the current spec revision; if access/permissions/provenance cannot be established, return `STOP_AUTHORITY_UNVERIFIED`.
