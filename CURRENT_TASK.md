@@ -4,7 +4,7 @@ Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `SOURCE_CONVERGED / SELF_AUDITED / DRAFT_UNMERGED`
+Status: `MERGE_AND_WEB_PLUGIN_076_AUTHORIZED / PRE_MERGE`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
@@ -119,6 +119,15 @@ Same workflow-efficiency Task 092 and Draft PR #39. User explicitly approves imp
 - Focused source-contract/scenario checks: `30/30 PASS`, matrix `25` cases. Read-only `CODE_DIFF: PASS` for scoped source semantics, `AUDIT_INDEPENDENCE: SELF_CHECK`. One relative-link correction was confirmed at the final semantic HEAD.
 - `LOCAL_WORKTREE_COUNT=UNKNOWN`, `LOCAL_OVERUSE=UNVERIFIED`; remote PR/branch patterns are not machine-local Worktree evidence. No local cleanup, Web/local Plugin distribution, formal release, additional PR, or merge. No new PR-triggered CI runs returned for this semantic HEAD; do not infer `CI_PASS` or installed/runtime PASS.
 - User instructed **NO MERGE**; PR #39 remains Draft/unmerged and `main` is unchanged.
+
+## Explicit merge and Web Plugin distribution authorization (user approved 2026-11-04)
+
+- User now explicitly authorized merging existing PR #39, then updating the same private account Web Plugin and providing local Codex CLI refresh commands. This supersedes earlier no-merge / no-distribution STOP only for these named actions.
+- Preserve existing PR #39 and source scope. For alignment of Git-backed main and Web Plugin versions, authorize `plugin.json` patch bump from `0.7.5` to `0.7.6` on the same PR before merge; Web V1/V2 manifests must also agree on `0.7.6`. Do not create an independent release/tag, extra PR/worktree, or new plugin identity.
+- Re-read current PR/base/head, last source audit, live host gates available to the integration, and preserve required checks. Archive-only obsolete CI is not green CI. Mark Draft PR ready when needed, merge with expected-head lease, and read back merged main.
+- Distribute **only** verified `main` source Skill changes into the existing private Web Plugin via guarded in-place plugin update, preserving unaffected files, identity, ownership and sharing. Validate 9 Skill paths and key modified Skill/reference content after release readback; report any incomplete/failed update precisely.
+- Local commands are for the user's macOS Codex CLI on each machine. Do not claim local execution or local installed acceptance. Sync via repo-backed marketplace `main` and remove/add installed cached Plugin as applicable.
+- This Task may then be terminal with observed external post-merge control snapshot drift; avoid generating an extra control-only PR merely to memorialize merge, under the newly accepted control-plane contract.
 
 ## Next safe boundary
 
