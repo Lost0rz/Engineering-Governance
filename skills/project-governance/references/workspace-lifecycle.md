@@ -1,3 +1,7 @@
+## Control-mode applicability
+
+Both control modes share this reuse-first workspace policy. FILE_CONTROL reads current Task; ISSUE_CONTROL reads the approved selected Issue/spec revision. Issue edits/comments do not move Git HEAD, imply a new branch/worktree/PR or erase overlapping-writer/unique-work risk. Only the selected authority can grant a writing task.
+
 # Workspace lifecycle and closeout
 
 Apply this contract only when the target project uses task branches, Git worktrees, multiple checkouts, or an equivalent source-controlled task-workspace model. Do not introduce worktrees or extra branches into a project merely to satisfy this reference.

@@ -1,3 +1,5 @@
+<!-- Governance adoption template: declare CONTROL_MODE: FILE_CONTROL or ISSUE_CONTROL, allowed approvers/provenance, Issue read/write permissions and cutover basis. No automatic mode inference. -->
+
 # Project Agent Guidance
 
 Record only durable **project-specific normative rules and boundaries** supported by verified evidence. Reusable Engineering Governance workflow belongs in the Plugin Skills, not here.

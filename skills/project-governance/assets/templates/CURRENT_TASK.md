@@ -1,3 +1,5 @@
+<!-- FILE_CONTROL ONLY. ISSUE_CONTROL projects use an approved EXECUTION_SPEC_V1 GitHub Issue and must not maintain this as live task authority. -->
+
 # Current Task
 
 Task ID: [from the active authorization]
