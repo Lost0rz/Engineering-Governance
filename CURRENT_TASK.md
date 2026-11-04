@@ -1,74 +1,49 @@
-# CURRENT TASK — Engineering Framework Ownership Hardening / v0.7.5 Distribution
+# CURRENT TASK — Proportional Verification Cadence / Skill Efficiency
 
-Date: 2026-10-31
-
+Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
-
-Task ID: `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`
-
-Task class: `CORRECTIVE / DISTRIBUTION`
-
-State: `SOURCE_WEB_COMPLETE / LOCAL_REFRESH_PENDING`
+Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
+Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
+Status: `ACTIVE / SOURCE_CONSTRUCTION`
+Mode: `SOURCE_ONLY`
+Branch: `codex/verification-cadence-efficiency-092`
+Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
+PR: `DRAFT_PENDING / UNMERGED`
+Verification tier: `V2` (cross-Skill contract/composition; no runtime/source product behavior)
 
 ## Objective
 
-Make Engineering Governance the sole reusable engineering workflow/routing framework for governed software/repository work, so generated construction/handoff cards and runtime orchestration do not prescribe or depend on external engineering frameworks/Skills/plugins.
+Amend existing Engineering Governance Skills so small changes do not provoke repeated broad regression, CI, packaging or independent re-audit by default. Keep safety-critical evidence at risk-appropriate acceptance/release boundaries. This is source policy and card-contract work, **not** a new top-level Skill, execution engine, CI scheduler, service, or cross-project code change.
 
-External frameworks may be inspected as reference input. Reusable methods that are worth keeping must be absorbed into the owning Engineering Governance Skill/module before they become part of governed execution.
+## Authorized source surface
 
-## Delivered source behavior
+- `skills/project-governance/references/verification-tiers.md` — classification/cadence, reuse/host gate and selective rerun decisions.
+- `skills/project-governance/SKILL.md` — compact normative hook to owned verification reference.
+- `skills/agent-handoff/references/handoff-contract.md` — transfer the smallest decision-relevant verification delta, not a mandatory large form.
+- `skills/agent-handoff/SKILL.md` only if a lightweight hook is required.
+- `references/**` only for one focused cross-Skill scenario/acceptance matrix if useful.
+- `CURRENT_STATUS.md` / `CURRENT_TASK.md` for control reconciliation.
 
-Implemented in Plugin source version `0.7.5`:
+No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests/version, release/tag, production projects, downstream CI/runner topology, or installed Web/local plugin.
 
-- `project-governance` now owns the engineering framework boundary and keeps governed execution inside the Engineering Governance capability graph;
-- `global-routing` and `capability-composition` define external frameworks as reference/provenance/evidence rather than peer runtime controllers;
-- `execution-orchestrator` is the reusable owner for decomposition, Sub Agent topology, delegation, environment-owned model/reasoning resolution, review/integration lifecycle, and proportional scoped re-review;
-- `agent-handoff` and `handoff-contract` reject external engineering Skill/plugin/framework names as required execution dependencies while allowing genuine reference-only mentions;
-- global routing template carries the same framework-ownership boundary into adopted environments;
-- `references/V075_ENGINEERING_FRAMEWORK_OWNERSHIP_ACCEPTANCE.md` covers routing, handoff-card, historical-path, capability-gap, execution/model, and review-loop regression cases;
-- top-level Skill count remains exactly `9`.
+## Required behavior
 
-Source semantic/plugin head before final control closeout:
+1. V0 documentation/control-only change: static/authority checks, semantic evidence reuse when proven; never claim required host checks passed from semantic equivalence alone.
+2. V1 localized change: focused checks while constructing; no full test/audit after every edit.
+3. V2 related corrections: group scope; run broader affected-domain checks at stabilization/close, rerun only invalidated checks after corrections unless risk/host rules require more.
+4. V3/high risk or release: preserve explicit broad, independent and exact-host evidence required by acceptance authority.
+5. Reuse across pure control-only drift only with proven semantic equivalence and compatible task/authority conditions. Distinguish semantic vs literal-head host gates.
+6. A cross-context Handoff Card references accepted `CURRENT_TASK` verification terms and only reports fresh exceptions/phase/required checks; avoid duplicating the task or mandating verification metadata for trivial requests.
+7. Do not equate green CI with executed tests, nor machine browser checks with human UI acceptance.
 
-`109763036328e9616e417ebba3f075dc64212459`
+## Verification / audit
 
-## Web Plugin result
+- Before source mutation: separate control-only commit to establish this task on the branch.
+- Construction: focused source diff and contract scenario review; no installed/runtime test claims.
+- Frozen source: read back exact PR changes; verify V0/V1/V2/V3, stage, correction, evidence reuse, literal-host gate and cross-context positive/negative cases.
+- After implementation, perform a read-only `CODE_DIFF` evidence audit with honest independence basis (`SELF_CHECK` if same context).
+- Keep Draft / unmerged; only report source and repository delivery evidence actually seen. Formal plugin release/Web/local install acceptance is out of scope.
 
-Existing private Web Plugin updated in place:
+## STOP
 
-- Plugin ID unchanged: `plugins_6acb0b9e8b748191a9b89fad47d89517`;
-- version: `0.7.5`;
-- Web release ID: `pluginrel_6ae578380c8c8191a7c1f7175fded5a4`;
-- scope/discoverability: `USER / PRIVATE` unchanged;
-- root and `.codex-plugin` manifests read back as `0.7.5`;
-- Project Governance, global routing/composition, Execution Orchestrator, Agent Handoff, and Handoff contract changes read back from the current release.
-
-`WEB_PLUGIN_SYNC_075`: `PASS`.
-
-## Local update boundary
-
-Local marketplace/source remains:
-
-- marketplace: `engineering-governance-personal`;
-- plugin/source: `engineering-governance`;
-- source: `https://github.com/Lost0rz/Engineering-Governance.git`, ref `main`.
-
-Task 090's pending 0.7.4 local refresh is superseded. Refresh directly to 0.7.5 with:
-
-```bash
-codex plugin remove engineering-governance@engineering-governance-personal --json
-codex plugin add engineering-governance@engineering-governance-personal --json
-codex plugin list --marketplace engineering-governance-personal --json
-```
-
-After refresh, start a new Codex/Desktop session and verify the loaded/cache manifest reports `0.7.5` and the current Skill catalog no longer contains any removed external framework plugin that should not participate in governed engineering.
-
-Local runtime/install acceptance remains `PENDING_USER_EXECUTION`; no local PASS is inferred from source/Web synchronization.
-
-## Release boundary
-
-This task does not create or move a formal GitHub Release/tag. Formal GitHub release remains `plugin-v0.7.3` unless a separate formal-release task is requested.
-
-## Stop boundary
-
-Source and Web distribution are complete. Stop here pending local refresh evidence from the target machine.
+No implicit release, merge, downstream CI mutation, plugin deployment, or local cache edits. If an existing Skill already covers a case adequately, retain it and avoid duplicate prose. If repository main/branch identity drifts or an accepted authority conflicts, stop mutation and reconcile.

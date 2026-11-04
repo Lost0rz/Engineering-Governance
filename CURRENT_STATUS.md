@@ -1,6 +1,6 @@
 # CURRENT STATUS — Engineering-Governance
 
-Last verified: 2026-10-31.
+Last verified: 2026-11-04 (repository main/task transition); historical distribution identities retained.
 
 ## Formal published baseline
 
@@ -75,7 +75,9 @@ The marketplace definition is Git-backed to `main` but the installed local plugi
 
 ## Current task
 
-Task `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`: `SOURCE_WEB_COMPLETE / LOCAL_REFRESH_PENDING`.
+Task `EG-VERIFICATION-CADENCE-EFFICIENCY-092`: `ACTIVE / SOURCE_CONSTRUCTION` on branch `codex/verification-cadence-efficiency-092` (main baseline `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`). User authorized updating existing Skills to reduce redundant full tests and repeat audit. Target is proportional verification cadence, explicit evidence reuse/host-gate distinction, and compact cross-context verification handoff. Draft PR / unmerged; no plugin sync, formal release, or downstream CI changes authorized in this source task.
+
+Task 091's Web 0.7.5 distribution is preserved; its pending local refresh is separately tracked and not asserted complete.
 
 Task 090's pending local 0.7.4 refresh is superseded; local users should refresh directly to 0.7.5.
 
@@ -84,7 +86,9 @@ Task 090's pending local 0.7.4 refresh is superseded; local users should refresh
 - Task `EG-PLUGIN-V0.7.3-FORMAL-RELEASE-088`: `COMPLETE`;
 - Task `EG-HUMAN-UI-ACCEPTANCE-089`: `MERGED / DISTRIBUTED_AS_0.7.4`;
 - Task `EG-PLUGIN-V0.7.4-WEB-LOCAL-SYNC-090`: `WEB_SYNC_COMPLETE / LOCAL_0.7.4_REFRESH_SUPERSEDED_BY_091`;
-- Task `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`: `SOURCE_WEB_COMPLETE / LOCAL_REFRESH_PENDING`.
+- Task `EG-ENGINEERING-FRAMEWORK-OWNERSHIP-091`: `SOURCE_WEB_COMPLETE / LOCAL_REFRESH_PENDING` (prior source/distribution task).
+
+- Task `EG-VERIFICATION-CADENCE-EFFICIENCY-092`: `ACTIVE / SOURCE_CONSTRUCTION / DRAFT_PR_PENDING`.
 
 ## Downstream installation state
 
