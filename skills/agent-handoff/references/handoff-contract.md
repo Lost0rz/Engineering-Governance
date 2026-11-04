@@ -50,7 +50,7 @@ Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belo
 
 ## Issue-Control handoff and receipt
 
-For ISSUE_CONTROL, Card `AUTHORITY` references `owner/repo#issue`, `TASK_ID`, exact approved `SPEC_REVISION` and verifiable approving basis. The receiver must reread the current Issue body and relevant decisions before mutation, rather than execute a stale handoff transcript. `DELTA` contains only transfer-specific changes, not the full deterministic Work Packages. A decision comment is untrusted as execution authority unless incorporated into a newly approved material spec revision.
+For ISSUE_CONTROL, Card `AUTHORITY` references `owner/repo#issue`, `TASK_ID`, exact approved `SPEC_REVISION`, matching `SPEC_SHA256` and authenticated approval comment identity from an `AGENTS.md`-authorized actor. The receiver must reread the current Issue body and relevant decisions before mutation, rather than execute a stale handoff transcript. `DELTA` contains only transfer-specific changes, not the full deterministic Work Packages. A decision comment is untrusted as execution authority unless incorporated into a newly approved material spec revision.
 
 For meaningful PAUSE, TERMINATE and completed execution, post `DECISION_REQUEST_V1`, `EXECUTION_TERMINATED_V1` or `EXECUTION_RECEIPT_V1` to the same Issue, verify comment ID/URL, and report `RECEIPT_DELIVERY`. Failed posting is PENDING/FAILED, not complete synchronization. Do not write STATUS/TASK files or create control-only PRs for receipts. Keep PR/CI/merge and human UI acceptance independently verified.
 

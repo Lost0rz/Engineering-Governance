@@ -1,8 +1,9 @@
 # Engineering-Governance Repository Rules
 
 CONTROL_MODE: ISSUE_CONTROL
+ISSUE_APPROVERS: Lost0rz
 
-This repository's ISSUE_CONTROL cutover is bound to the **verified merge of migration PR #41**. Older accepted main revisions remain FILE_CONTROL. Bootstrap Issue #40 has provenance in the user's direct migration request and the Task 093 FILE_CONTROL transition commit; future Issues need their own verified approval of the material spec revision.
+This repository's ISSUE_CONTROL cutover is bound to the **verified merge of migration PR #41**. Older accepted main revisions remain FILE_CONTROL. Bootstrap Issue #40 is migration provenance under the FILE_CONTROL Task 093 bridge, **not** perpetual post-cutover execution authorization. After acceptance/cutover, follow-on source mutations require a separately approved, selected Issue revision with an authenticated `SPEC_APPROVAL_V1` comment by the authorized GitHub approver.
 
 ## Purpose
 
@@ -12,7 +13,7 @@ This repository is the source for reusable Engineering Governance Skills, routin
 
 - `AGENTS.md` contains durable rules for maintaining this source repository.
 - `CONTROL_MODE: ISSUE_CONTROL` takes effect only upon verified merge of the migration PR into `main`; before cutover accepted main remains FILE_CONTROL.
-- In ISSUE_CONTROL, the selected approved GitHub Issue/spec revision (initial Issue [#40](https://github.com/Lost0rz/Engineering-Governance/issues/40)) is the only task authorization; Issue comments carry decision/receipt evidence, not new scope. A label/body assertion alone never proves approval.
+- In ISSUE_CONTROL, the selected approved GitHub Issue/spec revision is the only task authorization (Issue [#40](https://github.com/Lost0rz/Engineering-Governance/issues/40) documents the migration, not automatic future authority); Issue comments carry decision/receipt evidence, not new scope. A label/body assertion alone never proves approval.
 - `CURRENT_TASK.md` and `CURRENT_STATUS.md` cease to be live controls after cutover and remain recoverable via Git history. PR/CI/merge truth belongs to the GitHub host.
 - Reusable engineering workflow belongs in `skills/**`; do not duplicate Skill procedure here. Issue approval, execution, receipt and migration behavior belongs to `skills/project-governance/references/issue-*.md`.
 - `documents/**` may preserve durable design rationale, but does not replace live controls.
