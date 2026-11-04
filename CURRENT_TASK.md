@@ -4,7 +4,7 @@ Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `WORKSPACE_CREATION_SOURCE_COMPLETE / SELF_AUDITED / DRAFT_UNMERGED`
+Status: `CONTROL_ALIGNMENT_CADENCE_CORRECTIVE_AUTHORIZED / IMPLEMENTING`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
@@ -102,9 +102,18 @@ Class `V2` (cross-Skill workflow-contract integration), targeted static diff/rea
 - Remote branch and PR counts do not prove physical local Worktrees. `LOCAL_WORKTREE_COUNT=UNKNOWN`, `LOCAL_OVERUSE=UNVERIFIED`; no local inspection, reset, prune, deletion or cleanup performed.
 - No automatic CI run returned for the semantic source HEAD. This is neither a claim of green CI nor installed Plugin behavior. `PR_MERGE_READY=NO` because user explicitly requires no merge and host-required checks have not been fully verified.
 
+## Authorized final convergence: module-scale Worktree / bounded control alignment (user approved 2026-11-04)
+
+Same workflow-efficiency Task 092 and Draft PR #39. User explicitly approves implementing the agreed two-part plan; **no merge, new PR, new worktree, product repo mutation or plugin distribution**.
+
+1. Strengthen `project-governance/references/workspace-lifecycle.md`: routine small code/UI/bug/control edits reuse safe existing checkout even when a project requires a new task branch/PR. Independent Git worktrees should ordinarily support substantial module/architecture development, sustained work or actual isolation/concurrent non-overlapping writers, not one per change. Size alone neither mandates nor forbids isolation when safety/runtime/project requirements justify exceptions.
+2. Extend `project-governance/references/control-plane.md` and `references/artifact-lifecycle.md`: distinguish **mandatory control check** from **conditional control write** and **independent PR creation**. Ordinary post-merge observed external state may be explicitly marked `POST_MERGE_DRIFT` without automatically raising a control-only PR. GitHub host merge evidence wins for merged state; stale TASK cannot authorize further product mutation. At the next *normally authorized* development branch/PR, do an initial control-only reconciliation/next-task authorization commit **before product mutation**, recording the previous task's observed outcome; do not invent a fresh PR merely to document prior merge. If the task's safety/authorization is materially stale for the immediate next action, use `RECONCILE_BEFORE_MUTATION` STOP until corrected under project-approved write rules. No direct-to-main bypass, no project AGENTS override. Exception control-only PR only when required by explicit project/host process or an authorized safety-critical immediate correction with no permitted normal carrier. Mark deferred alignment honestly; never report PASS for stale control files.
+3. Small `project-governance/SKILL.md` and `references/development-flow.md` hooks, plus `control-identity.md` wording only if needed to clarify literal host checks vs control-only semantic drift. Add focused scenario checks in the existing workspace acceptance matrix or a concise adjacent contract reference; no new Skill, service, scheduler, CI, auto-post-merge bot or fourth control authority.
+4. V2 targeted source contracts, valid/invalid scenarios, read-only `CODE_DIFF` self-audit and controls; keep PR #39 Draft/unmerged and preserve earlier Task 092 source/verifications.
+
 ## Next safe boundary
 
-Verification, obsolete CI archival, and workspace creation efficiency Skill source are now complete on Draft PR #39. Preserve this branch/PR without merge. If the user later requests installed rollout, inspect fresh repository acceptance/host gates and current plugin distribution needs first; do not infer that source changes already govern local Codex/ChatGPT sessions.
+Implement the newly authorized module-scale Worktree and bounded control-alignment convergence on the existing Task 092 / PR #39, then audit/reconcile. User explicitly forbids merging now; keep main unchanged.
 
 ## STOP
 
