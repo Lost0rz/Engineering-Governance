@@ -1,62 +1,173 @@
 name: Deterministic execution spec
-description: Start a detailed, audited engineering Issue; the Issue must be explicitly approved before Codex execution.
+description: Detailed construction plan; requires authenticated approval of the exact digest before execution.
 title: "[EXECUTION] "
 body:
   - type: markdown
     attributes:
       value: |
-        This form **does not grant approval**. Project Governance must verify evidence, plan specificity and authorization for the exact spec revision. Never include secrets.
+        Complete all fields with **verified, concrete** evidence and detailed Work Packages.
+        Form required-fields alone are not approval: an authorized user must post
+        SPEC_APPROVAL_V1 with SHA256 from the bundled validator for this issue.
+        A local executor may not guess missing files, APIs, tests or design decisions.
+  - type: dropdown
+    id: contract
+    attributes:
+      label: CONTRACT
+      description: "Execution contract identifier"
+      options:
+        - EXECUTION_SPEC_V1
+    validations:
+      required: true
   - type: input
     id: task_id
     attributes:
       label: TASK_ID
-      description: Existing task ID when continuing or migrating; context changes do not create new tasks.
-      placeholder: PROJECT-BOUNDED-WORK-001
+      description: "Stable task identity, preserve across contexts"
+      placeholder: "EG-PROJECT-TASK-001"
     validations:
       required: true
   - type: input
-    id: revision
+    id: spec_revision
     attributes:
       label: SPEC_REVISION
+      description: "Positive integer, bump for every approved body change"
       placeholder: "1"
     validations:
       required: true
-  - type: textarea
-    id: baseline
+  - type: dropdown
+    id: mode
     attributes:
-      label: VERIFIED_BASELINE
-      description: Exact inspected paths/functions/interfaces/ref and evidence; write UNKNOWN when not yet verified.
+      label: MODE
+      description: "Current issue template permits only bounded source execution"
+      options:
+        - EXECUTE
+    validations:
+      required: true
+  - type: input
+    id: purpose
+    attributes:
+      label: PURPOSE
+      description: "Specific engineering task purpose, e.g. BOUNDED_CORRECTIVE"
+      placeholder: "BOUNDED_CORRECTIVE"
     validations:
       required: true
   - type: textarea
     id: objective
     attributes:
-      label: OBJECTIVE_TARGET_SCOPE
+      label: OBJECTIVE
+      description: "One observable engineering outcome"
+      placeholder: "Implement precisely the accepted behavior."
+    validations:
+      required: true
+  - type: textarea
+    id: verified_baseline
+    attributes:
+      label: VERIFIED_BASELINE
+      description: "Actual inspected main/ref, file/symbol/API evidence; UNKNOWN means cannot execute"
+      placeholder: "repo main SHA; paths, functions and verified observations"
+    validations:
+      required: true
+  - type: textarea
+    id: target_behavior
+    attributes:
+      label: TARGET_BEHAVIOR
+      description: "Positive and negative observable acceptance claims"
+      placeholder: "Expected behavior and forbidden regressions"
+    validations:
+      required: true
+  - type: textarea
+    id: in_scope
+    attributes:
+      label: IN_SCOPE
+      description: "Explicit allowed components and semantics"
+      placeholder: "Only the listed module changes"
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: OUT_OF_SCOPE
+      description: "Explicit exclusions"
+      placeholder: "No schema or unrelated feature changes"
+    validations:
+      required: true
+  - type: textarea
+    id: allowed_side_effects
+    attributes:
+      label: ALLOWED_SIDE_EFFECTS
+      description: "Permitted source, workspace, API or data mutations"
+      placeholder: "Existing Draft PR, specified file edits"
+    validations:
+      required: true
+  - type: textarea
+    id: canonical_authorities
+    attributes:
+      label: CANONICAL_AUTHORITIES
+      description: "Accepted design, API, schema and AGENTS pointers"
+      placeholder: "AGENTS.md, source evidence, approved design"
     validations:
       required: true
   - type: textarea
     id: work_packages
     attributes:
       label: WORK_PACKAGES
-      description: Each WP needs source targets, precise actions, dependencies, edge cases, verification and done conditions.
+      description: "Concrete ordered WP(s); use #### WP01 and each mandatory action key"
+      placeholder: |
+        #### WP01 — scoped code change
+        Targets: actual verified file/function/interface
+        Preconditions: checked revision, dependencies, writable workspace
+        Actions: (1) exact edit (2) exact integration
+        Dependencies: NONE or specified WP
+        Edge cases: error handling and backwards compatibility
+        Verification: focused command and observable expected result
+        Done: specific PASS criterion
     validations:
       required: true
   - type: textarea
-    id: deviation
+    id: verification_plan
+    attributes:
+      label: VERIFICATION_PLAN
+      description: "Risk-tier, focused tests and final host gate as applicable"
+      placeholder: "V2: affected checks, exact-head PR host gate"
+    validations:
+      required: true
+  - type: textarea
+    id: human_ui_acceptance
+    attributes:
+      label: HUMAN_UI_ACCEPTANCE
+      description: "PENDING or NOT_REQUIRED: explicit non-product-UI rationale"
+      placeholder: "PENDING"
+    validations:
+      required: true
+  - type: textarea
+    id: deviation_policy
     attributes:
       label: DEVIATION_POLICY
+      description: "L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE with task limits"
+      placeholder: "L0 harmless locator; L1 scoped type/test fix; L2 new API; L3 unsafe write"
     validations:
       required: true
   - type: textarea
-    id: acceptance
+    id: stop_and_safety
     attributes:
-      label: ACCEPTANCE_RETURN_CONTRACT
+      label: STOP_AND_SAFETY
+      description: "Specific unapproved/destructive/permission/dependency stop criteria"
+      placeholder: "New schema or unverified authority -> PAUSE"
     validations:
       required: true
   - type: textarea
-    id: authorization
+    id: return_contract
+    attributes:
+      label: RETURN_CONTRACT
+      description: "Expected issue receipt content and PR/CI evidence"
+      placeholder: "EXECUTION_RECEIPT_V1 comment to this Issue; link PR"
+    validations:
+      required: true
+  - type: textarea
+    id: authorization_basis
     attributes:
       label: AUTHORIZATION_BASIS
-      description: An unverified value does not confer authority; a verified decision is still required.
+      description: "Not self-approval. Explicit approver comment with SHA256 is required after authoring."
+      placeholder: "PENDING — trusted SPEC_APPROVAL_V1 GitHub comment"
     validations:
       required: true
