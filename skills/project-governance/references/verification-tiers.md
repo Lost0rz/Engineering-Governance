@@ -25,25 +25,38 @@ Semantic equivalence does not make a current host gate pass. Re-read applicable 
 
 The tier describes what risk must be covered, not how often every check runs.
 
+## Scope selection and invocation frequency
+
+Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted `CURRENT_TASK.md` to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
+
+- **V0:** strictly control/document/projection-only changes use relevant static/tree/authority checks, not default product regression/build/packaging. A material normative rule or workflow/config/test contract change is *not* V0 solely because its file is Markdown/YAML.
+- **V1:** localized source behavior uses focused tests and directly related type/lint/runtime checks. No full suite or independent audit after every small edit.
+- **V2:** related slices or corrections use focused construction checks, followed by risk-appropriate **affected** domain/integration evidence when stabilized, rather than per-slice full tests and repeat audits.
+- **V3:** retain broad, independent, security/data/concurrency and release evidence appropriate to actual consequence and explicit acceptance contract. Efficiency does not waive these gates.
+
+Include transitive dependents/shared interfaces in scope; unknown impact requires investigation or conservative check expansion, never a silently narrow PASS. Previously passed evidence is reusable only with proved semantic identity, coverage and unchanged relevant dependencies/authority/task conditions. Later corrections rerun invalidated affected checks and scoped review first. Entire suites/audits are repeated only when integrated coverage was invalidated or accepted task, host or release gates require it.
+
+A green CI scope-selector with product jobs skipped is `SCOPE_GATE_PASS / TESTS_SKIPPED`, **not** `FULL_TESTS_PASS`. Semantic equivalence may support evidence reuse across pure control-only drift, but live status checks/required reviews for the literal current HEAD must independently be satisfied. This policy does not change project CI configuration.
+
 ## Verification cadence
 
 ### Construction
 
-Use the narrowest checks that catch defects introduced by current edits while remaining appropriate to the tier. Do not run unrelated broad suites after every small change.
+Use the narrowest checks that catch defects introduced by current edits while remaining appropriate to the tier. Do not run unrelated broad suites after every small change; group related edits before expensive validation where safe.
 
 For an explicitly authorized multi-part architecture/framework task, construction may use bounded static/sanity checks while deferring expensive **integrated installed/runtime acceptance** until the full architecture is frozen. This cadence is valid only when the task explicitly defines the later integrated acceptance boundary. It does not waive final evidence.
 
 ### Corrective close
 
-Group related findings sharing one objective/authority into one bounded corrective where practical. After it stabilizes, run broader **affected** regression justified by risk once rather than repeating unrelated full validation per edit.
+Group related findings sharing one objective/authority into one bounded corrective where practical. After it stabilizes, run broader **affected** regression justified by risk once rather than repeating unrelated full validation per edit. After a later fix, re-evaluate affected evidence rather than automatically restarting full validation.
 
 ### Task close
 
-Run every check required by the task's accepted verification contract and risk tier that was intentionally deferred during construction. State material checks still omitted and why.
+Complete required checks that remain unsatisfied; reuse valid evidence for unchanged relevant semantic identity and coverage rather than rerun just because closeout begins. State material checks still omitted and why.
 
 ### Merge/release boundary
 
-Add exact-head/provenance, broad build/integration/runtime/packaging/remote CI evidence only as required by the integration/release claim. Do not inherit every historical suite automatically.
+Add exact-head/provenance, broad build/integration/runtime/packaging/remote CI evidence only as required by the integration/release claim. Do not inherit every historical suite automatically. A green workflow does not prove full tests ran when jobs were skipped.
 
 ## Implementation verification vs independent audit
 

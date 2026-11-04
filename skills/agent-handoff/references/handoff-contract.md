@@ -90,6 +90,12 @@ When an EXECUTE handoff may materially benefit from orchestration, the Card may 
 
 Repository publication follows Project Governance remote-delivery authority. A Handoff Card may request the receiver to perform the already-authorized repository push/verification boundary, but it cannot invent a remote, grant force-push, choose `main`, or create publication authority absent from the owning task/project.
 
+## Proportional verification transfer
+
+Project Governance and the owning `CURRENT_TASK.md` govern risk tier, required checks, cadence and accepted evidence. The Handoff Card is **not** a second test plan. Include only fresh verification details that materially change the receiver's next action: affected checks now, construction/corrective/closeout boundary, justified deferred checks, or prior valid semantic evidence with identity and coverage. If unchanged and already documented in the task, reference that authority instead of copying test lists or adding mandatory fields to every Card.
+
+Do not prescribe boilerplate full regression, Release build, or independent audit after every local edit/commit/handoff/control-only change. For a final/host gate, identify the specific claim and required literal identity. For pure control-only drift, distinguish reusable semantic evidence from live host-required status checks. `SCOPE_GATE_PASS / TESTS_SKIPPED` is not `FULL_REGRESSION_PASS`. Unknown semantic equivalence or coverage remains `UNKNOWN`; the receiver chooses the smallest sufficient checks to resolve it. This does not introduce new Skills, audit tasks, forms, or a second CI-control authority.
+
 ## Human product-interface acceptance boundary
 
 For state-changing work that materially changes a real product interface's rendered layout, visual hierarchy, content presentation, interaction behavior, or responsive behavior, human UI/UX/product acceptance is the default final product-interface gate. The absence of an explicit acceptance field does not waive the gate.
