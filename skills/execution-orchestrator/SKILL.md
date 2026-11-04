@@ -26,6 +26,7 @@ Optimize for effective safe execution, not agent count.
 - Keep small, tightly coupled, single-writer work `INLINE`.
 - Prefer parallel read-only exploration/review/verification when units are genuinely independent.
 - Keep one writer for overlapping semantic authority.
+- Delegation does **not** automatically allocate a new branch, PR, or Git worktree per Sub Agent or command. Read-only agents can share a safe read-only checkout; a separate writer worktree requires the Project Governance creation gate, demonstrable isolation/concurrency value, and accepted project/runtime constraints. Respect host-required isolation without inventing an additional durable project worktree.
 - Use parallel writers only when semantic authority/workspaces are proven disjoint and integration evidence is defined.
 - Do not split one sequential thought process into artificial Sub Agent steps.
 - Cancel/supersede stale units rather than integrating them blindly.

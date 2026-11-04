@@ -51,7 +51,7 @@ BOUNDARY
 RETURN_CONTRACT
 ```
 
-Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, claim/evidence fields, and human-acceptance state when product-interface acceptance is material. See `references/handoff-contract.md`.
+Conditional fields include `PURPOSE`, `PROFILE`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, claim/evidence fields, and human-acceptance state when product-interface acceptance is material. Carry verification details only when they change the receiver's next decision; otherwise reference the task's verification contract rather than triggering another broad test/audit loop. See `references/handoff-contract.md`.
 
 ## Human UI acceptance preservation
 

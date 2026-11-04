@@ -115,13 +115,29 @@ It also does not prove current repository-host gates pass. Re-read live checks/r
 
 If control content materially changes authorization or another task-owned condition, obey the new semantics before mutation. That is an authorization effect, not evidence that application content changed.
 
+## Post-merge control snapshot drift — defer the write, not the authorization check
+
+A PR merge is an **external repository-host event**. A pre-merge control commit correctly records the then-current `READY_TO_MERGE` or equivalent state; it must not predeclare `MERGED`. When the host subsequently merges, GitHub's verified merge/ref evidence establishes the event even if `CURRENT_STATUS.md` / `CURRENT_TASK.md` still show the pre-merge snapshot. The old file is not current truth about that event and its former task authorization must not be reused for new product/source mutation.
+
+At the bounded control check, distinguish these observational classifications (not a new control file, runtime mechanism, mandatory status schema or automatic write):
+
+- **`CURRENT`** — control-owned facts and authorization match the freshest relevant evidence.
+- **`POST_MERGE_DRIFT`** — a newly verified external merge/terminal event occurred *after* the controls' valid pre-event snapshot; the difference is bounded to that observed event and does not make a previously authorized action silently valid. Report the host identity and mismatch, keep any old authorization inactive, and **do not automatically open a control-only PR**.
+- **`RECONCILE_BEFORE_MUTATION`** — the current controls lack valid authorization for the proposed next state-changing action, materially contradict safety/ownership/STOP conditions, or the supposed bounded external event cannot be established. STOP before product/source mutation until the owning controls are safely updated under project rules. Read-only recovery and control-authorizing reconciliation remain distinct from product implementation.
+
+**Normal next-task carrier:** at the next *actually authorized* material development activity, read live host/ref/workspace evidence and project `AGENTS.md`, establish the new task's scope/side effects, and use the already-required normal branch/PR when needed. Its **first substantive change is a control-only commit** reconciling the preceding task's verified terminal outcome and authorizing the next task, *before* any product/source mutation. This does not create a separate `close previous task` PR, automatically create a worktree, or authorize changes directly on protected `main`. The user/project authority needed to bootstrap the next task must already be present; old terminal `CURRENT_TASK.md` is not itself new execution authorization. If no safe, permitted carrier/authorization exists, STOP and ask for that boundary rather than inventing it.
+
+**Exceptional immediate correction:** a standalone control-only PR is justified only if an owning project/host rule explicitly requires it or a specific safety/authorization blocker must be corrected before the next normal development carrier and the user/project separately authorizes that corrective path. Do not silently bypass no-direct-main, reviews, branch protection, independent gates or exact host HEAD requirements to reduce PR count.
+
+**Reporting and outcome:** a mandatory Control Alignment **check** does not itself mandate a control **write**, commit, branch, worktree or PR. When persistence is safely deferred, report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION`, `CONTROL_OBSERVATION: POST_MERGE_DRIFT`, the verified host evidence and the next permitted carrier/boundary; **do not** report `CONTROL_ALIGNMENT: PASS` or a current `CURRENT_TASK.md` while files are stale. Only already-current files can yield `UNCHANGED` with `PASS`. No full semantic CI/audit rerun is implied by eventual control-only reconciliation, though the literal-host gates apply when the host requires them.
+
 ## Task lifecycle integrity
 
 - Reconcile immediately when an event changes engineering purpose, authorization, prerequisites, acceptance, STOP conditions, allowed side effects, writer authority, required workspace disposition or another task-owned fact needed for the next mutation.
 - Do **not** create a new task merely because work moves to another agent/session/machine or is decomposed into Sub Agent units.
 - When a design phase, execution phase, independent acceptance audit, corrective objective, or final verification is a materially distinct engineering purpose/authority boundary, represent that distinction through Project Governance task authorization rather than hiding it inside a handoff card.
 - A task that reached its defined terminal outcome no longer authorizes work under an earlier state.
-- Routine external evidence may remain external during execution; final Control Alignment may not leave material control-owned state stale.
+- Routine external evidence may remain external during execution. A successful **pre-merge** handoff must have valid task authority and accurate pre-event controls; a **post-merge external event** may be reported as bounded `POST_MERGE_DRIFT` under the dedicated rule above, with `NEEDS_RECONCILIATION` and next-product-mutation blocked until alignment. Do not claim a stale control snapshot is current or leave a different material authorization/safety conflict unresolved.
 - Task terminal state and physical branch/worktree disposition are separate; use `workspace-lifecycle.md`.
 - At final implementation merge gate, freeze the applicable Delivery / Semantic identity, obtain required semantic evidence, then separately read live host gates. Do not create evidence-only control commits as a prerequisite to merge.
 

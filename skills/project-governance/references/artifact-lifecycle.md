@@ -30,6 +30,8 @@ fresh outcome
 
 `NO_SEMANTIC_CHANGE -> NO_WRITE -> NO_COMMIT`.
 
+For an external PR merge, distinguish **live observed host truth** from the last persisted control snapshot. An accurate pre-merge `READY_TO_MERGE` record becomes an observable `POST_MERGE_DRIFT` after the host event; do not pre-write `MERGED` or generate a separate control-only PR solely to mirror the event. Read and report verified merge evidence, block any new product mutation under the old task authorization, and combine the terminal-outcome reconciliation with the **initial control-only commit of the next normal authorized task branch/PR** when safe. Refer to [Control plane and task authorization](control-plane.md) for exceptions and `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` reporting. If immediate safety/authorization resolution is mandatory, STOP and use an explicitly authorized project-compliant correction; do not turn bounded deferral into unlimited stale control authority.
+
 Normative/current authority materially stale for the next mutation must be reconciled before dependent mutation. A stale derived projection does not override its authority; report/refresh it according to task authorization.
 
 ## Common lifecycle

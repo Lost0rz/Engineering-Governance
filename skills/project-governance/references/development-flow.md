@@ -24,6 +24,14 @@ Verify only the repository/ref/revision/runtime/workspace facts needed for safe 
 
 For state-changing work identify the selected workspace, working-tree/unique-work state, and any task-relevant predecessor writer with overlapping authority. Preserve unknown local work. A project-looking path, branch name or execution card does not itself prove workspace authority.
 
+Run the **reuse-first creation gate** in `workspace-lifecycle.md` before allocating another checkout, Git worktree, branch or PR. These are separate decisions: a newly authorized task/branch does not inherently need a new physical worktree, and an agent/command/handoff does not inherit permission to create any of them. Reuse the existing safe authorized task ref/PR for related corrections and control alignment; honor any explicit project fresh-branch/PR rules. Read-only investigation normally uses existing source with no new workspace.
+
+### Post-merge status reconciliation without another PR
+
+A GitHub merge may occur **after** the last valid pre-merge `CURRENT_STATUS.md`/`CURRENT_TASK.md` commit. Do not predict the merge in those files and do not automatically create a new PR or physical Worktree just to record `MERGED`. At the final post-merge read-only observation, verify the actual host merge/ref identity, report `POST_MERGE_DRIFT` and `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` where persisted controls are still pre-merge, and treat the old Task as unable to authorize further product/source writes. The observed host fact is not a new control authority.
+
+At the **next normal, user/project-authorized development task**, read fresh project rules and evidence, reuse an eligible checkout, create the task branch/PR only if required, and commit preceding-task closure + new-task authorization as the **first control-only commit** on that ordinary carrier, before implementing the next product change. A separate closure-only PR is not required unless the host/project explicitly demands one or an independently authorized urgent control correction has no permitted normal carrier. Follow `control-plane.md` for STOP conditions and for the difference between checking, persisting, and opening a PR. Never write directly to protected `main` merely to avoid PR churn.
+
 ## 4. Confirm authorization and task boundary
 
 Compare the requested action with the active objective, in/out-of-scope boundary, allowed side effects, verification contract and STOP conditions.
