@@ -1,0 +1,64 @@
+name: EG 0.8.0 Web Plugin Candidate Package
+on:
+  push:
+    branches:
+      - codex/issue-control-execution-contract-093
+    paths:
+      - .github/workflows/eg-web-plugin-candidate.yml
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build verified plugin package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import json;print(json.load(open("plugin.json"))["version"])')" = "0.8.0"
+          test "$(find skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l | tr -d ' ')" = "9"
+          test -f skills/project-governance/references/issue-control.md
+          test -f skills/project-governance/references/issue-execution-contract.md
+          test -f skills/project-governance/references/issue-control-migration.md
+          test -f skills/project-governance/scripts/issue-spec-check.py
+          mkdir -p "$RUNNER_TEMP/eg-package/.codex-plugin"
+          git archive HEAD plugin.json skills | tar -xf - -C "$RUNNER_TEMP/eg-package"
+          python3 - "$RUNNER_TEMP/eg-package" <<'PY'
+          import json,pathlib,sys
+          root=pathlib.Path(sys.argv[1])
+          p=json.loads((root/'plugin.json').read_text())
+          assert p['name']=='engineering-governance' and p['version']=='0.8.0'
+          compatible={
+            'interface':{
+              'displayName':'Engineering Governance',
+              'shortDescription':'Governance, design, framework-owned execution, handoff, audit, navigation, and incident Skills.',
+              'longDescription':p['description'],
+              'developerName':'Workspace upload',
+              'category':'Other',
+              'capabilities':[],
+              'defaultPrompt':None
+            },
+            'name':p['name'],
+            'version':p['version'],
+            'description':p['description'],
+            'author':{'name':'Workspace upload'},
+            'keywords':[],
+            'skills':'./skills'
+          }
+          (root/'.codex-plugin/plugin.json').write_text(json.dumps(compatible,indent=2)+'\n')
+          assert len(list((root/'skills').glob('*/SKILL.md')))==9
+          PY
+          ( cd "$RUNNER_TEMP/eg-package"; zip -q -r "$GITHUB_WORKSPACE/engineering-governance-web-0.8.0.zip" plugin.json .codex-plugin skills )
+          unzip -t "$GITHUB_WORKSPACE/engineering-governance-web-0.8.0.zip" | tail -1
+          shasum -a 256 "$GITHUB_WORKSPACE/engineering-governance-web-0.8.0.zip"
+      - name: Upload candidate ZIP (not a release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: engineering-governance-web-0.8.0
+          path: engineering-governance-web-0.8.0.zip
+          if-no-files-found: error
+          retention-days: 7
