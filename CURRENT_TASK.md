@@ -4,7 +4,7 @@ Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `SOURCE_COMPLETE / SELF_AUDITED / CI_LEGACY_FAILURE`
+Status: `CI_ARCHIVE_CORRECTIVE_AUTHORIZED / IMPLEMENTATION_PENDING`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
@@ -24,7 +24,7 @@ Amend existing Engineering Governance Skills so small changes do not provoke rep
 - `references/**` only for one focused cross-Skill scenario/acceptance matrix if useful.
 - `CURRENT_STATUS.md` / `CURRENT_TASK.md` for control reconciliation.
 
-No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests/version, release/tag, production projects, downstream CI/runner topology, or installed Web/local plugin.
+No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests/version, release/tag, production projects, downstream product CI/runner topology, or installed Web/local plugin. This task now explicitly permits the single Engineering-Governance repository CI archival below.
 
 ## Required behavior
 
@@ -54,9 +54,20 @@ No change to `AGENTS.md`, top-level Skill count, model routing, plugin manifests
 - Existing `.github/workflows/validate-plugin-v0.7.3.yml` triggers on these Skill paths but hardcodes `manifest[\'version\'] == \'0.7.3\'`; current manifest is `0.7.5`. Latest PR CI run `41745425207` failed at this legacy version assertion before building the candidate. This is a CI/host blocker, not a proven Skill source regression.
 - `PR_MERGE_READY: NO`; no merge, no Web/local plugin sync and no downstream CI mutation.
 
+## Authorized legacy CI closeout (user approved 2026-11-04)
+
+The user authorized retiring the redundant, failing **old validation** of published version 0.7.3. This is a same-task corrective to the verification efficiency objective, not a new framework or release task.
+
+- Allowed mutation: only `.github/workflows/validate-plugin-v0.7.3.yml` in this repository, adopting the already established archived/dispatch-only pattern used by `validate-plugin-v0.7.2.yml`.
+- Expected behavior: ordinary Skill/PR changes **no longer auto-run** the hard-coded v0.7.3 candidate validator; no dependency on `plugin.json.version == 0.7.3` for current-source PR acceptance.
+- Preserve published release/tag/asset history and `.github/workflows/release-plugin-*.yml`; do not modify the current version, create a replacement full-suite workflow, disable GitHub Actions globally, or change other repositories.
+- Verification: exact workflow readback and diff; check zero `pull_request` / `push` / `schedule` triggers for archived validator, no candidate-build/version-gated job, archived validator remains manually inspectable, and untouched release/other workflows.
+- GitHub rulesets API returned an empty array; branch-protection endpoint was inaccessible to the integration (403). Therefore required-check availability is not proven and PR merge-readiness remains unresolved until live host gates can be verified.
+- Keep PR #39 Draft and unmerged. A branch-only source change does not alter behavior on `main` before merge.
+
 ## Next safe boundary
 
-A separately authorized project CI corrective should reconcile the stale v0.7.3 candidate validator trigger/version contract to current release policy, followed by appropriate fresh CI and PR merge readiness evidence. Preserve current source changes and keep #39 Draft until explicit authorization.
+Perform the newly authorized archived/dispatch-only CI corrective on #39, then perform read-only scoped source/trigger audit and reconcile task/status. Preserve current Skill source changes and keep #39 Draft pending explicit merge authorization.
 
 ## STOP
 
