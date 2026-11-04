@@ -2,7 +2,7 @@
 
 CONTROL_MODE: ISSUE_CONTROL
 
-This mode declaration is the intended state **after verified migration PR merge into main**; until the migration PR is merged, the accepted `main` remains FILE_CONTROL. This repository's initial Issue #40 is grounded by the user's direct migration request, the Task 093 FILE_CONTROL transitional commit, and the eventual migration PR merge. Subsequent Issues require their own explicit verified approval for the actual spec revision.
+This repository's ISSUE_CONTROL cutover is bound to the **verified merge of migration PR #41**. Older accepted main revisions remain FILE_CONTROL. Bootstrap Issue #40 has provenance in the user's direct migration request and the Task 093 FILE_CONTROL transition commit; future Issues need their own verified approval of the material spec revision.
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Exactly nine top-level Skills are supported:
 8. `domain-navigation`
 9. `incident-doctor`
 
-Global routing is policy, not another Skill. `design` owns bounded UI/UX and frontend visual-design capability while `solution-design` remains the owner for material engineering/architecture/state-ownership ambiguity. `project-profile` is derived context/navigation, not a fourth control source or replacement for project `AGENTS.md`, Domain authority, STATUS/TASK, or durable planning.
+Global routing is policy, not another Skill. `design` owns bounded UI/UX and frontend visual-design capability while `solution-design` remains the owner for material engineering/architecture/state-ownership ambiguity. `project-profile` is derived context/navigation, not a replacement for `AGENTS.md`, Domain authority, the selected FILE_CONTROL Task/Status or ISSUE_CONTROL Issue, or durable planning.
 
 ## Environment boundary
 
