@@ -63,3 +63,8 @@ Verification follows risk (`V0`–`V3`) and evidence identity. Semantic evidence
 - `skills/project-governance/references/artifact-lifecycle.md` — artifact ownership/refresh lifecycle.
 - `skills/design/references/module-map.md` — Design source-module status and composition boundary.
 - `skills/agent-handoff/references/handoff-contract.md` — card/receipt contract.
+
+
+### Issue Control local preflight
+
+For a repository that **explicitly** adopted ISSUE_CONTROL, read the complete fresh Issue using `gh issue view <number> -R owner/repo --json number,body,state,comments > issue.json`. The lightweight bundled validator at `skills/project-governance/scripts/issue-spec-check.py` supports `digest` (structural spec + SHA256) and `verify --approvers <trusted-github-logins>` (authenticated matching SPEC_APPROVAL_V1 comment). Neither check proves actual code targets or grants writer permission by itself. Use `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v` for the bounded contract scenarios. An approved Issue exists only after the authorized actor explicitly posts the exact digest approval. Progress, L2 resolution and final receipts are comments, not Git file updates.

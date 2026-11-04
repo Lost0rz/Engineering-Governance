@@ -78,3 +78,8 @@ An implementation may be `IMPLEMENTED` while CI or human UI acceptance is `PENDI
 ## Data minimization and fallback
 
 Never put credentials, customer secrets, private logs, or unneeded personal data into public Issues. For unavailable/unsafe GitHub Issue facilities, use the explicitly authorized FILE_CONTROL mode or stop and plan migration; no silent mode fallback within an already migrated task. Do not install extra runtime agents, GitHub Actions validators, schedulers or services merely to enforce this policy.
+
+
+### Focused checker tests
+
+Run `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v` from the repository root. Unit cases are source-structure and approval-provenance checks, **not** installed local CLI permission tests or source-path semantic acceptance. For an adopted repository, a local `gh` round trip and real authenticated approval remain separately required.

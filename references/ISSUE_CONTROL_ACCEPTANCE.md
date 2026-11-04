@@ -43,3 +43,19 @@ Verdict fields: SOURCE_CONTRACT, CROSS_SKILL_CONSISTENCY, GITHUB_REF, PR_HOST_GA
 - [ ] Issue Form `###` headings map to canonical spec fields only through known validated names; missing fields fail closed.
 - [ ] Unmigrated source still has no duplicate task authority; first control-only Task 093 commit precedes source writes.
 - [ ] Cutover source removes live Task/Status files and retains Git history.
+
+## EG-093 focused corrective verification (source-identical copy)
+
+- Exact remote Git blob of `skills/project-governance/scripts/issue-spec-check.py`: `59d4c66723030fe983b611f6441265bd7ffdc9c0`.
+- Exact remote Git blob of `skills/project-governance/scripts/test_issue_spec_check.py`: `cffe390cec00778d4f12b693409f9b8f1c56b3b3`.
+- Source-identical Python test execution in disposable verification environment: `16/16 PASS`, `0 FAIL`, `0 ERROR`.
+- Command for independent local replication: `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v`.
+- Covered: approved digest, comment-only continuity, changed body/revision rejection, untrusted actor, READY-label denial, missing/duplicate spec fields, unverified target, missing WP key, duplicated WP ID, WP placeholder, conflicting approval hashes, revocation, closed Issue and LF/CRLF equivalence.
+- **Not proved by these tests:** actual GitHub approver intent, semantic source-path correctness, local `gh` read/comment permissions, live CI/required checks, installed Web/Local Plugin, human interface acceptance and PR merge.
+
+### Migration evidence remaining before merge
+
+- `ISSUE_40_BODY: EXECUTION_SPEC_V1 / SPEC_REVISION=2 / 19 canonical fields / 6 WPs` (remote readback).
+- `SPEC_APPROVAL_V1: PENDING` for any post-cutover executable use of this Issue; old FILE_CONTROL Task 093 continues to authorize the current in-flight migration PR, not future Issue writes.
+- `LOCAL_GH_PREFLIGHT: UNVERIFIED` from remote-only tooling. A real local CLI read and a benign test comment receipt must be observed; connector-only proof is insufficient.
+- `PR_41: DRAFT / UNMERGED`; do not infer branch-protection or CI gates from clean mergeability.
