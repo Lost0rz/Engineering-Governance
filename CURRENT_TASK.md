@@ -4,7 +4,7 @@ Date: 2026-11-04
 Repository: `Lost0rz/Engineering-Governance`
 Task ID: `EG-VERIFICATION-CADENCE-EFFICIENCY-092`
 Task class: `BOUNDED CORRECTIVE / SOURCE SKILL CONTRACT`
-Status: `CONTROL_ALIGNMENT_CADENCE_CORRECTIVE_AUTHORIZED / IMPLEMENTING`
+Status: `SOURCE_CONVERGED / SELF_AUDITED / DRAFT_UNMERGED`
 Mode: `SOURCE_ONLY`
 Branch: `codex/verification-cadence-efficiency-092`
 Baseline main: `ef4f2d9af8e5796b7d0bc7b53f2c0dbe785211bb`
@@ -111,9 +111,18 @@ Same workflow-efficiency Task 092 and Draft PR #39. User explicitly approves imp
 3. Small `project-governance/SKILL.md` and `references/development-flow.md` hooks, plus `control-identity.md` wording only if needed to clarify literal host checks vs control-only semantic drift. Add focused scenario checks in the existing workspace acceptance matrix or a concise adjacent contract reference; no new Skill, service, scheduler, CI, auto-post-merge bot or fourth control authority.
 4. V2 targeted source contracts, valid/invalid scenarios, read-only `CODE_DIFF` self-audit and controls; keep PR #39 Draft/unmerged and preserve earlier Task 092 source/verifications.
 
+## Observed final two-part convergence and audit
+
+- Worktree/control alignment source semantic HEAD: `8bb65a65fb3effa2b9351f45a00e4c05f6ed3fb4` on existing Draft PR #39. This extension changes exactly 5 existing Project Governance entry/reference files and 1 existing scenario matrix; scope readback verified, no new top-level Skill or external project mutation.
+- The Worktree gate now prefers a safely reusable checkout for small bugs, localized UI/copy, reviews, tests and Task/Status changes, independently assessing fresh branch/PR requirements and durable physical Worktree isolation; large independent modules/long-lived development or demonstrated isolated writer/runtime needs are permitted with evidence and lifecycle ownership.
+- Control-plane changes define observational `CURRENT | POST_MERGE_DRIFT | RECONCILE_BEFORE_MUTATION` and separate mandatory check, conditional persistence and independent PR creation. Verified host merge can precede a delayed persisted snapshot without granting the old Task fresh authority. The next normally authorized development branch/PR starts with a control-only commit reconciling old terminal outcome + next task authorization before source mutation; a separate control-only PR is an explicit exception, not the default. Do not bypass protected main, project-specific rules or host-required checks; stale control alignment is not `PASS`.
+- Focused source-contract/scenario checks: `30/30 PASS`, matrix `25` cases. Read-only `CODE_DIFF: PASS` for scoped source semantics, `AUDIT_INDEPENDENCE: SELF_CHECK`. One relative-link correction was confirmed at the final semantic HEAD.
+- `LOCAL_WORKTREE_COUNT=UNKNOWN`, `LOCAL_OVERUSE=UNVERIFIED`; remote PR/branch patterns are not machine-local Worktree evidence. No local cleanup, Web/local Plugin distribution, formal release, additional PR, or merge. No new PR-triggered CI runs returned for this semantic HEAD; do not infer `CI_PASS` or installed/runtime PASS.
+- User instructed **NO MERGE**; PR #39 remains Draft/unmerged and `main` is unchanged.
+
 ## Next safe boundary
 
-Implement the newly authorized module-scale Worktree and bounded control-alignment convergence on the existing Task 092 / PR #39, then audit/reconcile. User explicitly forbids merging now; keep main unchanged.
+Task 092 source now contains proportional testing, obsolete v0.7.3 CI archival, reuse-first Worktree creation, and deferred post-merge control reconciliation. Hold Draft PR #39 unmerged under the user's instruction. A future merge/Plugin rollout requires separate explicit user authorization plus fresh host/readiness and distribution evidence. No downstream project rules, local Worktrees or runtime installations were changed.
 
 ## STOP
 
