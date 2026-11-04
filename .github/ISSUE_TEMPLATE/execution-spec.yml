@@ -1,0 +1,62 @@
+name: Deterministic execution spec
+description: Start a detailed, audited engineering Issue; the Issue must be explicitly approved before Codex execution.
+title: "[EXECUTION] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form **does not grant approval**. Project Governance must verify evidence, plan specificity and authorization for the exact spec revision. Never include secrets.
+  - type: input
+    id: task_id
+    attributes:
+      label: Stable task ID
+      description: Existing task ID when continuing or migrating; context changes do not create new tasks.
+      placeholder: PROJECT-BOUNDED-WORK-001
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Execution spec revision
+      placeholder: "1"
+    validations:
+      required: true
+  - type: textarea
+    id: baseline
+    attributes:
+      label: Verified baseline and code/design authorities
+      description: Exact inspected paths/functions/interfaces/ref and evidence; write UNKNOWN when not yet verified.
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective, target behavior, scope and non-goals
+    validations:
+      required: true
+  - type: textarea
+    id: work_packages
+    attributes:
+      label: Detailed ordered Work Packages
+      description: Each WP needs source targets, precise actions, dependencies, edge cases, verification and done conditions.
+    validations:
+      required: true
+  - type: textarea
+    id: deviation
+    attributes:
+      label: L0/L1/L2/L3 deviation and STOP policy
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance, human UI gate and Issue receipt contract
+    validations:
+      required: true
+  - type: textarea
+    id: authorization
+    attributes:
+      label: Explicit approval provenance for this revision
+      description: An unverified value does not confer authority; a verified decision is still required.
+    validations:
+      required: true
