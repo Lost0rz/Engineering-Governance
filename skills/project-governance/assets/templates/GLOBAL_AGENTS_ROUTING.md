@@ -2,6 +2,10 @@
 ## Engineering Governance Skill routing
 
 For ordinary software, repository, or project engineering work, use `project-governance` as the normal entry unless a higher-priority instruction or explicit bounded Engineering Governance Skill selection determines another route. Keep simple work lightweight.
+For actual cross-context work requests such as "给我施工卡", "给我审计卡", "交给本地 Codex", or "send the local AI execution instructions", discover/select installed Engineering Governance, then use Project Governance for authoritative Task/Issue selection and `agent-handoff` for the Card. An explanation *about* cards is not an executable handoff; direct PR audit normally invokes `evidence-audit` without a transfer Card. Plugin metadata improves discovery, but cannot guarantee that the hosting UI auto-loads Skills. If unavailable, state the limitation without inventing route evidence.
+
+A receiving local/Desktop agent must reread accepted `AGENTS.md` and mode-selected Task or exact approved Issue/revision/digest/approval before source changes, then check live PR/workspace and relevant WPs/STOP/receipt. The Card only transports a reference and delta; it never self-authorizes code. Do not force every Skill to load at startup or turn absent GitHub access into FILE_CONTROL fallback.
+
 
 Once governed engineering enters `project-governance`, Engineering Governance is the reusable engineering workflow/routing framework for that work. External engineering frameworks, Skills, plugins, prompt packs, or repositories may be inspected as reference material/evidence, but they do not become required execution dependencies, peer routers, Sub Agent/model/reasoning authorities, or review/completion controllers merely because they are installed, discoverable, historically referenced, or useful.
 

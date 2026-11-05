@@ -20,6 +20,28 @@ RETURN_CONTRACT: <actual evidence/result required for the next decision; do not 
 
 Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` are not `MODE` values. Put them in `PURPOSE` or `DELTA` when useful.
 
+## ISSUE_CONTROL compact example (requires real verified selectors)
+
+The sender populates **actual** Issue identity, revision, SHA256 and authenticated approval comment; these labels are *illustrative only*. Do not output placeholders as an executable Card.
+
+```text
+CARD_ID: <current-card-id>
+TASK_ID: <same approved Issue TASK_ID>
+MODE: EXECUTE
+CAPABILITY: project-governance
+TARGET: <owner/repo and concrete bounded outcome>
+ISSUE: <owner/repo#number>
+SPEC_REVISION: <approved revision>
+AUTHORITY: AGENTS.md + selected Issue + SPEC_SHA256 <verified> + approval comment <GitHub URL/actor>
+DELTA: <only sender-to-receiver fresh handoff change | NONE>
+BOUNDARY: revalidate selected Issue/current approval, reuse safe workspace, execute only approved WPs; stop on conflict
+RETURN_CONTRACT: observed WP/PR/CI results + same-Issue EXECUTION_RECEIPT_V1 URL, human UI gate separate
+```
+
+For an **audit handoff**, use the same nine core fields with `MODE: AUDIT`, `CAPABILITY: evidence-audit` when a formal verdict is intended, observed PR/ref, evidence/claim and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`. An audit Card is not an audit verdict.
+
+When no valid Issue spec/approval exists, return a non-executable design/review result and the blocking Issue URL; do not manufacture an EXECUTE Card or clone the approved plan into chat.
+
 ## Conditional fields
 
 Use only when decision-relevant:

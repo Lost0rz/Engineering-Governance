@@ -2,6 +2,20 @@
 
 This contract answers one question: **which Engineering Governance capability should handle the request now?** It selects capability; it does not duplicate Skill procedure or project facts.
 
+## Natural-language entry and discovery boundary
+
+Web/ChatGPT requests like "给我施工卡" (give me a construction card), "给我审计卡" (send an audit card), "交给本地 Codex", "write instructions for my local AI" and "return a task execution receipt" are **cross-context intent**, not free-form writing when a governed project is in context. Discover the installed Engineering Governance capability and enter `project-governance`; route an actual transfer artifact through `agent-handoff`. Project/organization instructions or explicit plugin selection may be authoritative entry surfaces, but a file **inside** the plugin cannot deterministically cause a platform to load that plugin. If discovery is unavailable, say so rather than claim Skill compliance.
+
+Negative cases: "施工卡格式是什么" is ordinary explanation unless the user actually requests an engineering handoff; "审计当前 PR" normally means **perform** an evidence audit rather than generate a Card for another agent; "看看当前进度" is advisory read-only status; mentioning another agent in historical text is not necessarily a handoff. Distinguish the requested outcome instead of hard keyword routing.
+
+This contract governs behavior **after entry** and discoverability guidance, not a guaranteed external plugin auto-launch. Confirm real Web Skill invocation in a fresh session; a well-formed-looking Card alone is not evidence the Skill was loaded.
+
+## Three-layer composition
+
+- **ENTRY**: select available installed Governance from user intent and supported platform/project guidance, otherwise report unavailable; do not treat manifest keywords as a security boundary.
+- **ROUTING**: `project-governance` chooses FILE_CONTROL Task or ISSUE_CONTROL exact approved Issue, then only the bounded required `agent-handoff`, `evidence-audit`, `design`, etc. No nine-Skill startup loop or duplicate task authority.
+- **EXECUTION**: receiving Codex Desktop/local agent reopens accepted `AGENTS.md`, selected Task or exact Issue/approval, fresh PR/worktree/host facts, relevant Domain and Work Package; apply L0/L1/L2/L3 and write same-Issue receipts. The Card is a locator + delta, not a permission token or an alternative execution spec. Missing material authority/Skill/host facts blocks affected writes.
+
 ## Routing surfaces
 
 An environment may expose explicit Skill selection, Skill metadata/platform discovery, project guidance, authoritative global guidance, or platform/runtime routing. Do not require a Local-style global file where none exists.
