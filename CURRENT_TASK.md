@@ -16,6 +16,8 @@ Enable explicitly opted-in personal-project AI-proxy Issue approval after a **fr
 ## Authorized changes
 - skills/project-governance/references/issue-control.md
 - skills/project-governance/references/issue-execution-contract.md
+- skills/project-governance/references/issue-control-migration.md
+- skills/project-governance/assets/templates/AGENTS.md
 - skills/project-governance/scripts/issue-spec-check.py
 - skills/project-governance/scripts/test_issue_spec_check.py
 - skills/project-governance/SKILL.md (bounded pointer)
