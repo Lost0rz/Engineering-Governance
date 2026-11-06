@@ -65,6 +65,24 @@ def approve(obj, actor="Lost0rz", hash_value=None, revision="2"):
     return obj
 
 
+def delegate(obj, actor="Lost0rz", hash_value=None, summary="I approve this exact current Issue"):
+    _, d = mod.digest(obj["body"], repo=REPO, number=obj["number"])
+    obj["comments"].append({
+        "id": len(obj["comments"]) + 1,
+        "author": {"login": actor},
+        "body": "\n".join([
+            "SPEC_DELEGATED_APPROVAL_V1", f"REPOSITORY: {REPO}", "ISSUE: 40",
+            "TASK_ID: EG-093", "SPEC_REVISION: 2",
+            f"SPEC_SHA256: {hash_value or d}", "DECISION: APPROVED_FOR_EXECUTION",
+            "AUTHORIZATION_CHANNEL: CHATGPT_WEB",
+            "USER_DECISION: EXPLICIT_APPROVAL_OF_CURRENT_SPEC",
+            f"USER_DECISION_SUMMARY: {summary}",
+            "PROVENANCE: ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF",
+        ]),
+    })
+    return obj
+
+
 class IssueContractTests(unittest.TestCase):
     def test_valid_approved_spec(self):
         result = mod.verify_approval(approve(issue()), repo=REPO, approvers={"Lost0rz"})
@@ -167,6 +185,115 @@ class IssueContractTests(unittest.TestCase):
         b = "\r\n".join(a.split("\n"))
         self.assertEqual(mod.digest(a, repo=REPO, number=40)[1],
                          mod.digest(b, repo=REPO, number=40)[1])
+
+    def test_delegation_defaults_off(self):
+        with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
+            mod.verify_approval(delegate(issue()), repo=REPO, approvers={"Lost0rz"})
+
+    def test_explicit_delegation_accepts_matching_exact_spec(self):
+        result = mod.verify_approval(delegate(issue()), repo=REPO,
+                                     approvers={"Lost0rz"}, allow_delegated=True)
+        self.assertEqual(result["result"], "STRUCTURE_AND_DELEGATED_APPROVAL_PASS")
+        self.assertEqual(result["approval_assurance"], "DELEGATED_ACCOUNT_ATTESTED")
+        self.assertEqual(result["approval_comment_id"], 1)
+
+    def test_direct_approval_still_preferred_with_delegation_opt_in(self):
+        x = approve(delegate(issue()))
+        r = mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+        self.assertEqual(r["result"], "STRUCTURE_AND_APPROVAL_PASS")
+        self.assertEqual(r["approval_assurance"], "DIRECT_GITHUB_ACTOR")
+
+    def test_delegation_untrusted_account_denied(self):
+        with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
+            mod.verify_approval(delegate(issue(), actor="outsider"), repo=REPO,
+                                approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_stale_digest_denied(self):
+        x = delegate(issue())
+        x["body"] = x["body"].replace("expected scoped contract", "changed scope")
+        with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
+            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_missing_required_attestation_denied(self):
+        x = delegate(issue())
+        x["comments"][0]["body"] = x["comments"][0]["body"].replace(
+            "PROVENANCE: ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF", "")
+        with self.assertRaisesRegex(mod.SpecError, "INVALID_DELEGATED_APPROVAL_FIELDS"):
+            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_incorrect_attestation_denied(self):
+        x = delegate(issue())
+        x["comments"][0]["body"] = x["comments"][0]["body"].replace(
+            "USER_DECISION: EXPLICIT_APPROVAL_OF_CURRENT_SPEC",
+            "USER_DECISION: AUTO_APPROVED")
+        with self.assertRaisesRegex(mod.SpecError, "INVALID_DELEGATED_ATTESTATION"):
+            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_empty_decision_summary_denied(self):
+        x = delegate(issue(), summary=" ")
+        with self.assertRaisesRegex(mod.SpecError, "INVALID_DELEGATED_ATTESTATION"):
+            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_revoked_denied(self):
+        x = delegate(issue())
+        x["comments"].append({
+            "id": 2, "author": {"login": "Lost0rz"},
+            "body": "SPEC_REVOCATION_V1\nTASK_ID: EG-093\nSPEC_REVISION: 2\nDECISION: REVOKED",
+        })
+        with self.assertRaisesRegex(mod.SpecError, "APPROVAL_REVOKED"):
+            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_reused_revision_digest_conflict_denied(self):
+        x = delegate(issue())
+        delegate(x, hash_value="c" * 64)
+        with self.assertRaisesRegex(mod.SpecError, "REVISION_REUSED"):
+            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegation_requires_exact_accepted_agents_opt_in(self):
+        self.assertFalse(mod.delegated_opt_in("CONTROL_MODE: ISSUE_CONTROL\n"))
+        self.assertTrue(mod.delegated_opt_in(
+            "CONTROL_MODE: ISSUE_CONTROL\nISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+        self.assertFalse(mod.delegated_opt_in(
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\nISSUE_DELEGATED_APPROVAL: DISABLED\n"))
+        self.assertFalse(mod.delegated_opt_in("ISSUE_DELEGATED_APPROVAL: enable\n"))
+
+
+    def test_delegation_fenced_backtick_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "## Example\n```md\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"))
+
+    def test_delegation_fenced_tilde_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "~~~text\nISSUE_DELEGATED_APPROVAL: ENABLED\n~~~\n"))
+
+    def test_delegation_indented_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "    ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+        self.assertFalse(mod.delegated_opt_in(
+            "  ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_blockquote_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "> ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_bare_directive_outside_example(self):
+        self.assertTrue(mod.delegated_opt_in(
+            "## Policy\n```md\nISSUE_DELEGATED_APPROVAL: DISABLED\n```\n"
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_html_comment_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "<!--\nISSUE_DELEGATED_APPROVAL: ENABLED\n-->\n"))
+        self.assertTrue(mod.delegated_opt_in(
+            "<!--\nISSUE_DELEGATED_APPROVAL: DISABLED\n-->\n"
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_duplicate_real_declarations_denied_with_fence(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"
+            "```text\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"
+            "ISSUE_DELEGATED_APPROVAL: DISABLED\n"))
+
 
 
 if __name__ == "__main__":

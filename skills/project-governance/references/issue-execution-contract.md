@@ -54,7 +54,7 @@ DECISION_REQUEST_V1 and EXECUTION_RECEIPT_V1 comments + PR evidence
 approved revision reference or PENDING; *not* approval itself
 ```
 
-Approval is **always** the distinct authenticated `SPEC_APPROVAL_V1` comment defined in `issue-control.md`. The helper checks structure, revision and content hash; human/agent source-grounding audit checks whether listed paths, ownership and expected outcomes are real. A verified plan cannot be inferred from merely filling required text boxes.
+Approval always requires a distinct GitHub Issue approval record defined in `issue-control.md`: strict/direct `SPEC_APPROVAL_V1` by default, or *only if the accepted target AGENTS explicitly opts in* `SPEC_DELEGATED_APPROVAL_V1` with `DELEGATED_ACCOUNT_ATTESTED` lower assurance after an exact Web user decision. Neither record is embedded in the nineteen-field Issue body, and neither may be inferred from a label or an AI claim. The helper checks structure, revision and content hash; human/agent source-grounding audit checks whether listed paths, ownership and expected outcomes are real. A verified plan cannot be inferred from merely filling required text boxes.
 
 **No 'improve', 'refactor as needed', 'fix all issues' or 'choose an architecture' as the only executable step.** The Web/design executor must resolve material decision branches, identify relevant paths/functions from fresh evidence (not fabricate code paths), and specify observable verification outcomes. If code access is limited, mark required targets `UNKNOWN` and keep the Issue in `DESIGN_REVIEW` or `BLOCKED` until grounded. A schema-complete but vague Issue is not `READY_TO_EXECUTE`.
 
@@ -101,7 +101,7 @@ Limit repeated asking: one current request per distinct blocker; append genuinel
 
 ### RESUME_CONTRACT_V1 — risk-based resolution
 
-For L2 pause, one authorized decision owner must issue a traceable `DECISION_RESOLUTION_V1` comment referencing the existing blocker/Issue, affected WPs and current approved `SPEC_REVISION + SPEC_SHA256`. The **GitHub actor identity** must be in project `ISSUE_APPROVERS`; a comment's self-claimed name is not enough. Local receiver rereads the complete current Issue, verifies the original spec approval, confirms facts/permissions/dependencies and applies one outcome:
+For L2 pause, one authorized decision owner must issue a traceable `DECISION_RESOLUTION_V1` comment referencing the existing blocker/Issue, affected WPs and current approved `SPEC_REVISION + SPEC_SHA256`. The **GitHub actor identity** must be in project `ISSUE_APPROVERS`; a comment's self-claimed name is not enough. For an opted-in delegated decision resolution, the Web agent may post only after an explicit user decision for the current blocker/unchanged digest; mark the resolution `AUTHORIZATION_CHANNEL: CHATGPT_WEB` and `PROVENANCE: ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF`. The receiver records lower assurance and must not treat the agent's attestation as independently verified human intent. This convenience does not authorize material contract revisions or bypass their fresh approved spec. Local receiver rereads the complete current Issue, verifies the original spec approval, confirms facts/permissions/dependencies and applies one outcome:
 
 | Outcome | Allowed only when | Authorization / next action |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ For L2 pause, one authorized decision owner must issue a traceable `DECISION_RES
 | `RESUME_REVISED` | Objective, constraints, interface, targets, dependency, safety or allowed writes change | Increment spec revision, update body and obtain a new `SPEC_APPROVAL_V1` digest-bound approval before affected writes |
 | `RESUME_DENIED` | Decision unresolved, inconsistent evidence, untrusted actor or unsafe state | Remain PAUSED or TERMINATE if L3 condition reached; do not act on conversational reply |
 
-`DECISION_RESOLUTION_V1` fields: `ISSUE`, `TASK_ID`, `BLOCKER_COMMENT_ID`, `SPEC_REVISION`, `SPEC_SHA256`, `DECISION`, `EVIDENCE`, `AFFECTED_WPS`, `SAFE_NEXT_ACTION`. The resolution must be posted by an authenticated authorized actor, with relevant evidence; its presence alone is not blanket authority to change source. An L3 terminated attempt is not silently resumed through L2 clarification. Duplicate asks for the same blocker are avoided; append new evidence instead.
+`DECISION_RESOLUTION_V1` fields: `ISSUE`, `TASK_ID`, `BLOCKER_COMMENT_ID`, `SPEC_REVISION`, `SPEC_SHA256`, `DECISION`, `EVIDENCE`, `AFFECTED_WPS`, `SAFE_NEXT_ACTION`; for an opted-in delegated resolution also include `AUTHORIZATION_CHANNEL` and `PROVENANCE` as described above. The resolution must be posted by an authenticated authorized actor, with relevant evidence; its presence alone is not blanket authority to change source. An L3 terminated attempt is not silently resumed through L2 clarification. Duplicate asks for the same blocker are avoided; append new evidence instead.
 
 Re-use unaffected verified WP outcomes. A comment-only clarification never requires an unrelated semantic test/CI rerun, but an affected verification gate must be refreshed when its evidence was invalidated.
 
@@ -149,3 +149,6 @@ A terminal implementation receipt is **not** `ISSUE_CLOSED`, `CI_PASS`, `PR_MERG
 - Negative: commenter attempts RESUME_UNCHANGED while altering API/side effects -> remain PAUSED.
 - Positive: approved R+1 RESUME_REVISED unblocks WP; preserve unaffected completed evidence.
 - Negative: CI PASS but UI not human-reviewed -> HUMAN_UI_ACCEPTANCE=PENDING.
+- Positive: opted-in exact Web delegated approval allows a scoped EXECUTE handoff with explicit `DELEGATED_ACCOUNT_ATTESTED`, not direct-human provenance.
+- Negative: delegation disabled, user intent not explicitly recorded, GitHub actor cannot be checked, stale digest, changed revision or revoked approval -> STOP.
+- Positive: AI may post progress/implementation receipts without reapproval, and may post an opted-in unchanged-spec L2 decision resolution only after an explicit user decision. Material change still requires new approved revision.
