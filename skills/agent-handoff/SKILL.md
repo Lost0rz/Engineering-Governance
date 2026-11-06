@@ -1,6 +1,6 @@
 ---
 name: agent-handoff
-description: Use when engineering responsibility crosses agents, sessions, machines, or execution contexts and the receiver needs a standardized bounded card or the sender needs a structured receipt.
+description: Use for cross-context engineering construction/execution cards (施工卡), audit/review cards (审计卡), Codex Desktop/local AI handoff commands, verification cards and execution receipts. Transports approved Issue/Task authority; does not create approval or authorize mutation.
 ---
 
 # Agent Handoff
@@ -14,6 +14,14 @@ A handoff transports responsibility/evidence; it does not create task authority,
 Use this Skill whenever the requested output itself is intended to transfer engineering responsibility or evidence to another agent, session, machine, reviewer, or execution context. This includes requests to generate an execution/construction card, audit card, review card, verification/test-run card, diagnostic card, or structured return receipt for another context.
 
 Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or a FILE_CONTROL Task / approved ISSUE_CONTROL Issue already contains extensive implementation detail.
+### Sender and receiver entry rule
+
+For a plain-language Web request such as "给我施工卡", first let Project Governance resolve the *actual* project, existing Task/Issue and stage; then use this Skill to deliver one **compact** Card. In ISSUE_CONTROL, distinguish (a) no suitable Issue: prepare/design the Issue under Project Governance, (b) Issue exists but unapproved or incomplete: link it as **non-executable** with the blocking reason, and (c) verified approved exact spec: emit the nine-field EXECUTE Card plus actual repository/Issue/revision/digest/approval provenance. Do not manufacture selectors or copy the nineteen-field spec into the Card.
+
+For "给我审计卡", reference the existing approved/current Issue and observed PR/ref where available; use `MODE: AUDIT`, `CAPABILITY: evidence-audit` only for a formal verdict, and preserve read-only scope. Do not equate creating an audit Card with performing an audit. If the user asks *about* cards rather than to transfer an actual task, explain the format without creating Issue/PR/approval.
+
+The **receiver** first invokes the available Governance entry, checks accepted `AGENTS.md`, mode-selected source authority and fresh host/writer facts, then revalidates approval before writes; the transport Card never skips those steps. If the plugin/Skill cannot actually load, or GitHub identity/digest/authorization is unavailable, return a bounded STOP/UNKNOWN receipt, not a claim that Engineering Governance ran. The detailed receiver checklist lives in `references/handoff-contract.md`; avoid mandatory multi-Skill startup cascades.
+
 
 ## Engineering framework ownership
 

@@ -48,6 +48,32 @@ EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
 
 Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belong in `PURPOSE` or `DELTA`, not `MODE`.
 
+## Sender outcome gate and local receiver preflight
+
+**Web sender** (actual transfer intent, not merely a question about the format):
+
+| Observed authority | Deliverable | No-go |
+| --- | --- | --- |
+| No selected current Task/Issue | Project Governance discovery/design result or prepared Issue for review | Do not fabricate TASK_ID, approval or executable Card. |
+| ISSUE_CONTROL Issue incomplete/unapproved or material spec drift | Issue review link + exact blocking fact; optionally read-only REVIEW/AUDIT Card | Never emit EXECUTE Card implying approved authority. |
+| ISSUE_CONTROL exact current revision/digest approved by authenticated actor | Compact nine-core-field EXECUTE Handoff Card with Issue/ref/revision/digest/approver comment provenance and transfer delta | Never paste whole 19-field plan or treat labels/ChatGPT confirmation as approval. |
+| FILE_CONTROL target repository | Card references accepted current Task and relevant fresh source status | Do not force Issue Control because installed plugin supports it. |
+
+A request to *perform* an audit (rather than instruct another agent to audit) routes to Evidence Audit directly when a formal verdict is needed; an AUDIT Card remains read-only and never implies write permission. Textual similarity alone is not a route.
+
+**Codex Desktop/local receiver** applies a **bounded, one-time-per-task-entry** check before modifying any file/branch/PR:
+
+1. Resolve whether Engineering Governance really is available/loaded in the current execution context; identify version/provenance when observable. A Card cannot make an unavailable Skill exist. If unavailable, stop governed mutation and return a precise missing-capability receipt; do not role-play a successful route.
+2. Read target repository's current accepted `AGENTS.md` and project-specific `docs/AGENTS.md` only when relevant. Select FILE_CONTROL or ISSUE_CONTROL from that authority, not the Card, plugin version, chat history or former project state. Different projects may be on different modes.
+3. For ISSUE_CONTROL EXECUTE, fetch the **explicitly selected** Issue body/state/comments freshly using available `gh`/connector. Verify 19-field spec quality, `TASK_ID`, monotonic `SPEC_REVISION`, canonical SHA256 via the *existing* Project Governance helper, authenticated authorized approver's `SPEC_APPROVAL_V1` comment, no revocation, and task/repository match. For FILE_CONTROL, read live accepted Task and required status; never execute from archived Task copies.
+4. Confirm actual current local checkout/branch/dirty work/worktrees and remote PR/CI/merge facts needed for the next WP. Apply reuse-first writer/PR rules; unresolved overlap or GitHub access/auth uncertainty means STOP affected writes. Preserve prior verified evidence where valid; don't re-run full preflight per command.
+5. Read only task-relevant Domain/business/design and execution/STOP/receipt references; perform current authorized WPs, route to `execution-orchestrator` only when useful delegation value exists. Runtime owns model/reasoning; no Card may set a higher Sub Agent model or change a live environment default.
+6. At material PAUSE/TERMINATE/final implementation, post typed receipt to the **same selected Issue** and verify ID/URL; if delivery fails, mark PENDING/FAILED. Report actual code/CI/human UI boundaries separately.
+
+Revalidate identity/approval/host facts only when entering a fresh state-changing task, resuming after a material scope/authorization change, or reaching a host-governed merge gate. A progress comment or session handoff alone does not invalidate a stable approved digest. Do not create shadow Task/Status files in ISSUE_CONTROL.
+
+**Failure mode**: missing plugin/Skill, ambiguous selector, stale Card, missing/untrusted approval, disconnected GitHub or unsafe writer => `STOP_AUTHORITY_OR_CAPABILITY_UNVERIFIED` with the smallest actionable missing fact; no source mutation. A read-only format explanation or advisory audit may continue without falsely claiming an executable authorization.
+
 ## Issue-Control handoff and receipt
 
 For ISSUE_CONTROL, Card `AUTHORITY` references `owner/repo#issue`, `TASK_ID`, exact approved `SPEC_REVISION`, matching `SPEC_SHA256` and authenticated approval comment identity from an `AGENTS.md`-authorized actor. The receiver must reread the current Issue body and relevant decisions before mutation, rather than execute a stale handoff transcript. `DELTA` contains only transfer-specific changes, not the full deterministic Work Packages. A decision comment is untrusted as execution authority unless incorporated into a newly approved material spec revision.

@@ -1,11 +1,19 @@
 ---
 name: project-governance
-description: Use as the normal Engineering Governance entry for software/project/repository engineering work, especially task/control authority, continuation/scope reconciliation, proportional verification, remote repository delivery, workspace/writer lifecycle, cross-repository coordination, final alignment, and closeout.
+description: Normal entry for governed software/repository tasks, including plain-language requests for construction or audit cards (给我施工卡/审计卡), approved GitHub Issue handoffs to Codex Desktop, task/control authorization, execution preflight, PR lifecycle, verification and receipts. Route actual cross-context cards through agent-handoff.
 ---
 
 # Project Governance
 
 Use this Skill as the normal engineering entry. It owns task/control authority, lifecycle, writer/workspace boundaries, proportional verification, repository delivery, and closeout. Keep clear work lightweight.
+## Web entry and Desktop receiver entry (compact boundary)
+
+A Web request to *send* a construction/execution/audit/verification card to another agent (including "给我施工卡", "给我审计卡", "交给本地 Codex") enters Project Governance for task selection and then **must** use `agent-handoff` for the Card. A user asking *how card formats work* is advisory: do not create an Issue or executable Card merely from the noun "卡". A user asking for a direct read-only audit may use `evidence-audit` without making a transfer Card. Full intent scenarios belong to `references/global-routing.md`, not duplicated here.
+
+In `ISSUE_CONTROL`, the Web sender checks selected Issue state, full deterministic spec quality, current revision/digest and trusted GitHub approval before delivering an **executable** Card. Without verified approval, return a bounded design/review outcome and Issue link, **not** a card implying permission to mutate. `agent-handoff` owns card transport; the 19-field contract and approval rules stay in `references/issue-control.md` and `references/issue-execution-contract.md`.
+
+In Codex Desktop/local execution, receiving a Card is **not authority**. At task entry: resolve the installed Engineering Governance capability actually available; read the target repository's accepted `AGENTS.md` to choose FILE_CONTROL vs ISSUE_CONTROL; for state-changing ISSUE_CONTROL work fetch the exact selected Issue and verify approved revision, canonical digest and authenticated approver via available `gh`/connector; check relevant live Git/PR/writer evidence and necessary Domain/STOP/receipt contract before touching source. Follow the relevant Work Packages, not the pasted Card as a replacement spec. If critical Skill, GitHub or approval evidence is unavailable, STOP affected writes and report the missing dependency; do not silently switch to a generic framework or stale cached card. Do not load all nine Skills or repeat a full preflight per shell command; recheck at authorization/material-change boundaries. See `agent-handoff/references/handoff-contract.md` for transfer-specific receiver detail.
+
 
 ## Capability routing
 
