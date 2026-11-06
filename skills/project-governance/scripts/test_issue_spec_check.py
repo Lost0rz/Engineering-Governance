@@ -283,10 +283,10 @@ class IssueContractTests(unittest.TestCase):
 
     def test_delegation_html_comment_example_not_policy(self):
         self.assertFalse(mod.delegated_opt_in(
-            "<!--\\nISSUE_DELEGATED_APPROVAL: ENABLED\\n-->\\n"))
+            "<!--\nISSUE_DELEGATED_APPROVAL: ENABLED\n-->\n"))
         self.assertTrue(mod.delegated_opt_in(
-            "<!--\\nISSUE_DELEGATED_APPROVAL: DISABLED\\n-->\\n"
-            "ISSUE_DELEGATED_APPROVAL: ENABLED\\n"))
+            "<!--\nISSUE_DELEGATED_APPROVAL: DISABLED\n-->\n"
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
 
     def test_delegation_duplicate_real_declarations_denied_with_fence(self):
         self.assertFalse(mod.delegated_opt_in(
