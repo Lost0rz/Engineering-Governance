@@ -129,9 +129,23 @@ def _record(comment: dict, kind: str) -> dict[str, str] | None:
 
 
 def delegated_opt_in(agents_text: str) -> bool:
-    """Only the accepted AGENTS.md may opt in; duplicate/conflicting settings deny."""
-    entries = [line.strip() for line in _lines(agents_text).split("\n")
-               if line.strip().startswith("ISSUE_DELEGATED_APPROVAL:")]
+    """Allow one operative top-level opt-in, never a Markdown example."""
+    entries: list[str] = []
+    fence: tuple[str, int] | None = None
+    for line in _lines(agents_text).split("\n"):
+        marker = re.match(r"^[ \\t]{0,3}(`{3,}|~{3,})([^\\n]*)$", line)
+        if marker:
+            token, suffix = marker.groups()
+            if fence is None:
+                fence = (token[0], len(token))
+            elif token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
+                fence = None
+            continue
+        if fence is not None:
+            continue
+        # Indented code, quoted examples and prose are not policy declarations.
+        if line.startswith("ISSUE_DELEGATED_APPROVAL:"):
+            entries.append(line.rstrip(" \\t"))
     return entries == ["ISSUE_DELEGATED_APPROVAL: ENABLED"]
 
 
