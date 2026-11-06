@@ -133,7 +133,7 @@ def delegated_opt_in(agents_text: str) -> bool:
     entries: list[str] = []
     fence: tuple[str, int] | None = None
     for line in _lines(agents_text).split("\n"):
-        marker = re.match(r"^[ \\t]{0,3}(`{3,}|~{3,})([^\\n]*)$", line)
+        marker = re.match(r"^[ \t]{0,3}(`{3,}|~{3,})([^\n]*)$", line)
         if marker:
             token, suffix = marker.groups()
             if fence is None:
@@ -145,7 +145,7 @@ def delegated_opt_in(agents_text: str) -> bool:
             continue
         # Indented code, quoted examples and prose are not policy declarations.
         if line.startswith("ISSUE_DELEGATED_APPROVAL:"):
-            entries.append(line.rstrip(" \\t"))
+            entries.append(line.rstrip(" \t"))
     return entries == ["ISSUE_DELEGATED_APPROVAL: ENABLED"]
 
 
