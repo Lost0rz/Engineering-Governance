@@ -258,6 +258,36 @@ class IssueContractTests(unittest.TestCase):
         self.assertFalse(mod.delegated_opt_in("ISSUE_DELEGATED_APPROVAL: enable\n"))
 
 
+    def test_delegation_fenced_backtick_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "## Example\n```md\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"))
+
+    def test_delegation_fenced_tilde_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "~~~text\nISSUE_DELEGATED_APPROVAL: ENABLED\n~~~\n"))
+
+    def test_delegation_indented_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "    ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+        self.assertFalse(mod.delegated_opt_in(
+            "  ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_blockquote_example_not_policy(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "> ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_bare_directive_outside_example(self):
+        self.assertTrue(mod.delegated_opt_in(
+            "## Policy\n```md\nISSUE_DELEGATED_APPROVAL: DISABLED\n```\n"
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
+
+    def test_delegation_duplicate_real_declarations_denied_with_fence(self):
+        self.assertFalse(mod.delegated_opt_in(
+            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"
+            "```text\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"
+            "ISSUE_DELEGATED_APPROVAL: DISABLED\n"))
+
+
 
 if __name__ == "__main__":
     unittest.main()
