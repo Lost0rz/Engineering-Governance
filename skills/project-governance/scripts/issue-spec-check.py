@@ -29,6 +29,7 @@ WP_KEYS = ("Targets", "Preconditions", "Actions", "Dependencies",
 FIELD_HEADER = re.compile(r"^### ([A-Z][A-Z0-9_]*)[ \t]*$")
 WP_HEADER = re.compile(r"^#### WP\d{2,}[ \t]*[-—:].*$", re.M)
 APPROVAL_PREFIX = "SPEC_APPROVAL_V1"
+DELEGATED_APPROVAL_PREFIX = "SPEC_DELEGATED_APPROVAL_V1"
 REVOCATION_PREFIX = "SPEC_REVOCATION_V1"
 PLACEHOLDER = re.compile(r"(^|\n)[ \t]*(?:TODO|TBD|UNKNOWN|<[^>\n]+>|\.\.\.)[ \t]*(?:\n|$)", re.I)
 
@@ -127,16 +128,36 @@ def _record(comment: dict, kind: str) -> dict[str, str] | None:
     return entries
 
 
-def verify_approval(issue: dict, *, repo: str, approvers: set[str]) -> dict:
+def delegated_opt_in(agents_text: str) -> bool:
+    """Only the accepted AGENTS.md may opt in; duplicate/conflicting settings deny."""
+    entries = [line.strip() for line in _lines(agents_text).split("\n")
+               if line.strip().startswith("ISSUE_DELEGATED_APPROVAL:")]
+    return entries == ["ISSUE_DELEGATED_APPROVAL: ENABLED"]
+
+
+def verify_approval(issue: dict, *, repo: str, approvers: set[str],
+                    allow_delegated: bool = False) -> dict:
+    """Verify exact-spec approval. Delegation is lower-assurance and opt-in only.
+
+    The caller must resolve allow_delegated from accepted repository AGENTS.md.
+    The CLI additionally requires an AGENTS file when delegated mode is enabled.
+    GitHub actor authentication cannot independently prove ChatGPT user intent.
+    """
     if not approvers:
         raise SpecError("NO_TRUSTED_APPROVERS")
-    if issue.get("state") != "OPEN" and issue.get("state") != "open":
+    if issue.get("state") not in ("OPEN", "open"):
         raise SpecError("ISSUE_NOT_OPEN")
     fields, actual = digest(str(issue.get("body") or ""), repo=repo,
                             number=issue.get("number"))
     task, rev = fields["TASK_ID"], fields["SPEC_REVISION"]
     seen_revision_hashes: set[str] = set()
-    valid = False
+    valid_direct_id = None
+    valid_delegated_id = None
+    delegated_keys = {
+        "REPOSITORY", "ISSUE", "TASK_ID", "SPEC_REVISION", "SPEC_SHA256",
+        "DECISION", "AUTHORIZATION_CHANNEL", "USER_DECISION",
+        "USER_DECISION_SUMMARY", "PROVENANCE",
+    }
     for comment in issue.get("comments", []):
         if not isinstance(comment, dict) or not comment.get("id"):
             raise SpecError("UNVERIFIABLE_COMMENT_ID")
@@ -146,9 +167,20 @@ def verify_approval(issue: dict, *, repo: str, approvers: set[str]) -> dict:
         revoke = _record(comment, REVOCATION_PREFIX)
         if revoke and revoke.get("TASK_ID") == task and revoke.get("SPEC_REVISION") == rev:
             raise SpecError("APPROVAL_REVOKED")
-        record = _record(comment, APPROVAL_PREFIX)
-        if not record:
+        direct = _record(comment, APPROVAL_PREFIX)
+        delegated = (_record(comment, DELEGATED_APPROVAL_PREFIX)
+                     if allow_delegated else None)
+        if not direct and not delegated:
             continue
+        record = direct or delegated
+        if delegated:
+            if set(record) != delegated_keys:
+                raise SpecError("INVALID_DELEGATED_APPROVAL_FIELDS")
+            if (record["AUTHORIZATION_CHANNEL"] != "CHATGPT_WEB"
+                    or record["USER_DECISION"] != "EXPLICIT_APPROVAL_OF_CURRENT_SPEC"
+                    or record["PROVENANCE"] != "ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF"
+                    or not 1 <= len(record["USER_DECISION_SUMMARY"]) <= 500):
+                raise SpecError("INVALID_DELEGATED_ATTESTATION")
         if record.get("TASK_ID") != task or record.get("SPEC_REVISION") != rev:
             continue
         if record.get("REPOSITORY") != repo or record.get("ISSUE") != str(issue["number"]):
@@ -157,15 +189,23 @@ def verify_approval(issue: dict, *, repo: str, approvers: set[str]) -> dict:
         if not re.fullmatch(r"[0-9a-f]{64}", sha):
             raise SpecError("INVALID_APPROVAL_DIGEST")
         seen_revision_hashes.add(sha)
-        if (record.get("DECISION") == "APPROVED_FOR_EXECUTION"
-                and sha == actual):
-            valid = True
+        if record.get("DECISION") == "APPROVED_FOR_EXECUTION" and sha == actual:
+            if delegated:
+                valid_delegated_id = comment["id"]
+            else:
+                valid_direct_id = comment["id"]
     if len(seen_revision_hashes) > 1:
         raise SpecError("REVISION_REUSED_FOR_DIFFERENT_CONTENT")
-    if not valid:
+    if valid_direct_id is None and valid_delegated_id is None:
         raise SpecError("NO_MATCHING_TRUSTED_APPROVAL")
+    delegated_result = valid_direct_id is None
     return {
-        "result": "STRUCTURE_AND_APPROVAL_PASS",
+        "result": ("STRUCTURE_AND_DELEGATED_APPROVAL_PASS" if delegated_result
+                   else "STRUCTURE_AND_APPROVAL_PASS"),
+        "approval_assurance": ("DELEGATED_ACCOUNT_ATTESTED" if delegated_result
+                               else "DIRECT_GITHUB_ACTOR"),
+        "approval_comment_id": (valid_delegated_id if delegated_result
+                                else valid_direct_id),
         "task_id": task,
         "spec_revision": rev,
         "spec_sha256": actual,
@@ -181,6 +221,10 @@ def main() -> int:
     p.add_argument("--issue-json", type=Path, required=True)
     p.add_argument("--repo", required=True)
     p.add_argument("--approvers", default="", help="comma-separated trusted GitHub logins from AGENTS.md")
+    p.add_argument("--allow-delegated", action="store_true",
+                   help="opt-in only: requires accepted AGENTS.md policy")
+    p.add_argument("--agents-file", type=Path,
+                   help="accepted target AGENTS.md, mandatory for --allow-delegated")
     args = p.parse_args()
     try:
         issue = json.loads(args.issue_json.read_text(encoding="utf-8"))
@@ -190,8 +234,16 @@ def main() -> int:
                       "task_id": fields["TASK_ID"], "spec_revision": fields["SPEC_REVISION"],
                       "spec_sha256": h}
         else:
-            result = verify_approval(issue, repo=args.repo,
-                                     approvers={x.strip() for x in args.approvers.split(",") if x.strip()})
+            if args.allow_delegated:
+                if args.agents_file is None:
+                    raise SpecError("DELEGATION_AGENTS_FILE_REQUIRED")
+                if not delegated_opt_in(args.agents_file.read_text(encoding="utf-8")):
+                    raise SpecError("DELEGATION_NOT_OPTED_IN")
+            result = verify_approval(
+                issue, repo=args.repo,
+                approvers={x.strip() for x in args.approvers.split(",") if x.strip()},
+                allow_delegated=args.allow_delegated,
+            )
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return 0
     except (SpecError, KeyError, TypeError, ValueError, OSError) as exc:
