@@ -132,6 +132,7 @@ def delegated_opt_in(agents_text: str) -> bool:
     """Allow one operative top-level opt-in, never a Markdown example."""
     entries: list[str] = []
     fence: tuple[str, int] | None = None
+    html_comment = False
     for line in _lines(agents_text).split("\n"):
         marker = re.match(r"^[ \t]{0,3}(`{3,}|~{3,})([^\n]*)$", line)
         if marker:
@@ -142,6 +143,14 @@ def delegated_opt_in(agents_text: str) -> bool:
                 fence = None
             continue
         if fence is not None:
+            continue
+        if html_comment:
+            if "-->" in line:
+                html_comment = False
+            continue
+        if "<!--" in line:
+            # Multi-line Markdown HTML comments are not operative directives.
+            html_comment = "-->" not in line.split("<!--", 1)[1]
             continue
         # Indented code, quoted examples and prose are not policy declarations.
         if line.startswith("ISSUE_DELEGATED_APPROVAL:"):
