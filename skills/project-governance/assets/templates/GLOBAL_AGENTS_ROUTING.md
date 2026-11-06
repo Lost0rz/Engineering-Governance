@@ -21,7 +21,7 @@ Routing is selective, not cumulative, but selected Engineering Governance Skills
 
 Do not walk installed Skills as a checklist or invoke a Skill for general enrichment, completeness, a second opinion without an unresolved dependency, or because it is installed. An already-understood frontend redesign can remain `project-governance → design`; if Design genuinely cannot identify a needed backend authority/source route, it may call `domain-navigation`, receive the verified route, and then resume Design.
 
-When the requested output itself is a construction/execution/audit/review/verify/diagnose Card, instructions, or structured Receipt intended for another agent, session, machine, reviewer, or execution context, use `agent-handoff` for that transfer artifact. Preserve current task authority; generating the Card does not create a new task.
+When the requested output itself is a construction/execution/audit/review/verify/diagnose Card, instructions, or structured Receipt intended for another agent, session, machine, reviewer, or execution context, use `agent-handoff` for that transfer artifact. Preserve the current task authority selected by `AGENTS.md` (FILE_CONTROL Task or approved ISSUE_CONTROL Issue/spec revision); generating the Card does not create a new task or approve an Issue.
 
 A governed Handoff Card may name only an Engineering Governance `CAPABILITY` or `NONE`. Do not emit external engineering Skill/plugin/framework names as required execution steps. TDD, debugging, review, planning, verification, or completion expectations should be stated as behavior/acceptance requirements or handled by the owning Engineering Governance capability. External names may remain only as genuine reference/provenance/evidence.
 

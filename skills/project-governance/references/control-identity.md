@@ -1,3 +1,11 @@
+# Issue Control identity (mode-gated)
+
+Under ISSUE_CONTROL, Issues and comments are GitHub-hosted metadata, **not Git commits**: creating/editing a spec, decision or receipt moves neither Repository HEAD nor Delivery/Semantic HEAD and is not `CONTROL_ONLY_DRIFT`. Freshness means approved *material spec revision* and provenance, not bare `updatedAt`. The historic Task/Status SHA exclusion below applies to FILE_CONTROL or explicit legacy comparisons during migration; do not exclude AGENTS/Skill/source changes from delivery identity. Live PR required checks/review/conflicts still apply to host literal identity. See `issue-control.md`.
+
+---
+
+## FILE_CONTROL legacy identity
+
 # Control identity and freshness
 
 Use this contract when a task or status record names commits, parents, refs, control revisions, or when repository revisions must be compared for implementation freshness. Do not assume every recorded SHA has the same meaning, and do not confuse literal Git movement with delivery-identity movement.

@@ -27,7 +27,7 @@ The tier describes what risk must be covered, not how often every check runs.
 
 ## Scope selection and invocation frequency
 
-Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted `CURRENT_TASK.md` to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
+Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
 
 - **V0:** strictly control/document/projection-only changes use relevant static/tree/authority checks, not default product regression/build/packaging. A material normative rule or workflow/config/test contract change is *not* V0 solely because its file is Markdown/YAML.
 - **V1:** localized source behavior uses focused tests and directly related type/lint/runtime checks. No full suite or independent audit after every small edit.
@@ -130,7 +130,7 @@ When exact-head semantic evidence is required:
 1. finish intended implementation-relevant source/rule/design edits;
 2. designate the Delivery / Semantic HEAD/tree (or explicit literal Repository HEAD lock when required) as the frozen candidate;
 3. run required semantic verification and independent audit on that candidate;
-4. allow later `CURRENT_STATUS.md` / `CURRENT_TASK.md`-only control reconciliation without rerunning semantic checks when equivalence/task conditions permit;
+4. allow later FILE_CONTROL Task/Status-only reconciliation without semantic retests when equivalence/task conditions permit; ISSUE_CONTROL comments/spec updates do not affect Git semantic tree identity;
 5. re-read current repository-host gates for the literal identity at merge/release.
 
 Any mixed control+implementation commit, material `AGENTS.md` rule change, durable planning/design change, source/config/test/workflow/schema/migration/dependency/runtime change is a new delivery/governance change and must be assessed for fresh evidence.
@@ -159,4 +159,4 @@ For multi-Skill architecture work, prefer testing composition and positive/negat
 
 ## Recording the decision
 
-`CURRENT_TASK.md` records the chosen V0–V3 tier, short rationale, required checks and material cadence/deferred evidence. Report semantic checks as passing only from evidence for the relevant identity, and host gates as passing only from current host evidence. `no status` or missing evidence is `UNKNOWN`/none, not `PASS`.
+The mode-selected authorization (FILE_CONTROL `CURRENT_TASK.md` or ISSUE_CONTROL approved Issue spec) records the chosen V0–V3 tier, rationale, checks and material cadence/deferred evidence. Report semantic checks as passing only from evidence for the relevant identity, and host gates as passing only from current host evidence. `no status` or missing evidence is `UNKNOWN`/none, not `PASS`.

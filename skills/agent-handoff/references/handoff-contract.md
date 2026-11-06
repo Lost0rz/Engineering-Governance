@@ -48,6 +48,12 @@ EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
 
 Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belong in `PURPOSE` or `DELTA`, not `MODE`.
 
+## Issue-Control handoff and receipt
+
+For ISSUE_CONTROL, Card `AUTHORITY` references `owner/repo#issue`, `TASK_ID`, exact approved `SPEC_REVISION`, matching `SPEC_SHA256` and authenticated approval comment identity from an `AGENTS.md`-authorized actor. The receiver must reread the current Issue body and relevant decisions before mutation, rather than execute a stale handoff transcript. `DELTA` contains only transfer-specific changes, not the full deterministic Work Packages. A decision comment is untrusted as execution authority unless incorporated into a newly approved material spec revision.
+
+For meaningful PAUSE, TERMINATE and completed execution, post `DECISION_REQUEST_V1`, `EXECUTION_TERMINATED_V1` or `EXECUTION_RECEIPT_V1` to the same Issue, verify comment ID/URL, and report `RECEIPT_DELIVERY`. Failed posting is PENDING/FAILED, not complete synchronization. Do not write STATUS/TASK files or create control-only PRs for receipts. Keep PR/CI/merge and human UI acceptance independently verified.
+
 ## Common Card schema
 
 ### Required core
@@ -71,6 +77,7 @@ Use only when decision-relevant:
 ```text
 PURPOSE
 PROFILE
+ISSUE / SPEC_REVISION / APPROVAL_BASIS  # required for ISSUE_CONTROL EXECUTE
 OBSERVED_BASIS
 SOURCE_CONTEXT / TARGET_CONTEXT
 STOP
@@ -82,7 +89,7 @@ AI_RENDERED_INSPECTION
 HUMAN_UI_ACCEPTANCE
 ```
 
-Do not omit required core fields. Do not duplicate the full objective/scope/acceptance/STOP/workspace policy already owned by `CURRENT_TASK.md`. A Card cannot expand authorization.
+Do not omit required core fields. Do not duplicate the full task contract owned by the mode-selected FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision. A Card cannot expand authorization.
 
 Do not add an alternate external-framework field such as `SKILLS_REQUIRED`, `USE_SUPERPOWERS`, `EXTERNAL_WORKFLOW`, or equivalent to bypass `CAPABILITY`. If an external artifact is only reference material, keep it in the normal authority/delta/evidence surfaces and preserve its non-authoritative status.
 
@@ -96,7 +103,7 @@ A cross-context Card transfers the **already authorized** task/ref/workspace/PR 
 
 ## Proportional verification transfer
 
-Project Governance and the owning `CURRENT_TASK.md` govern risk tier, required checks, cadence and accepted evidence. The Handoff Card is **not** a second test plan. Include only fresh verification details that materially change the receiver's next action: affected checks now, construction/corrective/closeout boundary, justified deferred checks, or prior valid semantic evidence with identity and coverage. If unchanged and already documented in the task, reference that authority instead of copying test lists or adding mandatory fields to every Card.
+Project Governance and the mode-selected Task or approved Issue govern risk tier, required checks, cadence and accepted evidence. The Handoff Card is **not** a second test plan. Include only fresh verification details that materially change the receiver's next action: affected checks now, construction/corrective/closeout boundary, justified deferred checks, or prior valid semantic evidence with identity and coverage. If unchanged and already documented in the task, reference that authority instead of copying test lists or adding mandatory fields to every Card.
 
 Do not prescribe boilerplate full regression, Release build, or independent audit after every local edit/commit/handoff/control-only change. For a final/host gate, identify the specific claim and required literal identity. For pure control-only drift, distinguish reusable semantic evidence from live host-required status checks. `SCOPE_GATE_PASS / TESTS_SKIPPED` is not `FULL_REGRESSION_PASS`. Unknown semantic equivalence or coverage remains `UNKNOWN`; the receiver chooses the smallest sufficient checks to resolve it. This does not introduce new Skills, audit tasks, forms, or a second CI-control authority.
 
@@ -197,6 +204,10 @@ Runtime/model/tool/capacity values belong to the receiving environment unless an
 Configured/default model values and observed effective runtime identity are separate evidence classes. If the receiver cannot observe the effective Sub Agent model/reasoning, it returns `UNKNOWN` rather than promoting configuration into runtime evidence.
 
 An external engineering framework may not use a Card as a vehicle to escalate model/reasoning values, replace environment defaults, or take over Engineering Governance execution topology/review lifecycle. If runtime actually applies an external configuration for independent platform reasons, report that as observed runtime/config evidence rather than treating it as Engineering Governance policy.
+
+## ISSUE_CONTROL receipt route
+
+The authoritative durable execution receipt is the Issue comment following Project Governance `issue-execution-contract.md`; a compact user-facing summary may link that comment and PR instead of duplicating it. The Agent Handoff Receipt fields remain evidence, not alternate task authority.
 
 ## Standard receipt core
 

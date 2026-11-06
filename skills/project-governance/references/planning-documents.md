@@ -2,7 +2,7 @@
 
 Use a durable planning/design document only when long-lived context materially helps more than one bounded execution decision. Reuse an accepted architecture/product/design authority when one already owns this role; `documents/**` is a default pattern only when the target project has no better authority.
 
-A planning/design document is **not** a fourth control file. The three project controls remain `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md`.
+A planning/design document never independently authorizes execution. `AGENTS.md` selects FILE_CONTROL (legacy Task/Status) or ISSUE_CONTROL (approved selected Issue/spec revision) as the sole task authority.
 
 ## Ownership model
 
@@ -10,8 +10,8 @@ A planning/design document is **not** a fourth control file. The three project c
 | --- | --- | --- |
 | `AGENTS.md` | durable operating rules and stable repository/project boundaries | live task/progress history |
 | durable planning/design authority | accepted long-lived design, rationale, constraints, work-package structure, whole-plan acceptance boundary | task authorization, live CI/PR/progress log |
-| `CURRENT_TASK.md` | one active execution authorization and bounded task contract | long-term architecture/plan |
-| `CURRENT_STATUS.md` | concise verified project snapshot/current planning position | detailed plan or implementation diary |
+| active task authority | FILE_CONTROL: `CURRENT_TASK.md`; ISSUE_CONTROL: approved selected Issue revision | duplicate long-term design or parallel task contract |
+| task/progress observation | FILE_CONTROL: concise `CURRENT_STATUS.md`; ISSUE_CONTROL: Issue receipts and live GitHub host evidence | new task authorization or detailed durable architecture |
 | Solution Design output | bounded design decision/evidence before placement in the correct authority | automatic task authorization or second design authority |
 
 Keep one owner per fact/decision class and link instead of copying full contents.
@@ -28,7 +28,7 @@ REASON: <material task-owned semantic change | none>
 DURABLE_DOCUMENT: <path/section | NONE>
 ```
 
-If `YES`, Project Governance reconciles/re-authorizes `CURRENT_TASK.md` before affected implementation. Writing a design document does not itself authorize execution.
+If `YES`, Project Governance reauthorizes the FILE_CONTROL Task or the ISSUE_CONTROL approved Issue spec revision before affected implementation. Writing a design document does not itself authorize execution.
 
 ## When durable planning is justified
 
@@ -75,7 +75,7 @@ If a later design change materially alters task-owned prerequisites, scope, acce
 
 ## Status linkage
 
-`CURRENT_STATUS.md` summarizes only where the project is now; do not copy the detailed plan into status.
+In FILE_CONTROL, `CURRENT_STATUS.md` summarizes current state. In ISSUE_CONTROL, use bounded Issue comments for observed progress/receipts and PR/CI for code-host truth; do not copy the durable plan into live status-file commits.
 
 ## Planning/design alignment at final handoff
 
@@ -90,8 +90,8 @@ If a current Project Profile surface exists and is cheap/available, it may be re
 For actual authority-sensitive decisions, progressively read as needed:
 
 1. applicable `AGENTS.md`;
-2. `CURRENT_STATUS.md`;
-3. `CURRENT_TASK.md`;
+2. task authority by `CONTROL_MODE`: FILE_CONTROL Task/Status, or ISSUE_CONTROL selected approved Issue/spec revision;
+3. relevant Issue decisions/receipts or file-state evidence, as applicable;
 4. the task's bounded related design/plan when present;
 5. additional Domain/source/runtime/evidence only as needed.
 
@@ -99,4 +99,4 @@ A stale/absent Profile does not block recovery when underlying authorities are a
 
 ## Delivery identity
 
-Durable planning/design files are governance/delivery-relevant content. They are not part of the default `CONTROL_ONLY_DRIFT` exclusion. Only `CURRENT_STATUS.md` and `CURRENT_TASK.md` are excluded by default.
+Durable planning/design files are governance/delivery-relevant content. They are not part of the default `CONTROL_ONLY_DRIFT` exclusion. Under FILE_CONTROL, only `CURRENT_STATUS.md` and `CURRENT_TASK.md` are the default control-only exclusion. ISSUE_CONTROL Issue metadata is not in the Git tree; `AGENTS.md` and governance source changes remain implementation/delivery relevant.

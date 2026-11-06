@@ -107,7 +107,7 @@ Do not promote these into the durable Profile merely because they are currently 
 
 A non-goal or exclusion whose owning authority is explicitly scoped to `current`, `current work`, `MVP`, `phase`, `wave`, `deferred`, `not yet`, or equivalent delivery-stage language fails the durability gate unless a separate durable authority establishes that same boundary as lasting product identity.
 
-These belong in `CURRENT_STATUS.md`, `CURRENT_TASK.md`, current delivery/planning authority, implementation/runtime evidence, or the owning operational surface.
+These belong in the mode-selected FILE_CONTROL Task/Status or ISSUE_CONTROL Issue/receipts, current delivery/planning authority, implementation/runtime evidence, or the owning operational surface.
 
 ### Durable and version-scoped context
 

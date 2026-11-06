@@ -1,3 +1,11 @@
+# Mode-aware control selector
+
+`AGENTS.md` selects exactly one task authority: FILE_CONTROL retains the legacy contract below; ISSUE_CONTROL selects one approved Issue/spec revision and puts meaningful execution/decision receipts in its comments. In ISSUE_CONTROL, legacy Task/Status files are not active, Issue comments/labels are not independent authorization, and PR/CI/merge evidence remains host owned. See [Issue authority](issue-control.md), [deterministic execution](issue-execution-contract.md), and [migration](issue-control-migration.md). A mandatory Issue-mode alignment check rereads approved revision, relevant receipts and host gates; it never requires a new control-only Git PR. Missing/unverified Issue approval blocks mutation.
+
+---
+
+## FILE_CONTROL-only historical three-file contract
+
 # Three-file control plane and non-control artifacts
 
 The project-local `AGENTS.md`, `CURRENT_STATUS.md`, and `CURRENT_TASK.md` have distinct ownership. Keep one authoritative owner for each fact/decision class.

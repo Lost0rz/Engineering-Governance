@@ -1,3 +1,5 @@
+<!-- FILE_CONTROL ONLY. ISSUE_CONTROL projects derive progress from Issue receipts and GitHub PR/CI/merge evidence; do not write a parallel current status file. -->
+
 # Current Project Status
 
 Last verified: [date/time, inspected sources or revisions, and freshness basis]

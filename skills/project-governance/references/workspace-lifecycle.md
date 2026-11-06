@@ -1,3 +1,7 @@
+## Control-mode applicability
+
+Both control modes share this reuse-first workspace policy. FILE_CONTROL reads current Task; ISSUE_CONTROL reads the approved selected Issue/spec revision. Issue edits/comments do not move Git HEAD, imply a new branch/worktree/PR or erase overlapping-writer/unique-work risk. Only the selected authority can grant a writing task.
+
 # Workspace lifecycle and closeout
 
 Apply this contract only when the target project uses task branches, Git worktrees, multiple checkouts, or an equivalent source-controlled task-workspace model. Do not introduce worktrees or extra branches into a project merely to satisfy this reference.
@@ -11,7 +15,7 @@ A **task**, execution command, agent/session/context, local checkout, task branc
 Before any **new** task-workspace/branch/PR side effect, use the smallest relevant evidence to decide, in order:
 
 1. **No writing needed?** For read-only investigation, planning, review, audit, normal test execution, no-op reconciliation, and control observation, use an existing safe checkout or remote source. No task branch/worktree/PR is implied; tests that must write generated temporary output follow the project's test-isolation rules, not automatically a durable task worktree.
-2. **Existing authority still usable?** If the current task and authorized ref/workspace/PR remain correct and safe, reuse them. Same-task corrections, routine `CURRENT_STATUS.md`/`CURRENT_TASK.md` alignment, another command, agent handoff, reviewer loop, session restart, phase checkpoint, or control-only HEAD advance do **not** independently authorize a successor. Do not manufacture a new PR only to memorialize evidence or a control-only status change when the owning task/repository permits alignment on the existing authorized ref.
+2. **Existing authority still usable?** If the current task and authorized ref/workspace/PR remain correct and safe, reuse them. Same-task corrections, routine FILE_CONTROL `CURRENT_STATUS.md`/`CURRENT_TASK.md` alignment or ISSUE_CONTROL comment/spec coordination, another command, agent handoff, reviewer loop, session restart, phase checkpoint, or control-only HEAD advance do **not** independently authorize a successor. Do not manufacture a new PR only to memorialize evidence or a control-only status change when the owning task/repository permits alignment on the existing authorized ref.
 ### Size/independence decision before physical Git worktree allocation
 
 **Default: small changes use a safely reusable checkout, not a new physical worktree.** Small bug fixes, UI/copy tweaks, localized implementation corrections, documentation, Task/Status reconciliation, targeted tests, and review/checkpoint rounds ordinarily use the existing authorized task worktree or a safe canonical checkout. Where a fresh task branch/PR is required, create or select that **branch in a safe existing checkout** when the project's branch/workspace rules and working-tree state permit; do not create a registered worktree merely because the branch/PR is new.
@@ -104,7 +108,7 @@ If a relevant predecessor writer is unresolved, its unique-work state is unknown
 
 A stale-looking path, old branch name, detached checkout, or merged remote PR alone is not enough evidence to delete, bypass, or treat a local workspace as non-writing.
 
-A Repository HEAD mismatch caused only by `CURRENT_STATUS.md` / `CURRENT_TASK.md` is different: classify it as `CONTROL_ONLY_DRIFT` when the changed path set proves that classification. It does not by itself make an otherwise accepted workspace stale, require a new construction workspace, or block selection. Material task-content changes remain authoritative and must still be obeyed.
+In FILE_CONTROL, a Repository HEAD mismatch caused only by `CURRENT_STATUS.md` / `CURRENT_TASK.md` is different: classify it as `CONTROL_ONLY_DRIFT` when the changed path set proves that classification. It does not by itself make an otherwise accepted workspace stale, require a new construction workspace, or block selection. Material task-content changes remain authoritative and must still be obeyed.
 
 ## Lifecycle dispositions
 
@@ -138,7 +142,7 @@ Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely
 
 ## Control-only main advance after closeout
 
-Once terminal authorization and physical workspace closeout have both been verified, a later canonical-main Repository HEAD advance limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is non-blocking lifecycle evidence:
+Once terminal authorization and physical workspace closeout have both been verified, in FILE_CONTROL, a later canonical-main Repository HEAD advance limited to `CURRENT_STATUS.md` and/or `CURRENT_TASK.md` is non-blocking lifecycle evidence:
 
 ```text
 LIFECYCLE_STATE = CLOSED

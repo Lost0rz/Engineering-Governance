@@ -28,3 +28,8 @@ Verify only relevant surfaces:
 - supported global-guidance environments have one current block; environments without it remain functional.
 
 Global routing adoption and target-project governance/profile generation are separate operations.
+
+
+## ISSUE_CONTROL project adoption
+
+Skill installation does not switch a consuming project. A repository explicitly adopts `CONTROL_MODE: ISSUE_CONTROL` in its accepted `AGENTS.md` using `references/issue-control-migration.md`, after establishing an approved detailed Issue and verified Web connector/local `gh` access. Unmigrated projects remain FILE_CONTROL. Verify cutover, authority uniqueness, issue receipt posting and original PR/human acceptance. Do not add a daemon, runtime router, issue watcher or mandatory per-comment CI validator simply to adopt this source contract.
