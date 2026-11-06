@@ -1,4 +1,4 @@
-<!-- Governance adoption template: declare CONTROL_MODE: FILE_CONTROL or ISSUE_CONTROL, allowed approvers/provenance, Issue read/write permissions and cutover basis. No automatic mode inference. -->
+<!-- Governance adoption template: declare CONTROL_MODE: FILE_CONTROL or ISSUE_CONTROL, ISSUE_APPROVERS and Issue read/write permissions/cutover basis. Optional ISSUE_DELEGATED_APPROVAL: ENABLED is a separate explicit *lower-assurance* opt-in for Web AI-proxy approval after exact user authorization; omit to keep strict GitHub-human approval. Never enable implicitly from Plugin installation or template copy. -->
 
 # Project Agent Guidance
 
