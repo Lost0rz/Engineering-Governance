@@ -6,7 +6,7 @@ Scope: Issue #44, stacked Draft on PR #43 (which depends on PR #41). This is a f
 | --- | --- | --- |
 | A01 | No accepted AGENTS delegation opt-in | Strict `SPEC_APPROVAL_V1` only; delegated record alone => `NO_MATCHING_TRUSTED_APPROVAL` |
 | A02 | Accepted AGENTS contains exactly one `ISSUE_DELEGATED_APPROVAL: ENABLED` | CLI `--allow-delegated --agents-file <accepted AGENTS>` permits the distinct delegated format |
-| A03 | Duplicate, missing or disabled AGENTS declaration | STOP: `DELEGATION_NOT_OPTED_IN`; do not infer permission from plugin installation |
+| A03 | Duplicate, missing, disabled, Markdown-fenced, indented, quoted or HTML-comment-only AGENTS declaration | STOP: `DELEGATION_NOT_OPTED_IN`; nonoperative examples never enable proxy approval |
 | A04 | Web user explicitly approves exact current repo/Issue/spec digest | AI may post `SPEC_DELEGATED_APPROVAL_V1` via authenticated Issue write surface; record actual comment ID and actor |
 | A05 | Chat lacks current-spec human decision, user says generic continue, or agent decides alone | Do not post approval or emit executable handoff |
 | A06 | Valid matching delegated record and opted-in receiver | `STRUCTURE_AND_DELEGATED_APPROVAL_PASS`, `DELEGATED_ACCOUNT_ATTESTED`, actual comment ID; receiver still checks code/writer/STOP |
@@ -24,7 +24,7 @@ Scope: Issue #44, stacked Draft on PR #43 (which depends on PR #41). This is a f
 
 ## Source check
 - Existing direct-approval test cases remain intact.
-- Add 11 focused opt-in/default/digest/actor/attestation/revocation/conflict tests.
+- Preserve 11 original delegated approval cases and add 7 fenced/indented/blockquote/HTML-comment opt-in guard regressions; 34 focused Python tests total.
 - Run `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v` on the exact candidate source before merge; no all-project CI or mandatory full-suite reruns.
 - Cross-reference `issue-control.md`, `issue-execution-contract.md`, `project-governance/SKILL.md`, `agent-handoff/references/handoff-contract.md` and `agent-handoff/SKILL.md`.
 - Source diff and remote branch identity are not Web Plugin publish, Local Codex install, GitHub required checks, human product acceptance, merge or release evidence.
