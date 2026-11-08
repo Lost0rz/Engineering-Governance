@@ -1,4 +1,4 @@
-<!-- Governance adoption template: declare CONTROL_MODE: FILE_CONTROL or ISSUE_CONTROL, ISSUE_APPROVERS and Issue read/write permissions/cutover basis. Optional ISSUE_DELEGATED_APPROVAL: ENABLED is a separate explicit *lower-assurance* opt-in for Web AI-proxy approval after exact user authorization; omit to keep strict GitHub-human approval. Never enable implicitly from Plugin installation or template copy. -->
+<!-- Governance adoption template: declare CONTROL_MODE: FILE_CONTROL or ISSUE_CONTROL, ISSUE_APPROVERS and Issue permissions/cutover basis. ISSUE_WEB_SPEC_AUTHORING is a separate, optional Web Agent A authoring opt-in; default deny and keep it independent from approval. ISSUE_DELEGATED_APPROVAL: ENABLED is a separate explicit lower-assurance approval-proxy opt-in. Never enable either permission implicitly from Plugin installation or template copy. -->
 
 # Project Agent Guidance
 
@@ -6,6 +6,11 @@ Record only durable **project-specific normative rules and boundaries** supporte
 
 ## Normative project rules
 [Project-specific MUST/MUST-NOT rules, canonical writers/authority boundaries, safety/data constraints, and durable operating invariants. Omit descriptive background that belongs in the Project Profile.]
+
+## Issue authoring and approval
+ISSUE_WEB_SPEC_AUTHORING: DISABLED
+
+[Keep disabled unless this project explicitly authorizes Web Agent A to create or revise Issue execution-spec drafts. Enabling this line grants only user-requested Issue-spec authoring; it does not approve a spec or grant source, branch, PR, merge, or release authority.]
 
 ## Authority exceptions / durable boundaries
 [Only project-specific authority rules that materially constrain execution. Point to accepted domain/data/architecture authorities rather than copying their detail.]

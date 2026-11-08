@@ -294,6 +294,42 @@ class IssueContractTests(unittest.TestCase):
             "```text\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"
             "ISSUE_DELEGATED_APPROVAL: DISABLED\n"))
 
+    def test_web_spec_authoring_defaults_to_deny(self):
+        self.assertFalse(mod.web_spec_authoring_opt_in("CONTROL_MODE: ISSUE_CONTROL\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "ISSUE_WEB_SPEC_AUTHORING: DISABLED\n"))
+
+    def test_web_spec_authoring_requires_one_exact_enabled_declaration(self):
+        self.assertTrue(mod.web_spec_authoring_opt_in(
+            "CONTROL_MODE: ISSUE_CONTROL\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\nISSUE_WEB_SPEC_AUTHORING: DISABLED\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in("ISSUE_WEB_SPEC_AUTHORING: enabled\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in("ISSUE_WEB_SPEC_AUTHORING : ENABLED\n"))
+
+    def test_web_spec_authoring_ignores_markdown_examples(self):
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "```md\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n```\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "~~~text\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n~~~\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "    ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "> ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+        self.assertFalse(mod.web_spec_authoring_opt_in(
+            "<!--\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n-->\n"))
+        self.assertTrue(mod.web_spec_authoring_opt_in(
+            "```md\nISSUE_WEB_SPEC_AUTHORING: DISABLED\n```\n"
+            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+
+    def test_web_authoring_opt_in_does_not_approve_a_draft(self):
+        self.assertTrue(mod.web_spec_authoring_opt_in(
+            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+        with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
+            mod.verify_approval(issue(), repo=REPO, approvers={"Lost0rz"})
+
 
 
 if __name__ == "__main__":

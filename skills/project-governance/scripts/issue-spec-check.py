@@ -128,8 +128,8 @@ def _record(comment: dict, kind: str) -> dict[str, str] | None:
     return entries
 
 
-def delegated_opt_in(agents_text: str) -> bool:
-    """Allow one operative top-level opt-in, never a Markdown example."""
+def _single_operative_opt_in(agents_text: str, key: str) -> bool:
+    """Accept one exact top-level ENABLED declaration, never a Markdown example."""
     entries: list[str] = []
     fence: tuple[str, int] | None = None
     html_comment = False
@@ -153,9 +153,19 @@ def delegated_opt_in(agents_text: str) -> bool:
             html_comment = "-->" not in line.split("<!--", 1)[1]
             continue
         # Indented code, quoted examples and prose are not policy declarations.
-        if line.startswith("ISSUE_DELEGATED_APPROVAL:"):
+        if line.startswith(key + ":"):
             entries.append(line.rstrip(" \t"))
-    return entries == ["ISSUE_DELEGATED_APPROVAL: ENABLED"]
+    return entries == [key + ": ENABLED"]
+
+
+def delegated_opt_in(agents_text: str) -> bool:
+    """Allow one operative delegated-approval opt-in, never a Markdown example."""
+    return _single_operative_opt_in(agents_text, "ISSUE_DELEGATED_APPROVAL")
+
+
+def web_spec_authoring_opt_in(agents_text: str) -> bool:
+    """Allow one operative Issue-spec-authoring opt-in, default deny."""
+    return _single_operative_opt_in(agents_text, "ISSUE_WEB_SPEC_AUTHORING")
 
 
 def verify_approval(issue: dict, *, repo: str, approvers: set[str],
