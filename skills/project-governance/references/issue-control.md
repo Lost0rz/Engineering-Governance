@@ -22,6 +22,17 @@ A task may have multiple approved open Issues in a repository; each proposed wri
  
 Do not mirror every Issue comment into Git. No standalone control PR for progress, receipts, Issue edits, approvals, merge observation or status synchronization.
 
+## Web Issue-spec authoring — explicit request and target opt-in
+
+Issue-spec drafting is a bounded authoring capability, separate from execution approval. By default, Web Agent A has no GitHub Issue write authority. It may create an unapproved execution-spec Issue or revise the body of one exact selected Issue only when the current user explicitly requests that write and the target repository's **accepted `AGENTS.md` on live `main`** contains exactly one operative top-level `ISSUE_WEB_SPEC_AUTHORING: ENABLED` declaration. This opt-in is independent from `ISSUE_DELEGATED_APPROVAL` and grants no approval or source-writing authority.
+
+Before creating or editing an Issue, resolve the canonical repository and live `main`, read the accepted target `AGENTS.md`, use [`web_spec_authoring_opt_in()`](../scripts/issue-spec-check.py), and search for duplicate/current Issues and relevant writers. Confirm the authenticated Issue writer can write to that repository. If the target policy, requested Issue, live body, or writer boundary is unclear or changes during the operation, stop and reconcile.
+
+- **Create:** prepare a complete nineteen-field draft and validate its structure. Create only the requested Issue with a descriptive title and the spec body. Then fetch it again, confirm its actual Issue number, state and body, and calculate the canonical digest from that readback. Creation and a passing digest leave approval pending.
+- **Revise:** require an exact Issue selector and user-directed delta. Re-read the Issue body and comments immediately before editing; preserve existing approval and receipt comments. Increment `SPEC_REVISION` for a published body change. For an approved or in-progress spec, require explicit user authorization for the material revision, check the affected writer/PR boundary, and pause the affected writer until the new revision receives its own exact approval. If a writer may still be acting on the old contract and cannot be safely paused, stop the edit. After the edit, fetch the Issue again and verify the requested delta, revision and canonical digest.
+
+This path permits correction of an unapproved draft without requiring that draft to approve itself. The write is limited to the user-requested Issue-spec operation; it does not authorize source changes, branch/worktree creation, PR actions, approval comments, merge, release, or unrelated Issue metadata. Never author or proxy a `SPEC_APPROVAL_V1` or `SPEC_DELEGATED_APPROVAL_V1` as part of drafting. Local execution remains blocked until the ordinary trusted exact-digest approval and receiver preflight pass.
+
 ## Executable spec representation and read-only validator
 
 Both the GitHub Issue Form and the Markdown template emit exactly the same canonical `### FIELD_NAME` sections for the nineteen keys in `scripts/issue-spec-check.py`. The GitHub host, not Issue prose, supplies repository and Issue number. A missing, unknown, duplicate, blank, `UNKNOWN` execution target, or structurally incomplete WP fails closed. Use `###` only for canonical fields, and `#### WP01 — ...` for work packages. No guess-based mapping between differently named form fields and instructions.
