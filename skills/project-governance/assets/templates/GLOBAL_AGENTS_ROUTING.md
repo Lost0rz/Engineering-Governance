@@ -1,35 +1,13 @@
-<!-- BEGIN ENGINEERING-GOVERNANCE ROUTING -->
+<!-- Consumer routing hint. Detailed routing and engineering rules live in the installed Governance Skills. -->
 ## Engineering Governance Skill routing
 
-For ordinary software, repository, or project engineering work, use `project-governance` as the normal entry unless a higher-priority instruction or explicit bounded Engineering Governance Skill selection determines another route. Keep simple work lightweight.
-For actual cross-context work requests such as "给我施工卡", "给我审计卡", "交给本地 Codex", or "send the local AI execution instructions", discover/select installed Engineering Governance, then use Project Governance for authoritative Task/Issue selection and `agent-handoff` for the Card. An explanation *about* cards is not an executable handoff; direct PR audit normally invokes `evidence-audit` without a transfer Card. Plugin metadata improves discovery, but cannot guarantee that the hosting UI auto-loads Skills. If unavailable, state the limitation without inventing route evidence.
+For governed engineering work, enter `project-governance` unless a higher-priority project instruction or explicit narrow Skill selection applies. Use `AGENTS.md` and current Task/Issue as project authority; this template is not another approval source.
 
-A receiving local/Desktop agent must reread accepted `AGENTS.md` and mode-selected Task or exact approved Issue/revision/digest/approval before source changes, then check live PR/workspace and relevant WPs/STOP/receipt. The Card only transports a reference and delta; it never self-authorizes code. Do not force every Skill to load at startup or turn absent GitHub access into FILE_CONTROL fallback.
+Select only the needed owner:
+- `project-profile`: compact project context; `solution-design`: material engineering architecture/state ambiguity; `design`: UI/UX/frontend interaction or visual design.
+- `execution-orchestrator`: useful delegation; `agent-handoff`: actual cross-context Card/Receipt; `evidence-audit`: formal read-only verdict.
+- `domain-navigation`: unclear source/ownership route; `incident-doctor`: blocking evidence gap.
 
+Selection is not a mandatory pipeline. A selected Skill owns its details and can consult another for a real dependency, then resume. Do not copy each downstream Skill's procedures, impose an external engineering framework/model, or create a new task/Card merely for a session change.
 
-Once governed engineering enters `project-governance`, Engineering Governance is the reusable engineering workflow/routing framework for that work. External engineering frameworks, Skills, plugins, prompt packs, or repositories may be inspected as reference material/evidence, but they do not become required execution dependencies, peer routers, Sub Agent/model/reasoning authorities, or review/completion controllers merely because they are installed, discoverable, historically referenced, or useful.
-
-If an external method has durable value, map it to the existing Engineering Governance owner and express the need as behavior/acceptance. Extend the owning Skill/internal module when reusable value is proven. Do not jump to a second engineering framework as a convenience fallback.
-
-Use `project-profile` only when creating, rebuilding, shrinking, or auditing the compact derived project context/index. It is not task authority or a Domain Map replacement; repository/project-managed Profile mutation still requires compatible task authorization.
-
-Use `solution-design` for material engineering requirements/architecture/state-ownership/API/data-flow/implementation-boundary ambiguity. Use `design` for bounded UI/UX/frontend interaction and visual design/redesign, including hierarchy, composition, typography, density, interface copy, design specification and visual execution critique. Mentioning the word “design” alone is not enough to select `design`.
-
-For mixed frontend workflow questions, distinguish:
-- interaction workflow — how users see, understand, navigate, edit, act and receive feedback -> `design`;
-- business/state workflow — canonical state transitions, data/state ownership, API/data-flow responsibility, persistence or implementation boundaries -> `solution-design` when materially ambiguous.
-
-Use `execution-orchestrator` for useful decomposition/delegation/recovery; `agent-handoff` for bounded cross-context transfer; `evidence-audit` for formal read-only evidence/acceptance/readiness verdicts; `domain-navigation` for unclear semantic/source/symbol/test/runtime/dependency routes; and `incident-doctor` only for a blocking evidence gap.
-
-Routing is selective, not cumulative, but selected Engineering Governance Skills are not isolated silos. A bounded Skill may call another Engineering Governance capability when a concrete unresolved dependency crosses that capability's real boundary and can materially change the current decision. State the unresolved dependency, decision impact, capability, bounded expected return, and where the originating capability will resume. Return to that owner/stage after the bounded result is sufficient.
-
-Do not walk installed Skills as a checklist or invoke a Skill for general enrichment, completeness, a second opinion without an unresolved dependency, or because it is installed. An already-understood frontend redesign can remain `project-governance → design`; if Design genuinely cannot identify a needed backend authority/source route, it may call `domain-navigation`, receive the verified route, and then resume Design.
-
-When the requested output itself is a construction/execution/audit/review/verify/diagnose Card, instructions, or structured Receipt intended for another agent, session, machine, reviewer, or execution context, use `agent-handoff` for that transfer artifact. Preserve the current task authority selected by `AGENTS.md` (FILE_CONTROL Task or approved ISSUE_CONTROL Issue/spec revision); generating the Card does not create a new task or approve an Issue.
-
-A governed Handoff Card may name only an Engineering Governance `CAPABILITY` or `NONE`. Do not emit external engineering Skill/plugin/framework names as required execution steps. TDD, debugging, review, planning, verification, or completion expectations should be stated as behavior/acceptance requirements or handled by the owning Engineering Governance capability. External names may remain only as genuine reference/provenance/evidence.
-
-Simple advisory read-only status/evidence inspection may remain in `project-governance`. Keywords and installed external Skill names alone do not select a route. These capabilities compose without creating parallel task authority or a second engineering control framework. Follow the selected Engineering Governance Skill and the target repository's own authorities for project facts.
-
-For governed user-facing responses, make routing observable: report the actual `Governance route` and actual Engineering Governance `Skills used`; do not list installed/discovered/external reference Skills that did not materially govern the work.
-<!-- END ENGINEERING-GOVERNANCE ROUTING -->
+For an actual cross-context construction/audit handoff, Project Governance selects the current authority and `agent-handoff` transports it; a Card cannot grant approval. Advisory questions do not need a Card. Keep user responses concise; include route/Skills only when decision-relevant or explicitly requested.

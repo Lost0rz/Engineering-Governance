@@ -71,7 +71,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("specific overlapping writes or unique work", development)
         self.assertNotIn("Writer release requires both", development)
         self.assertIn("## Legacy/default ISSUE_CONTROL compact example", handoff_template)
-        self.assertIn("Under legacy/default `ISSUE_CONTROL`", execution)
+        self.assertIn("Issue approval, Web authoring, exact digest/revision binding", execution)
         self.assertIn("separately opted-in, independently host-verified", readme)
 
     def test_low_ceremony_entry_and_cross_context_handoff(self):
@@ -81,7 +81,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
         self.assertIn("do not emit a compulsory multi-field receipt", governance)
         self.assertIn("Ordinary same-session continuation", handoff)
-        self.assertIn("TASK_ID: <selected task>", handoff)
+        self.assertIn("TASK_ID, MODE, TARGET, AUTHORITY, BOUNDARY, DELTA, RETURN_CONTRACT", handoff)
         self.assertNotIn("HANDOFF_ROUTE_APPLIED: YES", handoff)
         self.assertIn("## Conditional FILE_CONTROL alignment", control)
         self.assertIn("not a universal gate on every code edit", control.replace("**", ""))
@@ -126,7 +126,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         readme = self.read("README.md")
         self.assertNotIn("all nine required core fields", handoff_contract)
         self.assertNotIn("Compact nine-core-field", handoff_contract)
-        self.assertIn("No standalone 11-item formatting checklist", handoff_contract)
+        self.assertIn("Do not create checkbox receipts", handoff_contract)
         self.assertIn("not a universal per-edit final alignment gate", governance)
         self.assertIn("8-field `AUTONOMY_SCOPE_V1`", readme)
 
@@ -168,6 +168,22 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("without requiring nonexistent WP fields", audit)
         self.assertIn("Legacy: increment revision", contract)
         self.assertIn("G3 requires the applicable explicit owner decision", contract)
+
+    def test_layered_contract_has_one_operational_owner(self):
+        routing = self.read("skills/project-governance/references/global-routing.md")
+        governance = self.read("skills/project-governance/SKILL.md")
+        handoff = self.read("skills/agent-handoff/SKILL.md")
+        contract = self.read("skills/agent-handoff/references/handoff-contract.md")
+        execution = self.read("skills/project-governance/references/issue-execution-contract.md")
+        routing_template = self.read("skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md")
+        self.assertIn("which Engineering Governance capability", routing)
+        self.assertNotIn("UNRESOLVED_DEPENDENCY:", routing)
+        self.assertNotIn("INTERACTION_WORKFLOW\\n", governance)
+        self.assertNotIn("SPEC_DELEGATED_APPROVAL_V1", handoff)
+        self.assertNotIn("grant_credential_id", contract)
+        self.assertIn("issue-control.md", execution)
+        self.assertIn("A Card never grants", contract)
+        self.assertNotIn("For governed user-facing responses, make routing observable:", routing_template)
 
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
