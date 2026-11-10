@@ -63,7 +63,7 @@ Conditional fields include `PURPOSE`, `PROFILE`, `ISSUE`, `SPEC_REVISION`, `OBSE
 
 ## Issue execution transfer and durable receipt
 
-For ISSUE_CONTROL, hand off only the verified repository/Issue/approved SPEC_REVISION and transfer-specific delta; do not copy the long Issue body. The local receiver retrieves the current approved spec via `gh`/connector and follows deterministic WPs and L0/L1/L2/L3 deviation policy. PAUSE/TERMINATE/final execution receipts must be posted as comments on the **same Issue** and the actual comment receipt verified. Comment evidence cannot reauthorize a new scope or new model topology. See Project Governance `issue-control.md` and `issue-execution-contract.md`.
+For ISSUE_CONTROL, hand off only the verified repository/Issue/current SPEC_REVISION and transfer-specific delta; do not copy the long Issue body. The local receiver retrieves the selected current spec and verifies the applicable legacy approval or separately accepted, independently host-verified autonomy grant. Under **legacy/default ISSUE_CONTROL**, post meaningful PAUSE/TERMINATE/final execution receipts to the same Issue and verify their delivery. In an actually active, independently verified G1/G2 autonomy mode, routine Issue comments are optional when evidence is recoverable from the task/PR/commit/CI/handoff; material risk expansion still needs a valid new authorization. Comments are evidence to consult, not an extra Writer-release permission and cannot expand scope. See Project Governance `issue-control.md` and `issue-execution-contract.md`.
 
 ## Human UI acceptance preservation
 

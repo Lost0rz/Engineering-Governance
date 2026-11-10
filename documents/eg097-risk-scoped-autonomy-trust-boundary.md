@@ -8,6 +8,8 @@ Baseline: `main@83932cc17e9985d155eee09a74492c141949c730`. This file is a propos
 
 On 2026-11-10, a live GitHub read of `/repos/Lost0rz/Engineering-Governance/rulesets` returned `[]`. The GitHub App connection received `403 Resource not accessible by integration` from `/branches/main/protection`. The empty rulesets response **does not prove** protection is present or absent; effective branch protection and workflow/Actions privileges are **UNVERIFIED**.
 
+A maintainer's local `gh` readback on 2026-11-10 subsequently returned `404 Branch not protected` for `main`, no effective branch rules or rulesets, Actions enabled with allowed actions `all`, and no checks on PR #49. This confirms a present unprotected-main blocker, not merely an API-read gap for the connected app. The current branch must not present this as protected.
+
 The existing `SPEC_APPROVAL_V1` verification checks approved Issue body digest and an authenticated GitHub comment author. A linked AI GitHub connector can operate on behalf of a human account; an `actor.login == Lost0rz` observation alone does not independently establish a human click, intent or permission separation. A writable Issue body, mutable local JSON file, copied Card, PR title, comment, label, artifact or AI-provided `HUMAN_APPROVED` field must never become an independent grant.
 
 Threats to test and reject: (a) an executor creating or editing its own authorized spec; (b) an executor creating a claimed owner comment or GitHub native event with the same effective credential; (c) a workflow file or default branch writable by the executor; (d) replaying a previous grant after revocation, expiry, new commit, target change or increased risk; (e) ambiguous branch/worktree writers; (f) permission, data, deployment or release escalation hidden inside a nominally small patch.
@@ -50,7 +52,9 @@ A test helper path not listed in the original WP is not *automatically* L2 when 
 
 ## 4. Writer evidence and cross-context recovery
 
-Preserve a *single current writer per overlapping semantic surface*. At handoff, re-read literal PR/merge/HEAD, relevant local worktree owners, unique uncommitted work and active overlapping sessions; never infer local release from remote merge alone. A `DECISION_RESOLUTION` Issue comment is not intrinsically a writer release. For a verified unchanged target and an independently safe released writer, proceed without a new GitHub comment in active autonomous mode.
+Preserve unique local work and avoid genuine conflicting writes. When overlap is actually indicated, consult relevant Issue discussion, PR/ref history and local workspace facts together; normal agent-to-agent transfer does not require a second Writer-release approval or inventory. A comment remains useful evidence but cannot independently authorize out-of-scope mutations.
+
+The current grant schema fixes one `target_commit_sha`. Before any activation, implement a verified continuation rule: anchor the originally trusted base and allow subsequent commits only when the host proves an authorized ancestry/branch relationship, unchanged task/risk/effect envelope and no revocation. Do not blindly equate every new HEAD with the original grant Commit, or accept a freely supplied local ancestry claim. The current checker remains deliberately inactive and does not yet implement this rule.
 
 A Card carries only `repo + task ID + grant anchor + exact evidence identity + current WP + transfer delta + STOP`. The receiver must validate the source grant and live workspace state; the Card is not an independent permission, and copying a stale grant cannot reactivate it. Progress and terminal results may be recorded through PR/commit/test artifacts; comment-free execution is not evidence-free execution.
 

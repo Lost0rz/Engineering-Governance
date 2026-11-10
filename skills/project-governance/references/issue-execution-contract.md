@@ -136,7 +136,7 @@ Re-use unaffected verified WP outcomes. A comment-only clarification never requi
 
 ## EXECUTION_RECEIPT_V1 (Issue comment)
 
-Write at meaningful checkpoints only: **always** on PAUSE, TERMINATE, final implementation result; optionally on independently meaningful WP handoff. No comment per edit, shell command or test assertion. Receiver uses `gh issue comment ... --body-file` or supported connector and confirms actual posted comment. When posting is unavailable, report `RECEIPT_DELIVERY: FAILED/PENDING` and preserve content; do not claim synchronization.
+In **legacy/default ISSUE_CONTROL**, post a meaningful Issue comment on PAUSE, TERMINATE and final implementation; independent WP handoff comments are optional. In a **separately activated, independently host-verified G1/G2 autonomy mode**, routine progress, corrections, resume and terminal implementation Issue comments are optional when the outcome is recoverable from the selected task, PR/commit/CI and handoff evidence. This does not waive a real L2 authority decision, relevant project-specific stricter obligations or accountable result evidence. Comments remain useful input; do not require one per edit, shell command or test assertion. For a required comment, use `gh issue comment ... --body-file` or a supported connector, read back the comment, and report a delivery failure accurately.
 
 ```text
 RECEIPT_TYPE: EXECUTION_RECEIPT_V1 | DECISION_REQUEST_V1 | EXECUTION_TERMINATED_V1
@@ -158,12 +158,9 @@ A terminal implementation receipt is **not** `ISSUE_CLOSED`, `CI_PASS`, `PR_MERG
 
 ## Verification scenarios
 
-### Historical regression cases
+### Task-general regression expectations
 
-- **FloatTabs #208 — bounded DEBUG-only test seam:** a proven test-only seam with no product-side effect can remain G1/L1 when its target is inside the authorized path envelope. An explicitly excluded/new source target is L2 until separately approved; “DEBUG-only” alone does not bypass the path boundary.
-- **FloatTabs #211 — human UI and overlapping writer:** exact-head CI, screenshot or machine browser checks do not turn a required real-user acceptance into PASS. Keep UI acceptance PENDING and release a Writer only after both current PR/merge evidence and local worktree, dirty/unique-work, and active-overlap facts are checked.
-- **Merloom #632 — RawSku overwrite guard:** a nonempty protected RawSku set cannot be overwritten, appended, or merged by generic autonomous authority. Treat the destructive data effect as a hard exclusion even when a proposed source diff is small.
-- **RemoteOrbit #51 — privileged HID helper:** signing, installing, launching or enabling a privileged Helper/Driver is G3 and outside the G1/G2 grant; missing signer, device or host proof pauses the affected WP, and the backend remains disabled.
+Historical project names, exact incidents and project-owned protected-data rules belong in regression test fixtures and the owning projects, not in this reusable normative contract. The shared contract already defines the G/L/V boundaries, human UI acceptance, and exclusions for privileged, destructive or out-of-scope work. If a concrete simultaneous-write risk arises, evaluate relevant Issue discussion, PR and local workspace evidence; ordinary Writer handoff is not a new approval or checklist gate.
 
 - **Same defect, repeated local fixes:** a second bounded correction for the same approved defect remains L1 when objective/risk/effects are unchanged; rerun only invalidated affected checks.
 - **Daily WP continuation:** after an active autonomy grant is truly verified, ordinary G1/G2 progress and recovery do not require per-WP Issue comments. In legacy mode, the current Issue receipt rules remain in force.

@@ -36,28 +36,32 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("`G0`–`G3` scale", verification)
         self.assertIn("Record the governance-risk envelope and verification tier separately", verification)
 
-    def test_writer_release_requires_host_and_local_facts(self):
+    def test_normal_writer_handoff_has_no_extra_gate(self):
         workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
-        self.assertIn("Writer release at handoff", workspace)
-        self.assertIn("read current PR/merge/head and changed-path evidence from GitHub", workspace)
-        self.assertIn("verify the relevant local branches/worktrees", workspace)
-        self.assertIn("A comment may document evidence but is never the sole release gate", workspace)
+        handoff = self.read("skills/agent-handoff/references/handoff-contract.md")
+        self.assertIn("Issue discussion, PR history and local observations are complementary evidence", workspace)
+        self.assertIn("Ordinary agent handoff does not introduce a separate Writer-release approval/checklist", workspace)
+        self.assertNotIn("### Writer release at handoff", workspace)
+        self.assertIn("a normal handoff needs no separate Writer-release ritual", handoff)
 
-    def test_four_historical_safety_scenarios_remain_explicit(self):
+    def test_project_specific_incidents_do_not_become_global_normative_rules(self):
         contract = self.read("skills/project-governance/references/issue-execution-contract.md")
-        expected = (
-            "FloatTabs #208 — bounded DEBUG-only test seam",
-            "FloatTabs #211 — human UI and overlapping writer",
-            "Merloom #632 — RawSku overwrite guard",
-            "RemoteOrbit #51 — privileged HID helper",
-        )
-        for scenario in expected:
+        checker_tests = self.read("skills/project-governance/scripts/test_issue_spec_check.py")
+        for scenario in ("FloatTabs #208", "FloatTabs #211", "Merloom #632", "RemoteOrbit #51"):
             with self.subTest(scenario=scenario):
-                self.assertIn(scenario, contract)
-        self.assertIn("explicitly excluded/new source target is L2", contract)
-        self.assertIn("Keep UI acceptance PENDING", contract)
-        self.assertIn("cannot be overwritten, appended, or merged", contract)
-        self.assertIn("G3 and outside the G1/G2 grant", contract)
+                self.assertNotIn(scenario, contract)
+        for test_name in ("test_float_tabs_208", "test_float_tabs_211",
+                          "test_merloom_632", "test_remoteorbit_51"):
+            self.assertIn(test_name, checker_tests)
+        self.assertIn("Historical project names, exact incidents", contract)
+
+    def test_comment_requirements_are_mode_scoped(self):
+        contract = self.read("skills/project-governance/references/issue-execution-contract.md")
+        handoff = self.read("skills/agent-handoff/SKILL.md")
+        self.assertIn("legacy/default ISSUE_CONTROL", contract)
+        self.assertIn("terminal implementation Issue comments are optional", contract)
+        self.assertIn("Under **legacy/default ISSUE_CONTROL**", handoff)
+        self.assertIn("routine Issue comments are optional", handoff)
 
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
