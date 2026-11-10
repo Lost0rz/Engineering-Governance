@@ -23,7 +23,7 @@ Semantic equivalence does not make a current host gate pass. Re-read applicable 
 - **V2 — domain/integration boundary:** focused tests, affected-domain evidence and required integration checks.
 - **V3 — broad/high-consequence/release:** broad relevant integration/build/runtime/security/concurrency/release evidence appropriate to the claim.
 
-The tier describes what verification evidence must cover, not the authority to perform the work or how often every check runs. A bounded G1/G2 source change can still require V3 security/concurrency review; G3 remains outside a G1/G2 autonomy grant even if a narrow test is V1.
+A G0 read-only status lookup is not automatically a code audit or V3 readiness assessment. Choose verification depth from the actual claim; do not fetch full source/spec/history to answer only current PR/CI status. The tier describes evidence coverage, not authority or test cadence. A bounded G1/G2 source change can still require V3 security/concurrency review; G3 remains outside a G1/G2 autonomy grant even if a narrow test is V1.
 
 ## Scope selection and invocation frequency
 

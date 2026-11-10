@@ -7,14 +7,15 @@ description: Use when a real failure, unexplained behavior, or unsafe ambiguity 
 
 Use this Skill only when all three conditions hold: a real failure/unexplained unsafe ambiguity exists; it blocks safe progress; and current evidence is insufficient for the next safe decision. A known defect with sufficient evidence remains normal authorized Project Governance work.
 
-## Read the contracts
+## Read only the needed contract
 
-- [Evidence gate](references/evidence-gate.md)
-- [Probe design](references/probe-design.md)
-- [Fresh incident capture](references/fresh-incident.md)
-- [Probe lifecycle](references/probe-lifecycle.md)
-- [Systematic diagnosis techniques](references/systematic-techniques.md)
-- [Incident record template](assets/templates/INCIDENT.md)
+Start with [Evidence gate](references/evidence-gate.md) for a genuine blocked decision; inspect existing evidence before adding probes. Other references are conditional, **not** a required reading sequence:
+
+- [Probe design](references/probe-design.md) — when a new probe could change the decision.
+- [Fresh incident capture](references/fresh-incident.md) — when observation identity/freshness is uncertain.
+- [Probe lifecycle](references/probe-lifecycle.md) — when diagnostic probes need retention or retirement.
+- [Systematic techniques](references/systematic-techniques.md) — when a bounded first pass is insufficient.
+- [Incident template](assets/templates/INCIDENT.md) — only when a durable incident record is required.
 
 ## Workflow
 

@@ -194,6 +194,19 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertNotIn("For governed user-facing responses, make routing observable:", routing_template)
         self.assertNotIn("## Mandatory pre-return gate", request_template)
 
+    def test_g0_status_fast_path_does_not_trigger_full_audit_preflight(self):
+        governance = self.read("skills/project-governance/SKILL.md")
+        routing = self.read("skills/project-governance/references/global-routing.md")
+        tiers = self.read("skills/project-governance/references/verification-tiers.md")
+        doctor = self.read("skills/incident-doctor/SKILL.md")
+        self.assertIn("G0 status-only inquiries", governance)
+        self.assertIn("For **state-changing work and authority decisions**", governance)
+        self.assertIn("optional pointers, not a startup reading list", governance)
+        self.assertIn("lightweight G0 status lookup", routing)
+        self.assertIn("not automatically a code audit or V3", tiers)
+        self.assertIn("Other references are conditional", doctor)
+        self.assertNotIn("## Read the contracts", doctor)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")

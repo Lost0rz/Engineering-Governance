@@ -8,7 +8,7 @@ description: Normal entry for governed software/repository tasks, including plai
 Use this Skill as the normal engineering entry. It owns task/control authority, lifecycle, writer/workspace boundaries, proportional verification, repository delivery, and closeout. Keep clear work lightweight.
 ## Entry and capability boundaries
 
-Select the current project task and authority here; route specialized work only when its actual trigger matters. `references/global-routing.md` owns the Skill selection table and cross-Skill composition. A requested cross-context Card goes to `agent-handoff`; advice or an ordinary continuation needs no Card.
+Route by the requested outcome, not by keywords. `references/global-routing.md` owns Skill selection; `agent-handoff` handles actual cross-context Cards, not ordinary continuation. **G0 status-only inquiries** (e.g. PR state and existing CI) use the smallest fresh read-only host evidence needed; they do not trigger full Issue/AGENTS preflight, formal Evidence Audit, V3 review or unrelated reference loading unless the question or project authority actually requires it.
 
 For G0 read-only inspection, no Issue approval is required. For state-changing work, read the accepted `AGENTS.md` and selected FILE_CONTROL Task or ISSUE_CONTROL Issue. `references/issue-control.md` owns Web authoring, strict/delegated approval, the optional trusted G1/G2 grant and local receiver preflight. The unverified autonomy path is inactive; a Card is never authorization. Do not request repeated approval for a genuinely unchanged, already-authorized action.
 
@@ -21,7 +21,7 @@ Before creating any branch, Git worktree/checkout, or PR, apply the **reuse-firs
 
 ## Task-control mode selection
 
-Read `AGENTS.md` and select exactly one mode: `FILE_CONTROL` (legacy CURRENT_TASK/STATUS) or `ISSUE_CONTROL` (selected approved GitHub Issue/spec revision). In Issue mode use `references/issue-control.md` and `references/issue-execution-contract.md` for approval, detailed deterministic Work Packages, L0/L1/L2/L3 deviation handling, resume and Issue comment receipts. `references/issue-control-migration.md` governs safe per-project cutover. Treat risk-scoped autonomy as inactive unless the accepted `AGENTS.md` explicitly opts in and the actual GitHub host, revocation/target binding and credential separation are independently verified; otherwise use legacy ISSUE_CONTROL. Classify governance risk G0–G3 separately from verification tier V0–V3. An issue label, vague prompt, stale snapshot or unverified approver never grants writes. GitHub access failure is STOP, not permission to infer authority.
+For **state-changing work and authority decisions**, read accepted `AGENTS.md` and select `FILE_CONTROL` (CURRENT_TASK/STATUS) or `ISSUE_CONTROL` (approved Issue/revision). Apply `issue-control.md` and `issue-execution-contract.md` only to the selected decision; `issue-control-migration.md` applies only to migration. Do not activate risk-scoped autonomy without actual accepted opt-in and independently verified host/credential trust. G0–G3 risks and V0–V3 verification remain separate. Unknown or stale authorization **never grants writes**; GitHub authorization failure stops the affected mutation. For a simple G0 status lookup, do not perform this write-authorization preflight.
 
 ## Control alignment versus standalone PR creation
 
@@ -57,7 +57,7 @@ For a material engineering action, return a short, truthful outcome: what change
 Report actual PR/commit/CI identity when claiming delivery, and do not label an unrun test, absent permission, machine-driven UI inspection or unmerged Draft as PASS. Subagent model/reasoning details are relevant only when actual delegation materially affected the task. No documentation-only or no-op activity requires a status-only commit or Issue comment.
 ## Supporting contracts
 
-Read only what the current decision needs:
+These are **optional pointers, not a startup reading list**. Open a reference only after a concrete question or safety gate selects its owner:
 
 - `references/control-plane.md` — mode-aware authority and alignment;
 - `references/issue-control.md` — approved Issue authority and provenance;
