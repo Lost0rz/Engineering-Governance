@@ -84,7 +84,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("TASK_ID: <selected task>", handoff)
         self.assertNotIn("HANDOFF_ROUTE_APPLIED: YES", handoff)
         self.assertIn("## Conditional FILE_CONTROL alignment", control)
-        self.assertIn("not a universal gate on every code edit", control)
+        self.assertIn("not a universal gate on every code edit", control.replace("**", ""))
         self.assertIn("Prevent actual conflicting writes", workspace)
         self.assertIn("retained review workspace", workspace)
 
