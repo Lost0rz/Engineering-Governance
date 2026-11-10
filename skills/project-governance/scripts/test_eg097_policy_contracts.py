@@ -210,6 +210,25 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("verbose Issue/comment payloads **out of the model context**", issue)
         self.assertIn("Do not truncate away later revocations", issue)
 
+    def test_design_and_profile_have_mode_selected_lazy_references(self):
+        design = self.read("skills/design/SKILL.md")
+        spec = self.read("skills/design/references/design-specification.md")
+        review = self.read("skills/design/references/design-review.md")
+        profile = self.read("skills/project-profile/SKILL.md")
+        profile_contract = self.read("skills/project-profile/references/profile-contract.md")
+        for mode in ("AUDIT_ONLY", "DESIGN_SPEC", "DESIGN_IMPLEMENT", "FINAL_REVIEW"):
+            self.assertIn(mode, design)
+        self.assertIn("read only the selected procedure", design)
+        self.assertIn("PRE_BUILD_DESIGN_GATE", spec)
+        self.assertIn("### 2. Anthropic design analysis", spec)
+        self.assertIn("### 8. Microsoft internal final Design review", review)
+        self.assertIn("HUMAN_UI_ACCEPTANCE", review)
+        self.assertIn("only an actual human decision", design)
+        self.assertIn("profile-contract.md", profile)
+        self.assertIn("## Mandatory pre-return compliance gate", profile_contract)
+        self.assertNotIn("### 8. Microsoft internal final Design review", design)
+        self.assertNotIn("## Mandatory pre-return compliance gate", profile)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")
