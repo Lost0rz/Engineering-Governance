@@ -47,7 +47,7 @@ jobs:
           from pathlib import Path
           import zipfile
 
-          version = "0.8.3"
+          version = "0.8.4"
           repo = Path(".")
           original = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
           assert original["name"] == "engineering-governance"
