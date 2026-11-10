@@ -155,7 +155,7 @@ Any source/config/test/workflow/schema/migration/dependency/runtime-relevant cha
 
 ## Explicit retention
 
-A retained workspace is valid when all of the following are known:
+A retained workspace needs enough identity and unique-work evidence for its actual disposition; collect only relevant facts:
 
 - owning task or work item;
 - workspace/ref identity;
@@ -164,7 +164,7 @@ A retained workspace is valid when all of the following are known:
 - whether unique local work exists and how it is protected;
 - whether it remains write-capable for any authority that overlaps another current/proposed writer.
 
-A vague “might be useful later” is not a retention condition. If a retained predecessor can still resume writes under its current authorization, treat it as a writer for overlap checks. If it must coexist with a successor, first establish a verified non-writing boundary such as explicit freeze/read-only disposition, supersession, or another project-defined rule that prevents both workspaces from writing the same authority concurrently.
+A vague “might be useful later” does not prove that cleanup is safe or necessary. A retained predecessor's theoretical ability to resume is not itself a writer collision; if there is an actual overlapping write risk, protect unique work and establish a safe boundary only for the conflicting operation.
 
 If the task is superseded, determine whether any unique work must be transferred/preserved; then close or explicitly freeze the superseded workspace when safe.
 
@@ -194,37 +194,27 @@ Issue discussion, PR history and local observations are complementary evidence; 
 
 ## Handoff evidence
 
-Keep closeout output concise. When workspace lifecycle is material, report the verified equivalents of the workspace fields below. For every final successful **state-changing** governed handoff, also report the control-alignment fields even when some workspace fields are not applicable.
+Report only lifecycle facts material to an actual workspace closeout or conflicting write. FILE_CONTROL alignment is a separate, conditional task/status check when the owning control state materially changes; ordinary handoff needs no full workspace or alignment receipt.
 
 ```text
-TASK_ID: <id>
-TASK_LIFECYCLE: <current/terminal state>
-WORKSPACE_IDENTITY: <path or other stable identity, ref, HEAD>
-WORKSPACE_DISPOSITION: <removed | retained-write-capable | retained-frozen | preserved | unresolved | project equivalent>
-WRITE_AUTHORITY: <overlapping authority or not applicable>
-UNIQUE_WORK: <none | preserved with evidence | unresolved>
-LOCAL_BRANCH_DISPOSITION: <removed | retained | not applicable | unresolved>
-REMOTE_BRANCH_DISPOSITION: <removed | retained | not applicable | unresolved>
-RETAIN_UNTIL: <event/decision, if retained>
-UNCLASSIFIED_RELEVANT_WORKSPACES: <count or unresolved>
-RELATED_DOCUMENT: <path | NONE>
-DOCUMENT_ALIGNMENT: <UPDATED | UNCHANGED | NOT_APPLICABLE>
-CURRENT_STATUS_RECONCILIATION: <UPDATED | UNCHANGED>
-CURRENT_TASK_RECONCILIATION: <UPDATED | UNCHANGED>
-CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION>
-FINAL_STATE: <project-specific result>
+TASK_ID: <current task>
+WORKSPACE_IDENTITY: <relevant ref/path/head>
+DISPOSITION: <retained | preserved | removed | unresolved>
+UNIQUE_WORK: <preserved evidence | none | unresolved>
+WRITE_CONFLICT: <actual overlapping risk or none>
+NEXT_ACTION: <only when work remains>
 ```
 
-Do not require workspace fields that the project does not use. The purpose of the workspace fields is to make the next task able to distinguish a clean baseline from retained, write-capable, frozen/read-only, or unresolved lifecycle state without reconstructing history. The control-alignment fields serve a different purpose: they prove the executor checked whether durable planning/status/task semantics still match reality rather than silently omitting that check.
+Optional local/remote branch and retention details follow the owning project's real workspace needs. Do not turn these example fields into a universal release/cleanup gate. For FILE_CONTROL, report an alignment result only when the event-triggered control-plane contract actually requires one; ISSUE_CONTROL never inherits Task/Status alignment.
 
-Strict read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` with stale/match detail and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY` instead of modifying controls.
+When FILE_CONTROL alignment is applicable, strict read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION`
 
 ## Stop conditions
 
 Stop destructive or conflicting state-changing work when any of these materially affects the task:
 
 - a task-relevant workspace cannot be tied to a verified repository/task/ref identity;
-- a predecessor can write an overlapping fact/state/policy/behavior authority and remains unresolved or write-capable under its current authorization;
+- an actually active overlapping writer or unresolved unique work would be overwritten by the proposed operation;
 - staged, unstaged, untracked, or local-only work has unknown ownership/disposition;
 - the lifecycle event's effect on authorization or the retention condition cannot be verified;
 - the storage authority or applicable project-local durable-path override is unresolved when the task must choose a durable project-controlled location;

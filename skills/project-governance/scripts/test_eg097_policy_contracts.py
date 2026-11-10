@@ -169,6 +169,13 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("Legacy: increment revision", contract)
         self.assertIn("G3 requires the applicable explicit owner decision", contract)
 
+    def test_no_unconditional_workspace_alignment_or_historical_writer_mutex(self):
+        workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
+        self.assertNotIn("For every final successful **state-changing** governed handoff", workspace)
+        self.assertNotIn("a predecessor can write an overlapping fact/state/policy/behavior authority", workspace)
+        self.assertIn("actually active overlapping writer", workspace)
+        self.assertIn("FILE_CONTROL alignment is a separate, conditional", workspace)
+
     def test_layered_contract_has_one_operational_owner(self):
         routing = self.read("skills/project-governance/references/global-routing.md")
         governance = self.read("skills/project-governance/SKILL.md")
