@@ -27,6 +27,8 @@ An expressly authorized Issue-readiness audit binds verdict to exact repository,
 
 Bind target/range/identity, requirement/design authority, evidence freshness, live host identity when relevant, and required claims:
 
+Report governance risk G0–G3, verification tier V0–V3, and audit independence as separate facts. A passing local policy-shape check cannot establish host authorization or activate the risk-scoped mode; any required host-trust claim without independent evidence remains UNKNOWN and blocks PASS.
+
 ```text
 REQUIRED_CLAIMS
 OBSERVED_EVIDENCE

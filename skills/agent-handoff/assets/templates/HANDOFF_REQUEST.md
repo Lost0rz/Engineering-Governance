@@ -42,6 +42,23 @@ For an **audit handoff**, use the same nine core fields with `MODE: AUDIT`, `CAP
 
 When no valid Issue spec/approval exists, return a non-executable design/review result and the blocking Issue URL; do not manufacture an EXECUTE Card or clone the approved plan into chat.
 
+## Optional active autonomy reference
+
+Include these fields only after the accepted target `AGENTS.md` opt-in and independent live host/credential-separation proof both pass. They identify an already verified grant; they are not evidence by themselves.
+
+```text
+AUTONOMY_GRANT_REF: <trusted host run URL or run ID>
+GRANT_RUN_ID / GRANT_ATTEMPT: <exact current run identity>
+WORKFLOW_REF / WORKFLOW_SHA: <protected source identity re-read from host>
+ISSUE_SNAPSHOT: <repo#issue + task ID + revision + digest>
+TARGET_REF / TARGET_COMMIT: <exact authorized branch/ref and commit SHA>
+REQUESTED_PATHS / REQUESTED_EFFECTS: <within the host-verified grant envelope>
+MAX_GOVERNANCE_RISK: G1 | G2
+GRANT_EXPIRY / REVOCATION_CHECK: <host-read values and observation time>
+```
+
+For this active mode, use the host grant as the single `APPROVAL_BASIS`; it replaces the approval-comment prerequisite. Do not combine legacy comment approval and the host grant implicitly. If any value is unavailable or only self-asserted in a local snapshot, remain on the legacy Issue authorization path or return STOP.
+
 ## Conditional fields
 
 Use only when decision-relevant:

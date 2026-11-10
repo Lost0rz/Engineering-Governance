@@ -78,6 +78,19 @@ Before approving and before local mutation, check:
 
 Failure: do not fill in missing design with model guesswork. Return `SPEC_INCOMPLETE` / `PAUSE_AND_ASK` with evidence and questions. No source mutation.
 
+## Governance risk G0–G3
+
+Governance risk bounds authority and allowed effects:
+
+| Level | Boundary | Authorization rule |
+| --- | --- | --- |
+| G0 | Read-only source or host inspection | Existing read authority; no task write grant |
+| G1 | Bounded source repair or test seam with no production side effect | Exact approved task scope; only an independently verified autonomy grant may omit routine progress/correction/resume comments |
+| G2 | Cross-component source changes within a fixed interface, data, and permission envelope | Exact approved task scope plus writer/dependency checks; autonomy still requires a trusted host grant |
+| G3 | Privilege, identity, credentials, production release, irreversible data, or security-boundary change | Outside risk-scoped autonomy; use the separate high-assurance authority and release/data gates |
+
+G0–G3 are not test tiers. Verification intensity is V0–V3 as defined in `verification-tiers.md`; a high V tier does not expand authority, and a low V tier does not make a high G risk safe. The new mode accepts at most G1/G2 and remains inactive until accepted policy opt-in and independent host/credential verification both pass.
+
 ## EXECUTION_DEVIATION_V1
 
 | Level | Condition | Permitted action | Evidence |
@@ -88,6 +101,8 @@ Failure: do not fill in missing design with model guesswork. Return `SPEC_INCOMP
 | L3 `TERMINATE` | Revoked/invalid authority, destructive/security/data integrity risk, unresolvable conflict or exhausted bounded correction without safe path | End current execution attempt; retain unique work and evidence; no automatic rollback/reset/cleanup | Issue comment `EXECUTION_TERMINATED_V1` |
 
 Never interpret failed tests alone as universal permission to broaden scope. Do not silently upgrade a L2 to L1 by asking the same low-reasoning model to invent the missing architecture. Task-specific stricter STOP rules take precedence. L2 PAUSE is not a reason to create a new PR/Issue or restart all other verified work. L3 termination is an execution outcome, not necessarily cancellation/closure of the Issue.
+
+L0–L3 classify deviations after authority is established; they do not change the G risk ceiling. L0 continues on proven nonsemantic locator/format differences. L1 permits `CHECK → FIX → RECHECK_AFFECTED` for the same objective, risk and side-effect envelope. L2 pauses only the affected WP and dependents when objective, contract, security/permission, hard exclusion, target, or unresolved writer boundary changes; independent safe WPs may continue. L3 terminates on revoked/forged authority, credential exposure, uncontrolled destructive writes, or an unsalvageable authority conflict. Under legacy `ISSUE_CONTROL`, retain the existing Issue approval, decision and meaningful receipt requirements. Routine G1/G2 progress/correction/resume comments are optional only after the new mode's accepted opt-in and independent host grant have been verified; a comment never supplies the missing grant or authorizes risk expansion.
 
 ### DECISION_REQUEST_V1 comment
 
@@ -142,6 +157,17 @@ RECEIPT_DELIVERY: POSTED_VERIFIED | PENDING | FAILED
 A terminal implementation receipt is **not** `ISSUE_CLOSED`, `CI_PASS`, `PR_MERGED`, `RELEASED`, or `HUMAN_UI_ACCEPTANCE_PASS`. Those claims require separate live evidence. Refer to PR/Actions for verbose logs; do not paste unbounded outputs or secrets. Do not edit approved Issue body just to add an execution receipt.
 
 ## Verification scenarios
+
+### Historical regression cases
+
+- **FloatTabs #208 — bounded DEBUG-only test seam:** a proven test-only seam with no product-side effect can remain G1/L1 when its target is inside the authorized path envelope. An explicitly excluded/new source target is L2 until separately approved; “DEBUG-only” alone does not bypass the path boundary.
+- **FloatTabs #211 — human UI and overlapping writer:** exact-head CI, screenshot or machine browser checks do not turn a required real-user acceptance into PASS. Keep UI acceptance PENDING and release a Writer only after both current PR/merge evidence and local worktree, dirty/unique-work, and active-overlap facts are checked.
+- **Merloom #632 — RawSku overwrite guard:** a nonempty protected RawSku set cannot be overwritten, appended, or merged by generic autonomous authority. Treat the destructive data effect as a hard exclusion even when a proposed source diff is small.
+- **RemoteOrbit #51 — privileged HID helper:** signing, installing, launching or enabling a privileged Helper/Driver is G3 and outside the G1/G2 grant; missing signer, device or host proof pauses the affected WP, and the backend remains disabled.
+
+- **Same defect, repeated local fixes:** a second bounded correction for the same approved defect remains L1 when objective/risk/effects are unchanged; rerun only invalidated affected checks.
+- **Daily WP continuation:** after an active autonomy grant is truly verified, ordinary G1/G2 progress and recovery do not require per-WP Issue comments. In legacy mode, the current Issue receipt rules remain in force.
+- **Grant replay and self-grant:** changed Issue digest/revision, target ref, expiry or revocation invalidates the old grant; an actor label or matching human account is not proof of separate credentials.
 
 - Positive: rich verified plan approved at revision R, local reads R, completes approved WP, comments with PR evidence and UI=PENDING.
 - Negative: open Issue has detailed steps but unverified approver -> STOP.

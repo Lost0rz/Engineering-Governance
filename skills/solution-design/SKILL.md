@@ -15,6 +15,8 @@ Read [Design contract](references/design-contract.md).
 
 For ISSUE_CONTROL, resolve architecture, state ownership and required API/data decisions before proposing READY_TO_EXECUTE. Translate accepted decisions into grounded Work Packages with verified code targets, ordered steps, dependencies, error cases, tests and STOP conditions; unknown source locations remain UNKNOWN rather than fabricated. A local L2 pause returns unresolved decisions here, then to Project Governance for revised approval, not to the local small model for architectural guessing.
 
+Record governance risk G0–G3 as an authority/effects boundary and V0–V3 separately as the evidence needed to verify the design. A local snapshot, actor login, or proposed workflow is not host-proof for activating risk-scoped autonomy; unresolved host trust stays fail closed and returns to Project Governance.
+
 ## Core workflow
 
 1. State the unresolved design question and why it matters to the authorized objective.

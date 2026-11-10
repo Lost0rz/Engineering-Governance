@@ -13,6 +13,7 @@ import hashlib
 import json
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 CONTRACT = "EXECUTION_SPEC_V1"
@@ -31,6 +32,30 @@ WP_HEADER = re.compile(r"^#### WP\d{2,}[ \t]*[-—:].*$", re.M)
 APPROVAL_PREFIX = "SPEC_APPROVAL_V1"
 DELEGATED_APPROVAL_PREFIX = "SPEC_DELEGATED_APPROVAL_V1"
 REVOCATION_PREFIX = "SPEC_REVOCATION_V1"
+AUTONOMY_CONTRACT = "RISK_SCOPED_AUTONOMY_V1"
+AUTONOMY_FIELDS = {
+    "contract", "repository", "issue_number", "task_id", "spec_revision",
+    "spec_sha256", "target_ref", "target_commit_sha", "allowed_paths",
+    "requested_paths", "max_risk", "requested_risk", "allowed_effects",
+    "requested_effects", "hard_exclusions",
+    "issued_at", "expires_at", "revoked_at", "grant_event",
+}
+AUTONOMY_EVENT_FIELDS = {
+    "host", "event", "workflow_path", "workflow_ref", "workflow_sha",
+    "run_id", "run_attempt", "actor_login", "grant_credential_id",
+    "executor_credential_id", "workflow_source_readback",
+    "protection_readback", "credential_separation_readback", "revocation_readback",
+}
+AUTONOMY_HARD_EXCLUSIONS = {
+    "merge", "release", "production_deploy", "privileged_install",
+    "other_repository", "human_ui_acceptance", "protected_main_write",
+    "credential_write", "destructive_data_overwrite",
+}
+AUTONOMY_ALLOWED_EFFECTS = {
+    "repository_source_changes", "repository_tests", "same_task_ref_push",
+}
+AUTONOMY_SUPPORTED_EFFECTS = AUTONOMY_ALLOWED_EFFECTS | AUTONOMY_HARD_EXCLUSIONS
+GOVERNANCE_RISKS = ("G0", "G1", "G2", "G3")
 PLACEHOLDER = re.compile(r"(^|\n)[ \t]*(?:TODO|TBD|UNKNOWN|<[^>\n]+>|\.\.\.)[ \t]*(?:\n|$)", re.I)
 
 
@@ -168,6 +193,176 @@ def web_spec_authoring_opt_in(agents_text: str) -> bool:
     return _single_operative_opt_in(agents_text, "ISSUE_WEB_SPEC_AUTHORING")
 
 
+def risk_scoped_autonomy_opt_in(agents_text: str) -> bool:
+    """Recognize one operative opt-in; this does not prove accepted-main origin."""
+    return _single_operative_opt_in(agents_text, "RISK_SCOPED_AUTONOMY")
+
+
+def _autonomy_timestamp(value: object, field: str) -> datetime:
+    if not isinstance(value, str) or not value.endswith("Z"):
+        raise SpecError("INVALID_AUTONOMY_TIMESTAMP: " + field)
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError as exc:
+        raise SpecError("INVALID_AUTONOMY_TIMESTAMP: " + field) from exc
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise SpecError("INVALID_AUTONOMY_TIMESTAMP: " + field)
+    return parsed.astimezone(timezone.utc)
+
+
+def _safe_repo_path(value: object) -> bool:
+    if not isinstance(value, str) or not value or value.startswith("/") or "\\" in value:
+        return False
+    parts = value.split("/")
+    return (all(part not in ("", ".", "..") and part.casefold() != ".git" for part in parts)
+            and not any(ch in value for ch in "*?[]"))
+
+
+def _safe_target_ref(value: object) -> bool:
+    if not isinstance(value, str) or not re.fullmatch(r"refs/heads/[A-Za-z0-9._/-]+", value):
+        return False
+    name = value[len("refs/heads/"):]
+    parts = name.split("/")
+    return (bool(name) and not name.endswith(("/", ".")) and ".." not in name
+            and "@{" not in name
+            and all(part and not part.startswith(".") and not part.endswith(".lock")
+                    for part in parts))
+
+
+def _path_within_allowed(path: str, allowed_path: str) -> bool:
+    return path == allowed_path or path.startswith(allowed_path.rstrip("/") + "/")
+
+
+def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
+                             approvers: set[str], agents_text: str,
+                             target_ref: str, target_commit_sha: str,
+                             now: datetime | None = None) -> dict:
+    """Validate a proposed grant snapshot, but never treat local JSON as host authority.
+
+    This source version intentionally has no trusted GitHub host reader or credential
+    separation verifier. A structurally valid snapshot therefore remains inactive.
+    """
+    if not risk_scoped_autonomy_opt_in(agents_text):
+        raise SpecError("AUTONOMY_NOT_OPTED_IN")
+    if not approvers:
+        raise SpecError("NO_TRUSTED_APPROVERS")
+    if issue.get("state") not in ("OPEN", "open"):
+        raise SpecError("ISSUE_NOT_OPEN")
+    if not isinstance(authorization, dict) or set(authorization) != AUTONOMY_FIELDS:
+        raise SpecError("INVALID_AUTONOMY_FIELDS")
+
+    fields, current_digest = digest(str(issue.get("body") or ""), repo=repo,
+                                    number=issue.get("number"))
+    if (authorization.get("contract") != AUTONOMY_CONTRACT
+            or authorization.get("repository") != repo
+            or authorization.get("issue_number") != issue.get("number")
+            or authorization.get("task_id") != fields["TASK_ID"]
+            or authorization.get("spec_revision") != fields["SPEC_REVISION"]
+            or authorization.get("spec_sha256") != current_digest):
+        raise SpecError("AUTONOMY_TASK_BINDING_MISMATCH")
+    if not _safe_target_ref(target_ref):
+        raise SpecError("INVALID_AUTONOMY_TARGET_REF")
+    if authorization.get("target_ref") != target_ref:
+        raise SpecError("AUTONOMY_TARGET_MISMATCH")
+    if (not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", target_commit_sha)
+            or authorization.get("target_commit_sha") != target_commit_sha):
+        raise SpecError("AUTONOMY_COMMIT_MISMATCH")
+
+    paths = authorization.get("allowed_paths")
+    if not isinstance(paths, list) or not paths or not all(_safe_repo_path(path) for path in paths):
+        raise SpecError("INVALID_AUTONOMY_ALLOWED_PATHS")
+    requested_paths = authorization.get("requested_paths")
+    if (not isinstance(requested_paths, list) or not requested_paths
+            or not all(_safe_repo_path(path) for path in requested_paths)):
+        raise SpecError("INVALID_AUTONOMY_REQUESTED_PATHS")
+    if any(not any(_path_within_allowed(path, allowed) for allowed in paths)
+           for path in requested_paths):
+        raise SpecError("AUTONOMY_PATH_OUTSIDE_ENVELOPE")
+    max_risk = authorization.get("max_risk")
+    requested_risk = authorization.get("requested_risk")
+    if max_risk not in ("G1", "G2") or requested_risk not in GOVERNANCE_RISKS:
+        raise SpecError("UNSUPPORTED_AUTONOMY_RISK")
+    if GOVERNANCE_RISKS.index(requested_risk) > GOVERNANCE_RISKS.index(max_risk):
+        raise SpecError("AUTONOMY_RISK_OUTSIDE_ENVELOPE")
+
+    allowed_effects = authorization.get("allowed_effects")
+    requested_effects = authorization.get("requested_effects")
+    hard_exclusions = authorization.get("hard_exclusions")
+    if (not isinstance(allowed_effects, list) or not allowed_effects
+            or not all(isinstance(item, str) and item in AUTONOMY_SUPPORTED_EFFECTS
+                       for item in allowed_effects)
+            or not isinstance(requested_effects, list)
+            or not all(isinstance(item, str) and item in AUTONOMY_SUPPORTED_EFFECTS
+                       for item in requested_effects)
+            or not set(requested_effects).issubset(set(allowed_effects))):
+        raise SpecError("AUTONOMY_UNSUPPORTED_OR_OUTSIDE_EFFECT_ENVELOPE")
+    if (not isinstance(hard_exclusions, list)
+            or not all(isinstance(item, str) and item in AUTONOMY_SUPPORTED_EFFECTS
+                       for item in hard_exclusions)
+            or not AUTONOMY_HARD_EXCLUSIONS.issubset(set(hard_exclusions))):
+        raise SpecError("AUTONOMY_HARD_EXCLUSIONS_INCOMPLETE_OR_UNSUPPORTED")
+    if set(requested_effects).intersection(AUTONOMY_HARD_EXCLUSIONS):
+        raise SpecError("AUTONOMY_HARD_EXCLUDED_EFFECT")
+
+    current = now or datetime.now(timezone.utc)
+    if current.tzinfo is None or current.utcoffset() is None:
+        raise SpecError("INVALID_AUTONOMY_CLOCK")
+    current = current.astimezone(timezone.utc)
+    issued = _autonomy_timestamp(authorization.get("issued_at"), "issued_at")
+    expires = _autonomy_timestamp(authorization.get("expires_at"), "expires_at")
+    if issued > current:
+        raise SpecError("AUTONOMY_GRANT_NOT_YET_VALID")
+    if expires <= issued:
+        raise SpecError("INVALID_AUTONOMY_EXPIRY")
+    if expires <= current:
+        raise SpecError("AUTONOMY_GRANT_EXPIRED")
+    if authorization.get("revoked_at") is not None:
+        _autonomy_timestamp(authorization.get("revoked_at"), "revoked_at")
+        raise SpecError("AUTONOMY_GRANT_REVOKED")
+
+    event = authorization.get("grant_event")
+    if not isinstance(event, dict) or set(event) != AUTONOMY_EVENT_FIELDS:
+        raise SpecError("INVALID_AUTONOMY_HOST_EVENT_FIELDS")
+    if (event.get("host") != "github.com"
+            or event.get("event") != "workflow_dispatch"
+            or not isinstance(event.get("workflow_path"), str)
+            or not re.fullmatch(r"\.github/workflows/[A-Za-z0-9_.-]+\.ya?ml",
+                                event.get("workflow_path", ""))
+            or event.get("workflow_ref") != "refs/heads/main"
+            or not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})",
+                                str(event.get("workflow_sha") or ""))
+            or not re.fullmatch(r"[1-9][0-9]*", str(event.get("run_id") or ""))
+            or type(event.get("run_attempt")) is not int or event["run_attempt"] < 1):
+        raise SpecError("INVALID_AUTONOMY_HOST_EVENT")
+    if event.get("actor_login") not in approvers:
+        raise SpecError("UNTRUSTED_AUTONOMY_GRANT_ACTOR")
+    grant_credential = event.get("grant_credential_id")
+    executor_credential = event.get("executor_credential_id")
+    if (not isinstance(grant_credential, str) or not grant_credential
+            or not isinstance(executor_credential, str) or not executor_credential
+            or grant_credential == executor_credential):
+        raise SpecError("AUTONOMY_SELF_AUTHORIZATION")
+    if any(event.get(key) is not True for key in (
+            "workflow_source_readback", "protection_readback",
+            "credential_separation_readback", "revocation_readback")):
+        raise SpecError("AUTONOMY_HOST_TRUST_UNVERIFIED")
+
+    return {
+        "result": "STOP",
+        "reason": "UNVERIFIED_AUTHORIZATION_SOURCE",
+        "autonomy_status": "INACTIVE_UNVERIFIED_HOST_BOUNDARY",
+        "policy_shape": "PASS_LOCAL_SNAPSHOT_ONLY",
+        "execution_allowed": False,
+        "task_id": fields["TASK_ID"],
+        "spec_revision": fields["SPEC_REVISION"],
+        "spec_sha256": current_digest,
+        "target_ref": target_ref,
+        "target_commit_sha": target_commit_sha,
+        "max_risk": max_risk,
+        "requested_risk": requested_risk,
+    }
+
+
 def verify_approval(issue: dict, *, repo: str, approvers: set[str],
                     allow_delegated: bool = False) -> dict:
     """Verify exact-spec approval. Delegation is lower-assurance and opt-in only.
@@ -250,23 +445,29 @@ def verify_approval(issue: dict, *, repo: str, approvers: set[str],
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("mode", choices=("digest", "verify"))
-    p.add_argument("--issue-json", type=Path, required=True)
+    p.add_argument("mode", choices=("digest", "verify", "autonomy-verify"))
+    p.add_argument("--issue-json", type=Path)
+    p.add_argument("--authorization-json", type=Path,
+                   help="untrusted local grant snapshot for autonomy-verify")
+    p.add_argument("--target-ref", help="current local target ref for autonomy-verify")
+    p.add_argument("--target-commit", help="current exact target commit for autonomy-verify")
     p.add_argument("--repo", required=True)
     p.add_argument("--approvers", default="", help="comma-separated trusted GitHub logins from AGENTS.md")
     p.add_argument("--allow-delegated", action="store_true",
                    help="opt-in only: requires accepted AGENTS.md policy")
     p.add_argument("--agents-file", type=Path,
-                   help="accepted target AGENTS.md, mandatory for --allow-delegated")
+                   help="target AGENTS.md; local content alone cannot prove accepted-main origin")
     args = p.parse_args()
     try:
+        if args.issue_json is None:
+            raise SpecError("ISSUE_JSON_REQUIRED")
         issue = json.loads(args.issue_json.read_text(encoding="utf-8"))
         if args.mode == "digest":
             fields, h = digest(issue["body"], repo=args.repo, number=issue["number"])
             result = {"result": "STRUCTURE_PASS_APPROVAL_PENDING",
                       "task_id": fields["TASK_ID"], "spec_revision": fields["SPEC_REVISION"],
                       "spec_sha256": h}
-        else:
+        elif args.mode == "verify":
             if args.allow_delegated:
                 if args.agents_file is None:
                     raise SpecError("DELEGATION_AGENTS_FILE_REQUIRED")
@@ -277,8 +478,25 @@ def main() -> int:
                 approvers={x.strip() for x in args.approvers.split(",") if x.strip()},
                 allow_delegated=args.allow_delegated,
             )
+        else:
+            if args.authorization_json is None:
+                raise SpecError("AUTONOMY_AUTHORIZATION_JSON_REQUIRED")
+            if args.agents_file is None:
+                raise SpecError("AUTONOMY_AGENTS_FILE_REQUIRED")
+            if not args.target_ref:
+                raise SpecError("AUTONOMY_TARGET_REF_REQUIRED")
+            if not args.target_commit:
+                raise SpecError("AUTONOMY_TARGET_COMMIT_REQUIRED")
+            authorization = json.loads(args.authorization_json.read_text(encoding="utf-8"))
+            agents_text = args.agents_file.read_text(encoding="utf-8")
+            result = verify_autonomy_snapshot(
+                issue, authorization, repo=args.repo,
+                approvers={x.strip() for x in args.approvers.split(",") if x.strip()},
+                agents_text=agents_text, target_ref=args.target_ref,
+                target_commit_sha=args.target_commit,
+            )
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
-        return 0
+        return 2 if result.get("result") == "STOP" else 0
     except (SpecError, KeyError, TypeError, ValueError, OSError) as exc:
         print(json.dumps({"result": "STOP", "reason": str(exc)}, ensure_ascii=False))
         return 2

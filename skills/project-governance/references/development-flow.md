@@ -36,6 +36,8 @@ At the **next normal, user/project-authorized development task**, read fresh pro
 
 Compare the requested action with the active objective, in/out-of-scope boundary, allowed side effects, verification contract and STOP conditions.
 
+In `ISSUE_CONTROL`, retain the strict/direct or explicitly opted-in delegated approval path by default. Use risk-scoped autonomy only when the accepted `AGENTS.md` opt-in and independent live-host/credential-separation proof both verify; a local grant snapshot never changes that gate. Record governance authority risk G0–G3 separately from verification tier V0–V3 and deviation L0–L3.
+
 Keep the same task when the engineering purpose and authorization are materially unchanged across:
 
 - Web/local/session/machine continuation;
@@ -62,6 +64,8 @@ Return the verified route or unresolved gap to the calling flow. Navigation does
 ## 7. Resolve writer/code authority
 
 Before adding/changing a writer, backend, shared behavior, module boundary or materially new responsibility, apply `code-structure.md`. Reuse/extend/replace the canonical authority deliberately rather than creating parallel truth. File size alone is not a responsibility boundary.
+
+At handoff, Writer release requires both live GitHub PR/merge/path evidence and local overlapping-workspace/unique-work facts under `workspace-lifecycle.md`; a receipt or decision comment alone is not release evidence.
 
 If the responsibility boundary becomes unclear, return to Domain Navigation or Solution Design according to whether the uncertainty is location/authority or design choice.
 
@@ -90,6 +94,8 @@ Do not paste complete task/status/rules into the card by default. If the receive
 ## 10. Implement and verify proportionally
 
 Implement the smallest authorized outcome. Select the lightest safe `V0`–`V3` verification tier and a cadence appropriate to the construction/corrective/task/integration boundary.
+
+The verification tier covers evidence, not permission. A G1/G2 task can still require V3 security/concurrency review; neither a V0 check nor a small diff authorizes G3 effects.
 
 Implementation self-check, tests, lint, type-checks and focused verification remain part of the execution task unless an independent acceptance boundary is separately required.
 

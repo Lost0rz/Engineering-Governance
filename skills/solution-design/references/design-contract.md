@@ -65,6 +65,8 @@ DURABLE_DOCUMENT: <path/section | NONE>
 
 If `YES`, return to Project Governance before affected mutation.
 
+Name governance risk G0–G3 as the authority/effects envelope and V0–V3 separately as the verification evidence needed. A design proposal, accepted Issue text or local grant snapshot cannot activate risk-scoped autonomy without accepted repository opt-in and independent current-host/credential proof.
+
 ## Convergence
 
 Before leaving design verify that the selected option satisfies the original objective, preserves/deliberately changes canonical authority, respects material non-goals, has clear verification implications, and leaves unresolved decisions explicit.

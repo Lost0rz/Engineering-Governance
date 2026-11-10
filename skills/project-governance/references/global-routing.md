@@ -14,7 +14,7 @@ This contract governs behavior **after entry** and discoverability guidance, not
 
 - **ENTRY**: select available installed Governance from user intent and supported platform/project guidance, otherwise report unavailable; do not treat manifest keywords as a security boundary.
 - **ROUTING**: `project-governance` chooses FILE_CONTROL Task or ISSUE_CONTROL exact approved Issue, then only the bounded required `agent-handoff`, `evidence-audit`, `design`, etc. No nine-Skill startup loop or duplicate task authority.
-- **EXECUTION**: receiving Codex Desktop/local agent reopens accepted `AGENTS.md`, selected Task or exact Issue/approval, fresh PR/worktree/host facts, relevant Domain and Work Package; apply L0/L1/L2/L3 and write same-Issue receipts. The Card is a locator + delta, not a permission token or an alternative execution spec. Missing material authority/Skill/host facts blocks affected writes.
+- **EXECUTION**: receiving Codex Desktop/local agent reopens accepted `AGENTS.md`, selected Task or exact Issue/approval, fresh PR/worktree/host facts, relevant Domain and Work Package; apply L0/L1/L2/L3 and write the mode-appropriate receipts. Classify authority risk as G0–G3 separately from verification tier V0–V3. A future risk-scoped path is inactive unless accepted opt-in and independent current-host/credential-separation evidence both pass; otherwise keep legacy ISSUE_CONTROL. The Card is a locator + delta, not a permission token or an alternative execution spec. Missing material authority/Skill/host facts blocks affected writes.
 
 ## Routing surfaces
 

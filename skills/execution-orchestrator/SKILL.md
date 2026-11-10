@@ -69,6 +69,8 @@ A reviewer finding does not automatically authorize a new whole-task reviewer lo
 
 Each unit operates within an approved Issue Work Package; delegation and subagents do not expand authority. L2 PAUSE_AND_ASK blocks the affected WP and its dependencies, while strictly disjoint WPs may continue under the current approved plan. L3 TERMINATE preserves unique work without unapproved rollback. Comments/spec revisions never automatically create new physical worktrees, PRs, agents or model upgrades.
 
+Keep governance risk G0–G3 separate from verification tier V0–V3 and deviation L0–L3. Decomposition, a passing check, or a positive local grant snapshot cannot expand the selected Issue's authority; risk-scoped autonomy remains inactive without accepted policy opt-in and independently verified live-host/credential separation.
+
 ## Core flow
 
 1. Read the active task and the bounded accepted plan/design it references.

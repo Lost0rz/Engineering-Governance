@@ -1,6 +1,6 @@
 # Verification tiers, cadence, evidence identity, and independent audit
 
-Choose the lightest verification that safely establishes the requested result. **Verification effort follows change risk, not change count.** `V0`–`V3` is the single risk/scope dimension; cadence is separate.
+Choose the lightest verification that safely establishes the requested result. **Verification effort follows consequence and affected scope, not change count.** `V0`–`V3` classifies verification evidence; governance authorization risk is the separate `G0`–`G3` scale in `issue-execution-contract.md`. Cadence is a third, independent choice.
 
 ## Evidence identity
 
@@ -16,18 +16,20 @@ Required status checks, required reviews, conflicts/mergeability, merge queue, b
 
 Semantic equivalence does not make a current host gate pass. Re-read applicable host gates at the merge/release decision.
 
-## Risk/scope tiers
+## Verification tiers V0–V3
 
 - **V0 — documentation/control-only and non-product formatting:** diff/content/link/frontmatter/tree/scope consistency, provided no implementation-relevant rule/contract changed. Product UI layout change is not automatically V0.
 - **V1 — localized behavior:** focused tests plus directly relevant lint/type/runtime checks.
 - **V2 — domain/integration boundary:** focused tests, affected-domain evidence and required integration checks.
 - **V3 — broad/high-consequence/release:** broad relevant integration/build/runtime/security/concurrency/release evidence appropriate to the claim.
 
-The tier describes what risk must be covered, not how often every check runs.
+The tier describes what verification evidence must cover, not the authority to perform the work or how often every check runs. A bounded G1/G2 source change can still require V3 security/concurrency review; G3 remains outside a G1/G2 autonomy grant even if a narrow test is V1.
 
 ## Scope selection and invocation frequency
 
 Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
+
+Record the governance-risk envelope and verification tier separately when both matter: G0–G3 decides what authority/effects are permitted; V0–V3 decides what evidence is needed to support the result. Never infer a G level from test count or a V level from the size of the source diff.
 
 - **V0:** strictly control/document/projection-only changes use relevant static/tree/authority checks, not default product regression/build/packaging. A material normative rule or workflow/config/test contract change is *not* V0 solely because its file is Markdown/YAML.
 - **V1:** localized source behavior uses focused tests and directly related type/lint/runtime checks. No full suite or independent audit after every small edit.

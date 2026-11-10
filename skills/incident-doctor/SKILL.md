@@ -27,4 +27,6 @@ Use this Skill only when all three conditions hold: a real failure/unexplained u
 7. If the active task does not authorize the behavior change/side effects, return to Project Governance for reconciliation before mutation.
 8. After an authorized fix, use risk-proportional regression verification and retire/promote diagnostic probes explicitly.
 
+Use Project Governance's G0–G3 scale for authority risk and its V0–V3 scale for verification evidence; do not infer one from the other. A probe or local grant snapshot cannot activate risk-scoped autonomy without accepted policy opt-in and independent host/credential verification.
+
 Incident Doctor does not create a diagnostic platform, permanent observability expansion, broad redesign authority, automatic remediation, or a universal rule that every bug must undergo root-cause ceremony.

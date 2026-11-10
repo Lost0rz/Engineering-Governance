@@ -190,6 +190,10 @@ Remote repository evidence can establish PR, remote branch/ref, commit, merge, c
 
 A remote/Web auditor may determine the expected lifecycle outcome; the local executor establishes local workspace/unique-work facts. Claim a fully clean closeout only when the evidence covers both sides needed by that claim.
 
+### Writer release at handoff
+
+A merged predecessor PR, a GitHub Issue decision/receipt comment, or a prior agent's “released” statement is not by itself a Writer release. Before reusing an overlapping semantic surface, read current PR/merge/head and changed-path evidence from GitHub, then verify the relevant local branches/worktrees, dirty and untracked state, local-only commits, unique work, and active overlapping writer ownership. A comment may document evidence but is never the sole release gate. If the Writer boundary is unresolved, pause only the affected overlapping work; continue independently safe WPs. Inspect the task-relevant workspace set, not every historical Issue or PR in the repository.
+
 ## Handoff evidence
 
 Keep closeout output concise. When workspace lifecycle is material, report the verified equivalents of the workspace fields below. For every final successful **state-changing** governed handoff, also report the control-alignment fields even when some workspace fields are not applicable.

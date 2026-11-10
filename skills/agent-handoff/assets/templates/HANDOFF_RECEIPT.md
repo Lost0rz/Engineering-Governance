@@ -1,4 +1,4 @@
-<!-- ISSUE_CONTROL: post meaningful final/PAUSE/TERMINATE execution receipts to the selected GitHub Issue using EXECUTION_RECEIPT_V1, with TASK_ID, SPEC_REVISION and RECEIPT_DELIVERY. Do not write a parallel Task/Status control file. -->
+<!-- Legacy/default ISSUE_CONTROL: post meaningful final/PAUSE/TERMINATE execution receipts to the selected GitHub Issue using EXECUTION_RECEIPT_V1, with TASK_ID, SPEC_REVISION and RECEIPT_DELIVERY. In a separately accepted and host-verified risk-scoped G1/G2 run, routine progress/correction/resume comments are optional. Do not write a parallel Task/Status control file. -->
 
 # Handoff Receipt
 
@@ -43,6 +43,9 @@ START_IDENTITY: <identity>
 FINAL_IDENTITY: <identity>
 CHANGED_PATHS: <paths | NONE>
 VERIFICATION: <checks + results>
+GOVERNANCE_RISK: <G0-G3 | NOT_CLASSIFIED>
+VERIFICATION_TIER: <V0-V3 | NOT_APPLICABLE>
+AUTHORITY_SOURCE: <FILE_CONTROL | LEGACY_ISSUE_CONTROL | VERIFIED_AUTONOMY_GRANT | NONE>
 LIFECYCLE: <branch/PR/workspace effects | NONE>
 UNRESOLVED: <NONE | evidence/blocker>
 CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION | NOT_APPLICABLE>
