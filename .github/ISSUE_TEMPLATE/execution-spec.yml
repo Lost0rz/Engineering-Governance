@@ -127,8 +127,8 @@ body:
     id: verification_plan
     attributes:
       label: VERIFICATION_PLAN
-      description: "Risk-tier, focused tests and final host gate as applicable"
-      placeholder: "V2: affected checks, exact-head PR host gate"
+      description: "State the governance authority/effects ceiling G0-G3 separately from verification evidence tier V0-V3; list focused checks, cadence and live host gates"
+      placeholder: "G2 authority ceiling; V3 independent security/concurrency evidence; exact-head PR host gate"
     validations:
       required: true
   - type: textarea
@@ -143,8 +143,8 @@ body:
     id: deviation_policy
     attributes:
       label: DEVIATION_POLICY
-      description: "L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE with task limits"
-      placeholder: "L0 harmless locator; L1 scoped type/test fix; L2 new API; L3 unsafe write"
+      description: "L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE within the approved objective/risk/effect envelope; new autonomy never activates from a comment or local snapshot"
+      placeholder: "L0 equivalent locator; L1 same-scope fix; L2 permission or target expansion; L3 revoked grant or destructive write"
     validations:
       required: true
   - type: textarea

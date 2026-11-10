@@ -35,7 +35,7 @@ A remote-only session can assess PR/ref churn and suggest local follow-up, but i
 ## Core invariants
 
 1. **No unclassified task-relevant workspace.** A workspace that may affect the active task or lifecycle decision must have a verified relationship to a task/branch/ref and a known current disposition. Routine task startup does not require classifying unrelated historical workspaces unless they create ambiguity, collision, unique-work risk, lifecycle cleanup work, or are explicitly included in a legacy-reconciliation task. Projects may use their own lifecycle names; this contract does not impose a universal status enum.
-2. **No overlapping successor writer while a predecessor is unresolved or write-capable.** Do not create or select a successor writer workspace when an existing predecessor can write the same overlapping fact/state/policy/behavior authority and is unresolved, has unknown unique work, lacks a safe disposition, or remains able to resume writes under its current authorization. Capability or Domain labels are routing hints, not automatic mutual-exclusion boundaries: disjoint writers inside one capability may coexist when their write authorities do not overlap and repository rules allow it.
+2. **Prevent actual conflicting writes.** A retained branch or prior writer's theoretical ability to resume is not by itself a reason to block new work. When evidence shows concurrent overlapping modifications, unsafely shared local files, unresolved ownership or unique uncommitted work that could be lost, reconcile only the affected surfaces before conflicting mutation. Independent work and normal handoff continue. Comments, PR history and local evidence are all useful; none automatically creates a new Writer-release approval.
 3. **Lifecycle events are not terminal by name alone.** Merge, release, deployment, acceptance, abandonment, supersession, rollback, or another event changes workspace-closeout obligations only when project/task controls define that event as terminal for the task/phase or when it otherwise materially changes authorization. A remote merge alone does not universally prove that the task is terminal, and a terminal authorization state still does not prove physical/local workspace closeout.
 4. **Unknown or unique work is never cleanup fuel.** Preserve staged, unstaged, untracked, and local-only work until its ownership and disposition are verified. Do not use reset, stash, overwrite, forced branch movement, or forced worktree deletion merely to reach a clean-looking baseline.
 5. **Retention is explicit, not accidental.** A non-terminal workspace may remain for review, PR, QA, runtime acceptance, recovery, or another verified reason, but its owner, reason, release/next-event condition, and write capability must be known.
@@ -100,11 +100,11 @@ Perform a bounded workspace check for the repository and active scope. Establish
 - selected or proposed task workspace, local/remote branch state where relevant, worktree registration/path identity, HEAD, and working-tree state;
 - any existing workspace whose writes overlap the same affected fact/state/policy/behavior authority or that otherwise materially conflicts with the task;
 - whether those relevant workspaces are active, intentionally retained, terminal, uniquely dirty/local-only, or unresolved;
-- for any retained predecessor whose authority overlaps, whether it can still resume writes without a new authorization boundary.
+- when a specific collision is plausible, whether an overlapping execution is actually active or unique work is at risk.
 
 Expand beyond that bounded set only when ambiguity, unique work, a collision, lifecycle cleanup, or the task decision materially requires it.
 
-If a relevant predecessor writer is unresolved, its unique-work state is unknown, or it can still resume writes under its current authorization for the overlapping authority, stop creation/selection of the conflicting successor writer and reconcile the predecessor first. A retained predecessor stops blocking only when its write role has a verified safe boundary, such as terminal closeout, explicit supersession, explicit freeze/read-only disposition, or another project-defined state in which it cannot write that authority again without new authorization.
+If specific overlapping work is active or unique uncommitted changes might be overwritten, pause the **conflicting write only** until the affected files/workspace are safe. An inactive historical branch, retained review workspace or prior comment is not a standing global writer mutex. Do not require formal supersession just to resume non-overlapping development.
 
 A stale-looking path, old branch name, detached checkout, or merged remote PR alone is not enough evidence to delete, bypass, or treat a local workspace as non-writing.
 
@@ -138,7 +138,7 @@ A safe closeout establishes, in order:
 7. repository/worktree metadata pruning or equivalent maintenance when applicable;
 8. post-closeout verification of the remaining relevant workspace set.
 
-Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made. Before the overall state-changing execution claims a final successful handoff, also complete the Control Alignment Gate from [Control plane roles, updates, and lifecycle reconciliation](control-plane.md); workspace closeout and control alignment are separate required claims.
+Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made. For FILE_CONTROL, reconcile task/status controls only when a material control/terminal state changed under [Control plane roles](control-plane.md). ISSUE_CONTROL does not inherit the FILE_CONTROL gate. Neither a normal Handoff Card nor a merge observation alone mandates workspace cleanup.
 
 ## Control-only main advance after closeout
 
@@ -155,7 +155,7 @@ Any source/config/test/workflow/schema/migration/dependency/runtime-relevant cha
 
 ## Explicit retention
 
-A retained workspace is valid when all of the following are known:
+A retained workspace needs enough identity and unique-work evidence for its actual disposition; collect only relevant facts:
 
 - owning task or work item;
 - workspace/ref identity;
@@ -164,7 +164,7 @@ A retained workspace is valid when all of the following are known:
 - whether unique local work exists and how it is protected;
 - whether it remains write-capable for any authority that overlaps another current/proposed writer.
 
-A vague “might be useful later” is not a retention condition. If a retained predecessor can still resume writes under its current authorization, treat it as a writer for overlap checks. If it must coexist with a successor, first establish a verified non-writing boundary such as explicit freeze/read-only disposition, supersession, or another project-defined rule that prevents both workspaces from writing the same authority concurrently.
+A vague “might be useful later” does not prove that cleanup is safe or necessary. A retained predecessor's theoretical ability to resume is not itself a writer collision; if there is an actual overlapping write risk, protect unique work and establish a safe boundary only for the conflicting operation.
 
 If the task is superseded, determine whether any unique work must be transferred/preserved; then close or explicitly freeze the superseded workspace when safe.
 
@@ -190,39 +190,31 @@ Remote repository evidence can establish PR, remote branch/ref, commit, merge, c
 
 A remote/Web auditor may determine the expected lifecycle outcome; the local executor establishes local workspace/unique-work facts. Claim a fully clean closeout only when the evidence covers both sides needed by that claim.
 
+Issue discussion, PR history and local observations are complementary evidence; select only facts relevant to the current decision. Ordinary agent handoff does not introduce a separate Writer-release approval/checklist. Investigate actual writer overlap or unique-work risk when indicated, not by default.
+
 ## Handoff evidence
 
-Keep closeout output concise. When workspace lifecycle is material, report the verified equivalents of the workspace fields below. For every final successful **state-changing** governed handoff, also report the control-alignment fields even when some workspace fields are not applicable.
+Report only lifecycle facts material to an actual workspace closeout or conflicting write. FILE_CONTROL alignment is a separate, conditional task/status check when the owning control state materially changes; ordinary handoff needs no full workspace or alignment receipt.
 
 ```text
-TASK_ID: <id>
-TASK_LIFECYCLE: <current/terminal state>
-WORKSPACE_IDENTITY: <path or other stable identity, ref, HEAD>
-WORKSPACE_DISPOSITION: <removed | retained-write-capable | retained-frozen | preserved | unresolved | project equivalent>
-WRITE_AUTHORITY: <overlapping authority or not applicable>
-UNIQUE_WORK: <none | preserved with evidence | unresolved>
-LOCAL_BRANCH_DISPOSITION: <removed | retained | not applicable | unresolved>
-REMOTE_BRANCH_DISPOSITION: <removed | retained | not applicable | unresolved>
-RETAIN_UNTIL: <event/decision, if retained>
-UNCLASSIFIED_RELEVANT_WORKSPACES: <count or unresolved>
-RELATED_DOCUMENT: <path | NONE>
-DOCUMENT_ALIGNMENT: <UPDATED | UNCHANGED | NOT_APPLICABLE>
-CURRENT_STATUS_RECONCILIATION: <UPDATED | UNCHANGED>
-CURRENT_TASK_RECONCILIATION: <UPDATED | UNCHANGED>
-CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION>
-FINAL_STATE: <project-specific result>
+TASK_ID: <current task>
+WORKSPACE_IDENTITY: <relevant ref/path/head>
+DISPOSITION: <retained | preserved | removed | unresolved>
+UNIQUE_WORK: <preserved evidence | none | unresolved>
+WRITE_CONFLICT: <actual overlapping risk or none>
+NEXT_ACTION: <only when work remains>
 ```
 
-Do not require workspace fields that the project does not use. The purpose of the workspace fields is to make the next task able to distinguish a clean baseline from retained, write-capable, frozen/read-only, or unresolved lifecycle state without reconstructing history. The control-alignment fields serve a different purpose: they prove the executor checked whether durable planning/status/task semantics still match reality rather than silently omitting that check.
+Optional local/remote branch and retention details follow the owning project's real workspace needs. Do not turn these example fields into a universal release/cleanup gate. For FILE_CONTROL, report an alignment result only when the event-triggered control-plane contract actually requires one; ISSUE_CONTROL never inherits Task/Status alignment.
 
-Strict read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` with stale/match detail and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY` instead of modifying controls.
+When FILE_CONTROL alignment is applicable, read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY` with relevant evidence; it must not silently modify controls.
 
 ## Stop conditions
 
 Stop destructive or conflicting state-changing work when any of these materially affects the task:
 
 - a task-relevant workspace cannot be tied to a verified repository/task/ref identity;
-- a predecessor can write an overlapping fact/state/policy/behavior authority and remains unresolved or write-capable under its current authorization;
+- an actually active overlapping writer or unresolved unique work would be overwritten by the proposed operation;
 - staged, unstaged, untracked, or local-only work has unknown ownership/disposition;
 - the lifecycle event's effect on authorization or the retention condition cannot be verified;
 - the storage authority or applicable project-local durable-path override is unresolved when the task must choose a durable project-controlled location;

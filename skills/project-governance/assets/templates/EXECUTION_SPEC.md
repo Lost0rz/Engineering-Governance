@@ -59,7 +59,7 @@ Done: <checkable done criterion>
 
 ### VERIFICATION_PLAN
 
-<Risk-tier, focused tests and final host gate as applicable>
+<Governance authority/effects ceiling G0-G3, separately from verification tier V0-V3; list focused checks, cadence, and final live host gates as applicable>
 
 ### HUMAN_UI_ACCEPTANCE
 
@@ -67,7 +67,7 @@ PENDING
 
 ### DEVIATION_POLICY
 
-<L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE with task limits>
+<L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE within the fixed objective/risk/effect envelope. Routine G1/G2 comments are optional only after accepted RISK_SCOPED_AUTONOMY opt-in and independent host-grant verification; legacy ISSUE_CONTROL rules remain the default.>
 
 ### STOP_AND_SAFETY
 

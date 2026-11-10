@@ -4,7 +4,7 @@ Engineering-Governance is a source repository for reusable AI engineering Skills
 
 ## Capability model
 
-v0.6.8 has nine top-level Skills:
+The current source defines nine top-level Skills:
 
 - **Project Governance** — normal engineering entry; task/control authority, lifecycle, writers/workspaces, verification and closeout.
 - **Project Profile** — creates/refreshes a compact derived project-context/index from verified authorities; repository/project-managed mutation still requires compatible task authority.
@@ -34,7 +34,7 @@ This lets the design capability evolve without installing multiple overlapping d
 - Project Profile — concise descriptive context + pointers to authorities; one current projection surface or explicit primary + mirror;
 - Domain/navigation authority — detailed semantic ownership/source/test/runtime route;
 - durable planning — long-lived design/rationale/work packages when justified;
-- active task control, selected explicitly by `AGENTS.md`: FILE_CONTROL uses legacy Task/Status files; ISSUE_CONTROL uses an approved GitHub Issue/spec revision with comments for decisions and execution receipts;
+- active task control, selected explicitly by `AGENTS.md`: FILE_CONTROL uses legacy Task/Status files; legacy/default ISSUE_CONTROL uses an approved GitHub Issue/spec revision and meaningful decision/final comments. A separately opted-in, independently host-verified G1/G2 autonomy path is a **candidate** and remains inactive until its trust boundary is proven;
 - implementation authority — canonical source/schema/config/workflow/persisted contract/state owner for the implementation class;
 - observed evidence — CI/test results, PR/host state, runtime/review/audit/probe observations.
 
@@ -44,7 +44,7 @@ A Profile or Domain Map is a derived projection. If it conflicts with its author
 
 Ordinary software/project work enters `project-governance`. Use narrower capabilities only when their semantic trigger applies. `solution-design` handles engineering architecture/state ownership; `design` handles bounded UI/UX/frontend visual direction and execution. They may compose under one Project Governance task without becoming parallel task authorities.
 
-In ISSUE_CONTROL, high-reasoning design and review creates a verified detailed `EXECUTION_SPEC_V1`, local Codex reads the approved revision via `gh`, executes bounded work packages and posts `EXECUTION_RECEIPT_V1` or pause/termination comments; PR/CI remain code evidence. See `skills/project-governance/references/issue-control.md`, `issue-execution-contract.md` and `issue-control-migration.md`.
+In legacy/default ISSUE_CONTROL, the selected verified 19-field `EXECUTION_SPEC_V1` and its direct or opted-in delegated exact-revision GitHub approval authorize bounded implementation; meaningful PAUSE/TERMINATE/final Issue receipts are posted while PR/CI remain separate evidence. The proposed G1/G2 risk-scoped path accepts a simpler 8-field `AUTONOMY_SCOPE_V1` policy-only input but still requires independent GitHub host authorization and credential separation before routine Issue comments or exact-digest approval comments can be omitted. The current source deliberately fails closed on that path. An ordinary merge or package release is a separate host-governed action, not automatically G3 by name. See `skills/project-governance/references/issue-control.md`, `issue-execution-contract.md` and `issue-control-migration.md`.
 
 Changing agent/session/machine/context does not create a new task. Same-purpose continuation keeps the task and, when safe, the current PR/workspace. Handoffs transport authority references + fresh delta; they do not restate a second task contract.
 
@@ -54,7 +54,7 @@ Concrete Sub Agent model/reasoning, parallel capacity, delegation limits, tools,
 
 ## Verification
 
-Verification follows risk (`V0`–`V3`) and evidence identity. Semantic evidence and live repository-host gates are separate claims. Missing checks are not PASS. Installed/runtime acceptance is performed only after a frozen source candidate exists.
+Authorization risk (`G0`–`G3`), verification evidence (`V0`–`V3`) and execution deviation (`L0`–`L3`) are distinct. Verification follows affected consequence and evidence identity. Semantic evidence and live repository-host gates are separate claims. Missing checks are not PASS. Installed/runtime acceptance is performed only after a frozen source candidate exists.
 
 ## Maintainer references
 
@@ -67,4 +67,4 @@ Verification follows risk (`V0`–`V3`) and evidence identity. Semantic evidence
 
 ### Issue Control local preflight
 
-For a repository that **explicitly** adopted ISSUE_CONTROL, read the complete fresh Issue using `gh issue view <number> -R owner/repo --json number,body,state,comments > issue.json`. The lightweight bundled validator at `skills/project-governance/scripts/issue-spec-check.py` supports `digest` (structural spec + SHA256) and `verify --approvers <trusted-github-logins>` (authenticated matching SPEC_APPROVAL_V1 comment). Neither check proves actual code targets or grants writer permission by itself. Use `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v` for the bounded contract scenarios. An approved Issue exists only after the authorized actor explicitly posts the exact digest approval. Progress, L2 resolution and final receipts are comments, not Git file updates.
+For a repository that **explicitly** adopted ISSUE_CONTROL, read the complete fresh Issue using `gh issue view <number> -R owner/repo --json number,body,state,comments > issue.json`. The lightweight bundled validator at `skills/project-governance/scripts/issue-spec-check.py` supports `digest` (structural spec + SHA256), legacy `verify --approvers <trusted-github-logins>` (authenticated matching SPEC_APPROVAL_V1, or explicit delegated mode), and a separate `autonomy-verify` candidate that always returns STOP without trusted host and credential-separation evidence. None of these checks proves source ownership or replaces real local writer safety. Use `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v` for the bounded contract scenarios. Legacy/default Issue execution still requires the matching authorized exact-digest approval; in a future independently accepted active autonomy mode, a host grant may replace only that approval-comment prerequisite for in-envelope G1/G2 work. Evidence remains recoverable from the appropriate Issue/PR/commit/CI/receipt surfaces, not Git status-only commits.

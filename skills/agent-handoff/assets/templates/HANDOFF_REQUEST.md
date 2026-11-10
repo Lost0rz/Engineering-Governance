@@ -2,33 +2,26 @@
 
 A Card is transport, not a second task contract. Reference current authority and carry only transfer-specific delta.
 
-## Required core
+## Minimum handoff
 
 ```text
-CARD_ID: <id>
-TASK_ID: <same authorized task unless Project Governance changed the task boundary>
+TASK_ID: <selected task>
 MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
-CAPABILITY: <Engineering Governance Skill | NONE>
-TARGET: <immediate requested outcome / object>
-AUTHORITY: <FILE_CONTROL Task or ISSUE_CONTROL approved Issue URL/revision/provenance, plus relevant project/design pointers>
-DELTA: <fresh transfer-specific delta | NONE>
-BOUNDARY: <allowed read/write/action boundary>
-RETURN_CONTRACT: <actual evidence/result required for the next decision; do not predeclare success>
+TARGET: <bounded outcome>
+AUTHORITY: <accepted Task or selected Issue/revision/approval or independently verified grant>
+BOUNDARY: <actual write/read/STOP limit>
+DELTA: <fresh context or NONE>
+RETURN_CONTRACT: <decisive evidence/result>
 ```
 
-`CAPABILITY` selects the bounded Skill/capability the receiver should use. `MODE` classifies receiver action/side effects. A mode name never replaces Skill routing or grants mutation authority.
+Add `CAPABILITY`, `CARD_ID`, `ISSUE`, `SPEC_REVISION`, host provenance and UI fields only when relevant. Existing nine-field Cards are compatible; an ordinary continuation does not require creating a Card. The Card remains transport, never source authority.
+## Legacy/default ISSUE_CONTROL compact example (requires real verified selectors)
 
-Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` are not `MODE` values. Put them in `PURPOSE` or `DELTA` when useful.
-
-## ISSUE_CONTROL compact example (requires real verified selectors)
-
-The sender populates **actual** Issue identity, revision, SHA256 and authenticated approval comment; these labels are *illustrative only*. Do not output placeholders as an executable Card.
+This example applies to **legacy/default** ISSUE_CONTROL. The sender populates **actual** Issue identity, revision, SHA256 and authenticated approval comment. The separately host-verified active autonomy route below uses a different authorization basis and does not inherit the approval-comment requirement. Labels are *illustrative only*; never output placeholders as an executable Card.
 
 ```text
-CARD_ID: <current-card-id>
 TASK_ID: <same approved Issue TASK_ID>
 MODE: EXECUTE
-CAPABILITY: project-governance
 TARGET: <owner/repo and concrete bounded outcome>
 ISSUE: <owner/repo#number>
 SPEC_REVISION: <approved revision>
@@ -38,9 +31,26 @@ BOUNDARY: revalidate selected Issue/current approval, reuse safe workspace, exec
 RETURN_CONTRACT: observed WP/PR/CI results + same-Issue EXECUTION_RECEIPT_V1 URL, human UI gate separate
 ```
 
-For an **audit handoff**, use the same nine core fields with `MODE: AUDIT`, `CAPABILITY: evidence-audit` when a formal verdict is intended, observed PR/ref, evidence/claim and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`. An audit Card is not an audit verdict.
+For an **audit handoff**, use the same minimum context fields with `MODE: AUDIT`, `CAPABILITY: evidence-audit` when a formal verdict is intended, observed PR/ref, evidence/claim and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`. An audit Card is not an audit verdict.
 
 When no valid Issue spec/approval exists, return a non-executable design/review result and the blocking Issue URL; do not manufacture an EXECUTE Card or clone the approved plan into chat.
+
+## Optional active autonomy reference
+
+Include these fields only after the accepted target `AGENTS.md` opt-in and independent live host/credential-separation proof both pass. They identify an already verified grant; they are not evidence by themselves.
+
+```text
+AUTONOMY_GRANT_REF: <trusted host run URL or run ID>
+GRANT_RUN_ID / GRANT_ATTEMPT: <exact current run identity>
+WORKFLOW_REF / WORKFLOW_SHA: <protected source identity re-read from host>
+ISSUE_SNAPSHOT: <repo#issue + task ID + revision + digest>
+TARGET_REF / TARGET_COMMIT: <exact authorized branch/ref and commit SHA>
+REQUESTED_PATHS / REQUESTED_EFFECTS: <within the host-verified grant envelope>
+MAX_GOVERNANCE_RISK: G1 | G2
+GRANT_EXPIRY / REVOCATION_CHECK: <host-read values and observation time>
+```
+
+For this active mode, use the host grant as the single `APPROVAL_BASIS`; it replaces the approval-comment prerequisite. Do not combine legacy comment approval and the host grant implicitly. If any value is unavailable or only self-asserted in a local snapshot, remain on the legacy Issue authorization path or return STOP.
 
 ## Conditional fields
 
@@ -64,23 +74,9 @@ Do not duplicate objective, scope, acceptance, STOP conditions or workspace poli
 
 A sender-observed SHA/ref belongs in `OBSERVED_BASIS` by default. Use `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or another equality-lock field only when the referenced owning authority explicitly defines that lock.
 
-## Mandatory pre-return gate
+## Card integrity
 
-Before returning this Card, revise the draft until every item is YES:
-
-```text
-HANDOFF_ROUTE_APPLIED: YES
-REQUIRED_CORE_COMPLETE: YES
-MODE_VALID: YES
-TASK_AUTHORITY_PRESERVED: YES
-AUTHORITY_REFERENCED_NOT_DUPLICATED: YES
-DELTA_IS_TRANSFER_SPECIFIC: YES
-BOUNDARY_DOES_NOT_EXPAND_AUTHORITY: YES
-OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES
-RETURN_CONTRACT_OUTCOME_NEUTRAL: YES
-```
-
-Do not return a known-noncompliant draft plus commentary. Correct it before return.
+Use `agent-handoff/references/handoff-contract.md` for the actual transport contract. Keep task identity, observed authority, bounded action and return evidence accurate; do not output checklist fields or use a Card to grant permission.
 
 ## Mode hints
 

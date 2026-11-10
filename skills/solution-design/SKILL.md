@@ -7,13 +7,15 @@ description: Use when authorized engineering work has materially ambiguous requi
 
 Use this Skill only when implementation would otherwise require material guessing about what should be built or where responsibility should live. Clear bounded changes stay in Project Governance.
 
-Solution Design does not authorize implementation. the FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision remains the selected active authorization and project semantic authorities remain product/domain truth.
+Solution Design does not authorize implementation. FILE_CONTROL Task or ISSUE_CONTROL selected approved spec / independently host-verified active grant remains the relevant authority; target-project product/domain truth stays with the owning project.
 
 Read [Design contract](references/design-contract.md).
 
 ## Detailed Issue design responsibility
 
-For ISSUE_CONTROL, resolve architecture, state ownership and required API/data decisions before proposing READY_TO_EXECUTE. Translate accepted decisions into grounded Work Packages with verified code targets, ordered steps, dependencies, error cases, tests and STOP conditions; unknown source locations remain UNKNOWN rather than fabricated. A local L2 pause returns unresolved decisions here, then to Project Governance for revised approval, not to the local small model for architectural guessing.
+For complex legacy ISSUE_CONTROL specs, ground necessary WPs in verified code targets, dependencies, risks and tests before declaring readiness. For a future **independently host-verified G1/G2 compact scope**, resolve implementation choices within the selected task/grant envelope without forcing a WP list or new user approval. An L2 uncertainty triggers bounded design resolution, not automatically a spec revision: return to Project Governance for reassessment **only when** task scope, effects, security or permission authority materially changes. Do not fabricate missing API contracts or treat a design conclusion as a new grant.
+
+Record governance risk G0–G3 as an authority/effects boundary and V0–V3 separately as the evidence needed to verify the design. A local snapshot, actor login, or proposed workflow is not host-proof for activating risk-scoped autonomy; unresolved host trust stays fail closed and returns to Project Governance.
 
 ## Core workflow
 

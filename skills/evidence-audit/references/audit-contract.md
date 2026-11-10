@@ -23,6 +23,8 @@ The required level follows user/task/risk requirements; do not force expensive i
 
 Every material finding names supporting evidence: requirement/authority, path/symbol/diff, test result, CI run/job, PR/host gate, release/provenance record, artifact hash or runtime observation.
 
+Classify governance authority risk G0–G3 separately from verification evidence tier V0–V3 and audit independence. A valid-looking local risk-grant snapshot cannot prove live host authority or credential separation; missing required host evidence remains UNKNOWN.
+
 Do not substitute confidence, prior summaries or matching names for underlying evidence when available.
 
 ## 4. Common identity and coverage envelope

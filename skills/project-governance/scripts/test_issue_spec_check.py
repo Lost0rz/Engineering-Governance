@@ -3,6 +3,7 @@
 import copy
 import importlib.util
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 MODULE = Path(__file__).with_name("issue-spec-check.py")
@@ -81,6 +82,55 @@ def delegate(obj, actor="Lost0rz", hash_value=None, summary="I approve this exac
         ]),
     })
     return obj
+
+
+AUTONOMY_AGENTS = (
+    "CONTROL_MODE: ISSUE_CONTROL\n"
+    "ISSUE_APPROVERS: Lost0rz\n"
+    "RISK_SCOPED_AUTONOMY: ENABLED\n"
+)
+
+
+def autonomy_snapshot(obj=None):
+    selected_issue = obj or issue()
+    _, spec_sha = mod.digest(selected_issue["body"], repo=REPO,
+                             number=selected_issue["number"])
+    return {
+        "contract": "RISK_SCOPED_AUTONOMY_V1",
+        "repository": REPO,
+        "issue_number": selected_issue["number"],
+        "task_id": "EG-093",
+        "spec_revision": "2",
+        "spec_sha256": spec_sha,
+        "target_ref": "refs/heads/codex/eg-093",
+        "target_commit_sha": "a" * 40,
+        "allowed_paths": ["skills/project-governance"],
+        "requested_paths": ["skills/project-governance/scripts/issue-spec-check.py"],
+        "max_risk": "G2",
+        "requested_risk": "G1",
+        "allowed_effects": ["repository_source_changes", "repository_tests", "same_task_ref_push"],
+        "requested_effects": ["repository_source_changes", "repository_tests"],
+        "hard_exclusions": sorted(mod.AUTONOMY_HARD_EXCLUSIONS),
+        "issued_at": "2026-11-10T00:00:00Z",
+        "expires_at": "2026-11-11T00:00:00Z",
+        "revoked_at": None,
+        "grant_event": {
+            "host": "github.com",
+            "event": "workflow_dispatch",
+            "workflow_path": ".github/workflows/task-authorization.yml",
+            "workflow_ref": "refs/heads/main",
+            "workflow_sha": "a" * 40,
+            "run_id": "123456789",
+            "run_attempt": 1,
+            "actor_login": "Lost0rz",
+            "grant_credential_id": "independent-grant-credential",
+            "executor_credential_id": "executor-connector-credential",
+            "workflow_source_readback": True,
+            "protection_readback": True,
+            "credential_separation_readback": True,
+            "revocation_readback": True,
+        },
+    }
 
 
 class IssueContractTests(unittest.TestCase):
@@ -329,6 +379,262 @@ class IssueContractTests(unittest.TestCase):
             "ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
             mod.verify_approval(issue(), repo=REPO, approvers={"Lost0rz"})
+
+    def test_autonomy_opt_in_requires_one_operative_declaration(self):
+        self.assertTrue(mod.risk_scoped_autonomy_opt_in(AUTONOMY_AGENTS))
+        self.assertFalse(mod.risk_scoped_autonomy_opt_in(
+            "```text\nRISK_SCOPED_AUTONOMY: ENABLED\n```\n"))
+        self.assertFalse(mod.risk_scoped_autonomy_opt_in(
+            "RISK_SCOPED_AUTONOMY: ENABLED\nRISK_SCOPED_AUTONOMY: DISABLED\n"))
+
+    def test_valid_g1_snapshot_is_policy_only_and_remains_fail_closed(self):
+        result = mod.verify_autonomy_snapshot(
+            issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
+            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            now=datetime(2026, 11, 10, tzinfo=timezone.utc),
+        )
+        self.assertEqual(result["policy_shape"], "PASS_LOCAL_SNAPSHOT_ONLY")
+        self.assertEqual(result["result"], "STOP")
+        self.assertEqual(result["reason"], "UNVERIFIED_AUTHORIZATION_SOURCE")
+        self.assertEqual(result["autonomy_status"], "INACTIVE_UNVERIFIED_HOST_BOUNDARY")
+        self.assertFalse(result["execution_allowed"])
+
+    def test_compact_g1_scope_is_only_policy_shape_and_always_stops(self):
+        compact_body = "\n\n".join([
+            "### CONTRACT\nAUTONOMY_SCOPE_V1", "### TASK_ID\nEG-093",
+            "### SPEC_REVISION\n2", "### OBJECTIVE\nFix bounded checker test",
+            "### ALLOWED_PATHS\nskills/project-governance",
+            "### ALLOWED_EFFECTS\nrepository_source_changes,repository_tests,same_task_ref_push",
+            "### MAX_RISK\nG2", "### STOP_AND_SAFETY\nNo privileged action",
+        ]) + "\n"
+        compact = {"number": 40, "state": "OPEN", "body": compact_body, "comments": []}
+        fields, sha = mod.digest_autonomy_scope(compact_body, repo=REPO, number=40)
+        self.assertEqual(fields["CONTRACT"], "AUTONOMY_SCOPE_V1")
+        self.assertEqual(len(fields), 8)
+        grant = autonomy_snapshot()
+        grant["spec_sha256"] = sha
+        result = mod.verify_autonomy_snapshot(
+            compact, grant, repo=REPO, approvers={"Lost0rz"},
+            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+            target_commit_sha="a"*40, now=datetime(2026, 11, 10, tzinfo=timezone.utc),
+        )
+        self.assertEqual(result["result"], "STOP")
+        self.assertFalse(result["execution_allowed"])
+        self.assertEqual(result["policy_shape"], "PASS_LOCAL_SNAPSHOT_ONLY")
+        with self.assertRaisesRegex(mod.SpecError, "UNKNOWN_FIELD|MISSING_FIELDS"):
+            mod.digest(compact_body, repo=REPO, number=40)
+
+        scope_violations = [
+            ("### MAX_RISK\nG2", "### MAX_RISK\nG1",
+             "AUTONOMY_GRANT_RISK_OUTSIDE_ISSUE_SCOPE"),
+            ("### ALLOWED_PATHS\nskills/project-governance", "### ALLOWED_PATHS\napps/web",
+             "AUTONOMY_GRANT_PATH_OUTSIDE_ISSUE_SCOPE"),
+            ("### ALLOWED_EFFECTS\nrepository_source_changes,repository_tests,same_task_ref_push",
+             "### ALLOWED_EFFECTS\nrepository_tests",
+             "AUTONOMY_GRANT_EFFECT_OUTSIDE_ISSUE_SCOPE"),
+        ]
+        for old, new, err in scope_violations:
+            with self.subTest(err=err):
+                different = dict(compact, body=compact_body.replace(old, new))
+                _, new_sha = mod.digest_autonomy_scope(different["body"], repo=REPO, number=40)
+                changed = copy.deepcopy(grant)
+                changed["spec_sha256"] = new_sha
+                with self.assertRaisesRegex(mod.SpecError, err):
+                    mod.verify_autonomy_snapshot(
+                        different, changed, repo=REPO, approvers={"Lost0rz"},
+                        agents_text=AUTONOMY_AGENTS,
+                        target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                    )
+
+        for invalid in (compact_body.replace("### TASK_ID", "### EXTRA"),
+                        compact_body.replace("### OBJECTIVE", "### TASK_ID"),
+                        compact_body.replace("### ALLOWED_PATHS\nskills/project-governance",
+                                             "### ALLOWED_PATHS\n../secrets")):
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(mod.SpecError):
+                    mod.digest_autonomy_scope(invalid, repo=REPO, number=40)
+
+    def test_autonomy_paths_reject_control_character_injections(self):
+        for unsafe in ("skills/unsafe\x00file", "skills/unsafe\nfile", "skills/unsafe\rfile"):
+            grant = autonomy_snapshot()
+            grant["allowed_paths"] = [unsafe]
+            with self.subTest(path=repr(unsafe)):
+                with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_ALLOWED_PATHS"):
+                    mod.verify_autonomy_snapshot(
+                        issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                        agents_text=AUTONOMY_AGENTS,
+                        target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                    )
+
+    def test_autonomy_missing_opt_in_stops(self):
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_NOT_OPTED_IN"):
+            mod.verify_autonomy_snapshot(
+                issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
+                agents_text="CONTROL_MODE: ISSUE_CONTROL\n",
+                target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_self_grant_with_same_credential_stops(self):
+        grant = autonomy_snapshot()
+        grant["grant_event"]["executor_credential_id"] = "independent-grant-credential"
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_SELF_AUTHORIZATION"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_untrusted_grant_actor_stops(self):
+        grant = autonomy_snapshot()
+        grant["grant_event"]["actor_login"] = "outsider"
+        with self.assertRaisesRegex(mod.SpecError, "UNTRUSTED_AUTONOMY_GRANT_ACTOR"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_replayed_after_spec_change_stops(self):
+        changed = issue()
+        changed["body"] = changed["body"].replace(
+            "Implement exactly the approved scoped fix", "Implement a different scope")
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_TASK_BINDING_MISMATCH"):
+            mod.verify_autonomy_snapshot(
+                changed, autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_revoked_or_expired_snapshot_stops(self):
+        revoked = autonomy_snapshot()
+        revoked["revoked_at"] = "2026-11-10T12:00:00Z"
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_GRANT_REVOKED"):
+            mod.verify_autonomy_snapshot(
+                issue(), revoked, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+        expired = autonomy_snapshot()
+        expired["issued_at"] = "2026-11-08T00:00:00Z"
+        expired["expires_at"] = "2026-11-09T00:00:00Z"
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_GRANT_EXPIRED"):
+            mod.verify_autonomy_snapshot(
+                issue(), expired, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                now=datetime(2026, 11, 10, tzinfo=timezone.utc),
+            )
+
+    def test_autonomy_target_change_stops(self):
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_TARGET_MISMATCH"):
+            mod.verify_autonomy_snapshot(
+                issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/other-task", target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_replay_after_target_commit_change_stops(self):
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_COMMIT_MISMATCH"):
+            mod.verify_autonomy_snapshot(
+                issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                target_commit_sha="b"*40,
+            )
+
+    def test_autonomy_requested_path_must_stay_inside_allowed_path_prefix(self):
+        grant = autonomy_snapshot()
+        grant["requested_paths"] = ["skills/project-governance-escape/attack.py"]
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_PATH_OUTSIDE_ENVELOPE"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_paths_cannot_target_git_metadata(self):
+        grant = autonomy_snapshot()
+        grant["allowed_paths"] = [".git"]
+        grant["requested_paths"] = [".git/config"]
+        with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_ALLOWED_PATHS"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_unknown_effect_alias_cannot_hide_merge(self):
+        grant = autonomy_snapshot()
+        grant["allowed_effects"].append("pr_merge")
+        grant["requested_effects"].append("pr_merge")
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_UNSUPPORTED_OR_OUTSIDE_EFFECT_ENVELOPE"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                target_commit_sha="a"*40,
+            )
+
+    def test_autonomy_invalid_branch_refs_stop(self):
+        for target_ref in ("refs/heads/../main", "refs/heads/.hidden", "refs/heads/topic.lock",
+                           "refs/heads/topic/", "refs/heads/a@{b}"):
+            with self.subTest(target_ref=target_ref):
+                with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_TARGET_REF"):
+                    mod.verify_autonomy_snapshot(
+                        issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
+                        agents_text=AUTONOMY_AGENTS, target_ref=target_ref, target_commit_sha="a"*40,
+                    )
+
+    def test_autonomy_g3_risk_is_outside_g1_g2_envelope(self):
+        grant = autonomy_snapshot()
+        grant["requested_risk"] = "G3"
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_RISK_OUTSIDE_ENVELOPE"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_float_tabs_208_debug_only_test_seam_is_g1_policy_only(self):
+        grant = autonomy_snapshot()
+        grant["max_risk"] = "G1"
+        grant["requested_effects"] = ["repository_tests"]
+        result = mod.verify_autonomy_snapshot(
+            issue(), grant, repo=REPO, approvers={"Lost0rz"},
+            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            now=datetime(2026, 11, 10, tzinfo=timezone.utc),
+        )
+        self.assertEqual(result["requested_risk"], "G1")
+        self.assertEqual(result["result"], "STOP")
+        self.assertFalse(result["execution_allowed"])
+
+    def test_float_tabs_211_human_ui_acceptance_is_hard_excluded(self):
+        grant = autonomy_snapshot()
+        grant["allowed_effects"].append("human_ui_acceptance")
+        grant["requested_effects"].append("human_ui_acceptance")
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_HARD_EXCLUDED_EFFECT"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_merloom_632_rawsku_overwrite_is_hard_denied(self):
+        grant = autonomy_snapshot()
+        grant["allowed_effects"].append("destructive_data_overwrite")
+        grant["requested_effects"].append("destructive_data_overwrite")
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_HARD_EXCLUDED_EFFECT"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+
+    def test_remoteorbit_51_privileged_hid_helper_is_g3_and_hard_excluded(self):
+        grant = autonomy_snapshot()
+        grant["requested_risk"] = "G3"
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_RISK_OUTSIDE_ENVELOPE"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
+        grant["requested_risk"] = "G2"
+        grant["allowed_effects"].append("privileged_install")
+        grant["requested_effects"].append("privileged_install")
+        with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_HARD_EXCLUDED_EFFECT"):
+            mod.verify_autonomy_snapshot(
+                issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            )
 
 
 

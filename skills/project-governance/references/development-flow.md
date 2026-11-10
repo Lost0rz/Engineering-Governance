@@ -36,6 +36,8 @@ At the **next normal, user/project-authorized development task**, read fresh pro
 
 Compare the requested action with the active objective, in/out-of-scope boundary, allowed side effects, verification contract and STOP conditions.
 
+In `ISSUE_CONTROL`, retain the strict/direct or explicitly opted-in delegated approval path by default. Use risk-scoped autonomy only when the accepted `AGENTS.md` opt-in and independent live-host/credential-separation proof both verify; a local grant snapshot never changes that gate. Record governance authority risk G0–G3 separately from verification tier V0–V3 and deviation L0–L3.
+
 Keep the same task when the engineering purpose and authorization are materially unchanged across:
 
 - Web/local/session/machine continuation;
@@ -62,6 +64,8 @@ Return the verified route or unresolved gap to the calling flow. Navigation does
 ## 7. Resolve writer/code authority
 
 Before adding/changing a writer, backend, shared behavior, module boundary or materially new responsibility, apply `code-structure.md`. Reuse/extend/replace the canonical authority deliberately rather than creating parallel truth. File size alone is not a responsibility boundary.
+
+At an ordinary handoff, pass along relevant Issue discussion, PR/ref evidence and local workspace context when helpful, without demanding a separate Writer-release check. Only when specific overlapping writes or unique work are actually at risk, reconcile the relevant facts before making the conflicting write; preserve existing work. See `workspace-lifecycle.md` for the general lifecycle rules.
 
 If the responsibility boundary becomes unclear, return to Domain Navigation or Solution Design according to whether the uncertainty is location/authority or design choice.
 
@@ -90,6 +94,8 @@ Do not paste complete task/status/rules into the card by default. If the receive
 ## 10. Implement and verify proportionally
 
 Implement the smallest authorized outcome. Select the lightest safe `V0`–`V3` verification tier and a cadence appropriate to the construction/corrective/task/integration boundary.
+
+The verification tier covers evidence, not permission. A G1/G2 task can still require V3 security/concurrency review; neither a V0 check nor a small diff authorizes G3 effects.
 
 Implementation self-check, tests, lint, type-checks and focused verification remain part of the execution task unless an independent acceptance boundary is separately required.
 
@@ -132,19 +138,16 @@ Audit/reviewer findings do not authorize fixes. Corrective mutation returns to P
 
 At a merge/release decision, keep semantic implementation evidence separate from live repository-host gates. Reuse semantic evidence across proven `CONTROL_ONLY_DRIFT` only when semantic equivalence and task conditions permit it. Re-read current required checks/reviews/conflicts/mergeability/merge queue/current-base/latest-head rules for the literal identity the host governs.
 
-## 15. Reconcile controls and close out
+## 15. Reconcile controls and close out when material
 
-Before a final successful governed state-changing handoff, run the mandatory Control Alignment Gate:
+At a **real task/authorization/terminal state transition**, verify the affected authority and outcome; do not impose a universal Control Alignment Gate at each edit, ordinary handoff, same-task continuation or test result.
 
-1. obtain fresh outcome/lifecycle evidence, including the applicable remote-delivery state for repository-backed commits;
-2. FILE_CONTROL: reread Task/Status; ISSUE_CONTROL: reread approved Issue revision, meaningful decisions/receipts and current host evidence;
-3. reread the linked durable planning/design authority when the outcome could have changed its owned semantics;
-4. update only the actual semantic owner: file controls in FILE_CONTROL or approved spec/decision/final Issue receipt in ISSUE_CONTROL; no Issue-progress Git commits;
-5. report FILE_CONTROL document/status/task reconciliation and `CONTROL_ALIGNMENT`, or ISSUE_CONTROL `ISSUE_AUTHORITY_ALIGNMENT` plus `RECEIPT_DELIVERY`, without inventing successful delivery.
+- **FILE_CONTROL:** when Task/Status semantics may change, compare to current facts and update only stale project-owned control fields under `control-plane.md`.
+- **ISSUE_CONTROL legacy:** retain actual selected approval, existing material-decision and required final-receipt rules. Do not read/update legacy Task/Status or manufacture Issue-progress Git commits.
+- **Verified active G1/G2 autonomy (future):** recover result from selected task/grant/PR/commit/CI/handoff; ordinary Issue comments are optional. Missing host authorization continues to STOP, not silently fall back to an unapproved path.
+- **Merge/release:** check the actual host gate and evidence for that operation. Do not infer final acceptance or local workspace cleanup from remote merge alone.
 
-The check is mandatory; writes are conditional.
-
-If task workspaces exist, separately reconcile physical workspace/branch disposition under `workspace-lifecycle.md`. A merge event does not by itself prove local closeout. Likewise, local workspace cleanup does not convert an unpushed required deliverable into remote delivery.
+Preserve unique local work and investigate only actual overlapping writer/cleanup risks. When no owned control meaning changed, no additional control write, checkbox report or status-only commit is required.
 
 ## Cross-skill composition
 
