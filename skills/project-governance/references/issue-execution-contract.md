@@ -49,12 +49,12 @@ L0, L1, L2, L3, scope/risk limits
 ### STOP_AND_SAFETY
 specific unauthorized/destructive/security/dependency stops
 ### RETURN_CONTRACT
-DECISION_REQUEST_V1 and EXECUTION_RECEIPT_V1 comments + PR evidence
+Legacy: decision/final Issue comments + PR evidence; separately activated host-verified autonomy: recoverable task/PR/commit/CI/handoff evidence, optional routine Issue comments
 ### AUTHORIZATION_BASIS
 approved revision reference or PENDING; *not* approval itself
 ```
 
-Approval always requires a distinct GitHub Issue approval record defined in `issue-control.md`: strict/direct `SPEC_APPROVAL_V1` by default, or *only if the accepted target AGENTS explicitly opts in* `SPEC_DELEGATED_APPROVAL_V1` with `DELEGATED_ACCOUNT_ATTESTED` lower assurance after an exact Web user decision. Neither record is embedded in the nineteen-field Issue body, and neither may be inferred from a label or an AI claim. The helper checks structure, revision and content hash; human/agent source-grounding audit checks whether listed paths, ownership and expected outcomes are real. A verified plan cannot be inferred from merely filling required text boxes.
+Under legacy/default `ISSUE_CONTROL`, approval requires a distinct GitHub Issue record defined in `issue-control.md`: strict/direct `SPEC_APPROVAL_V1` by default, or *only if the accepted target AGENTS explicitly opts in* `SPEC_DELEGATED_APPROVAL_V1` with `DELEGATED_ACCOUNT_ATTESTED` lower assurance after an exact Web user decision. A separately selected and independently host-verified active autonomy grant may replace the approval comment only inside its fixed G1/G2 scope; the current implementation cannot activate that path. Neither record is embedded in the nineteen-field Issue body, and neither may be inferred from a label or an AI claim. The helper checks structure, revision and content hash; human/agent source-grounding audit checks whether listed paths, ownership and expected outcomes are real. A verified plan cannot be inferred from merely filling required text boxes.
 
 ### Draft authoring does not approve or execute
 

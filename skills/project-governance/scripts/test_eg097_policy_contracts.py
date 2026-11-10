@@ -63,6 +63,17 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("Under **legacy/default ISSUE_CONTROL**", handoff)
         self.assertIn("routine Issue comments are optional", handoff)
 
+    def test_no_unconditional_writer_release_or_legacy_comment_in_shared_entry_docs(self):
+        development = self.read("skills/project-governance/references/development-flow.md")
+        handoff_template = self.read("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md")
+        execution = self.read("skills/project-governance/references/issue-execution-contract.md")
+        readme = self.read("README.md")
+        self.assertIn("specific overlapping writes or unique work", development)
+        self.assertNotIn("Writer release requires both", development)
+        self.assertIn("## Legacy/default ISSUE_CONTROL compact example", handoff_template)
+        self.assertIn("Under legacy/default `ISSUE_CONTROL`", execution)
+        self.assertIn("separately opted-in, independently host-verified", readme)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")

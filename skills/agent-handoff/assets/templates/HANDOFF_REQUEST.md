@@ -20,9 +20,9 @@ RETURN_CONTRACT: <actual evidence/result required for the next decision; do not 
 
 Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` are not `MODE` values. Put them in `PURPOSE` or `DELTA` when useful.
 
-## ISSUE_CONTROL compact example (requires real verified selectors)
+## Legacy/default ISSUE_CONTROL compact example (requires real verified selectors)
 
-The sender populates **actual** Issue identity, revision, SHA256 and authenticated approval comment; these labels are *illustrative only*. Do not output placeholders as an executable Card.
+This example applies to **legacy/default** ISSUE_CONTROL. The sender populates **actual** Issue identity, revision, SHA256 and authenticated approval comment. The separately host-verified active autonomy route below uses a different authorization basis and does not inherit the approval-comment requirement. Labels are *illustrative only*; never output placeholders as an executable Card.
 
 ```text
 CARD_ID: <current-card-id>
