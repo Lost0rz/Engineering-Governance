@@ -207,7 +207,7 @@ NEXT_ACTION: <only when work remains>
 
 Optional local/remote branch and retention details follow the owning project's real workspace needs. Do not turn these example fields into a universal release/cleanup gate. For FILE_CONTROL, report an alignment result only when the event-triggered control-plane contract actually requires one; ISSUE_CONTROL never inherits Task/Status alignment.
 
-When FILE_CONTROL alignment is applicable, strict read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION`
+When FILE_CONTROL alignment is applicable, read-only work may report `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY` with relevant evidence; it must not silently modify controls.
 
 ## Stop conditions
 
