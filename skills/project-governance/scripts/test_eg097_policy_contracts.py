@@ -112,6 +112,14 @@ class EG097PolicyContractTests(unittest.TestCase):
         for path in ("'plugin.json'", "'AGENTS.md'", "'.agents/plugins/**'"):
             self.assertIn(path, workflow)
 
+    def test_compact_scope_is_separate_from_legacy_approval(self):
+        source = self.read("skills/project-governance/scripts/issue-spec-check.py")
+        control = self.read("skills/project-governance/references/issue-control.md")
+        self.assertIn('COMPACT_CONTRACT = "AUTONOMY_SCOPE_V1"', source)
+        self.assertIn("def digest_autonomy_scope(", source)
+        self.assertIn("8-field `AUTONOMY_SCOPE_V1`", control)
+        self.assertIn("Legacy `digest` and `verify`", control)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")

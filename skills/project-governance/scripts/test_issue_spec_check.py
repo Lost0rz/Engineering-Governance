@@ -399,6 +399,61 @@ class IssueContractTests(unittest.TestCase):
         self.assertEqual(result["autonomy_status"], "INACTIVE_UNVERIFIED_HOST_BOUNDARY")
         self.assertFalse(result["execution_allowed"])
 
+    def test_compact_g1_scope_is_only_policy_shape_and_always_stops(self):
+        compact_body = "\n\n".join([
+            "### CONTRACT\nAUTONOMY_SCOPE_V1", "### TASK_ID\nEG-093",
+            "### SPEC_REVISION\n2", "### OBJECTIVE\nFix bounded checker test",
+            "### ALLOWED_PATHS\nskills/project-governance",
+            "### ALLOWED_EFFECTS\nrepository_source_changes,repository_tests,same_task_ref_push",
+            "### MAX_RISK\nG2", "### STOP_AND_SAFETY\nNo privileged action",
+        ]) + "\n"
+        compact = {"number": 40, "state": "OPEN", "body": compact_body, "comments": []}
+        fields, sha = mod.digest_autonomy_scope(compact_body, repo=REPO, number=40)
+        self.assertEqual(fields["CONTRACT"], "AUTONOMY_SCOPE_V1")
+        self.assertEqual(len(fields), 8)
+        grant = autonomy_snapshot()
+        grant["spec_sha256"] = sha
+        result = mod.verify_autonomy_snapshot(
+            compact, grant, repo=REPO, approvers={"Lost0rz"},
+            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+            target_commit_sha="a"*40, now=datetime(2026, 11, 10, tzinfo=timezone.utc),
+        )
+        self.assertEqual(result["result"], "STOP")
+        self.assertFalse(result["execution_allowed"])
+        self.assertEqual(result["policy_shape"], "PASS_LOCAL_SNAPSHOT_ONLY")
+        with self.assertRaisesRegex(mod.SpecError, "MISSING_FIELDS"):
+            mod.digest(compact_body, repo=REPO, number=40)
+
+        scope_violations = [
+            ("### MAX_RISK\nG2", "### MAX_RISK\nG1",
+             "AUTONOMY_GRANT_RISK_OUTSIDE_ISSUE_SCOPE"),
+            ("### ALLOWED_PATHS\nskills/project-governance", "### ALLOWED_PATHS\napps/web",
+             "AUTONOMY_GRANT_PATH_OUTSIDE_ISSUE_SCOPE"),
+            ("### ALLOWED_EFFECTS\nrepository_source_changes,repository_tests,same_task_ref_push",
+             "### ALLOWED_EFFECTS\nrepository_tests",
+             "AUTONOMY_GRANT_EFFECT_OUTSIDE_ISSUE_SCOPE"),
+        ]
+        for old, new, err in scope_violations:
+            with self.subTest(err=err):
+                different = dict(compact, body=compact_body.replace(old, new))
+                _, new_sha = mod.digest_autonomy_scope(different["body"], repo=REPO, number=40)
+                changed = copy.deepcopy(grant)
+                changed["spec_sha256"] = new_sha
+                with self.assertRaisesRegex(mod.SpecError, err):
+                    mod.verify_autonomy_snapshot(
+                        different, changed, repo=REPO, approvers={"Lost0rz"},
+                        agents_text=AUTONOMY_AGENTS,
+                        target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                    )
+
+        for invalid in (compact_body.replace("### TASK_ID", "### EXTRA"),
+                        compact_body.replace("### OBJECTIVE", "### TASK_ID"),
+                        compact_body.replace("### ALLOWED_PATHS\nskills/project-governance",
+                                             "### ALLOWED_PATHS\n../secrets")):
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(mod.SpecError):
+                    mod.digest_autonomy_scope(invalid, repo=REPO, number=40)
+
     def test_autonomy_missing_opt_in_stops(self):
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_NOT_OPTED_IN"):
             mod.verify_autonomy_snapshot(

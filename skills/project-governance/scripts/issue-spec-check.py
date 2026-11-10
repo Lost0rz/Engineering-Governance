@@ -27,6 +27,12 @@ FIELDS = (
 )
 WP_KEYS = ("Targets", "Preconditions", "Actions", "Dependencies",
            "Edge cases", "Verification", "Done")
+# Future opt-in G1/G2 scope only; this is not a standalone authorization path.
+COMPACT_CONTRACT = "AUTONOMY_SCOPE_V1"
+COMPACT_FIELDS = (
+    "CONTRACT", "TASK_ID", "SPEC_REVISION", "OBJECTIVE", "ALLOWED_PATHS",
+    "ALLOWED_EFFECTS", "MAX_RISK", "STOP_AND_SAFETY",
+)
 FIELD_HEADER = re.compile(r"^### ([A-Z][A-Z0-9_]*)[ \t]*$")
 WP_HEADER = re.compile(r"^#### WP\d{2,}[ \t]*[-—:].*$", re.M)
 APPROVAL_PREFIX = "SPEC_APPROVAL_V1"
@@ -122,6 +128,68 @@ def parse_fields(body: str) -> dict[str, str]:
             if re.search(r"\b(?:TODO|TBD|UNKNOWN)\b|<[^>\n]+>|\.\.\.", line.group(1), re.I):
                 raise SpecError("WP_FIELD_UNRESOLVED: " + match.group().strip() + ":" + key)
     return result
+
+
+def parse_compact_scope(body: str) -> dict[str, str]:
+    """Validate a short in-envelope task; never grant execution by itself."""
+    entries: dict[str, list[str]] = {}
+    current: str | None = None
+    for line in _lines(body).split("\n"):
+        match = FIELD_HEADER.fullmatch(line)
+        if match:
+            key = match.group(1)
+            if key not in COMPACT_FIELDS:
+                raise SpecError("UNKNOWN_COMPACT_FIELD: " + key)
+            if key in entries:
+                raise SpecError("DUPLICATE_COMPACT_FIELD: " + key)
+            entries[key] = []
+            current = key
+        elif current:
+            entries[current].append(line)
+        elif line.strip():
+            raise SpecError("INVALID_COMPACT_PREFIX")
+    missing = set(COMPACT_FIELDS) - set(entries)
+    if missing:
+        raise SpecError("MISSING_COMPACT_FIELDS: " + ",".join(sorted(missing)))
+    result = {key: "\n".join(entries[key]).strip(" \t\n") for key in COMPACT_FIELDS}
+    for key, value in result.items():
+        if not value or PLACEHOLDER.search(value):
+            raise SpecError("INCOMPLETE_COMPACT_FIELD: " + key)
+    if result["CONTRACT"] != COMPACT_CONTRACT:
+        raise SpecError("UNSUPPORTED_COMPACT_CONTRACT")
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", result["TASK_ID"]):
+        raise SpecError("INVALID_COMPACT_TASK_ID")
+    if not re.fullmatch(r"[1-9]\d*", result["SPEC_REVISION"]):
+        raise SpecError("INVALID_COMPACT_REVISION")
+    if result["MAX_RISK"] not in ("G1", "G2"):
+        raise SpecError("UNSUPPORTED_COMPACT_RISK")
+    paths = [line.strip().removeprefix("- ").strip()
+             for line in result["ALLOWED_PATHS"].splitlines() if line.strip()]
+    effects = [entry.strip().removeprefix("- ").strip()
+               for entry in re.split(r"[,\n]", result["ALLOWED_EFFECTS"])
+               if entry.strip()]
+    if (not paths or len(paths) != len(set(paths))
+            or not all(_safe_repo_path(path) for path in paths)):
+        raise SpecError("INVALID_COMPACT_ALLOWED_PATHS")
+    if (not effects or len(effects) != len(set(effects))
+            or not set(effects).issubset(AUTONOMY_ALLOWED_EFFECTS)):
+        raise SpecError("INVALID_COMPACT_ALLOWED_EFFECTS")
+    return result
+
+
+def digest_autonomy_scope(body: str, *, repo: str, number: int) -> tuple[dict[str, str], str]:
+    """Accept legacy 19-field Issue or opt-in 8-field G1/G2 scope; policy only."""
+    if re.search(r"(?m)^### CONTRACT[ \t]*\n[ \t\n]*AUTONOMY_SCOPE_V1[ \t]*(?:\n|$)", _lines(body)):
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
+            raise SpecError("INVALID_REPOSITORY")
+        if not isinstance(number, int) or number <= 0:
+            raise SpecError("INVALID_ISSUE_NUMBER")
+        fields = parse_compact_scope(body)
+        material = {"repository": repo, "issue": number, "fields": fields}
+        payload = json.dumps(material, sort_keys=True, ensure_ascii=False,
+                             separators=(",", ":")).encode("utf-8")
+        return fields, hashlib.sha256(payload).hexdigest()
+    return digest(body, repo=repo, number=number)
 
 
 def digest(body: str, *, repo: str, number: int) -> tuple[dict[str, str], str]:
@@ -251,8 +319,8 @@ def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
     if not isinstance(authorization, dict) or set(authorization) != AUTONOMY_FIELDS:
         raise SpecError("INVALID_AUTONOMY_FIELDS")
 
-    fields, current_digest = digest(str(issue.get("body") or ""), repo=repo,
-                                    number=issue.get("number"))
+    fields, current_digest = digest_autonomy_scope(str(issue.get("body") or ""), repo=repo,
+                                                   number=issue.get("number"))
     if (authorization.get("contract") != AUTONOMY_CONTRACT
             or authorization.get("repository") != repo
             or authorization.get("issue_number") != issue.get("number")
@@ -264,6 +332,8 @@ def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
         raise SpecError("INVALID_AUTONOMY_TARGET_REF")
     if authorization.get("target_ref") != target_ref:
         raise SpecError("AUTONOMY_TARGET_MISMATCH")
+    # This is the initial grant anchor only. A verified successor-commit lineage
+    # adapter is not yet available: do not accept a caller-supplied ancestry flag.
     if (not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", target_commit_sha)
             or authorization.get("target_commit_sha") != target_commit_sha):
         raise SpecError("AUTONOMY_COMMIT_MISMATCH")
@@ -278,12 +348,21 @@ def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
     if any(not any(_path_within_allowed(path, allowed) for allowed in paths)
            for path in requested_paths):
         raise SpecError("AUTONOMY_PATH_OUTSIDE_ENVELOPE")
+    if fields["CONTRACT"] == COMPACT_CONTRACT:
+        scope_paths = [line.strip().removeprefix("- ").strip()
+                       for line in fields["ALLOWED_PATHS"].splitlines() if line.strip()]
+        if any(not any(_path_within_allowed(path, allowed) for allowed in scope_paths)
+               for path in paths):
+            raise SpecError("AUTONOMY_GRANT_PATH_OUTSIDE_ISSUE_SCOPE")
     max_risk = authorization.get("max_risk")
     requested_risk = authorization.get("requested_risk")
     if max_risk not in ("G1", "G2") or requested_risk not in GOVERNANCE_RISKS:
         raise SpecError("UNSUPPORTED_AUTONOMY_RISK")
     if GOVERNANCE_RISKS.index(requested_risk) > GOVERNANCE_RISKS.index(max_risk):
         raise SpecError("AUTONOMY_RISK_OUTSIDE_ENVELOPE")
+    if (fields["CONTRACT"] == COMPACT_CONTRACT
+            and GOVERNANCE_RISKS.index(max_risk) > GOVERNANCE_RISKS.index(fields["MAX_RISK"])):
+        raise SpecError("AUTONOMY_GRANT_RISK_OUTSIDE_ISSUE_SCOPE")
 
     allowed_effects = authorization.get("allowed_effects")
     requested_effects = authorization.get("requested_effects")
@@ -303,6 +382,11 @@ def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
         raise SpecError("AUTONOMY_HARD_EXCLUSIONS_INCOMPLETE_OR_UNSUPPORTED")
     if set(requested_effects).intersection(AUTONOMY_HARD_EXCLUSIONS):
         raise SpecError("AUTONOMY_HARD_EXCLUDED_EFFECT")
+    if fields["CONTRACT"] == COMPACT_CONTRACT:
+        issue_effects = {s.strip().removeprefix("- ").strip()
+                         for s in re.split(r"[,\n]", fields["ALLOWED_EFFECTS"]) if s.strip()}
+        if not set(allowed_effects).issubset(issue_effects):
+            raise SpecError("AUTONOMY_GRANT_EFFECT_OUTSIDE_ISSUE_SCOPE")
 
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None or current.utcoffset() is None:
