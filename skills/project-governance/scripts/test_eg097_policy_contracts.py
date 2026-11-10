@@ -95,7 +95,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("Explicit user/owner decision", execution)
         self.assertIn("user need not visit GitHub", issue)
         self.assertIn("source-write** grant never implicitly authorizes merge", issue)
-        self.assertIn("fail-closed checker", execution)
+        self.assertIn("policy-only future path", execution)
 
     def test_source_plugin_identity_and_all_install_surfaces(self):
         import json
@@ -137,7 +137,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("using the contract selected by the authorization path", receiver)
         self.assertNotIn("19-field quality, current revision and canonical SHA256 in both authority paths", receiver)
         self.assertIn("8-field parser", receiver)
-        self.assertIn("Under legacy/default ISSUE_CONTROL", receiver)
+        self.assertIn("Legacy uses the 19-field Issue", receiver)
         self.assertIn("For an actual Handoff Card", receipt)
         self.assertNotIn("## Mandatory pre-return gate", receipt)
         self.assertNotIn("SOURCE_CARD_ID_PRESERVED: YES", receipt)
