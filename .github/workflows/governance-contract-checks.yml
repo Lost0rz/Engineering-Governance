@@ -8,6 +8,9 @@ on:
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/workflows/governance-contract-checks.yml'
       - 'README.md'
+      - 'AGENTS.md'
+      - 'plugin.json'
+      - '.agents/plugins/**'
   workflow_dispatch:
 
 permissions:
@@ -29,5 +32,7 @@ jobs:
           python-version: '3.12'
       - name: Compile governance checker and tests
         run: python3 -m compileall -q skills/project-governance/scripts
+      - name: Validate plugin manifest and marketplace JSON
+        run: python3 -c 'import json,pathlib; files=["plugin.json",".agents/plugins/marketplace.json"]; [json.loads(pathlib.Path(p).read_text(encoding="utf-8")) for p in files]'
       - name: Run focused governance contract tests
         run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v

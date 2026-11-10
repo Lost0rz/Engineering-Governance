@@ -12,7 +12,7 @@ A Web request to *send* a construction/execution/audit/verification card to anot
 
 In `ISSUE_CONTROL`, an explicit current user request to create or revise an Issue execution-spec draft may use Web Agent A's narrow authoring path only when the target repository's accepted `AGENTS.md` on live `main` has exactly one operative top-level `ISSUE_WEB_SPEC_AUTHORING: ENABLED` declaration. Read the live target policy and current Issue/writer state first, use the official checker, and verify the Issue number/body/digest by host readback after writing. This can create or correct an unapproved draft; it never approves the spec or authorizes source, branch, worktree, PR, merge or release actions. Keep the authoring and approval flows separate as defined in `references/issue-control.md`.
 
-In `ISSUE_CONTROL`, the Web sender checks selected Issue state, full deterministic spec quality, current revision/digest and trusted GitHub approval before delivering an **executable** Card. The strict default is direct `SPEC_APPROVAL_V1`; only target projects explicitly opting in via accepted `AGENTS.md` may accept a separately labeled, lower-assurance `SPEC_DELEGATED_APPROVAL_V1` after the user's explicit approval of the exact current spec in Web chat. The sender must not spoof direct human approval or claim independent proof of chat intent; require posted GitHub comment ID/actor verification. Without verified approval, return a bounded design/review outcome and Issue link, **not** a card implying permission to mutate. `agent-handoff` owns card transport; the 19-field contract and approval rules stay in `references/issue-control.md` and `references/issue-execution-contract.md`.
+For G0 read-only work, do not demand an Issue approval or an executable Card. For state-changing `ISSUE_CONTROL`, select **one** accepted authorization path: legacy/default exact-revision direct or expressly opted-in delegated approval; or a separately opted-in G1/G2 autonomous grant independently verified from the GitHub host. In legacy mode, an AI may post a clearly labeled delegated approval after the user's explicit decision **when** the target project opted in and the write surface supports Issue comments; the user need not open GitHub merely to paste that record. This is lower assurance than a protected human grant, so never mislabel it as direct GitHub approval. Inactive/unverified autonomy does not authorize any write. Do not invent additional approval requirements for a normal G0 inquiry or already authorized same-scope continuation. `agent-handoff` owns transport; `issue-control.md` and `issue-execution-contract.md` own exact approval provenance and scope.
 
 In Codex Desktop/local execution, receiving a Card is **not authority**. At task entry: resolve the installed Engineering Governance capability actually available; read the target repository's accepted `AGENTS.md` to choose FILE_CONTROL vs ISSUE_CONTROL; for state-changing ISSUE_CONTROL work fetch the exact selected Issue and verify approved revision, canonical digest and authenticated GitHub actor via available `gh`/connector, plus explicit AGENTS opt-in and `DELEGATED_ACCOUNT_ATTESTED` assurance when using delegated approval; check relevant live Git/PR/writer evidence and necessary Domain/STOP/receipt contract before touching source. Follow the relevant Work Packages, not the pasted Card as a replacement spec. If critical Skill, GitHub or approval evidence is unavailable, STOP affected writes and report the missing dependency; do not silently switch to a generic framework or stale cached card. Do not load all nine Skills or repeat a full preflight per shell command; recheck at authorization/material-change boundaries. See `agent-handoff/references/handoff-contract.md` for transfer-specific receiver detail.
 
@@ -134,63 +134,9 @@ Project Profile, durable planning, Domain maps, handoffs, audits and CI/test/PR/
 
 ## Compact Engineering Status Receipt
 
-For governed engineering/execution/audit/CI/PR/merge/status responses, emit **one compact human-readable receipt**. The route and used-Skill fields are mandatory; omit only genuinely non-applicable optional fields:
+For a material engineering action, return a short, truthful outcome: what changed, the decisive evidence or blocker, and the next safe action. Mention the actual Governance route/Skills when materially used, but **do not emit a compulsory multi-field receipt or checklist for routine status, advice, G0 inspection or an ordinary same-task continuation**. A real cross-context Card, mandated project record, G3 decision or release gate keeps its own required provenance.
 
-```text
-Governance route:
-Skills used:
-Capability modules:   # optional
-Task state:
-Execution topology:   # required when execution topology was materially decided/executed
-Subagents:            # required for governed execution: NO or YES + bounded role/count summary
-Subagent runtime:     # when Subagents=YES; observed effective model/reasoning, configured-vs-effective caveat, or UNKNOWN
-Outcome:
-Changes:
-Remote delivery:      # required for repository-backed state-changing work that produced/advanced commits
-Control alignment:
-PR / workspace:
-Next:
-```
-
-`Governance route` reports the actual ordered Engineering Governance capability path used for the response, including bounded detours and returns when material, not the route that theoretically could have been used.
-
-`Skills used` reports every top-level Engineering Governance Skill whose bounded instructions materially governed the work, and no others. Do not list installed/discovered Skills, external framework Skills, Skills merely mentioned in routing documentation, or Skills inspected only as reference/evidence.
-
-When a Skill materially applies an internal source module, `Capability modules` may expose that module for observability. Internal source modules do not become peer top-level Skills.
-
-For execution responses:
-
-- `Execution topology` reports the topology actually selected/used, such as `INLINE`, `SEQUENTIAL_DELEGATED`, `PARALLEL_READ_ONLY`, or `PARALLEL_DISJOINT_WRITERS`;
-- `Subagents: NO` is expected when delegation did not create material value;
-- when Sub Agents were used, report role/count compactly, for example `YES — explorer ×2, worker ×1, verifier ×1`;
-- `Subagent runtime` must distinguish observed effective identity from configuration. Never report a configured model/reasoning value as effective unless runtime evidence supports it;
-- if effective model/reasoning is not exposed, say `UNKNOWN` or `configured <value>; effective runtime identity UNKNOWN`;
-- `Remote delivery` distinguishes local commit state from remote availability. When applicable, report `PUSHED_VERIFIED`, `NOT_APPLICABLE_NO_REMOTE`, `NOT_REQUIRED_LOCAL_ONLY`, `PENDING`, or `FAILED`, plus remote ref/commit detail when material. Never infer remote delivery merely from `git commit`, a clean working tree, or a local branch SHA.
-
-The receipt is observational, not a reason to spawn Sub Agents or create a remote.
-
-Keep the receipt status-oriented and do not copy task scope/history. If the response already contains a detailed machine/context Handoff Receipt, do not duplicate that full receipt; provide only the compact human summary needed for the user-facing response.
-
-### Mandatory pre-return receipt compliance gate
-
-Before returning any governed user-facing response, verify all applicable items:
-
-```text
-GOVERNANCE_ROUTE_REPORTED: YES
-SKILLS_USED_REPORTED: YES
-SKILLS_USED_ACTUAL_ONLY: YES
-ROUTE_AND_SKILLS_CONSISTENT: YES
-ENGINEERING_FRAMEWORK_OWNERSHIP_PRESERVED: YES
-EXECUTION_TOPOLOGY_REPORTED_IF_APPLICABLE: YES
-SUBAGENT_USAGE_REPORTED_IF_APPLICABLE: YES
-SUBAGENT_RUNTIME_NOT_INVENTED: YES
-REMOTE_DELIVERY_REPORTED_IF_APPLICABLE: YES
-REMOTE_DELIVERY_NOT_INFERRED_FROM_LOCAL_COMMIT: YES
-LEGACY_RECEIPT_REPLACED: YES
-```
-
-If any applicable check would be `NO`, correct the response before returning it.
-
+Report actual PR/commit/CI identity when claiming delivery, and do not label an unrun test, absent permission, machine-driven UI inspection or unmerged Draft as PASS. Subagent model/reasoning details are relevant only when actual delegation materially affected the task. No documentation-only or no-op activity requires a status-only commit or Issue comment.
 ## Supporting contracts
 
 Read only what the current decision needs:

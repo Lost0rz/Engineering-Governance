@@ -69,20 +69,18 @@ A handoff transports the current task/authority references + fresh delta across 
 
 When freshness matters, sender/receiver may record and compare `AUTHORITY_OBSERVED_BASIS`. A handoff never silently overrides a materially changed current authority. Compatible current authority may continue; incompatible task drift returns to Project Governance. Required authority that is unavailable and cannot be safely represented by a bounded snapshot produces a STOP, not a guess.
 
-## Mandatory Control Alignment Gate
+## Conditional FILE_CONTROL alignment
 
-Every governed **state-changing** execution must perform this gate before final successful handoff such as `PASS`, `COMPLETE`, `CLOSED`, `MERGED` or `RELEASED`.
-
-The **check is mandatory; writes are conditional**.
+This is a FILE_CONTROL task/status reconciliation procedure, **not** a universal gate on every code edit, test, agent handoff or ISSUE_CONTROL task. Trigger it when a material FILE_CONTROL task/authorization/terminal state may have changed, or the owning project requires a final control snapshot. For an unchanged active task and routine same-purpose continuation, reuse valid state without another reconciliation pass. Writes remain conditional.
 
 1. obtain fresh outcome/lifecycle evidence;
 2. reread current `CURRENT_STATUS.md` and `CURRENT_TASK.md`;
 3. reread a linked durable design/plan when the result could have changed its owned semantics;
 4. compare reality with what each source owns;
 5. update only sources whose owned semantics are materially stale/incomplete;
-6. report the alignment result explicitly.
+6. report the relevant discrepancy or final outcome only when material; avoid a mandatory status-field report for a no-change continuation.
 
-Use semantic equivalents of:
+When an actual FILE_CONTROL reconciliation was required, concise evidence may use:
 
 ```text
 RELATED_DOCUMENT: <path | NONE>

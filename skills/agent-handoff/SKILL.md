@@ -11,12 +11,12 @@ A handoff transports responsibility/evidence; it does not create task authority,
 
 ## Trigger
 
-Use this Skill whenever the requested output itself is intended to transfer engineering responsibility or evidence to another agent, session, machine, reviewer, or execution context. This includes requests to generate an execution/construction card, audit card, review card, verification/test-run card, diagnostic card, or structured return receipt for another context.
+Use this Skill when the user actually requests an explicit cross-context execution, review, audit, verification or diagnosis handoff or structured receipt. Ordinary same-session continuation, source inspection, status advice and routine agents sharing a known task do **not** require a new Card just because context exists.
 
 Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or a FILE_CONTROL Task / approved ISSUE_CONTROL Issue already contains extensive implementation detail.
 ### Sender and receiver entry rule
 
-For a plain-language Web request such as "给我施工卡", first let Project Governance resolve the *actual* project, existing Task/Issue and stage; then use this Skill to deliver one **compact** Card. In ISSUE_CONTROL, distinguish (a) no suitable Issue: prepare/design the Issue under Project Governance, (b) Issue exists but unapproved or incomplete: link it as **non-executable** with the blocking reason, and (c) verified approved exact spec: emit the nine-field EXECUTE Card plus actual repository/Issue/revision/digest/approval provenance. A GitHub approval is direct by default; separately recorded Web AI delegation is allowed only under a target repo's explicit opt-in, with `DELEGATED_ACCOUNT_ATTESTED` and actual comment ID/actor recorded, never as fabricated direct-human provenance. Do not manufacture selectors or copy the nineteen-field spec into the Card.
+For "给我施工卡", resolve the current project and task once and deliver a minimal executable Card **only if** its actual legacy approval or independently accepted host-verified autonomy grant can be checked. An unapproved or incomplete legacy Issue yields a non-executable link and the smallest blocking fact, not a fabricated Card. For opted-in delegated approval, include genuine comment provenance and `DELEGATED_ACCOUNT_ATTESTED`; never misrepresent an AI proxy comment as direct human provenance. Do not duplicate the Issue spec or invent a new task.
 
 For "给我审计卡", reference the existing approved/current Issue and observed PR/ref where available; use `MODE: AUDIT`, `CAPABILITY: evidence-audit` only for a formal verdict, and preserve read-only scope. Do not equate creating an audit Card with performing an audit. If the user asks *about* cards rather than to transfer an actual task, explain the format without creating Issue/PR/approval.
 
@@ -45,22 +45,19 @@ Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` are 
 
 ## Standard card
 
-Required core fields:
+For an expressly requested executable cross-context transfer, include only what the receiver cannot safely recover from the selected task:
 
 ```text
-CARD_ID
-TASK_ID
-MODE
-CAPABILITY: <Engineering Governance skill | NONE>
-TARGET
-AUTHORITY
-DELTA: <fresh transfer delta | NONE>
-BOUNDARY
-RETURN_CONTRACT
+TASK_ID: <selected task>
+MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
+TARGET: <immediate outcome>
+AUTHORITY: <current task/Issue + applicable approval or verified grant locator>
+BOUNDARY: <specific risk/write/STOP limits>
+DELTA: <fresh context or NONE>
+RETURN_CONTRACT: <decisive result/evidence>
 ```
 
-Conditional fields include `PURPOSE`, `PROFILE`, `ISSUE`, `SPEC_REVISION`, `OBSERVED_BASIS`, source/target context, transfer-specific `STOP`, claim/evidence fields, and human-acceptance state when product-interface acceptance is material. Carry verification details only when they change the receiver's next decision; otherwise reference the task's verification contract rather than triggering another broad test/audit loop. See `references/handoff-contract.md`.
-
+Add `CAPABILITY`, `CARD_ID`, exact Issue revision/digest/approval identity, host grant identity, UI gate or runtime details **only when needed**. Existing longer nine-field Cards remain readable; this is not a new schema-enforcement service. The receiver independently reads current authority. A Card is not a permission grant.
 ## Issue execution transfer and durable receipt
 
 For ISSUE_CONTROL, hand off only the verified repository/Issue/current SPEC_REVISION and transfer-specific delta; do not copy the long Issue body. The local receiver retrieves the selected current spec and verifies the applicable legacy approval or separately accepted, independently host-verified autonomy grant. Under **legacy/default ISSUE_CONTROL**, post meaningful PAUSE/TERMINATE/final execution receipts to the same Issue and verify their delivery. In an actually active, independently verified G1/G2 autonomy mode, routine Issue comments are optional when evidence is recoverable from the task/PR/commit/CI/handoff; material risk expansion still needs a valid new authorization. Comments are evidence to consult, not an extra Writer-release permission and cannot expand scope. See Project Governance `issue-control.md` and `issue-execution-contract.md`.
@@ -83,43 +80,9 @@ For a material product-interface change, default to `HUMAN_UI_ACCEPTANCE: PENDIN
 
 A receiver must not return `HUMAN_UI_ACCEPTANCE: PASS` merely because it opened the page, clicked through the workflow, or inspected screenshots/renders itself. `PASS`/`FAIL` requires an explicit human decision.
 
-## Mandatory pre-return compliance gate
+## Pre-return integrity check
 
-Before returning any generated Handoff Card, correct the draft in the same pass until all are true:
-
-```text
-HANDOFF_ROUTE_APPLIED: YES
-REQUIRED_CORE_COMPLETE: YES
-MODE_VALID: YES
-TASK_AUTHORITY_PRESERVED: YES
-AUTHORITY_REFERENCED_NOT_DUPLICATED: YES
-DELTA_IS_TRANSFER_SPECIFIC: YES
-BOUNDARY_DOES_NOT_EXPAND_AUTHORITY: YES
-OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES
-RETURN_CONTRACT_OUTCOME_NEUTRAL: YES
-ENGINEERING_FRAMEWORK_OWNERSHIP_PRESERVED: YES
-EXTERNAL_ENGINEERING_SKILL_REQUIREMENTS_ABSENT: YES
-HUMAN_UI_ACCEPTANCE_OWNER_PRESERVED_IF_APPLICABLE: YES
-```
-
-Interpretation:
-
-- every required core field is present;
-- `MODE` is exactly one accepted side-effect class;
-- same-purpose transfer keeps the current `TASK_ID` unless Project Governance already changed task authority;
-- `AUTHORITY` points to FILE_CONTROL Task or ISSUE_CONTROL approved Issue/rules/design authorities instead of copying their full objective/scope/acceptance/STOP/workspace policy;
-- `DELTA` carries only new context the receiver would not recover from the referenced authorities;
-- a Card never expands mutation/write authority;
-- a SHA/ref observed by the sender belongs in `OBSERVED_BASIS` unless an owning authority explicitly declares an equality/lock requirement; the Card must not invent `EXPECTED_HEAD`, `MUST_EQUAL`, or equivalent lock semantics;
-- `RETURN_CONTRACT` requests the actual result/evidence. Do not prefill a successful `FINAL_STATE`, `READY`, `PASS`, or merge/release outcome that has not yet been observed;
-- `CAPABILITY` is an Engineering Governance capability or `NONE`, and no external engineering framework/Skill/plugin is prescribed as required execution workflow;
-- external framework names may remain only where they are genuinely reference/provenance/evidence, never as routing/execution authority;
-- when human product-interface acceptance is required, the Card keeps it human-owned and does not delegate that final acceptance to AI Computer Use or screenshot inspection.
-
-A known `NO` is a generation failure and must be fixed before the Card is returned. Do not return the noncompliant draft with an explanatory note.
-
-Before returning a structured Handoff Receipt, likewise verify that its required core fields are present, that `OUTCOME` reports the observed result rather than a predetermined success state, that reported `Skills used`/capability route does not promote external reference Skills into Engineering Governance execution, and that any human UI acceptance field reflects an explicit human decision rather than machine observation.
-
+Do not return a Card that invents authority, changes the selected task, expands write/risk limits, copies a long planning document, claims an unobserved PASS, or delegates human UI acceptance to AI. Prefer a concise corrected Card over a checklist of booleans. The receiver validates current authority and actual changed paths when that decision matters. A structured receipt reports observed results and real evidence rather than satisfying a universal output schema.
 ## Modes
 
 - `EXECUTE` — authorized state change;

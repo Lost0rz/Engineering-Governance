@@ -64,7 +64,7 @@ For a material edit to an approved or in-progress spec, the user must explicitly
 
 **No 'improve', 'refactor as needed', 'fix all issues' or 'choose an architecture' as the only executable step.** The Web/design executor must resolve material decision branches, identify relevant paths/functions from fresh evidence (not fabricate code paths), and specify observable verification outcomes. If code access is limited, mark required targets `UNKNOWN` and keep the Issue in `DESIGN_REVIEW` or `BLOCKED` until grounded. A schema-complete but vague Issue is not `READY_TO_EXECUTE`.
 
-For a large plan, retain full contract in Issue body; allow receiver to consume only current WP, shared constraints, dependency outcomes and approval. Summaries are **not** separate authorization. File paths may legitimately move; a receiver can resolve a semantically equivalent location with evidence under L0 without changing the approved architecture/interface.
+For complex or high-consequence plans use the full legacy Issue contract. A low-risk, separately trusted G1/G2 autonomy grant should reference the minimum approved objective, risk ceiling, allowable effects/paths and STOP conditions instead of forcing a 19-field form; that compact execution path is a **future** contract and not executable under today's fail-closed checker. For a large legacy plan, retain full contract in Issue body; allow receiver to consume only current WP, shared constraints, dependency outcomes and approval. Summaries are **not** separate authorization. File paths may legitimately move; a receiver can resolve a semantically equivalent location with evidence under L0 without changing the approved architecture/interface.
 
 ### Pre-execution spec-quality gate
 
@@ -85,11 +85,11 @@ Governance risk bounds authority and allowed effects:
 | Level | Boundary | Authorization rule |
 | --- | --- | --- |
 | G0 | Read-only source or host inspection | Existing read authority; no task write grant |
-| G1 | Bounded source repair or test seam with no production side effect | Exact approved task scope; only an independently verified autonomy grant may omit routine progress/correction/resume comments |
-| G2 | Cross-component source changes within a fixed interface, data, and permission envelope | Exact approved task scope plus writer/dependency checks; autonomy still requires a trusted host grant |
-| G3 | Privilege, identity, credentials, production release, irreversible data, or security-boundary change | Outside risk-scoped autonomy; use the separate high-assurance authority and release/data gates |
+| G1 | Bounded low-consequence repair, test seam or documentation | Automatically execute within current project/task policy **only after** the applicable authorization path is actually valid; no human approval for each local correction |
+| G2 | Bounded cross-component or integration work without new privilege or irreversible side effects | Automatically execute inside an independently verified task/risk envelope with affected tests and host gates, not per-WP human permission |
+| G3 | Credential/identity or privilege expansion, destructive data, irreversible production action or material security boundary | Explicit user/owner decision with the applicable higher-assurance evidence and execution/host safeguards |
 
-G0–G3 are not test tiers. Verification intensity is V0–V3 as defined in `verification-tiers.md`; a high V tier does not expand authority, and a low V tier does not make a high G risk safe. The new mode accepts at most G1/G2 and remains inactive until accepted policy opt-in and independent host/credential verification both pass.
+Risk follows **actual side effect and consequence**, not words like `merge`, `release`, file count or workflow step. An ordinary protected PR merge may be G2 only when a separate legitimate merge gate is satisfied; a production rollout or privileged release may be G3. The present autonomous source-write checker does **not** itself authorize any merge or release. G3 user decisions may be recorded by an explicitly opted-in, authenticated agent proxy when the project accepts that assurance, rather than requiring the user to paste a GitHub comment; a high-assurance host requirement cannot be replaced by a proxy comment. G0–G3 are not test tiers. Verification intensity is V0–V3 as defined in `verification-tiers.md`; a high V tier does not expand authority, and a low V tier does not make a high G risk safe. The new mode accepts at most G1/G2 and remains inactive until accepted policy opt-in and independent host/credential verification both pass.
 
 ## EXECUTION_DEVIATION_V1
 

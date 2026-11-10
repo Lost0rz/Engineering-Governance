@@ -85,25 +85,16 @@ For meaningful PAUSE, TERMINATE and completed execution under legacy/default ISS
 
 ## Common Card schema
 
-### Required core
+### Minimum executable handoff
 
-```text
-CARD_ID
-TASK_ID
-MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
-CAPABILITY: <Engineering Governance skill | NONE>
-TARGET
-AUTHORITY
-DELTA: <fresh transfer-specific delta | NONE>
-BOUNDARY
-RETURN_CONTRACT
-```
-
+For an explicitly requested cross-context EXECUTE/AUDIT/VERIFY transfer, use the seven decision-relevant keys `TASK_ID, MODE, TARGET, AUTHORITY, BOUNDARY, DELTA, RETURN_CONTRACT`. An existing nine-field Card remains valid; `CARD_ID` and `CAPABILITY` are conditional, not a second permission mechanism. Include the exact approved Issue revision/digest or host grant anchor in `AUTHORITY` for state-changing Issue Control. Routine same-context continuation needs no Card.
 ### Conditional
 
 Use only when decision-relevant:
 
 ```text
+CARD_ID
+CAPABILITY
 PURPOSE
 PROFILE
 ISSUE / TASK_ID / SPEC_REVISION / SPEC_SHA256  # required for ISSUE_CONTROL EXECUTE in both modes
@@ -121,7 +112,7 @@ AI_RENDERED_INSPECTION
 HUMAN_UI_ACCEPTANCE
 ```
 
-Do not omit required core fields. Do not duplicate the full task contract owned by the mode-selected FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision. A Card cannot expand authorization.
+Do not omit the minimum fields needed for the actual transfer or duplicate the full task contract. When a specialized capability is necessary, name it; otherwise the normal Project Governance entry can resolve routing. A Card cannot expand authorization.
 
 Do not add an alternate external-framework field such as `SKILLS_REQUIRED`, `USE_SUPERPOWERS`, `EXTERNAL_WORKFLOW`, or equivalent to bypass `CAPABILITY`. If an external artifact is only reference material, keep it in the normal authority/delta/evidence surfaces and preserve its non-authoritative status.
 

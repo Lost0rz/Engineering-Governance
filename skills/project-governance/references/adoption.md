@@ -13,13 +13,14 @@ If the environment has authoritative global guidance, manage exactly one current
 
 ## Web and Desktop entry acceptance
 
-When installing/updating Governance, check two **separate** routes, using actual runtime evidence where available:
+When installing/updating Governance, check **separate execution surfaces** only when they are actually targeted, using current runtime evidence:
 
 1. **Web entry**: in a fresh project chat, say "给我施工卡" or "给我审计卡" with a known task context and check actual Governance Skill resolution, correct task/Issue selection, right `agent-handoff` Card schema and truthful handling of missing approval. Plugin manifest descriptions/keywords increase discovery relevance but **do not guarantee** an automatic invocation.
-2. **Desktop receive**: in a fresh Codex Desktop session, paste the Card, check observed installed Governance version/availability, accepted repository `AGENTS.md`, current Issue or Task authority, actual local `gh` read/approval provenance, current PR/worktree, relevant Work Packages and STOP/receipt. A terminal-only `gh` check does not prove the Desktop agent has equivalent permissions.
-3. Negative controls: explanation-only prompts must not auto-create Issues, direct read-only audit must not become construction handoff, inaccessible plugin/GitHub must not be described as success, and a changed/unapproved Issue must not authorize writes.
+2. **Codex Desktop/local receive**: in a fresh local session, check actual installed source/version/Skill availability and the accepted repository's authority, selected task, current PR/workspace and necessary permissions before an allowed write. A terminal-only `gh` check does not establish Desktop tool permissions.
+3. **Claude Code/local receive**: inspect the actually installed or symlink-resolved Skill source and the receiving agent's effective permissions; a Codex installation does not prove Claude Code uses the same version.
+4. Negative controls: explanation-only prompts must not auto-create Issues, direct read-only audit must not become construction handoff, inaccessible plugin/GitHub must not be described as success, and a changed/unapproved Issue must not authorize writes.
 
-A source/package check does not establish Web auto-selection or Desktop installed behavior. Record source version, Web release, local installation and both actual run outcomes separately; prefer a compact acceptance fixture instead of constructing another runtime controller.
+A source/package check does not establish Web auto-selection, Codex Desktop or Claude Code runtime behavior. Record **source SHA, packaged manifest version and payload digest, Web-installed identity, Codex-installed source and Claude-installed source separately**, reusing existing host/install metadata instead of inventing a runtime controller. A plugin ZIP built from a Draft PR is a test artifact, not an accepted release, and a marketplace `main` ref will not install Draft PR changes.
 
 ## Upgrade verification
 

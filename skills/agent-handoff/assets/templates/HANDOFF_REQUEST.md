@@ -2,33 +2,26 @@
 
 A Card is transport, not a second task contract. Reference current authority and carry only transfer-specific delta.
 
-## Required core
+## Minimum handoff
 
 ```text
-CARD_ID: <id>
-TASK_ID: <same authorized task unless Project Governance changed the task boundary>
+TASK_ID: <selected task>
 MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
-CAPABILITY: <Engineering Governance Skill | NONE>
-TARGET: <immediate requested outcome / object>
-AUTHORITY: <FILE_CONTROL Task or ISSUE_CONTROL approved Issue URL/revision/provenance, plus relevant project/design pointers>
-DELTA: <fresh transfer-specific delta | NONE>
-BOUNDARY: <allowed read/write/action boundary>
-RETURN_CONTRACT: <actual evidence/result required for the next decision; do not predeclare success>
+TARGET: <bounded outcome>
+AUTHORITY: <accepted Task or selected Issue/revision/approval or independently verified grant>
+BOUNDARY: <actual write/read/STOP limit>
+DELTA: <fresh context or NONE>
+RETURN_CONTRACT: <decisive evidence/result>
 ```
 
-`CAPABILITY` selects the bounded Skill/capability the receiver should use. `MODE` classifies receiver action/side effects. A mode name never replaces Skill routing or grants mutation authority.
-
-Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` are not `MODE` values. Put them in `PURPOSE` or `DELTA` when useful.
-
+Add `CAPABILITY`, `CARD_ID`, `ISSUE`, `SPEC_REVISION`, host provenance and UI fields only when relevant. Existing nine-field Cards are compatible; an ordinary continuation does not require creating a Card. The Card remains transport, never source authority.
 ## Legacy/default ISSUE_CONTROL compact example (requires real verified selectors)
 
 This example applies to **legacy/default** ISSUE_CONTROL. The sender populates **actual** Issue identity, revision, SHA256 and authenticated approval comment. The separately host-verified active autonomy route below uses a different authorization basis and does not inherit the approval-comment requirement. Labels are *illustrative only*; never output placeholders as an executable Card.
 
 ```text
-CARD_ID: <current-card-id>
 TASK_ID: <same approved Issue TASK_ID>
 MODE: EXECUTE
-CAPABILITY: project-governance
 TARGET: <owner/repo and concrete bounded outcome>
 ISSUE: <owner/repo#number>
 SPEC_REVISION: <approved revision>
@@ -38,7 +31,7 @@ BOUNDARY: revalidate selected Issue/current approval, reuse safe workspace, exec
 RETURN_CONTRACT: observed WP/PR/CI results + same-Issue EXECUTION_RECEIPT_V1 URL, human UI gate separate
 ```
 
-For an **audit handoff**, use the same nine core fields with `MODE: AUDIT`, `CAPABILITY: evidence-audit` when a formal verdict is intended, observed PR/ref, evidence/claim and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`. An audit Card is not an audit verdict.
+For an **audit handoff**, use the same minimum context fields with `MODE: AUDIT`, `CAPABILITY: evidence-audit` when a formal verdict is intended, observed PR/ref, evidence/claim and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`. An audit Card is not an audit verdict.
 
 When no valid Issue spec/approval exists, return a non-executable design/review result and the blocking Issue URL; do not manufacture an EXECUTE Card or clone the approved plan into chat.
 

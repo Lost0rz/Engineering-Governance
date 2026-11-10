@@ -35,7 +35,7 @@ A remote-only session can assess PR/ref churn and suggest local follow-up, but i
 ## Core invariants
 
 1. **No unclassified task-relevant workspace.** A workspace that may affect the active task or lifecycle decision must have a verified relationship to a task/branch/ref and a known current disposition. Routine task startup does not require classifying unrelated historical workspaces unless they create ambiguity, collision, unique-work risk, lifecycle cleanup work, or are explicitly included in a legacy-reconciliation task. Projects may use their own lifecycle names; this contract does not impose a universal status enum.
-2. **No overlapping successor writer while a predecessor is unresolved or write-capable.** Do not create or select a successor writer workspace when an existing predecessor can write the same overlapping fact/state/policy/behavior authority and is unresolved, has unknown unique work, lacks a safe disposition, or remains able to resume writes under its current authorization. Capability or Domain labels are routing hints, not automatic mutual-exclusion boundaries: disjoint writers inside one capability may coexist when their write authorities do not overlap and repository rules allow it.
+2. **Prevent actual conflicting writes.** A retained branch or prior writer's theoretical ability to resume is not by itself a reason to block new work. When evidence shows concurrent overlapping modifications, unsafely shared local files, unresolved ownership or unique uncommitted work that could be lost, reconcile only the affected surfaces before conflicting mutation. Independent work and normal handoff continue. Comments, PR history and local evidence are all useful; none automatically creates a new Writer-release approval.
 3. **Lifecycle events are not terminal by name alone.** Merge, release, deployment, acceptance, abandonment, supersession, rollback, or another event changes workspace-closeout obligations only when project/task controls define that event as terminal for the task/phase or when it otherwise materially changes authorization. A remote merge alone does not universally prove that the task is terminal, and a terminal authorization state still does not prove physical/local workspace closeout.
 4. **Unknown or unique work is never cleanup fuel.** Preserve staged, unstaged, untracked, and local-only work until its ownership and disposition are verified. Do not use reset, stash, overwrite, forced branch movement, or forced worktree deletion merely to reach a clean-looking baseline.
 5. **Retention is explicit, not accidental.** A non-terminal workspace may remain for review, PR, QA, runtime acceptance, recovery, or another verified reason, but its owner, reason, release/next-event condition, and write capability must be known.
@@ -100,11 +100,11 @@ Perform a bounded workspace check for the repository and active scope. Establish
 - selected or proposed task workspace, local/remote branch state where relevant, worktree registration/path identity, HEAD, and working-tree state;
 - any existing workspace whose writes overlap the same affected fact/state/policy/behavior authority or that otherwise materially conflicts with the task;
 - whether those relevant workspaces are active, intentionally retained, terminal, uniquely dirty/local-only, or unresolved;
-- for any retained predecessor whose authority overlaps, whether it can still resume writes without a new authorization boundary.
+- when a specific collision is plausible, whether an overlapping execution is actually active or unique work is at risk.
 
 Expand beyond that bounded set only when ambiguity, unique work, a collision, lifecycle cleanup, or the task decision materially requires it.
 
-If a relevant predecessor writer is unresolved, its unique-work state is unknown, or it can still resume writes under its current authorization for the overlapping authority, stop creation/selection of the conflicting successor writer and reconcile the predecessor first. A retained predecessor stops blocking only when its write role has a verified safe boundary, such as terminal closeout, explicit supersession, explicit freeze/read-only disposition, or another project-defined state in which it cannot write that authority again without new authorization.
+If specific overlapping work is active or unique uncommitted changes might be overwritten, pause the **conflicting write only** until the affected files/workspace are safe. An inactive historical branch, retained review workspace or prior comment is not a standing global writer mutex. Do not require formal supersession just to resume non-overlapping development.
 
 A stale-looking path, old branch name, detached checkout, or merged remote PR alone is not enough evidence to delete, bypass, or treat a local workspace as non-writing.
 
@@ -138,7 +138,7 @@ A safe closeout establishes, in order:
 7. repository/worktree metadata pruning or equivalent maintenance when applicable;
 8. post-closeout verification of the remaining relevant workspace set.
 
-Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made. Before the overall state-changing execution claims a final successful handoff, also complete the Control Alignment Gate from [Control plane roles, updates, and lifecycle reconciliation](control-plane.md); workspace closeout and control alignment are separate required claims.
+Do not declare `CLOSED_CLEAN` (or an equivalent project-specific outcome) merely because the PR merged. Closeout evidence must support both the terminal authorization claim and the local/workspace disposition claim actually being made. For FILE_CONTROL, reconcile task/status controls only when a material control/terminal state changed under [Control plane roles](control-plane.md). ISSUE_CONTROL does not inherit the FILE_CONTROL gate. Neither a normal Handoff Card nor a merge observation alone mandates workspace cleanup.
 
 ## Control-only main advance after closeout
 

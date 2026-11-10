@@ -74,6 +74,44 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("Under legacy/default `ISSUE_CONTROL`", execution)
         self.assertIn("separately opted-in, independently host-verified", readme)
 
+    def test_low_ceremony_entry_and_cross_context_handoff(self):
+        governance = self.read("skills/project-governance/SKILL.md")
+        handoff = self.read("skills/agent-handoff/SKILL.md")
+        control = self.read("skills/project-governance/references/control-plane.md")
+        workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
+        self.assertIn("do not emit a compulsory multi-field receipt", governance)
+        self.assertIn("Routine same-session continuation", handoff)
+        self.assertIn("TASK_ID: <selected task>", handoff)
+        self.assertNotIn("HANDOFF_ROUTE_APPLIED: YES", handoff)
+        self.assertIn("## Conditional FILE_CONTROL alignment", control)
+        self.assertIn("not a universal gate on every code edit", control)
+        self.assertIn("Prevent actual conflicting writes", workspace)
+        self.assertIn("retained review workspace", workspace)
+
+    def test_risk_based_user_decision_and_delegated_comment_route(self):
+        execution = self.read("skills/project-governance/references/issue-execution-contract.md")
+        issue = self.read("skills/project-governance/references/issue-control.md")
+        self.assertIn("Risk follows **actual side effect and consequence**", execution)
+        self.assertIn("Explicit user/owner decision", execution)
+        self.assertIn("user need not visit GitHub", issue)
+        self.assertIn("source-write** grant never implicitly authorizes merge", issue)
+        self.assertIn("fail-closed checker", execution)
+
+    def test_source_plugin_identity_and_all_install_surfaces(self):
+        import json
+        plugin = json.loads(self.read("plugin.json"))
+        marketplace = json.loads(self.read(".agents/plugins/marketplace.json"))
+        self.assertEqual(plugin["name"], "engineering-governance")
+        self.assertRegex(plugin["version"], r"^\\d+\\.\\d+\\.\\d+$")
+        self.assertEqual(marketplace["plugins"][0]["name"], plugin["name"])
+        self.assertEqual(marketplace["plugins"][0]["source"]["ref"], "main")
+        adoption = self.read("skills/project-governance/references/adoption.md")
+        for surface in ("Web-installed", "Codex-installed", "Claude-installed"):
+            self.assertIn(surface, adoption)
+        workflow = self.read(".github/workflows/governance-contract-checks.yml")
+        for path in ("'plugin.json'", "'AGENTS.md'", "'.agents/plugins/**'"):
+            self.assertIn(path, workflow)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")
