@@ -36,3 +36,60 @@ jobs:
         run: python3 -c 'import json,pathlib; files=["plugin.json",".agents/plugins/marketplace.json"]; [json.loads(pathlib.Path(p).read_text(encoding="utf-8")) for p in files]'
       - name: Run focused governance contract tests
         run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v
+
+      - name: Build versioned Web preview package
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import zipfile
+
+          version = "0.8.3"
+          repo = Path(".")
+          original = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
+          assert original["name"] == "engineering-governance"
+          original["version"] = version
+
+          codex_manifest = {
+              "interface": {
+                  "displayName": "Engineering Governance",
+                  "shortDescription": original["extensions"]["com.openai"]["interface"]["shortDescription"],
+                  "longDescription": original["description"],
+                  "developerName": "Workspace upload",
+                  "category": "Other",
+                  "capabilities": [],
+                  "defaultPrompt": None,
+              },
+              "name": original["name"],
+              "version": version,
+              "description": original["description"],
+              "author": {"name": "Workspace upload"},
+              "keywords": [],
+              "skills": "./skills",
+          }
+          head = os.popen("git rev-parse HEAD").read().strip()
+          assert len(head) == 40 and all(c in "0123456789abcdef" for c in head)
+          out = Path("dist") / f"engineering-governance-web-preview-{version}-{head[:12]}.zip"
+          out.parent.mkdir(exist_ok=True)
+          entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))
+          entries = [path for path in entries if path.is_file() and not "__pycache__" in path.parts and path.suffix != ".pyc"]
+          with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
+              archive.writestr("plugin.json", json.dumps(original, indent=2, ensure_ascii=False) + "\n")
+              archive.writestr(".codex-plugin/plugin.json", json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n")
+              for path in entries:
+                  archive.write(path, path.as_posix())
+              archive.writestr("PREVIEW_SOURCE_SHA.txt", head + "\n")
+          print(f"WEB_PREVIEW_PACKAGE={out}")
+          print(f"WEB_PREVIEW_SOURCE_SHA={head}")
+          print(f"WEB_PREVIEW_FILE_COUNT={len(entries) + 3}")
+          PY
+      - name: Upload Web preview package (artifact only; no release)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engineering-governance-web-preview
+          path: dist/engineering-governance-web-preview-*.zip
+          if-no-files-found: error
+          retention-days: 7
