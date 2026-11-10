@@ -143,10 +143,6 @@ Configured/default model values and observed effective runtime identity are sepa
 
 An external engineering framework may not use a Card as a vehicle to escalate model/reasoning values, replace environment defaults, or take over Engineering Governance execution topology/review lifecycle. If runtime actually applies an external configuration for independent platform reasons, report that as observed runtime/config evidence rather than treating it as Engineering Governance policy.
 
-## ISSUE_CONTROL receipt route
-
-In legacy/default ISSUE_CONTROL, the required durable execution receipt is the Issue comment defined by Project Governance `issue-execution-contract.md`. In an actually host-verified active G1/G2 autonomy mode, routine Issue comments are optional and the durable outcome may be carried by linked task, PR/commit/CI and handoff evidence. Existing comments remain valid evidence and may be included; no empty or duplicate comment is needed solely for transport. The Agent Handoff Receipt fields are evidence, not alternate task authority.
-
 ## Receipt
 
 Use `assets/templates/HANDOFF_RECEIPT.md` for the minimal evidence schema. Preserve `TASK_ID`, `MODE`, `TARGET`, observed `OUTCOME` and decisive evidence; `CARD_ID`/`CAPABILITY` are included only when supplied or relevant. For `EXECUTE`, include changed files, tests, actual local/remote ref state and unresolved blockers when material; a local commit is not proof of remote delivery. For `AUDIT/REVIEW/VERIFY`, report only the observed identity, evidence, verdict and limits.

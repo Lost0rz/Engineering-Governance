@@ -35,7 +35,7 @@ Use the minimal `TASK_ID, MODE, TARGET, AUTHORITY, BOUNDARY, DELTA, RETURN_CONTR
 
 ## Issue execution and receipt
 
-Under **legacy/default ISSUE_CONTROL**, issue approval and meaningful PAUSE/TERMINATE/final receipts follow Project Governance's `issue-control.md` and `issue-execution-contract.md`. Under an independently verified active G1/G2 grant, routine Issue comments are optional; the unverified grant is inactive. This Skill does not redefine approval, deviation or comment conditions.
+Issue approval and comment/receipt rules belong to Project Governance's `issue-control.md` and `issue-execution-contract.md`. This Skill carries the selected authority reference and resulting evidence; it does not redefine either legacy or autonomous approval/receipt requirements.
 
 
 ## Human UI evidence

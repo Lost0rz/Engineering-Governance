@@ -60,8 +60,8 @@ class EG097PolicyContractTests(unittest.TestCase):
         handoff = self.read("skills/agent-handoff/SKILL.md")
         self.assertIn("legacy/default ISSUE_CONTROL", contract)
         self.assertIn("terminal implementation Issue comments are optional", contract)
-        self.assertIn("Under **legacy/default ISSUE_CONTROL**", handoff)
-        self.assertIn("routine Issue comments are optional", handoff)
+        self.assertIn("Issue approval and comment/receipt rules belong to Project Governance", handoff)
+        self.assertNotIn("Under **legacy/default ISSUE_CONTROL**", handoff)
 
     def test_no_unconditional_writer_release_or_legacy_comment_in_shared_entry_docs(self):
         development = self.read("skills/project-governance/references/development-flow.md")

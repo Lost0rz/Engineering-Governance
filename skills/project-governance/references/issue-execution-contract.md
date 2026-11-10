@@ -1,10 +1,10 @@
 # Execution Spec / Deviation / Receipt — ISSUE_CONTROL
 
-This is a reusable **source contract**, not a daemon, form-only validator, model router, second task authority or separate Skill. Project Governance owns authorization; Solution Design resolves architecture; Agent Handoff transports a reference + delta. Low-reasoning executors receive explicit work packages, not open-ended product questions.
+This is a reusable **source contract**, not a daemon, form-only validator, model router, second task authority or separate Skill. Project Governance owns authorization; Solution Design resolves architecture; Agent Handoff transports a reference + delta. Detailed legacy executors use the approved Work Packages; compact autonomous tasks use their authorized objective and bounded scope.
 
 ## EXECUTION_SPEC_V1 (Issue body)
 
-For executable Issues, use the exact **nineteen** `### FIELD_NAME` headings below in either the GitHub Issue Form or the Markdown template. The host verifies repository and Issue number independently, so they are not self-entered proof. The order is conventional; the digest helper canonicalizes by known field name.
+For **legacy EXECUTION_SPEC_V1 Issues**, use the exact **nineteen** `### FIELD_NAME` headings below in either the GitHub Issue Form or the Markdown template. The host verifies repository and Issue number independently, so they are not self-entered proof. The order is conventional; the digest helper canonicalizes by known field name.
 
 ```text
 ### CONTRACT
