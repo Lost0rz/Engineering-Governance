@@ -65,7 +65,7 @@ Return the verified route or unresolved gap to the calling flow. Navigation does
 
 Before adding/changing a writer, backend, shared behavior, module boundary or materially new responsibility, apply `code-structure.md`. Reuse/extend/replace the canonical authority deliberately rather than creating parallel truth. File size alone is not a responsibility boundary.
 
-At an ordinary handoff, pass along available Issue discussion, PR/ref evidence and local workspace context without demanding a separate Writer-release check. Only when specific overlapping writes or unique work are actually at risk, reconcile the relevant facts before making the conflicting write; preserve existing work. See `workspace-lifecycle.md` for the general lifecycle rules.
+At an ordinary handoff, pass along relevant Issue discussion, PR/ref evidence and local workspace context when helpful, without demanding a separate Writer-release check. Only when specific overlapping writes or unique work are actually at risk, reconcile the relevant facts before making the conflicting write; preserve existing work. See `workspace-lifecycle.md` for the general lifecycle rules.
 
 If the responsibility boundary becomes unclear, return to Domain Navigation or Solution Design according to whether the uncertainty is location/authority or design choice.
 

@@ -120,6 +120,16 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("8-field `AUTONOMY_SCOPE_V1`", control)
         self.assertIn("Legacy `digest` and `verify`", control)
 
+    def test_final_handoff_rules_do_not_restore_nine_field_gate(self):
+        handoff_contract = self.read("skills/agent-handoff/references/handoff-contract.md")
+        governance = self.read("skills/project-governance/SKILL.md")
+        readme = self.read("README.md")
+        self.assertNotIn("all nine required core fields", handoff_contract)
+        self.assertNotIn("Compact nine-core-field", handoff_contract)
+        self.assertIn("No standalone 11-item formatting checklist", handoff_contract)
+        self.assertIn("not a universal per-edit final alignment gate", governance)
+        self.assertIn("8-field `AUTONOMY_SCOPE_V1`", readme)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")

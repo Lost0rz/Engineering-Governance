@@ -56,7 +56,7 @@ Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belo
 | --- | --- | --- |
 | No selected current Task/Issue | Project Governance discovery/design result or prepared Issue for review | Do not fabricate TASK_ID, approval or executable Card. |
 | ISSUE_CONTROL Issue incomplete/unapproved or material spec drift | Issue review link + exact blocking fact; optionally read-only REVIEW/AUDIT Card | Never emit EXECUTE Card implying approved authority. |
-| ISSUE_CONTROL exact current revision/digest approved by authenticated actor | Compact nine-core-field EXECUTE Handoff Card with Issue/ref/revision/digest/approval comment provenance, assurance type and transfer delta | Never paste whole 19-field plan; ChatGPT confirmation only qualifies with explicit AGENTS opt-in, a distinct verified delegated GitHub record and lower-assurance labeling. |
+| ISSUE_CONTROL exact current revision/digest approved by authenticated actor | Minimal EXECUTE Handoff Card with Issue/ref/revision/digest/approval comment provenance, assurance type and transfer delta | Never paste whole 19-field plan; ChatGPT confirmation only qualifies with explicit AGENTS opt-in, a distinct verified delegated GitHub record and lower-assurance labeling. |
 | ISSUE_CONTROL with accepted risk-scoped opt-in and independently verified live host grant | Card references immutable grant run/attempt/workflow/ref/SHA, selected task snapshot, target ref and commit, requested paths/effects, risk ceiling, expiry and current revocation check; the grant replaces comment approval only in this explicitly selected mode | Local JSON, actor login, label or card fields cannot prove a grant; without trusted host/credential-separation evidence, use legacy ISSUE_CONTROL or stop. |
 | FILE_CONTROL target repository | Card references accepted current Task and relevant fresh source status | Do not force Issue Control because installed plugin supports it. |
 
@@ -162,23 +162,9 @@ For a material product-interface change, default to `HUMAN_UI_ACCEPTANCE: PENDIN
 
 A pending human gate does not invalidate otherwise valid automated verification or AI internal review; it only prevents a final human-acceptance claim.
 
-## Card generation rules
+## Card integrity (not a separate approval gate)
 
-Before returning a generated Card, check and correct all of the following in the same pass:
-
-1. **Route** — the output has actually been shaped as an Agent Handoff Card when it crosses contexts.
-2. **Core schema** — all nine required core fields are present.
-3. **Mode** — `MODE` is one accepted side-effect class, not a task-purpose adjective.
-4. **Task identity** — preserve the current `TASK_ID` for the same engineering purpose. Context changes alone do not create tasks.
-5. **Authority compression** — `AUTHORITY` points to the current task/rules/design sources; do not re-copy the entire task contract.
-6. **Fresh delta** — `DELTA` contains only transfer-specific facts/instructions that are not recoverable by rereading those authorities.
-7. **Boundary** — the Card cannot grant writes, scope, side effects, remote publication, or repository authority beyond the owning task.
-8. **Identity semantics** — sender-observed commits/refs belong in `OBSERVED_BASIS` by default. Promote an identity to `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or an equivalent lock only when an owning authority explicitly defines that lock and the Card is merely referencing it.
-9. **Outcome-neutral return** — `RETURN_CONTRACT` requests actual evidence/outcome. Do not predeclare `FINAL_STATE: READY`, `PASS`, merge/release completion, remote-delivery success, or another success that the receiver has not observed.
-10. **Engineering framework ownership** — `CAPABILITY` is an Engineering Governance capability or `NONE`; external engineering framework/Skill/plugin names are absent from required execution directives. Reference-only mentions remain reference-only.
-11. **Human acceptance ownership** — for material product-interface changes, default the human gate to pending unless owning authority explicitly waives it; never delegate the final decision to the receiving AI or equate automated/AI browser evidence with human acceptance.
-
-A Card that knowingly fails one of these checks is not returned with a warning; revise it until compliant or return to Project Governance when the owning authority itself is ambiguous/conflicting.
+For an expressly requested Card, keep the current task identity, explicit receiver action, current authorization reference and its real scope/STOP limits. Include only fresh delta and an outcome-neutral return request. No standalone 11-item formatting checklist, no nine-field ceremony, and no Card for an ordinary same-task continuation. The receiver independently verifies authorization before mutation; a Card never grants additional permissions. Do not manufacture a human UI acceptance result or a passed host check.
 
 ## Mode profiles
 
