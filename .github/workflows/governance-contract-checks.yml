@@ -1,0 +1,33 @@
+name: Governance Contract Checks
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'documents/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/workflows/governance-contract-checks.yml'
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: Python governance contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out PR source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile governance checker and tests
+        run: python3 -m compileall -q skills/project-governance/scripts
+      - name: Run focused governance contract tests
+        run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v
