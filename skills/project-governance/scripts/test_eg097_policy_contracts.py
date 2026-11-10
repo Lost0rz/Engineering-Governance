@@ -80,7 +80,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         control = self.read("skills/project-governance/references/control-plane.md")
         workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
         self.assertIn("do not emit a compulsory multi-field receipt", governance)
-        self.assertIn("Routine same-session continuation", handoff)
+        self.assertIn("Ordinary same-session continuation", handoff)
         self.assertIn("TASK_ID: <selected task>", handoff)
         self.assertNotIn("HANDOFF_ROUTE_APPLIED: YES", handoff)
         self.assertIn("## Conditional FILE_CONTROL alignment", control)
