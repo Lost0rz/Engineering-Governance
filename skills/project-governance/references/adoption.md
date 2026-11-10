@@ -38,7 +38,7 @@ Verify only relevant surfaces:
 - routing does not duplicate Skill procedure or project facts;
 - supported global-guidance environments have one current block; environments without it remain functional.
 
-Global routing adoption and target-project governance/profile generation are separate operations.
+Global routing adoption and target-project governance/profile generation are separate operations. The historical `references/V081_ENTRY_ROUTING_RECEIVER_ACCEPTANCE.md` documents the v0.8.1 nine-field acceptance baseline and must not be treated as a current requirement for the seven-field compatible Handoff; do not rewrite historical acceptance evidence into a new result. A release candidate still needs a fresh live Web, Codex Desktop and Claude Code smoke check against the same accepted source SHA and package manifest identity.
 
 
 ## ISSUE_CONTROL project adoption

@@ -67,7 +67,7 @@ A reviewer finding does not automatically authorize a new whole-task reviewer lo
 
 ## ISSUE_CONTROL deterministic execution units
 
-Each unit operates within an approved Issue Work Package; delegation and subagents do not expand authority. L2 PAUSE_AND_ASK blocks the affected WP and its dependencies, while strictly disjoint WPs may continue under the current approved plan. L3 TERMINATE preserves unique work without unapproved rollback. Comments/spec revisions never automatically create new physical worktrees, PRs, agents or model upgrades.
+Under legacy/default ISSUE_CONTROL, execution units reference the approved Issue Work Packages. In an **actually activated independently host-verified** G1/G2 compact-scope route, use bounded actions inside the eight-field task/grant path, effect and risk envelope; do not invent mandatory WP IDs. L2 means isolate an unresolved affected action, resolve in-envelope design/diagnostic uncertainty, then recheck affected evidence and continue when safe; ask the user only for a genuine owner-only or expanded-authority decision. L3 still terminates unsafe execution. Delegation, comments and spec revisions never create additional permission, physical worktrees, PRs, agents or model upgrades.
 
 Keep governance risk G0–G3 separate from verification tier V0–V3 and deviation L0–L3. Decomposition, a passing check, or a positive local grant snapshot cannot expand the selected Issue's authority; risk-scoped autonomy remains inactive without accepted policy opt-in and independently verified live-host/credential separation.
 

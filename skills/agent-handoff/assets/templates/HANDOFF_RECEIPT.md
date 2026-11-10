@@ -4,37 +4,19 @@
 
 A Receipt reports the actual result/evidence of one Card. It is transport/evidence, not project authority.
 
-## Required core
+## Compact result
 
-Every structured Receipt starts with:
+For an actual Handoff Card, report the selected `TASK_ID`, `MODE`, `TARGET`, observed `OUTCOME` and the decisive evidence or blocker. Preserve `CARD_ID` and `CAPABILITY` **only if supplied in the originating Card or material to the result**; an optional field absent from a valid seven-field Card is not a receipt failure.
 
 ```text
-CARD_ID: <source card id>
-TASK_ID: <authorized task id>
+TASK_ID: <selected task>
 MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
-CAPABILITY: <Engineering Governance Skill actually requested | NONE>
-TARGET: <card target>
-OUTCOME: <observed mode-appropriate result; never predetermined>
+TARGET: <actual target>
+OUTCOME: <observed result, including PARTIAL/STOP/UNKNOWN>
+EVIDENCE_OR_BLOCKER: <decisive reference / missing fact>
 ```
 
-Then add only mode-relevant evidence. Do not restate the full task contract.
-
-## Mandatory pre-return gate
-
-Before returning a structured Receipt, revise it until all are true:
-
-```text
-RECEIPT_CORE_COMPLETE: YES
-SOURCE_CARD_ID_PRESERVED: YES
-TASK_ID_PRESERVED_UNLESS_RECONCILED: YES
-MODE_PRESERVED: YES
-CAPABILITY_REPORTED_ACCURATELY: YES
-OUTCOME_IS_OBSERVED: YES
-EVIDENCE_IS_MODE_RELEVANT: YES
-RECEIPT_DOES_NOT_EXPAND_AUTHORITY: YES
-```
-
-`OUTCOME` may be success, failure, stop, blocked, unknown, no-change, or another evidence-supported result. Never force the Receipt into `READY`, `PASS`, merged, released, or another success state merely because the Card requested that work.
+A normal same-task continuation or conversational result does not require a structured Receipt. A Receipt never expands authority or predeclares PASS. Report relevant host/source/CI identity before claiming delivery, and keep human UI acceptance human-owned. No separate mandatory eight-checkbox pre-return gate.
 
 ## EXECUTE
 
@@ -48,7 +30,7 @@ VERIFICATION_TIER: <V0-V3 | NOT_APPLICABLE>
 AUTHORITY_SOURCE: <FILE_CONTROL | LEGACY_ISSUE_CONTROL | VERIFIED_AUTONOMY_GRANT | NONE>
 LIFECYCLE: <branch/PR/workspace effects | NONE>
 UNRESOLVED: <NONE | evidence/blocker>
-CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION | NOT_APPLICABLE>
+CONTROL_ALIGNMENT: <PASS | NEEDS_RECONCILIATION | NOT_APPLICABLE, only when a FILE_CONTROL control transition actually required it>
 NEXT_SAFE_ACTION: <next decision/action>
 ```
 
@@ -65,7 +47,7 @@ CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
 NEXT_SAFE_ACTION: <next decision/action>
 ```
 
-If formal Evidence Audit was requested, `CAPABILITY` should identify `evidence-audit`. `MODE: AUDIT` alone is only the read-only action class.
+If formal Evidence Audit was requested and the capability is relevant, `CAPABILITY` may identify `evidence-audit`; do not invent that Skill as invoked. `MODE: AUDIT` alone is only the read-only action class.
 
 ## VERIFY
 

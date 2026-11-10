@@ -454,6 +454,18 @@ class IssueContractTests(unittest.TestCase):
                 with self.assertRaises(mod.SpecError):
                     mod.digest_autonomy_scope(invalid, repo=REPO, number=40)
 
+    def test_autonomy_paths_reject_control_character_injections(self):
+        for unsafe in ("skills/unsafe\x00file", "skills/unsafe\nfile", "skills/unsafe\rfile"):
+            grant = autonomy_snapshot()
+            grant["allowed_paths"] = [unsafe]
+            with self.subTest(path=repr(unsafe)):
+                with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_ALLOWED_PATHS"):
+                    mod.verify_autonomy_snapshot(
+                        issue(), grant, repo=REPO, approvers={"Lost0rz"},
+                        agents_text=AUTONOMY_AGENTS,
+                        target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                    )
+
     def test_autonomy_missing_opt_in_stops(self):
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_NOT_OPTED_IN"):
             mod.verify_autonomy_snapshot(

@@ -138,19 +138,16 @@ Audit/reviewer findings do not authorize fixes. Corrective mutation returns to P
 
 At a merge/release decision, keep semantic implementation evidence separate from live repository-host gates. Reuse semantic evidence across proven `CONTROL_ONLY_DRIFT` only when semantic equivalence and task conditions permit it. Re-read current required checks/reviews/conflicts/mergeability/merge queue/current-base/latest-head rules for the literal identity the host governs.
 
-## 15. Reconcile controls and close out
+## 15. Reconcile controls and close out when material
 
-Before a final successful governed state-changing handoff, run the mandatory Control Alignment Gate:
+At a **real task/authorization/terminal state transition**, verify the affected authority and outcome; do not impose a universal Control Alignment Gate at each edit, ordinary handoff, same-task continuation or test result.
 
-1. obtain fresh outcome/lifecycle evidence, including the applicable remote-delivery state for repository-backed commits;
-2. FILE_CONTROL: reread Task/Status; ISSUE_CONTROL: reread approved Issue revision, meaningful decisions/receipts and current host evidence;
-3. reread the linked durable planning/design authority when the outcome could have changed its owned semantics;
-4. update only the actual semantic owner: file controls in FILE_CONTROL or approved spec/decision/final Issue receipt in ISSUE_CONTROL; no Issue-progress Git commits;
-5. report FILE_CONTROL document/status/task reconciliation and `CONTROL_ALIGNMENT`, or ISSUE_CONTROL `ISSUE_AUTHORITY_ALIGNMENT` plus `RECEIPT_DELIVERY`, without inventing successful delivery.
+- **FILE_CONTROL:** when Task/Status semantics may change, compare to current facts and update only stale project-owned control fields under `control-plane.md`.
+- **ISSUE_CONTROL legacy:** retain actual selected approval, existing material-decision and required final-receipt rules. Do not read/update legacy Task/Status or manufacture Issue-progress Git commits.
+- **Verified active G1/G2 autonomy (future):** recover result from selected task/grant/PR/commit/CI/handoff; ordinary Issue comments are optional. Missing host authorization continues to STOP, not silently fall back to an unapproved path.
+- **Merge/release:** check the actual host gate and evidence for that operation. Do not infer final acceptance or local workspace cleanup from remote merge alone.
 
-The check is mandatory; writes are conditional.
-
-If task workspaces exist, separately reconcile physical workspace/branch disposition under `workspace-lifecycle.md`. A merge event does not by itself prove local closeout. Likewise, local workspace cleanup does not convert an unpushed required deliverable into remote delivery.
+Preserve unique local work and investigate only actual overlapping writer/cleanup risks. When no owned control meaning changed, no additional control write, checkbox report or status-only commit is required.
 
 ## Cross-skill composition
 

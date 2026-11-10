@@ -130,6 +130,44 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("not a universal per-edit final alignment gate", governance)
         self.assertIn("8-field `AUTONOMY_SCOPE_V1`", readme)
 
+    def test_receiver_matches_compact_scope_and_mode_specific_receipts(self):
+        receiver = self.read("skills/agent-handoff/references/handoff-contract.md")
+        receipt = self.read("skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md")
+        issue = self.read("skills/project-governance/references/issue-control.md")
+        self.assertIn("using the contract selected by the authorization path", receiver)
+        self.assertNotIn("19-field quality, current revision and canonical SHA256 in both authority paths", receiver)
+        self.assertIn("8-field parser", receiver)
+        self.assertIn("Under legacy/default ISSUE_CONTROL", receiver)
+        self.assertIn("For an actual Handoff Card", receipt)
+        self.assertNotIn("## Mandatory pre-return gate", receipt)
+        self.assertNotIn("SOURCE_CARD_ID_PRESERVED: YES", receipt)
+        self.assertIn("only if supplied", receipt)
+        self.assertIn("Legacy/default: run `digest/verify`", issue)
+        self.assertIn("In a **verified active** G1/G2 grant mode", issue)
+
+    def test_control_alignment_is_mode_and_event_scoped_everywhere(self):
+        flow = self.read("skills/project-governance/references/development-flow.md")
+        control = self.read("skills/project-governance/references/control-plane.md")
+        receipt = self.read("skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md")
+        self.assertNotIn("run the mandatory Control Alignment Gate", flow)
+        self.assertIn("At a **real task/authorization/terminal state transition**", flow)
+        self.assertIn("## Conditional FILE_CONTROL alignment", control)
+        self.assertIn("only when a FILE_CONTROL control transition", receipt)
+
+    def test_l2_resolution_not_automatically_g3_or_human_confirmation(self):
+        contract = self.read("skills/project-governance/references/issue-execution-contract.md")
+        orchestrator = self.read("skills/execution-orchestrator/SKILL.md")
+        design = self.read("skills/solution-design/SKILL.md")
+        audit = self.read("skills/evidence-audit/SKILL.md")
+        self.assertIn("L2 `RESOLVE_OR_ESCALATE`", contract)
+        self.assertIn("L2 is not synonymous with G3", contract)
+        self.assertIn("L2 alone does not imply G3", self.read("skills/project-governance/references/issue-control.md"))
+        self.assertIn("do not invent mandatory WP IDs", orchestrator)
+        self.assertIn("without forcing a WP list", design)
+        self.assertIn("without requiring nonexistent WP fields", audit)
+        self.assertIn("Legacy: increment revision", contract)
+        self.assertIn("G3 requires the applicable explicit owner decision", contract)
+
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")

@@ -13,7 +13,7 @@ Calling this Skill from an implementation context does not make the result indep
 
 ## Issue specification / execution readiness audits
 
-An expressly authorized Issue-readiness audit binds verdict to exact repository, Issue, SPEC_REVISION, approver provenance and verified code authority. Audit detailed WPs (actual paths/functions/contracts, dependencies, edges and focused checks), L0–L3 decision behavior, resume, receipt and human UI acceptance. A filled form/READY label is not verified approval. Report separately `SPEC_QUALITY`, `ISSUE_AUTHORITY`, source/PR/CI/host evidence and actual installed runtime; findings do not authorize correction.
+An expressly authorized Issue-readiness audit binds verdict to exact repository, Issue, SPEC_REVISION, approver provenance and verified code authority. Audit detailed WPs **when the selected contract is the legacy 19-field spec**; for a future verified active eight-field G1/G2 compact scope, audit its task/risk/effect/path limits, actual changed paths, targeted tests and host-grant evidence without requiring nonexistent WP fields. In either mode verify L0–L3 decisions, evidence and applicable human UI acceptance. A filled form/READY label is not verified approval. Report separately `SPEC_QUALITY`, `ISSUE_AUTHORITY`, source/PR/CI/host evidence and actual installed runtime; findings do not authorize correction.
 
 ## Profiles
 

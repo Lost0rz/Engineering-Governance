@@ -283,7 +283,8 @@ def _safe_repo_path(value: object) -> bool:
         return False
     parts = value.split("/")
     return (all(part not in ("", ".", "..") and part.casefold() != ".git" for part in parts)
-            and not any(ch in value for ch in "*?[]"))
+            and not any(ch in value for ch in "*?[]")
+            and not any(ord(ch) < 32 or ord(ch) == 127 for ch in value))
 
 
 def _safe_target_ref(value: object) -> bool:
