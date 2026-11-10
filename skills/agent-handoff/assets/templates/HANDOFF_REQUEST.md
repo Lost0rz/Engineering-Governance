@@ -74,23 +74,9 @@ Do not duplicate objective, scope, acceptance, STOP conditions or workspace poli
 
 A sender-observed SHA/ref belongs in `OBSERVED_BASIS` by default. Use `EXPECTED_HEAD`, `REQUIRED_HEAD`, `MUST_EQUAL`, or another equality-lock field only when the referenced owning authority explicitly defines that lock.
 
-## Mandatory pre-return gate
+## Card integrity
 
-Before returning this Card, revise the draft until every item is YES:
-
-```text
-HANDOFF_ROUTE_APPLIED: YES
-REQUIRED_CORE_COMPLETE: YES
-MODE_VALID: YES
-TASK_AUTHORITY_PRESERVED: YES
-AUTHORITY_REFERENCED_NOT_DUPLICATED: YES
-DELTA_IS_TRANSFER_SPECIFIC: YES
-BOUNDARY_DOES_NOT_EXPAND_AUTHORITY: YES
-OBSERVED_IDENTITY_NOT_PROMOTED_TO_LOCK: YES
-RETURN_CONTRACT_OUTCOME_NEUTRAL: YES
-```
-
-Do not return a known-noncompliant draft plus commentary. Correct it before return.
+Use `agent-handoff/references/handoff-contract.md` for the actual transport contract. Keep task identity, observed authority, bounded action and return evidence accurate; do not output checklist fields or use a Card to grant permission.
 
 ## Mode hints
 

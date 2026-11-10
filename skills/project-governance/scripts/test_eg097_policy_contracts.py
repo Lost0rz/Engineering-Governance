@@ -176,6 +176,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         contract = self.read("skills/agent-handoff/references/handoff-contract.md")
         execution = self.read("skills/project-governance/references/issue-execution-contract.md")
         routing_template = self.read("skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md")
+        request_template = self.read("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md")
         self.assertIn("which Engineering Governance capability", routing)
         self.assertNotIn("UNRESOLVED_DEPENDENCY:", routing)
         self.assertNotIn("INTERACTION_WORKFLOW\\n", governance)
@@ -184,6 +185,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("issue-control.md", execution)
         self.assertIn("A Card never grants", contract)
         self.assertNotIn("For governed user-facing responses, make routing observable:", routing_template)
+        self.assertNotIn("## Mandatory pre-return gate", request_template)
 
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
