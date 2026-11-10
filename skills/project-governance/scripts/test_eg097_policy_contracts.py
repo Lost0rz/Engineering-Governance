@@ -102,7 +102,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         plugin = json.loads(self.read("plugin.json"))
         marketplace = json.loads(self.read(".agents/plugins/marketplace.json"))
         self.assertEqual(plugin["name"], "engineering-governance")
-        self.assertRegex(plugin["version"], r"^\\d+\\.\\d+\\.\\d+$")
+        self.assertRegex(plugin["version"], r"^\d+\.\d+\.\d+$")
         self.assertEqual(marketplace["plugins"][0]["name"], plugin["name"])
         self.assertEqual(marketplace["plugins"][0]["source"]["ref"], "main")
         adoption = self.read("skills/project-governance/references/adoption.md")
