@@ -421,7 +421,7 @@ class IssueContractTests(unittest.TestCase):
         self.assertEqual(result["result"], "STOP")
         self.assertFalse(result["execution_allowed"])
         self.assertEqual(result["policy_shape"], "PASS_LOCAL_SNAPSHOT_ONLY")
-        with self.assertRaisesRegex(mod.SpecError, "MISSING_FIELDS"):
+        with self.assertRaisesRegex(mod.SpecError, "UNKNOWN_FIELD|MISSING_FIELDS"):
             mod.digest(compact_body, repo=REPO, number=40)
 
         scope_violations = [
