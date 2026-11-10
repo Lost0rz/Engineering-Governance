@@ -22,7 +22,7 @@ Do not read both detailed procedures to classify a request. Reuse established de
 
 Use the smallest reliable context: current user task, relevant UI/source/render evidence, accepted design-system tokens and owning product/domain facts. An existing Project Profile is **derived context**, not authority; consuming it does not invoke Project Profile. Never invent Figma, backend contracts or runtime evidence.
 
-For `AUDIT_ONLY`, inspect the relevant flow and available surface. Assess material hierarchy, actions, information density, responsiveness, loading/error/read-only states and accessibility, then report bounded evidence/findings and STOP. Do **not** implement or run the full design/review pipeline merely for audit completeness.
+For `AUDIT_ONLY`, inspect the relevant flow and available surface. Assess material hierarchy, actions, information density, responsiveness, loading/error/read-only states and accessibility, then report bounded evidence/findings and finish the read-only audit without mutation. Do **not** implement or run the full design/review pipeline merely for audit completeness.
 
 Consult another Skill only for a concrete unresolved dependency (e.g. state ownership in Solution Design, unknown source route in Domain Navigation). Request a bounded answer and resume Design without rerouting the whole task. Detailed composition is optional in [module-map.md](references/module-map.md), not a required startup read.
 
