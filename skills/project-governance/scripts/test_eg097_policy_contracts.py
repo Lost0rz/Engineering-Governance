@@ -206,6 +206,9 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("not automatically a code audit or V3", tiers)
         self.assertIn("Other references are conditional", doctor)
         self.assertNotIn("## Read the contracts", doctor)
+        issue = self.read("skills/project-governance/references/issue-control.md")
+        self.assertIn("verbose Issue/comment payloads **out of the model context**", issue)
+        self.assertIn("Do not truncate away later revocations", issue)
 
     def test_new_autonomy_stays_inactive_without_independent_host_proof(self):
         control = self.read("skills/project-governance/references/issue-control.md")
