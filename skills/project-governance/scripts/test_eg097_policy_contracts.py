@@ -32,7 +32,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         execution = self.read("skills/project-governance/references/issue-execution-contract.md")
         verification = self.read("skills/project-governance/references/verification-tiers.md")
         self.assertIn("Governance risk G0–G3", execution)
-        self.assertIn("G0–G3 are not test tiers", execution)
+        self.assertIn("G0–G3 determine authority; V0–V3 determine verification", execution)
         self.assertIn("`G0`–`G3` scale", verification)
         self.assertIn("Record the governance-risk envelope and verification tier separately", verification)
 
