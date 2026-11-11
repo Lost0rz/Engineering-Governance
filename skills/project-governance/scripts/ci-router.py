@@ -53,35 +53,55 @@ def git(repo, *args):
         raise RouteError("GIT_SOURCE_UNAVAILABLE") from exc
 
 
-def changes(repo, base, head):
+def changes(repo, base, head, include_worktree=False):
+    """Include actual local edits only when explicitly requested by the host."""
     if not SHA.fullmatch(base) or not SHA.fullmatch(head):
         raise RouteError("INVALID_REF")
     for rev in (base, head):
         if git(repo, "cat-file", "-t", rev).strip() != b"commit":
             raise RouteError("INVALID_COMMIT")
-    if base == head:
-        return []
-    data = git(repo, "diff", "--name-status", "-z", "-M", base + "..." + head)
-    if data and not data.endswith(b"\0"):
-        raise RouteError("TRUNCATED_DIFF")
-    try:
-        fields = [v.decode("utf-8") for v in data[:-1].split(b"\0")] if data else []
-    except UnicodeError as exc:
-        raise RouteError("INVALID_PATH_ENCODING") from exc
-    paths, i = [], 0
-    while i < len(fields):
-        status = fields[i]
-        i += 1
-        if not re.fullmatch(r"(?:[AMDTUXB]|[RC][0-9]{1,3})", status):
-            raise RouteError("INVALID_DIFF_STATUS")
-        count = 2 if status[0] in "RC" else 1
-        if i + count > len(fields):
+    if include_worktree and git(repo, "rev-parse", "HEAD").decode().strip() != head:
+        raise RouteError("WORKTREE_HEAD_MISMATCH")
+
+    records = []
+    if base != head:
+        records.append(git(repo, "diff", "--name-status", "-z", "-M", base + "..." + head))
+    if include_worktree:
+        records.append(git(repo, "diff", "--name-status", "-z", "-M", "--cached"))
+        records.append(git(repo, "diff", "--name-status", "-z", "-M"))
+
+    paths = []
+    for data in records:
+        if data and not data.endswith(b"\0"):
             raise RouteError("TRUNCATED_DIFF")
-        for name in fields[i:i + count]:
-            if not safe_path(name):
-                raise RouteError("UNSAFE_PATH")
-            paths.append(name)
-        i += count
+        try:
+            fields = [v.decode("utf-8") for v in data[:-1].split(b"\0")] if data else []
+        except UnicodeError as exc:
+            raise RouteError("INVALID_PATH_ENCODING") from exc
+        i = 0
+        while i < len(fields):
+            status = fields[i]
+            i += 1
+            if not re.fullmatch(r"(?:[AMDTUXB]|[RC][0-9]{1,3})", status):
+                raise RouteError("INVALID_DIFF_STATUS")
+            count = 2 if status[0] in "RC" else 1
+            if i + count > len(fields):
+                raise RouteError("TRUNCATED_DIFF")
+            for name in fields[i:i + count]:
+                if not safe_path(name):
+                    raise RouteError("UNSAFE_PATH")
+                paths.append(name)
+            i += count
+
+    if include_worktree:
+        data = git(repo, "ls-files", "--others", "--exclude-standard", "-z")
+        try:
+            unseen = [p.decode("utf-8") for p in data.split(b"\0") if p]
+        except UnicodeError as exc:
+            raise RouteError("INVALID_PATH_ENCODING") from exc
+        if any(not safe_path(p) for p in unseen):
+            raise RouteError("UNSAFE_UNTRACKED_PATH")
+        paths.extend(unseen)
     return sorted(set(paths))
 
 
@@ -308,7 +328,8 @@ def execute_local(result, config, repo):
         detail = "PASS"
         for argv in test.get("setup", []) + [test["command"]]:
             try:
-                p = subprocess.run(argv, cwd=workdir,
+                p = subprocess.run(argv, cwd=workdir, stdout=sys.stderr,
+                                   stderr=sys.stderr,
                                    timeout=test.get("timeout_minutes", 20) * 60,
                                    check=False)
                 code = p.returncode
@@ -343,6 +364,7 @@ def main():
     p.add_argument("--config-path", default=".github/ci-capabilities.json")
     p.add_argument("--config-source", choices=("base", "file"), default="base")
     p.add_argument("--stage", choices=STAGES, default="ready")
+    p.add_argument("--worktree", action="store_true", help="Include staged, unstaged and untracked changes in local mode")
     p.add_argument("--focused", default="")
     p.add_argument("--output", type=Path)
     p.add_argument("--github-output", type=Path)
@@ -352,7 +374,9 @@ def main():
         if args.mode == "discover":
             result = discover(args.repo_root)
         else:
-            changed = changes(args.repo_root, args.base, args.head)
+            if args.worktree and args.github_output:
+                raise RouteError("WORKTREE_NOT_ALLOWED_IN_GITHUB")
+            changed = changes(args.repo_root, args.base, args.head, include_worktree=args.worktree)
             if args.mode == "run" and args.config_source != "base":
                 raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
             cfg, digest = load(args.repo_root, args.base, args.config_path, args.config_source)
