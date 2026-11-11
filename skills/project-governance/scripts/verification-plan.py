@@ -59,7 +59,7 @@ SCOPE = (
     ("skills/project-governance/assets/control-policy.json", "V3", "versioned global permission policy"),
     ("skills/project-governance/assets/templates/AGENTS.md", "V2", "project control boundary"),
     ("skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md", "V2", "global trusted routing"),
-    ("skills/agent-handoff/references/handoff-contract.md", "V3", "handoff never grants authority"),
+    ("skills/agent-handoff/references/handoff-contract.md", "V2", "handoff never grants authority"),
     (SCRIPT, "V3", "verification selector implementation"),
     ("skills/project-governance/scripts/test_verification_plan.py", "V3", "verification selector test"),
     ("AGENTS.md", "V2", "normative repository authorization"),

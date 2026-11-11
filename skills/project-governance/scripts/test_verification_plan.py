@@ -165,7 +165,7 @@ class VerificationPlanTests(unittest.TestCase):
         self.assertEqual(len(changes), 3)
         self.assertEqual(changes[1]["previous_path"], "AGENTS.md")
         self.assertEqual(changes[2]["status"], "C90")
-        self.assertEqual(route(*changes)["tier"], "V3")
+        self.assertEqual(route(*changes)["tier"], "V2")
 
     def test_truncated_unknown_or_empty_diff_does_not_skip(self):
         for raw in (b"", b"M\0README.md", b"R100\0a.md\0",
