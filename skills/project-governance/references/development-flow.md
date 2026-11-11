@@ -4,7 +4,7 @@ Use this flow for normal governed product/business engineering. It is a lifecycl
 
 ## 1. Recover authority, task purpose, and planning context
 
-Read versioned global `CONTROL_POLICY_V1` and independently verified GitHub enrollment for mode: unadopted FILE_CONTROL reads its historical Task/Status; adopted ISSUE_CONTROL fetches the exact selected approved GitHub Issue/spec revision and relevant approval/decision receipts. Project `AGENTS.md` contains only project-specific rules. Read bounded design and live PR evidence when needed. A stale file, unapproved Issue, incidental comment or READY label cannot expand task authorization.
+Read versioned global `CONTROL_POLICY_V1` and independently verified GitHub enrollment for mode: unadopted FILE_CONTROL reads its historical Task/Status; adopted ISSUE_CONTROL selects either an existing approved GitHub Issue/spec revision **or** a verified current top-level USER-requested G1/G2 bounded task without a first Issue/comment. For Issue-backed work fetch relevant approval/decision receipts; direct-user work verifies host role, repository/action and real write permission instead. Project `AGENTS.md` contains only project-specific rules. Read bounded design and live PR evidence when needed. A stale file, unapproved Issue, incidental comment or READY label cannot expand task authorization.
 
 When useful, interpret `TASK_CLASS` as the current engineering purpose: DESIGN, EXECUTION, AUDIT, VERIFY, DIAGNOSIS, CORRECTIVE, CLOSEOUT, or project-equivalent. This metadata does not create a second authority.
 
@@ -53,7 +53,7 @@ If implementation would require guessing about product intent, architecture, sta
 
 Clear local work stays in this flow. Do not invoke Solution Design merely because the request is a feature.
 
-After design, return to Project Governance. Material authorization changes require FILE_CONTROL Task reconciliation or ISSUE_CONTROL edited material spec revision with explicit verified reapproval before affected mutation. If design was a separately authorized purpose, a later execution task may reference that accepted design directly.
+After design, return to Project Governance. Material authorization changes require FILE_CONTROL Task reconciliation, Issue-backed revision/reapproval **if an Issue is the selected authority**, or a fresh explicit host-authenticated user decision for the revised bounded G1/G2 direct task; never silently widen a direct request. If design was a separately authorized purpose, a later execution task may reference that accepted design directly.
 
 ## 6. Resolve semantic/source route only when unclear
 
@@ -79,7 +79,7 @@ Delegated Sub Agents follow `ENVIRONMENT_DEFAULT_ONLY`. Each delegated execution
 
 One inline executor remains correct when decomposition provides no material benefit or dependencies/shared state make concurrency inefficient or unsafe.
 
-Orchestration never expands the selected FILE_CONTROL Task or ISSUE_CONTROL approved Issue execution scope.
+Orchestration never expands the selected FILE_CONTROL Task, ISSUE_CONTROL approved Issue, or verified current-user-direct G1/G2 task scope.
 
 ## 9. Transfer responsibility through context-neutral Agent Handoff
 
