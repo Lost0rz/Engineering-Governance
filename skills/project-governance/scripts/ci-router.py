@@ -156,6 +156,15 @@ def validate(config):
         by_id[name] = t
         if t.get("tier") not in ("V1", "V2", "V3"):
             raise RouteError("INVALID_TEST_TIER")
+        if type(t.get("fork_safe", False)) is not bool:
+            raise RouteError("INVALID_FORK_SAFE")
+        if t.get("fork_safe", False):
+            # Untrusted PR code must not be sent to persistent self-hosted runners.
+            runner = t.get("runner", [])
+            if (not isinstance(runner, list) or len(runner) != 1
+                    or not isinstance(runner[0], str)
+                    or not re.fullmatch(r"(?:ubuntu|windows|macos)-(?:latest|[0-9]{2}\.[0-9]{2}(?:-[a-z0-9]+)?)", runner[0])):
+                raise RouteError("FORK_SAFE_REQUIRES_GITHUB_HOSTED_RUNNER")
         runner = t.get("runner")
         if (not isinstance(runner, list) or not 1 <= len(runner) <= 8
                 or any(not isinstance(s, str) or not re.fullmatch(r"[\w.:-]{1,90}", s)
@@ -206,7 +215,11 @@ def validate(config):
     done = set()
     for name in names:
         visit(name, set(), done)
+    if type(config.get("fallback_satisfies_ready", False)) is not bool:
+        raise RouteError("INVALID_FALLBACK_COVERAGE_POLICY")
     fallback = config.get("fallback_tests", [])
+    if config.get("fallback_satisfies_ready") and not fallback:
+        raise RouteError("FALLBACK_COVERAGE_WITHOUT_TESTS")
     if (not isinstance(fallback, list)
             or any(not isinstance(name, str) for name in fallback)
             or len(set(fallback)) != len(fallback)
@@ -239,10 +252,12 @@ def shell(t):
 
 
 def select(config, changed, stage, base, head, digest, focused="",
-           config_path=".github/ci-capabilities.json"):
+           config_path=".github/ci-capabilities.json", source_trust="internal"):
     validate(config)
     if stage not in STAGES:
         raise RouteError("INVALID_STAGE")
+    if source_trust not in ("internal", "fork"):
+        raise RouteError("INVALID_SOURCE_TRUST")
     by_id = {t["id"]: t for t in config["tests"]}
     if stage == "focused" and focused not in by_id:
         raise RouteError("UNKNOWN_FOCUSED_TEST")
@@ -273,6 +288,16 @@ def select(config, changed, stage, base, head, digest, focused="",
     for item in list(ids):
         include_dependencies(item)
     selected = [t for t in config["tests"] if t["id"] in ids]
+    fork_blocked = []
+    if source_trust == "fork":
+        candidate_ids = {t["id"] for t in selected}
+        safe_ids = set()
+        for t in selected:
+            if t.get("fork_safe", False) and all(
+                    dep in safe_ids for dep in t.get("requires", [])):
+                safe_ids.add(t["id"])
+        fork_blocked = sorted(candidate_ids - safe_ids)
+        selected = [t for t in selected if t["id"] in safe_ids]
     matrix = [{"id": t["id"], "runner": t["runner"], "script": shell(t),
                "tier": t["tier"], "timeout_minutes": t.get("timeout_minutes", 20)}
               for t in selected]
@@ -280,7 +305,9 @@ def select(config, changed, stage, base, head, digest, focused="",
         raise RouteError("TEST_MATRIX_TOO_LARGE")
     config_changed = config_path in changed
     coverage = ("DEFERRED" if stage in ("draft", "none") else
+                "FORK_PARTIAL" if fork_blocked else
                 "FOCUSED_ONLY" if stage == "focused" else
+                "FALLBACK_COVERED" if unknown and config.get("fallback_satisfies_ready", False) else
                 "PARTIAL_UNMAPPED" if unknown else
                 "BASELINE_CAPABILITIES_USED" if config_changed and stage == "ready" else
                 "NO_TESTS_REQUIRED" if not matrix else "SELECTED_PENDING")
@@ -288,10 +315,13 @@ def select(config, changed, stage, base, head, digest, focused="",
             "config_sha256": digest, "changed_paths": changed,
             "selected_test_ids": [t["id"] for t in selected],
             "unmapped_paths": unknown, "coverage": coverage,
-            # A trusted-base fallback lane may cover previously unseen paths.
-            # Still show PARTIAL_UNMAPPED; never report an all-tests PASS.
-            "review_required": (stage == "ready" and bool(unknown)
-                                and not bool(config.get("fallback_tests", []))),
+            # A fallback can prove readiness only if the accepted catalog
+            # explicitly declares it sufficient for unknown paths.
+            "review_required": (stage == "ready" and
+                                (bool(fork_blocked) or
+                                 (bool(unknown) and not config.get("fallback_satisfies_ready", False)))),
+            "fork_blocked_tests": fork_blocked,
+            "source_trust": source_trust,
             "capabilities_changed": config_changed,
             "effective_tier": max((t["tier"] for t in selected), default="V0"),
             "run_tests": bool(matrix), "test_status": "NOT_RUN",
@@ -365,6 +395,7 @@ def main():
     p.add_argument("--config-source", choices=("base", "file"), default="base")
     p.add_argument("--stage", choices=STAGES, default="ready")
     p.add_argument("--worktree", action="store_true", help="Include staged, unstaged and untracked changes in local mode")
+    p.add_argument("--source-trust", choices=("internal", "fork"), default="internal")
     p.add_argument("--focused", default="")
     p.add_argument("--output", type=Path)
     p.add_argument("--github-output", type=Path)
@@ -382,7 +413,8 @@ def main():
             cfg, digest = load(args.repo_root, args.base, args.config_path, args.config_source)
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
-                            args.head, digest, args.focused, args.config_path)
+                            args.head, digest, args.focused, args.config_path,
+                            args.source_trust)
             if args.config_source == "base" and args.config_path in changed:
                 # Inspect PR config as data only. Never use its commands or runner
                 # labels to build an executable matrix before it becomes base.
