@@ -1,27 +1,9 @@
-# Cross-context Card and receipt
+# Cross-context transfer
 
-A Card transports *task references and the current action*, not repository permissions. The task owner remains `project-governance`. The receiving host verifies live identity, actual writer authority and affected scope when an action requires them.
+Default to a selected Issue/PR URL plus a short statement of what to do now. A separate Card is optional when the linked context is insufficient.
 
-## Card fields
+For a more complex transfer, include the task/target, current objective, source/evidence pointers, bounded read/write effects, unresolved question and expected result. `TASK_ID`, `MODE`, `TARGET`, `AUTHORITY`, `BOUNDARY`, `DELTA` and `RETURN_CONTRACT` are **suggested names**, not mandatory fields if ordinary prose is clear.
 
-| Field | Meaning |
-| --- | --- |
-| `TASK_ID` | Stable selected task |
-| `MODE` | `EXECUTE`, `AUDIT`, `REVIEW`, `VERIFY` or `DIAGNOSE` |
-| `TARGET` | Repo/ref/Issue/PR or artifact target |
-| `AUTHORITY` | Current task/decision locator and trust source |
-| `BOUNDARY` | Read/write limits, relevant risk/effects and exclusions |
-| `DELTA` | Current request, verified findings or remaining action |
-| `RETURN_CONTRACT` | Outcome and decisive evidence expected |
+Choose read-only review/audit/diagnosis versus executable work by actual requested effects, not by a field label alone. The recipient applies current verified user instructions and host permissions before changing source. Neither an Issue author nor a Card writer becomes a special approver.
 
-`CAPABILITY` (selected Skill) and `CARD_ID` are useful optional metadata, not authorization. No separate form is needed when the same context can continue directly.
-
-## Selecting evidence
-
-A legacy approved Issue task references its selected Issue/revision and relevant Work Package. A direct current USER-directed G1/G2 task references the current authenticated instruction and bounded effect; a different host needs its own fresh authorization. A formal audit uses read-only mode and declares what claim/identity requires a verdict.
-
-A handoff may link code, source findings, PR/CI state, screenshots and logs, but it does not need to reproduce them. Actual human UI acceptance remains an independently observed human decision.
-
-## Receipt
-
-Report `TASK_ID`, `MODE`, `TARGET`, `OUTCOME` and decisive `EVIDENCE` or blocker, plus the next unresolved action when material. Do not claim an unobserved PASS, installation, merge or permission change. Runtime model/tool settings come from the receiver's host, not the Card.
+Do not duplicate large plans, output checklists for their own sake or require a receipt comment. Report observed outcome, relevant test/CI/PR state, and material blockers. A new session alone is not a new task or approval.

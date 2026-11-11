@@ -1,49 +1,20 @@
 ---
 name: evidence-audit
-description: Use when the requested outcome is a formal read-only evidence, acceptance, or readiness verdict for implementation/code/PR/CI/release/post-change state, separate from corrective implementation. Do not use merely because code, PR, CI, or release is mentioned while the requested outcome is fixing, continuing, or simple advisory status inspection.
+description: Perform a requested formal evidence, code, PR, CI, release or post-change review using current source and host facts. Routine status checks need no formal audit.
 ---
 
 # Evidence Audit
 
-Use for an explicit evidence/acceptance/readiness verdict boundary. It evaluates evidence; it does not authorize corrective mutation. Read `references/audit-contract.md`.
+Use for an explicitly requested audit/readiness verdict. Establish what is being claimed, which code/PR/CI identity it covers, and what evidence must exist. Inspect only the affected implementation, contracts and host gates, then report actual findings.
 
-A simple advisory read-only inspection that only reports current evidence/status may remain in Project Governance and does not require a new AUDIT task or formal verdict. When formal acceptance/readiness is already authorized by the active task, reuse that authority; when it is a materially distinct engineering purpose, Project Governance authorizes the corresponding AUDIT/VERIFY task boundary.
+| Audit purpose | Evidence focus |
+| --- | --- |
+| Code change | Target behavior, source diff, regressions and affected tests |
+| PR integration | Current head/base, CI, mergeability and material risks |
+| CI | Workflow event, actual jobs, skipped checks and result |
+| Release/installed state | Artifact source/provenance and observed runtime |
+| Issue/plan quality | Clear goal, grounded assumptions, actionable acceptance and remaining choices |
 
-Calling this Skill from an implementation context does not make the result independent. When independence matters, report the actual basis: `SELF_CHECK`, `FRESH_CONTEXT`, `SEPARATE_AGENT`, or `HUMAN`.
+Issues do not need a special author, form, approval comment or revision digest to be useful for audit and implementation. Audit evidence does not grant write permission. Findings inside an already authorized corrective task can be fixed there without creating a new independent approval.
 
-## Issue specification / execution readiness audits
-
-An expressly authorized Issue-readiness audit binds verdict to exact repository, Issue, SPEC_REVISION, approver provenance and verified code authority. Audit detailed WPs **when the selected contract is the legacy 19-field spec**; for a future verified active eight-field G1/G2 compact scope, audit its task/risk/effect/path limits, actual changed paths, targeted tests and host-grant evidence without requiring nonexistent WP fields. In either mode verify L0–L3 decisions, evidence and applicable human UI acceptance. A filled form/READY label is not verified approval. Report separately `SPEC_QUALITY`, `ISSUE_AUTHORITY`, source/PR/CI/host evidence and actual installed runtime; findings do not authorize correction.
-
-## Profiles
-
-- `CODE_DIFF`
-- `PR_MERGE`
-- `CI`
-- `RELEASE_PROVENANCE`
-- `POST_CHANGE`
-
-## Before verdict
-
-Bind target/range/identity, requirement/design authority, evidence freshness, live host identity when relevant, and required claims:
-
-Report governance risk G0–G3, verification tier V0–V3, and audit independence as separate facts. A passing local policy-shape check cannot establish host authorization or activate the risk-scoped mode; any required host-trust claim without independent evidence remains UNKNOWN and blocks PASS.
-
-```text
-REQUIRED_CLAIMS
-OBSERVED_EVIDENCE
-UNVERIFIED_REQUIRED_CLAIMS
-```
-
-A required unsupported claim remains `UNKNOWN`.
-
-## Findings and verdict
-
-- `BLOCKING` -> `STOP`.
-- `IMPORTANT` -> `STOP` when required before the boundary; follow-up only when responsible authority explicitly accepts deferral.
-- `MINOR` -> may allow `PASS_WITH_FOLLOWUPS`.
-- required `UNKNOWN` -> `STOP`.
-
-Verdict: `PASS | PASS_WITH_FOLLOWUPS | STOP`.
-
-Do not transfer PASS between identities without accepted equivalence/provenance. Reviewer suggestions are evidence to verify, not mutation instructions.
+Distinguish `PASS`, `PASS_WITH_FOLLOWUPS` and `STOP` according to actual required evidence. Report uncertainty honestly; do not call an implementation self-check independent acceptance. See [audit contract](references/audit-contract.md) when a formal verdict needs detail.
