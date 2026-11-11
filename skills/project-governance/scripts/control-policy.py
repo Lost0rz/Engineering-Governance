@@ -7,6 +7,8 @@ The hosting execution environment owns actual GitHub permission checks and user 
 """
 from __future__ import annotations
 
+import base64
+import binascii
 import json
 import re
 import subprocess
@@ -117,6 +119,23 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
     comparison = _gh_api(f"repos/{repo}/compare/{merge_sha}...{main_sha}")
     if comparison.get("status") not in ("identical", "ahead"):
         raise ControlPolicyError("MIGRATION_NOT_IN_MAIN_ANCESTRY")
+    # The historical migration PR alone is insufficient: an older PR may
+    # have *added* project-level control selectors. Require the current
+    # accepted main AGENTS.md to be free of operative governance selectors.
+    accepted = _gh_api(f"repos/{repo}/contents/AGENTS.md?ref={main_sha}")
+    if (accepted.get("type") != "file" or accepted.get("encoding") != "base64"
+            or not isinstance(accepted.get("content"), str)):
+        raise ControlPolicyError("ACCEPTED_PROJECT_RULES_UNVERIFIED")
+    try:
+        blob = base64.b64decode(accepted["content"], validate=False)
+        content = blob.decode("utf-8")
+    except (ValueError, UnicodeDecodeError, binascii.Error):
+        raise ControlPolicyError("ACCEPTED_PROJECT_RULES_UNVERIFIED")
+    forbidden = ("CONTROL_MODE:", "ISSUE_APPROVERS:",
+                 "ISSUE_DELEGATED_APPROVAL:", "ISSUE_WEB_SPEC_AUTHORING:",
+                 "RISK_SCOPED_AUTONOMY:")
+    if any(line.startswith(forbidden) for line in content.splitlines()):
+        raise ControlPolicyError("PROJECT_CONTROL_SELECTORS_NOT_MIGRATED")
     return {
         "contract": CONTRACT,
         "repository": repo,
