@@ -26,7 +26,8 @@ SCOPE = (
     ("documents/archive/", "V0", "historical descriptive document"),
     ("documents/historical/", "V0", "historical descriptive document"),
     ("README.md", "V1", "README is consumed by governance policy tests"),
-    ("documents/", "V1", "descriptive planning evidence; targeted policy checks"),
+    ("documents/notes/", "V1", "descriptive notes; targeted policy checks"),
+    ("documents/", "V2", "durable design or unknown documentation owner"),
     ("skills/project-governance/references/verification-tiers.md", "V3", "verification policy owner"),
     (SCRIPT, "V3", "verification selector implementation"),
     ("skills/project-governance/scripts/test_verification_plan.py", "V3", "verification selector test"),
@@ -124,7 +125,7 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
         for path in paths:
             tier, why = classify(path)
             if path in symlink_paths or status[0] in "UXB":
-                tier, why = "V3", "symlink or unknown merge/conflict state"
+                tier, why = "V3", "symlink/gitlink or unknown merge/conflict state"
             highest = max(highest, TIERS.index(tier))
             reasons.append({"path": path, "tier": tier, "reason": why})
     tier = TIERS[highest]
@@ -160,17 +161,19 @@ def collect(repo: Path, base: str, head: str) -> dict:
     data = run_git(repo, "diff", "--name-status", "-z", "--find-renames",
                    "--no-ext-diff", base, head)
     changes = parse_name_status_z(data)
-    mode_data = run_git(repo, "ls-tree", "-r", "-z", head)
+    # Include BASE to catch deletion/rename of unsafe links, not just links at HEAD.
     symlinks: set[str] = set()
-    for record in mode_data.split(b"\0"):
-        if not record:
-            continue
-        try:
-            meta, path = record.split(b"\t", 1)
-            if meta.startswith(b"120000 "):
-                symlinks.add(path.decode("utf-8", errors="strict"))
-        except (UnicodeError, ValueError) as exc:
-            raise SelectionError("INVALID_TREE_DATA") from exc
+    for revision in (base, head):
+        mode_data = run_git(repo, "ls-tree", "-r", "-z", revision)
+        for record in mode_data.split(b"\0"):
+            if not record:
+                continue
+            try:
+                meta, path = record.split(b"\t", 1)
+                if meta.startswith((b"120000 ", b"160000 ")):
+                    symlinks.add(path.decode("utf-8", errors="strict"))
+            except (UnicodeError, ValueError) as exc:
+                raise SelectionError("INVALID_TREE_DATA") from exc
     return select(changes, base=base, head=head, symlink_paths=frozenset(symlinks))
 
 
