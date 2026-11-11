@@ -231,12 +231,23 @@ def select(config, changed, stage, base, head, digest, focused="",
     else:
         hits = {t["id"] for t in config["tests"]
                 if any(match(pat, path) for pat in t["paths"] for path in changed)}
-        unknown = [path for path in changed
-                   if not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
-                   and not any(match(pat, path) for pat in config.get("documentation_paths", []))]
+        unknown = [path for path in changed if path != config_path
+                   and not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
+                   and not (descriptive_doc(path) and any(
+                       match(pat, path) for pat in config.get("documentation_paths", [])))]
         if unknown:
             hits.update(config.get("fallback_tests", []))
         selected = [t for t in config["tests"] if t["id"] in hits]
+    ids = {t["id"] for t in selected}
+    by_id = {t["id"]: t for t in config["tests"]}
+    def include_dependencies(name):
+        for dependency in by_id[name].get("requires", []):
+            if dependency not in ids:
+                ids.add(dependency)
+                include_dependencies(dependency)
+    for item in list(ids):
+        include_dependencies(item)
+    selected = [t for t in config["tests"] if t["id"] in ids]
     matrix = [{"id": t["id"], "runner": t["runner"], "script": shell(t),
                "tier": t["tier"], "timeout_minutes": t.get("timeout_minutes", 20)}
               for t in selected]
@@ -245,14 +256,16 @@ def select(config, changed, stage, base, head, digest, focused="",
     config_changed = config_path in changed
     coverage = ("DEFERRED" if stage in ("draft", "none") else
                 "FOCUSED_ONLY" if stage == "focused" else
-                "CAPABILITIES_CHANGE_REVIEW" if config_changed and stage == "ready" else
                 "PARTIAL_UNMAPPED" if unknown else
+                "BASELINE_CAPABILITIES_USED" if config_changed and stage == "ready" else
                 "NO_TESTS_REQUIRED" if not matrix else "SELECTED_PENDING")
     return {"contract": PLAN, "base": base, "head": head, "stage": stage,
             "config_sha256": digest, "changed_paths": changed,
             "selected_test_ids": [t["id"] for t in selected],
             "unmapped_paths": unknown, "coverage": coverage,
-            "review_required": stage == "ready" and bool(unknown or config_changed),
+            "review_required": stage == "ready" and bool(unknown),
+            "capabilities_changed": config_changed,
+            "effective_tier": max((t["tier"] for t in selected), default="V0"),
             "run_tests": bool(matrix), "test_status": "NOT_RUN",
             "full_suite_claim": False, "matrix": {"include": matrix},
             "config_source": "ACCEPTED_BASE" if base != "LOCAL" else "LOCAL_FILE"}
