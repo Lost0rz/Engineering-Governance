@@ -1,6 +1,6 @@
 ---
 name: agent-handoff
-description: Use for cross-context engineering construction/execution cards (施工卡), audit/review cards (审计卡), Codex Desktop/local AI handoff commands, verification cards and execution receipts. Transports approved Issue/Task authority; does not create approval or authorize mutation.
+description: Use for cross-context engineering construction/execution cards (施工卡), audit/review cards (审计卡), Codex Desktop/local AI handoff commands, verification cards and execution receipts. Transports accepted Task/Issue authority or a receiving-host-verified current USER-directed bounded G1/G2 task; never creates approval or authorizes mutation.
 ---
 
 # Agent Handoff
@@ -13,7 +13,7 @@ A handoff transports responsibility/evidence; it does not create task authority,
 
 Use this Skill when the user actually requests an explicit cross-context execution, review, audit, verification or diagnosis handoff or structured receipt. Ordinary same-session continuation, source inspection, status advice and routine agents sharing a known task do **not** require a new Card just because context exists.
 
-Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or a FILE_CONTROL Task / approved ISSUE_CONTROL Issue already contains extensive implementation detail.
+Do not fall back to a legacy free-form execution-card format because the task is corrective or detailed. The transfer artifact must satisfy this Skill even when Project Governance, a plan, or a FILE_CONTROL Task / approved ISSUE_CONTROL Issue / verified current-user-direct G1/G2 task already contains extensive implementation detail.
 ### Sender and receiver boundary
 
 Project Governance selects the task and validates the applicable approval or trusted grant. This Skill only transports a bounded Card or observed Receipt. Missing execution authority means a non-executable explanation/link, not an invented Card; the receiver verifies current authority through Project Governance before writing. Details belong to `references/handoff-contract.md`.

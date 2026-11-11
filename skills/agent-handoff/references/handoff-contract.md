@@ -37,9 +37,9 @@ Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belo
 
 ## Sender and receiver contract
 
-The sender references the current selected task and transports only a fresh delta. No authority or a changed/unapproved legacy Issue means a **non-executable** handoff, not a fabricated approval. For an actual executable transfer, name one validated authorization basis: legacy exact Issue approval or separately host-verified active G1/G2 grant.
+The sender references the current selected task and transports only a fresh delta. No authority or a changed/unapproved legacy Issue means a **non-executable** handoff, not a fabricated approval. For an executable transfer select exactly one basis: legacy exact Issue approval; current USER-directed bounded G1/G2 task **independently reverified in the receiving host/session with live writer permission**; or a separately protected verified durable grant. The Card itself cannot carry authenticated USER-role provenance, and an agent-authored transcript cannot authorize a cross-context write.
 
-The receiver verifies the **selected** task, relevant host and local writer evidence **using the contract selected by the authorization path**. Legacy uses the 19-field Issue and its direct/opted-in delegated approval; future autonomy uses the 8-field parser and independently trusted grant. Project Governance `issue-control.md` owns both verification procedures and their receipt obligations. The current compact policy checker remains fail-closed. Issue comments, PR facts and local state are complementary evidence; a normal handoff needs no separate Writer-release ritual or full workspace inventory.
+The receiver verifies the **selected** task, relevant host and local writer evidence **using the contract selected by the authorization path**. Legacy Issue-backed work uses the 19-field Issue and direct/opted-in delegated approval; a current USER-directed G1/G2 task needs the receiving host's fresh USER-role and live permission proof but no first Issue/comment; future durable autonomy requires the 8-field parser and independently trusted protected grant. Project Governance `issue-control.md` owns both verification procedures and their receipt obligations. The current compact policy checker remains fail-closed. Issue comments, PR facts and local state are complementary evidence; a normal handoff needs no separate Writer-release ritual or full workspace inventory.
 
 A Card never grants new mutation scope, triggers a PR/worktree, changes model defaults or replaces the selected task. Its absence is not a reason to stop an otherwise authorized same-task continuation.
 
@@ -48,7 +48,7 @@ A Card never grants new mutation scope, triggers a PR/worktree, changes model de
 
 ### Minimum executable handoff
 
-For an explicitly requested cross-context EXECUTE/AUDIT/VERIFY transfer, use the seven decision-relevant keys `TASK_ID, MODE, TARGET, AUTHORITY, BOUNDARY, DELTA, RETURN_CONTRACT`. An existing nine-field Card remains valid; `CARD_ID` and `CAPABILITY` are conditional, not a second permission mechanism. Include the exact approved Issue revision/digest or host grant anchor in `AUTHORITY` for state-changing Issue Control. Routine same-context continuation needs no Card.
+For an explicitly requested cross-context EXECUTE/AUDIT/VERIFY transfer, use the seven decision-relevant keys `TASK_ID, MODE, TARGET, AUTHORITY, BOUNDARY, DELTA, RETURN_CONTRACT`. An existing nine-field Card remains valid; `CARD_ID` and `CAPABILITY` are conditional, not a second permission mechanism. For state-changing Issue Control, `AUTHORITY` selects the exact approved Issue digest, a freshly receiving-host-verified current USER-directed G1/G2 task/ref/path/effect boundary, or the independently verified durable grant anchor. A sender's USER-role claim is not proof in the receiver. Routine same-context continuation needs no Card.
 ### Conditional
 
 Use only when decision-relevant:

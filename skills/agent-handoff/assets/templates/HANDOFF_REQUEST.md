@@ -8,7 +8,7 @@ A Card is transport, not a second task contract. Reference current authority and
 TASK_ID: <selected task>
 MODE: EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
 TARGET: <bounded outcome>
-AUTHORITY: <accepted Task or selected Issue/revision/approval or independently verified grant>
+AUTHORITY: <accepted Task | selected approved Issue/revision | receiving-host-verified current USER G1/G2 task | independently verified protected grant>
 BOUNDARY: <actual write/read/STOP limit>
 DELTA: <fresh context or NONE>
 RETURN_CONTRACT: <decisive evidence/result>
@@ -25,7 +25,7 @@ MODE: EXECUTE
 TARGET: <owner/repo and concrete bounded outcome>
 ISSUE: <owner/repo#number>
 SPEC_REVISION: <approved revision>
-AUTHORITY: AGENTS.md + selected Issue + SPEC_SHA256 <verified> + approval comment <GitHub URL/actor>
+AUTHORITY: selected Issue + SPEC_SHA256 <verified> + approval comment <GitHub URL/actor>; project AGENTS.md supplies only project-specific facts
 DELTA: <only sender-to-receiver fresh handoff change | NONE>
 BOUNDARY: revalidate selected Issue/current approval, reuse safe workspace, execute only approved WPs; stop on conflict
 RETURN_CONTRACT: observed WP/PR/CI results + same-Issue EXECUTION_RECEIPT_V1 URL, human UI gate separate
@@ -33,11 +33,25 @@ RETURN_CONTRACT: observed WP/PR/CI results + same-Issue EXECUTION_RECEIPT_V1 URL
 
 For an **audit handoff**, use the same minimum context fields with `MODE: AUDIT`, `CAPABILITY: evidence-audit` when a formal verdict is intended, observed PR/ref, evidence/claim and `CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY`. An audit Card is not an audit verdict.
 
-When no valid Issue spec/approval exists, return a non-executable design/review result and the blocking Issue URL; do not manufacture an EXECUTE Card or clone the approved plan into chat.
+When the **selected** authority is missing (approved Issue, fresh receiving-host USER proof for bounded G1/G2, or independently verified protected grant), return a non-executable design/review result and the missing proof; do not invent an Issue URL or turn a transferred Card into user approval.
 
-## Optional active autonomy reference
+## Current USER-directed G1/G2 (only when the receiving host proves this request)
 
-Include these fields only after the accepted target `AGENTS.md` opt-in and independent live host/credential-separation proof both pass. They identify an already verified grant; they are not evidence by themselves.
+A current, authenticated top-level USER request can supply the initial task authority for bounded G1/G2 without a first Issue, GitHub approval comment, or per-WP reapproval. The Card is a locator **not proof**: the receiving runtime must independently establish actual USER-role provenance, task/ref/path/effect limits and real writer permission. A quoted user request, agent-generated handoff or GitHub login alone is never an authorization token. If proof cannot be re-established after transfer or session expiration, STOP or use an already-approved Issue.
+
+```text
+TASK_ID: <current user-directed task locator>
+MODE: EXECUTE
+TARGET: <repository and bounded outcome>
+AUTHORITY: CURRENT_USER_DIRECT_G1_G2 / RECEIVING_HOST_PREFLIGHT_REQUIRED
+BOUNDARY: <named G1/G2 paths/effects, excluding G3/merge/release>
+DELTA: <fresh context, not authorization>
+RETURN_CONTRACT: <actual evidence or STOP>
+```
+
+## Optional independent persistent autonomy reference
+
+Include these durable-grant fields only after separately trusted **global** CONTROL_POLICY_V1 opt-in, independent protected host authorization and grant/executor credential separation. Project `AGENTS.md` cannot activate autonomy. They identify an already verified grant; they are not evidence by themselves.
 
 ```text
 AUTONOMY_GRANT_REF: <trusted host run URL or run ID>
@@ -59,8 +73,8 @@ Use only when decision-relevant:
 ```text
 PURPOSE: <for example CORRECTIVE | DIAGNOSTIC_PROBE | TEST_IMPLEMENTATION>
 PROFILE: <for example TEST_RUN>
-ISSUE: <owner/repo#number when ISSUE_CONTROL EXECUTE>
-SPEC_REVISION: <approved material spec revision when ISSUE_CONTROL EXECUTE>
+ISSUE: <owner/repo#number only when Issue-backed ISSUE_CONTROL EXECUTE>
+SPEC_REVISION: <approved material spec revision only when Issue-backed ISSUE_CONTROL EXECUTE>
 OBSERVED_BASIS: <sender-observed revision/observation/head; not automatically a lock>
 SOURCE_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
 TARGET_CONTEXT: <web/local/cloud/subagent/reviewer/session/machine>
