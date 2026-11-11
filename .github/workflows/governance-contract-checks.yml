@@ -222,7 +222,9 @@ jobs:
           out = Path("dist") / f"engineering-governance-web-preview-{version}-{head[:12]}.zip"
           out.parent.mkdir(exist_ok=True)
           entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))
-          entries = [path for path in entries if path.is_file() and not "__pycache__" in path.parts and path.suffix != ".pyc"]
+          entries = [path for path in entries if path.is_file()
+                     and "__pycache__" not in path.parts and path.suffix != ".pyc"
+                     and not path.name.endswith("_ACCEPTANCE.md")]
           with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
               archive.writestr("plugin.json", json.dumps(original, indent=2, ensure_ascii=False) + "\n")
               archive.writestr(".codex-plugin/plugin.json", json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n")
