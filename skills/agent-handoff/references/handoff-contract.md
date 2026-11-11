@@ -1,151 +1,27 @@
-# Handoff Card & Receipt contract
+# Cross-context Card and receipt
 
-## Authority
+A Card transports *task references and the current action*, not repository permissions. The task owner remains `project-governance`. The receiving host verifies live identity, actual writer authority and affected scope when an action requires them.
 
-A Card is transport, not a second task contract. Reference current authority and carry only fresh transfer-specific delta. The receiver rereads accessible authorities; material conflict returns to Project Governance.
+## Card fields
 
-If the requested output itself will be sent to another agent, session, machine, reviewer, or execution context as engineering instructions/evidence, the transfer artifact uses this Handoff contract. A free-form “execution card” is not an alternate schema.
+| Field | Meaning |
+| --- | --- |
+| `TASK_ID` | Stable selected task |
+| `MODE` | `EXECUTE`, `AUDIT`, `REVIEW`, `VERIFY` or `DIAGNOSE` |
+| `TARGET` | Repo/ref/Issue/PR or artifact target |
+| `AUTHORITY` | Current task/decision locator and trust source |
+| `BOUNDARY` | Read/write limits, relevant risk/effects and exclusions |
+| `DELTA` | Current request, verified findings or remaining action |
+| `RETURN_CONTRACT` | Outcome and decisive evidence expected |
 
-## Framework boundary
+`CAPABILITY` (selected Skill) and `CARD_ID` are useful optional metadata, not authorization. No separate form is needed when the same context can continue directly.
 
-Only an Engineering Governance `CAPABILITY` (or `NONE`) may be requested as a governed Skill; external tooling may be cited as reference evidence but is not a required peer workflow. Framework ownership and composition belong to Project Governance's `global-routing.md` and `capability-composition.md`.
+## Selecting evidence
 
+A legacy approved Issue task references its selected Issue/revision and relevant Work Package. A direct current USER-directed G1/G2 task references the current authenticated instruction and bounded effect; a different host needs its own fresh authorization. A formal audit uses read-only mode and declares what claim/identity requires a verdict.
 
-## Capability vs Mode
-
-These are orthogonal:
-
-```text
-CAPABILITY = bounded Engineering Governance Skill/capability requested of the receiver, or NONE
-MODE       = receiver action / side-effect class
-```
-
-`MODE: AUDIT` or `MODE: VERIFY` does not by itself invoke `evidence-audit`. When a formal Evidence Audit verdict is intended across contexts, state both, for example:
-
-```text
-CAPABILITY: evidence-audit
-MODE: AUDIT
-```
-
-Valid `MODE` values are exactly:
-
-```text
-EXECUTE | AUDIT | REVIEW | VERIFY | DIAGNOSE
-```
-
-Task-purpose labels such as `CORRECTIVE`, `FEATURE`, `RELEASE`, or `HOTFIX` belong in `PURPOSE` or `DELTA`, not `MODE`.
-
-## Sender and receiver contract
-
-The sender references the current selected task and transports only a fresh delta. No authority or a changed/unapproved legacy Issue means a **non-executable** handoff, not a fabricated approval. For an executable transfer select exactly one basis: legacy exact Issue approval; current USER-directed bounded G1/G2 task **independently reverified in the receiving host/session with live writer permission**; or a separately protected verified durable grant. The Card itself cannot carry authenticated USER-role provenance, and an agent-authored transcript cannot authorize a cross-context write.
-
-The receiver verifies the **selected** task, relevant host and local writer evidence **using the contract selected by the authorization path**. Legacy Issue-backed work uses the 19-field Issue and direct/opted-in delegated approval; a current USER-directed G1/G2 task needs the receiving host's fresh USER-role and live permission proof but no first Issue/comment; future durable autonomy requires the 8-field parser and independently trusted protected grant. Project Governance `issue-control.md` owns both verification procedures and their receipt obligations. The current compact policy checker remains fail-closed. Issue comments, PR facts and local state are complementary evidence; a normal handoff needs no separate Writer-release ritual or full workspace inventory.
-
-A Card never grants new mutation scope, triggers a PR/worktree, changes model defaults or replaces the selected task. Its absence is not a reason to stop an otherwise authorized same-task continuation.
-
-
-## Common Card schema
-
-### Minimum executable handoff
-
-For an explicitly requested cross-context EXECUTE/AUDIT/VERIFY transfer, use the seven decision-relevant keys `TASK_ID, MODE, TARGET, AUTHORITY, BOUNDARY, DELTA, RETURN_CONTRACT`. An existing nine-field Card remains valid; `CARD_ID` and `CAPABILITY` are conditional, not a second permission mechanism. For state-changing Issue Control, `AUTHORITY` selects the exact approved Issue digest, a freshly receiving-host-verified current USER-directed G1/G2 task/ref/path/effect boundary, or the independently verified durable grant anchor. A sender's USER-role claim is not proof in the receiver. Routine same-context continuation needs no Card.
-### Conditional
-
-Use only when decision-relevant:
-
-```text
-CARD_ID
-CAPABILITY
-PURPOSE
-PROFILE
-ISSUE / SPEC_REVISION / SPEC_SHA256  # select current Issue identity; legacy 19-field digest or compact 8-field digest depending on real authorization mode
-APPROVAL_BASIS  # legacy direct/delegated approval OR active host grant; select one explicit mode
-AUTONOMY_GRANT_REF / GRANT_RUN_ID / GRANT_ATTEMPT / WORKFLOW_REF / WORKFLOW_SHA / TARGET_COMMIT / MAX_GOVERNANCE_RISK / GRANT_EXPIRY  # only for independently host-verified active grant
-GOVERNANCE_RISK / VERIFICATION_TIER  # record G0-G3 and V0-V3 separately when material
-OBSERVED_BASIS
-SOURCE_CONTEXT / TARGET_CONTEXT
-STOP
-CLAIM
-EXPECTED_EVIDENCE
-AUDIT_INDEPENDENCE
-AUTOMATED_BROWSER_VERIFICATION
-AI_RENDERED_INSPECTION
-HUMAN_UI_ACCEPTANCE
-```
-
-Do not omit the minimum fields needed for the actual transfer or duplicate the full task contract. When a specialized capability is necessary, name it; otherwise the normal Project Governance entry can resolve routing. A Card cannot expand authorization.
-
-Do not add an alternate external-framework field such as `SKILLS_REQUIRED`, `USE_SUPERPOWERS`, `EXTERNAL_WORKFLOW`, or equivalent to bypass `CAPABILITY`. If an external artifact is only reference material, keep it in the normal authority/delta/evidence surfaces and preserve its non-authoritative status.
-
-When an EXECUTE handoff may materially benefit from orchestration, the Card may point the receiver to `execution-orchestrator`; it must not predeclare that Sub Agents are required. The receiving environment decides through its execution value gate.
-
-Repository publication follows Project Governance remote-delivery authority. A Handoff Card may request the receiver to perform the already-authorized repository push/verification boundary, but it cannot invent a remote, grant force-push, choose `main`, or create publication authority absent from the owning task/project.
-
-## Workspace and verification evidence
-
-A Card may point to an already authorized workspace/ref and relevant checks. Workspace creation, writer safety, test cadence and remote delivery belong to Project Governance `workspace-lifecycle.md`, `verification-tiers.md` and `remote-delivery.md`; they are not new Handoff gates. A focused test or local commit does not prove full regression or pushed delivery.
-
-
-## Human interface acceptance evidence
-
-Keep `AUTOMATED_BROWSER_VERIFICATION`, `AI_RENDERED_INSPECTION` and `HUMAN_UI_ACCEPTANCE` distinct when relevant. A machine finding never proves a human decision; only the actual human result or owning waiver can set final human acceptance. The Handoff transport cannot create or waive this gate.
-
-
-## Card integrity (not a separate approval gate)
-
-For an expressly requested Card, keep the current task identity, explicit receiver action, current authorization reference and its real scope/STOP limits. Include only fresh delta and an outcome-neutral return request. No standalone 11-item formatting checklist, no nine-field ceremony, and no Card for an ordinary same-task continuation. The receiver independently verifies authorization before mutation; a Card never grants additional permissions. Do not manufacture a human UI acceptance result or a passed host check.
-
-## Mode profiles
-
-### EXECUTE
-
-Focus on mutation target, fresh delta, allowed mutation boundary, transfer-specific STOP and return evidence. Use `PURPOSE: DIAGNOSTIC_PROBE` or `PURPOSE: TEST_IMPLEMENTATION` when those state changes are specifically authorized.
-
-When execution topology is material, the return contract may request the **observed** execution topology, whether Sub Agents were actually used, their bounded roles/count, and observable effective runtime model/reasoning evidence. It must not require delegation merely to satisfy the receipt.
-
-The Card may require behavior such as red/green regression proof, focused verification, or scoped re-review, but it must describe that behavior directly or route to the owning Engineering Governance capability rather than require an external framework Skill to implement it.
-
-For repository-backed state-changing work that produces or advances commits, the return contract should also request the applicable Project Governance remote-delivery evidence. Local commit identity and remote delivery are separate claims.
-
-For material product-interface work, the return contract should request automated browser evidence, AI-rendered findings if any, and human acceptance state separately. Unless owning authority explicitly waives the human gate, the receiver may finish implementation/self-check and return `HUMAN_UI_ACCEPTANCE: PENDING`; it must not self-approve that field.
-
-### AUDIT / REVIEW
-
-Read-only. Add target/range/observed identity and, when material, required claims or independence expectation. Findings do not authorize fixes.
-
-An AI/browser REVIEW of a rendered product surface remains machine review. For a material product-interface change, return the machine findings plus `HUMAN_UI_ACCEPTANCE: PENDING` unless an explicit human result or explicit waiver is already available.
-
-### VERIFY
-
-Read-only confirmation of a named proposition/check. A normal test-run card is:
-
-```text
-MODE: VERIFY
-CAPABILITY: NONE
-PROFILE: TEST_RUN
-CLAIM
-EXPECTED_EVIDENCE
-```
-
-If the job changes test/source/config, it is EXECUTE instead.
-
-Automated browser verification is valid `VERIFY` evidence. It does not become human product-interface acceptance merely because the test uses a real browser.
-
-### DIAGNOSE
-
-Read-only diagnostic question/evidence/hypothesis transfer. State-changing probes use EXECUTE.
-
-## Runtime/configuration isolation
-
-Runtime/model/tool/capacity values belong to the receiving environment unless an accepted portable project artifact owns them. Sender observations never become receiver defaults merely through the Card.
-
-Configured/default model values and observed effective runtime identity are separate evidence classes. If the receiver cannot observe the effective Sub Agent model/reasoning, it returns `UNKNOWN` rather than promoting configuration into runtime evidence.
-
-An external engineering framework may not use a Card as a vehicle to escalate model/reasoning values, replace environment defaults, or take over Engineering Governance execution topology/review lifecycle. If runtime actually applies an external configuration for independent platform reasons, report that as observed runtime/config evidence rather than treating it as Engineering Governance policy.
+A handoff may link code, source findings, PR/CI state, screenshots and logs, but it does not need to reproduce them. Actual human UI acceptance remains an independently observed human decision.
 
 ## Receipt
 
-Use `assets/templates/HANDOFF_RECEIPT.md` for the minimal evidence schema. Preserve `TASK_ID`, `MODE`, `TARGET`, observed `OUTCOME` and decisive evidence; `CARD_ID`/`CAPABILITY` are included only when supplied or relevant. For `EXECUTE`, include changed files, tests, actual local/remote ref state and unresolved blockers when material; a local commit is not proof of remote delivery. For `AUDIT/REVIEW/VERIFY`, report only the observed identity, evidence, verdict and limits.
-
-Do not create checkbox receipts, claim unobserved CI/human UI acceptance, or force status fields into ordinary conversation. The selected Project Governance authorization and Issue comment policy remain authoritative.
-
+Report `TASK_ID`, `MODE`, `TARGET`, `OUTCOME` and decisive `EVIDENCE` or blocker, plus the next unresolved action when material. Do not claim an unobserved PASS, installation, merge or permission change. Runtime model/tool settings come from the receiver's host, not the Card.

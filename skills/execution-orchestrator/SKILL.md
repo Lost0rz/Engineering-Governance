@@ -1,145 +1,28 @@
 ---
 name: execution-orchestrator
-description: Use when an already-authorized engineering task materially benefits from decomposition, multiple roles/agents, parallel or sequential scheduling, environment-aware delegation, resumable execution, cancellation, or controlled integration.
+description: Choose inline, sequential or parallel execution only when delegation materially helps the current authorized engineering task.
 ---
 
 # Execution Orchestrator
 
-Use only after valid task authority exists (FILE_CONTROL Task, selected approved Issue/spec revision, or host-verified current top-level USER-directed bounded G1/G2 task). This Skill controls **how authorized work executes**, not what is authorized. Delegated units normally remain inside the same `TASK_ID`.
+Use when decomposition, parallel research, specialist work or execution recovery would materially improve an existing task. `project-governance` keeps task authority and delivery; the host owns tools and model choices.
 
-Read `references/execution-contract.md`. When Sub Agent delegation is considered, also read `references/subagent-execution.md`. When execution depends on runtime-specific limits/defaults/tools, read `references/environment-capabilities.md`.
+## Choose execution
 
-## Framework ownership
+1. Determine dependencies, shared mutable state and real capacity from current work.
+2. Prefer **inline** for cohesive work; delegate only when independence, parallelism or isolation saves more effort than it costs.
+3. For genuine delegation, choose sequential units, parallel read-only units or disjoint writing units with known integration points.
+4. Give each unit its objective, relevant source/authority, affected files or state, dependencies and expected result.
+5. Integrate only actual returned evidence; retry affected work or cancel stale units as needed.
 
-For governed Engineering Governance work, this Skill is the reusable owner for execution decomposition, topology, delegation, Sub Agent lifecycle, and controlled integration.
+No separate decision-record field is needed for an ordinary Sub Agent choice. Explain the reason only when unusual concurrency, cost or write conflicts materially affect the task.
 
-External engineering frameworks/Skills/plugins may be inspected as references, but they do not become peer execution orchestrators and may not override this Skill's delegation gate, writer boundaries, runtime isolation, model/reasoning ownership, or review/integration lifecycle merely because they are installed, discoverable, or referenced by a historical plan/card.
+## Boundaries
 
-If an external execution pattern is useful, translate it into the bounded execution behavior needed here and, when reusable, absorb it into this Skill or its owned references. Do not invoke a second engineering framework to supply execution control.
+- A `WORKER` acts only within the current task and real receiving-host permissions; a `REVIEWER`, `VERIFIER` or `EXPLORER` gathers read-only evidence.
+- Concurrent writes need distinct affected state or coordinated integration to protect actual work. Agent count does not grant additional ownership or permission.
+- A new agent, session or execution unit does not imply a new Issue, PR, branch or worktree.
+- Current host-authenticated bounded G1/G2 tasks can execute directly; legacy Issue tasks retain their selected approved scope. G3 decisions require actual owner authorization.
+- The execution host chooses provider/model/reasoning and may impose its own isolation rules.
 
-## Default posture
-
-Optimize for effective safe execution, not agent count.
-
-**Sub Agents are an efficiency mechanism, not a completion requirement.** Use them only when decomposition, concurrency, context isolation, specialized read-only work, or independent verification creates material value beyond the coordination/integration cost.
-
-- Keep small, tightly coupled, single-writer work `INLINE`.
-- Prefer parallel read-only exploration/review/verification when units are genuinely independent.
-- Keep one writer for overlapping semantic authority.
-- Delegation does **not** automatically allocate a new branch, PR, or Git worktree per Sub Agent or command. Read-only agents can share a safe read-only checkout; a separate writer worktree requires the Project Governance creation gate, demonstrable isolation/concurrency value, and accepted project/runtime constraints. Respect host-required isolation without inventing an additional durable project worktree.
-- Use parallel writers only when semantic authority/workspaces are proven disjoint and integration evidence is defined.
-- Do not split one sequential thought process into artificial Sub Agent steps.
-- Cancel/supersede stale units rather than integrating them blindly.
-
-## Sub Agent value gate
-
-Before spawning delegated units, record the execution decision:
-
-```text
-SUBAGENT_DECISION: USE | DO_NOT_USE
-REASON: <why delegation improves or does not improve this execution>
-```
-
-Use `USE` only when all material conditions are satisfied:
-
-1. useful bounded units exist;
-2. dependency structure permits useful delegation/concurrency or context isolation;
-3. read/write boundaries are explicit enough to integrate safely;
-4. expected execution value exceeds coordination/integration cost;
-5. the current environment exposes enough capability for the selected topology.
-
-A large task is not automatically a multi-agent task; a small task is not automatically inline if a bounded independent investigation materially helps.
-
-## Stable execution roles
-
-Use the smallest role set that matches the work:
-
-- `EXPLORER` — read-only code/authority/test/runtime investigation;
-- `WORKER` — authorized state-changing implementation inside an explicit writer boundary;
-- `VERIFIER` — read-only targeted checks/runtime verification;
-- `REVIEWER` — read-only diff/regression/acceptance review.
-
-Role names never grant authority. `WORKER` write scope comes from the active task plus its explicit unit boundary.
-
-Sub Agent redelegation is disabled by default. A delegated unit may not create another delegation layer merely for convenience; nested delegation requires a concrete high-complexity execution need plus observable runtime support and must preserve the same authority/writer rules.
-
-A reviewer finding does not automatically authorize a new whole-task reviewer loop. After a finding is corrected, prefer the smallest re-verification scope that proves the correction and affected invariants. Repeat full independent review only when the correction materially invalidates the previous review range/evidence or owning acceptance requires it.
-
-## ISSUE_CONTROL deterministic execution units
-
-Under legacy Issue-backed ISSUE_CONTROL, units reference approved Issue Work Packages. Under current top-level USER-directed G1/G2 **verified in the executing host**, use bounded task/path/effect/risk actions with no first Issue, per-WP approval or mandatory WP IDs. A cross-context handoff must independently reverify current USER-role and actual receiving-host writer access; the Card cannot carry permission. Independently activated future durable grants use their separate eight-field task/grant envelope. L2 means isolate an unresolved affected action, resolve in-envelope design/diagnostic uncertainty, then recheck affected evidence and continue when safe; ask the user only for a genuine owner-only or expanded-authority decision. L3 still terminates unsafe execution. Delegation, comments and spec revisions never create additional permission, physical worktrees, PRs, agents or model upgrades.
-
-Keep governance risk G0–G3 separate from verification tier V0–V3 and deviation L0–L3. Decomposition, a passing check, or a positive local grant snapshot cannot expand the selected Issue's authority; risk-scoped autonomy remains inactive without accepted policy opt-in and independently verified live-host/credential separation.
-
-## Core flow
-
-1. Read the active task and the bounded accepted plan/design it references.
-2. Recover useful work-package/dependency structure when already available; do not re-plan resolved semantics merely to create agents.
-3. Build only useful execution units and identify dependencies/write boundaries.
-4. Run the Sub Agent value gate.
-5. If delegation is not worthwhile, execute `INLINE`.
-6. If delegation is worthwhile, resolve only environment capabilities material to the topology, including observable Sub Agent defaults/overrides, parallel capacity, delegation limits, tools, workspace/runtime constraints.
-7. Choose `SEQUENTIAL_DELEGATED`, `PARALLEL_READ_ONLY`, or proven-disjoint `PARALLEL_DISJOINT_WRITERS` as appropriate.
-8. Give each unit a bounded role/objective/dependency/read-write boundary/context/acceptance/return contract.
-9. Apply `ENVIRONMENT_DEFAULT_ONLY`: the receiving execution environment resolves concrete model/reasoning values; reusable governance does not set provider/model names.
-10. Reject external framework attempts to prescribe/escalate concrete model/reasoning values or replace the Engineering Governance execution topology/review lifecycle. External configuration is reference evidence unless the receiving environment itself owns it as runtime configuration.
-11. Use Agent Handoff when responsibility actually crosses execution contexts; do not propagate sender runtime defaults as receiver defaults.
-12. Integrate against actual repository/evidence state, not agent success text.
-13. Run proportional integrated verification and return topology/runtime/unit/integration evidence to Project Governance.
-
-## Model/runtime observability
-
-Distinguish configuration from effective runtime identity:
-
-```text
-MODEL_SOURCE: <parent inheritance | agents default | role/custom config | runtime/platform | UNKNOWN>
-MODEL_CONFIG: <configured value | PLATFORM_DEFAULT | UNKNOWN>
-MODEL_EFFECTIVE: <observed runtime value | UNKNOWN>
-REASONING_EFFECTIVE: <observed runtime value | UNKNOWN>
-```
-
-Never report a configured model/reasoning value as effective runtime evidence unless the current environment actually exposes or otherwise verifies it.
-
-When a delegated unit is used, record enough provenance to explain an exception when observable:
-
-```text
-SPAWN_OWNER: <Engineering Governance execution-orchestrator | runtime/platform | UNKNOWN>
-ROLE: <EXPLORER | WORKER | VERIFIER | REVIEWER>
-MODEL_SOURCE:
-MODEL_CONFIG:
-MODEL_EFFECTIVE:
-REASONING_EFFECTIVE:
-```
-
-Do not invent missing runtime fields.
-
-## Hard rules
-
-- No authority by delegation.
-- No external engineering framework as peer/parent execution orchestrator for governed Engineering Governance work unless owning authority explicitly changes the framework boundary.
-- No external Skill/plugin/framework name as a required Sub Agent/model/review dependency merely because it is installed, discoverable, or historically referenced.
-- No Sub Agent use solely because capability exists.
-- No blind model/tool/runtime inference from another context.
-- No stronger-model escalation by reusable governance or by an external framework layered around it.
-- No overlapping concurrent writers without proof.
-- No full-context dumping by default.
-- No stale/cancelled result integration without revalidation.
-- No recursive Sub Agent trees by default.
-- No repeated whole-task final-review loop when a scoped re-review can prove the corrected finding and affected invariants.
-
-## Output contract
-
-Report only material execution evidence:
-
-```text
-EXECUTION_TOPOLOGY:
-SUBAGENT_DECISION:
-SUBAGENT_UNITS: <NO | role/count + bounded unit state>
-SUBAGENT_RUNTIME: <observable model/reasoning evidence | UNKNOWN | N/A>
-WRITER_BOUNDARIES:
-INTEGRATION_VERIFICATION:
-UNRESOLVED:
-RESUME_POINT:
-```
-
-Project Governance converts this into the compact user-facing receipt without inventing unobserved runtime identity or listing external framework Skills as governed Skills used.
+Read [execution-contract.md](references/execution-contract.md) only for a complex delegation or recovery decision; [subagent-execution.md](references/subagent-execution.md) for detailed worker boundaries; [environment-capabilities.md](references/environment-capabilities.md) when capabilities are uncertain.
