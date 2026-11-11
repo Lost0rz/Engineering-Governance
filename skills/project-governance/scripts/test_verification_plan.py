@@ -114,5 +114,29 @@ class VerificationTests(unittest.TestCase):
             self.assertEqual(plan["policy_source"], "TRUSTED_BASE")
 
 
+    def test_deleted_symlink_escalates_using_base_tree(self):
+        # Deleting an executable link must not become a documentation-only V0.
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", temp, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.email", "tests@example.invalid")
+            git("config", "user.name", "Tests")
+            folder = root / "documents/archive"
+            folder.mkdir(parents=True)
+            link = folder / "linked.md"
+            link.symlink_to("untrusted.md")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            before = git("rev-parse", "HEAD")
+            link.unlink()
+            git("add", "-A")
+            git("commit", "-qm", "delete")
+            after = git("rev-parse", "HEAD")
+            self.assertEqual(router.collect(root, before, after)["tier"], "V3")
+
+
 if __name__ == "__main__":
     unittest.main()
