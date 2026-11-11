@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Portable CI router. Plan only: does not execute tests or grant permissions."""
+"""Portable CI router. Plan by default; run only when explicitly requested."""
 import argparse
 import hashlib
 import json
@@ -195,6 +195,8 @@ def select(config, changed, stage, base, head, digest, focused="",
     matrix = [{"id": t["id"], "runner": t["runner"], "script": shell(t),
                "tier": t["tier"], "timeout_minutes": t.get("timeout_minutes", 20)}
               for t in selected]
+    if len(json.dumps({"include": matrix}, separators=(",", ":"))) > 180000:
+        raise RouteError("TEST_MATRIX_TOO_LARGE")
     config_changed = config_path in changed
     coverage = ("DEFERRED" if stage in ("draft", "none") else
                 "FOCUSED_ONLY" if stage == "focused" else

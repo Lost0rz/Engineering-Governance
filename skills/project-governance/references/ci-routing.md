@@ -1,6 +1,6 @@
 # Portable CI routing across repositories
 
-The same script, [ci-router.py](../scripts/ci-router.py), plans tests for **any** Git repository. It does not own project commands, provision runners, or grant GitHub permissions.
+The same script, [ci-router.py](../scripts/ci-router.py), plans tests for **any** Git repository and can execute selected trusted commands on explicit local request. It does not provision runners or grant GitHub permissions.
 
 ## First adoption (once per repository)
 
