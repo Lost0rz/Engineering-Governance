@@ -40,13 +40,15 @@ class GlobalControlPolicyTests(unittest.TestCase):
         final = "b" * 40
         events = [
             {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+             "body": "EG_CONTROL_MIGRATION_V1",
              "base": {"ref": "main"}, "head": {"repo": {"name": "Engineering-Governance"}}},
+            [{"filename": "AGENTS.md"}],
             {"commit": {"sha": final}},
             {"status": "ahead"},
         ]
         with patch.object(policy, "_gh_api", side_effect=events) as gh:
             r = policy.select_control("Lost0rz/Engineering-Governance", migration_pr=41)
-        self.assertEqual(gh.call_count, 3)
+        self.assertEqual(gh.call_count, 4)
         self.assertEqual(r["mode"], "ISSUE_CONTROL")
         self.assertEqual(r["source"], "LIVE_GITHUB_HOST")
         self.assertFalse(r["execution_authorized"])
@@ -62,13 +64,37 @@ class GlobalControlPolicyTests(unittest.TestCase):
         sha = "a" * 40
         events = [
             {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+             "body": "EG_CONTROL_MIGRATION_V1",
              "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
+            [{"filename": "AGENTS.md"}],
             {"commit": {"sha": "b" * 40}},
             {"status": "diverged"},
         ]
         with patch.object(policy, "_gh_api", side_effect=events):
             with self.assertRaisesRegex(policy.ControlPolicyError, "MIGRATION_NOT_IN_MAIN_ANCESTRY"):
                 policy.verify_migration("Lost0rz/Engineering-Governance", 41)
+
+    def test_unrelated_merged_pr_is_not_adoption(self):
+        sha = "a" * 40
+        with patch.object(policy, "_gh_api", return_value={
+            "merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+            "body": "Fix documentation typo",
+            "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}},
+        }):
+            with self.assertRaisesRegex(policy.ControlPolicyError, "PR_NOT_GOVERNANCE_MIGRATION"):
+                policy.verify_migration("Lost0rz/Engineering-Governance", 123)
+
+    def test_migration_missing_agents_diff_stops(self):
+        sha = "a" * 40
+        events = [
+            {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+             "body": "EG_CONTROL_MIGRATION_V1",
+             "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
+            [{"filename": "README.md"}],
+        ]
+        with patch.object(policy, "_gh_api", side_effect=events):
+            with self.assertRaisesRegex(policy.ControlPolicyError, "MIGRATION_DIFF_NOT_VERIFIED"):
+                policy.verify_migration("Lost0rz/Engineering-Governance", 123)
 
     def test_invalid_repositories_and_numbers_stop(self):
         for repo in ("", "../Merloom", "foo", "owner/repo/extra", "a;rm -rf /b"):
