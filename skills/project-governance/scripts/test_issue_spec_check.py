@@ -2,7 +2,12 @@
 """Focused positive/negative contract checks; no GitHub/network dependency."""
 import copy
 import importlib.util
+import json
+import io
+import sys
+import tempfile
 import unittest
+from contextlib import redirect_stdout
 from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
@@ -147,6 +152,45 @@ def structural_verify_autonomy_snapshot(*args, **kwargs):
 
 
 class IssueContractTests(unittest.TestCase):
+    def _cli_verify(self, additional, *, host_verified=False):
+        with tempfile.TemporaryDirectory() as d:
+            filename = Path(d) / "issue.json"
+            filename.write_text(json.dumps(approve(issue())), encoding="utf-8")
+            argv = ["issue-spec-check.py", "verify", "--repo", REPO,
+                    "--issue-json", str(filename)] + additional
+            capture = io.StringIO()
+            with patch.object(sys, "argv", argv), redirect_stdout(capture):
+                if host_verified:
+                    adopted = {"adoption": "VERIFIED_MERGED_MIGRATION",
+                               "contract": "CONTROL_POLICY_V1"}
+                    with patch.object(mod._POLICY, "select_control", return_value=adopted), \
+                         patch.object(mod._POLICY, "verified_personal_repo_approvers",
+                                      return_value={"Lost0rz"}):
+                        result = mod.main()
+                else:
+                    result = mod.main()
+            return result, json.loads(capture.getvalue())
+
+    def test_cli_verify_missing_global_enrollment_stops(self):
+        code, result = self._cli_verify([])
+        self.assertEqual(code, 2)
+        self.assertEqual(result["result"], "STOP")
+        self.assertIn("MIGRATION_HOST_PROOF_REQUIRED", result["reason"])
+
+    def test_cli_verify_host_enrollment_and_owner_still_not_source_write_grant(self):
+        code, result = self._cli_verify(["--migration-pr", "41"], host_verified=True)
+        self.assertEqual(code, 0)
+        self.assertEqual(result["result"], "STRUCTURE_AND_APPROVAL_PASS")
+        self.assertEqual(result["approver_source"], "LIVE_GITHUB_PERSONAL_REPO_OWNER")
+        self.assertEqual(result["adoption"], "VERIFIED_MERGED_MIGRATION")
+        self.assertFalse(result["source_write_authorized"])
+
+    def test_cli_verify_cannot_expand_owner_allowlist(self):
+        code, result = self._cli_verify(
+            ["--migration-pr", "41", "--approvers", "attacker"], host_verified=True)
+        self.assertEqual(code, 2)
+        self.assertEqual(result["reason"], "UNTRUSTED_APPROVER_INPUT")
+
     def test_valid_approved_spec(self):
         result = structural_verify_approval(approve(issue()), repo=REPO, approvers={"Lost0rz"})
         self.assertEqual(result["result"], "STRUCTURE_AND_APPROVAL_PASS")
