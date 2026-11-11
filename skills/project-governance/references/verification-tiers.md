@@ -1,172 +1,28 @@
-# Verification tiers, cadence, evidence identity, and independent audit
+# Verification: evidence follows impact
 
-Choose the lightest verification that safely establishes the requested result. **Verification effort follows consequence and affected scope, not change count.** `V0`–`V3` classifies verification evidence; governance authorization risk is the separate `G0`–`G3` scale in `issue-execution-contract.md`. Cadence is a third, independent choice.
+Choose tests that support the changed behavior and actual consequences. **G0–G3** describes permission/risk; **V0–V3** describes evidence depth. Neither determines the other.
 
-## Evidence identity
+| Tier | Use | Evidence |
+| --- | --- | --- |
+| V0 | Non-normative documentation/history/formatting | Diff, links, syntax and scope checks |
+| V1 | Local behavior or isolated contracts | Focused tests, applicable lint/types |
+| V2 | Shared behavior, Skill/workflow contracts or affected integration | Focused and dependent contract/integration checks |
+| V3 | Trusted execution code, unknown executable dependencies, consequential security/data changes or release claims | Relevant broad security, integration or build evidence |
 
-When identity matters, name what a result observed: literal Repository HEAD, Delivery / Semantic HEAD, PR head/merge ref, merge commit/tree, build/package artifact, installed package/app, deployed revision, runtime/process or release artifact.
+A file path is a routing hint, **not** a risk verdict. For a normative Markdown change start with affected contracts, and expand review/tests if the actual diff changes authorization semantics or other consequential behavior. Do not promote a whole directory to high risk merely because one rule is sensitive.
 
-Evidence proves the identity it actually observed. Matching names or historical proximity do not transfer PASS to another identity without accepted semantic equivalence/provenance.
+## CI selection
 
-Use `control-identity.md` when repository revisions differ. Semantic test/CI/review/audit evidence may be reused across proven `CONTROL_ONLY_DRIFT` when `SEMANTIC_TREE_EQUIVALENCE = PASS`, no implementation-relevant authority changed and no task condition invalidates the evidence.
+`VERIFICATION_PLAN_V1` is implemented by `scripts/verification-plan.py`. CI obtains the complete base/head diff, including rename origins, and runs the selector from the trusted **base**, not PR-supplied policy. The plan lists the source identities, selected/skipped suites, reasons and `TESTS_PENDING`. Untrusted or unverifiable selection receives conservative testing; skipped work is reported as skipped, never PASS.
 
-## Repository-host gates are separate
+For this repository, descriptive history can use V0; README/notes use V1; active Skill/contract Markdown uses affected V2 suites; trusted executable policy, CI/selector and unknown executable owners use V3. The chosen tier does **not** authorize writes, packaging or merge.
 
-Required status checks, required reviews, conflicts/mergeability, merge queue, branch rules, latest-head/current-base requirements and similar host conditions are live facts for the literal identity the repository host governs.
+**Build preview** is an independently requested `workflow_dispatch.package_preview` action; publishing/installing/releasing requires its own observable evidence.
 
-Semantic equivalence does not make a current host gate pass. Re-read applicable host gates at the merge/release decision.
+## Cadence and acceptance
 
-## Verification tiers V0–V3
+Run focused tests during implementation, then affected integration at a meaningful stable point. After a correction, rerun invalidated evidence; broader tests when coverage or high-consequence claims justify them. Reuse still-valid checks across proven semantic equivalence.
 
-- **V0 — documentation/control-only and non-product formatting:** diff/content/link/frontmatter/tree/scope consistency, provided no implementation-relevant rule/contract changed. Product UI layout change is not automatically V0.
-- **V1 — localized behavior:** focused tests plus directly relevant lint/type/runtime checks.
-- **V2 — domain/integration boundary:** focused tests, affected-domain evidence and required integration checks.
-- **V3 — broad/high-consequence/release:** broad relevant integration/build/runtime/security/concurrency/release evidence appropriate to the claim.
+A green scope check only proves selected checks ran. Track untested claims and actual CI status; independent audit is appropriate at a real acceptance boundary, not after every edit.
 
-A G0 read-only status lookup is not automatically a code audit or V3 readiness assessment. Choose verification depth from the actual claim; do not fetch full source/spec/history to answer only current PR/CI status. The tier describes evidence coverage, not authority or test cadence. A bounded G1/G2 source change can still require V3 security/concurrency review; G3 remains outside a G1/G2 autonomy grant even if a narrow test is V1.
-
-## Scope selection and invocation frequency
-
-Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted FILE_CONTROL Task, selected approved ISSUE_CONTROL Issue/spec, or independently host-verified current USER-directed G1/G2 task to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
-
-Record the governance-risk envelope and verification tier separately when both matter: G0–G3 decides what authority/effects are permitted; V0–V3 decides what evidence is needed to support the result. Never infer a G level from test count or a V level from the size of the source diff.
-
-- **V0:** strictly control/document/projection-only changes use relevant static/tree/authority checks, not default product regression/build/packaging. A material normative rule or workflow/config/test contract change is *not* V0 solely because its file is Markdown/YAML.
-- **V1:** localized source behavior uses focused tests and directly related type/lint/runtime checks. No full suite or independent audit after every small edit.
-- **V2:** related slices or corrections use focused construction checks, followed by risk-appropriate **affected** domain/integration evidence when stabilized, rather than per-slice full tests and repeat audits.
-- **V3:** retain broad, independent, security/data/concurrency and release evidence appropriate to actual consequence and explicit acceptance contract. Efficiency does not waive these gates.
-
-Include transitive dependents/shared interfaces in scope; unknown impact requires investigation or conservative check expansion, never a silently narrow PASS. Previously passed evidence is reusable only with proved semantic identity, coverage and unchanged relevant dependencies/authority/task conditions. Later corrections rerun invalidated affected checks and scoped review first. Entire suites/audits are repeated only when integrated coverage was invalidated or accepted task, host or release gates require it.
-
-A green CI scope-selector with product jobs skipped is `SCOPE_GATE_PASS / TESTS_SKIPPED`, **not** `FULL_TESTS_PASS`. Semantic equivalence may support evidence reuse across pure control-only drift, but live status checks/required reviews for the literal current HEAD must independently be satisfied. This policy does not change project CI configuration.
-
-## Machine-readable verification routing (VERIFICATION_PLAN_V1)
-
-The policy owner remains this Skill reference. The bundled `scripts/verification-plan.py` is a deterministic, stdlib **decision adapter**, not a new top-level Skill, authorization system, required-check waiver, or global runner. Its JSON contract is `VERIFICATION_PLAN_V1` with exact trusted base/head SHA, complete changed paths (both old and new on renames), selected/omitted checks, affected-tier rationale, `SCOPE_GATE_PASS` and a separate `TESTS_PENDING` state. Tests skipped by scope selection are explicitly `TESTS_SKIPPED`, never full-suite PASS.
-
-CI must load the routing implementation from the **accepted/protected base** and discover the GitHub-host-provided exact base/head changes itself. It must not execute a PR-supplied selector, accept a PR-provided risk classification, trust a truncated diff, or infer safety solely from file extensions. Invalid input or unavailable trusted base policy triggers a conservative full-test fallback **without automatic packaging**; the selector must not treat uncertain evidence as PASS. Trusted selector/host workflow, executable authorization/permission/identity code or unclassified executable dependencies escalate to V3. Normative Markdown/AGENTS and shared-Skill documentation use V2 affected behavioral contracts by default; reviewers escalate when actual semantic changes need broader evidence. A stable required status context must still report real results, including skipped checks; GitHub live required checks and approval gates remain independent.
-
-For this repository, V0 covers historical descriptive archives, V1 covers README/descriptive notes, and V2 runs affected cross-Skill contracts for ordinary **and normative Markdown**. A text location is not proof of a privilege change; real impact can still justify broader checks. Executable permission/approval code, trusted selector/CI, plugin manifest/install identity, unknown executable owners and ambiguous dependencies are V3. **No V-tier automatically requests a plugin package**: build preview is an explicit manual action, release follows its own provenance gates. Other repositories own their actual test commands; the plugin selects evidence scope, not GitHub runner permissions.
-
-## Verification cadence
-
-### Construction
-
-Use the narrowest checks that catch defects introduced by current edits while remaining appropriate to the tier. Do not run unrelated broad suites after every small change; group related edits before expensive validation where safe.
-
-For an explicitly authorized multi-part architecture/framework task, construction may use bounded static/sanity checks while deferring expensive **integrated installed/runtime acceptance** until the full architecture is frozen. This cadence is valid only when the task explicitly defines the later integrated acceptance boundary. It does not waive final evidence.
-
-### Corrective close
-
-Group related findings sharing one objective/authority into one bounded corrective where practical. After it stabilizes, run broader **affected** regression justified by risk once rather than repeating unrelated full validation per edit. After a later fix, re-evaluate affected evidence rather than automatically restarting full validation.
-
-### Task close
-
-Complete required checks that remain unsatisfied; reuse valid evidence for unchanged relevant semantic identity and coverage rather than rerun just because closeout begins. State material checks still omitted and why.
-
-### Merge/release boundary
-
-Add exact-head/provenance, broad build/integration/runtime/packaging/remote CI evidence only as required by the integration/release claim. Do not inherit every historical suite automatically. A green workflow does not prove full tests ran when jobs were skipped.
-
-## Implementation verification vs independent audit
-
-Keep task purpose and evidence role distinct:
-
-- implementation/self-check establishes behavior evidence required by the active execution/corrective task;
-- calling `evidence-audit` from the same implementation context does not automatically create independence;
-- when formal independent acceptance/readiness is a distinct engineering boundary, Project Governance authorizes the appropriate AUDIT/VERIFY task purpose and its required independence level;
-- not every V0/V1 change needs an independent audit;
-- V2 often benefits from independent audit at the integrated task/PR boundary rather than after every unit;
-- V3 requires explicit independent evidence/review appropriate to the high-consequence boundary.
-
-When independence matters, report one of:
-
-```text
-AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
-```
-
-`SELF_CHECK` is useful verification but is not independent acceptance.
-
-Evidence Audit profiles include `CODE_DIFF`, `PR_MERGE`, `CI`, `RELEASE_PROVENANCE`, and `POST_CHANGE`. A PASS for one profile does not automatically prove another.
-
-## Automated browser evidence vs human product-interface acceptance
-
-Keep browser-based engineering verification, AI rendered inspection, and human product-interface acceptance as separate evidence classes.
-
-Automated browser verification remains fully valid engineering evidence. This includes Playwright, Cypress, other E2E suites, DOM/state assertions, accessibility checks, scripted browser flows, screenshot/visual-regression systems, and comparable deterministic automation. Do not disable or downgrade these checks merely because a task also requires human UI acceptance.
-
-AI-driven browser inspection — including Computer Use/manual-style clicking, opening pages, navigating flows, or inspecting screenshots/renders — may be used for debugging, diagnosis, evidence gathering, internal Design review, and bounded corrective work. It is **machine-observed rendered evidence**, not human acceptance.
-
-For a state-changing task that materially changes a real product interface's rendered layout, visual hierarchy, content presentation, interaction behavior, or responsive behavior, **human UI acceptance is required by default**. Omission of a human-acceptance field from a task/card does not waive this gate.
-
-The default state is `HUMAN_UI_ACCEPTANCE: PENDING` until an explicit human reviewer/user decision is observed. `NOT_REQUIRED` is valid only when an owning user/project authority explicitly waives the human UI gate for that change, or when the task does not produce a product-interface result that needs visual/interaction acceptance.
-
-Therefore:
-
-- AI rendered inspection must not be reported as `AUDIT_INDEPENDENCE: HUMAN`;
-- an AI must not satisfy a human UI/UX/product acceptance gate by imitating a person in a browser;
-- automated browser PASS does not by itself establish subjective human product acceptance;
-- human acceptance may be recorded only from an explicit human reviewer/user decision about the actual interface;
-- if human product-interface acceptance is required and has not occurred, report it as pending rather than inferring PASS from screenshots, Computer Use, Playwright, or another machine-driven check.
-
-When applicable, keep the evidence visible as separate fields:
-
-```text
-AUTOMATED_BROWSER_VERIFICATION: PASS | FAIL | NOT_RUN | NOT_APPLICABLE
-AI_RENDERED_INSPECTION: PASS | FINDINGS | LIMITED | NOT_RUN | NOT_APPLICABLE
-HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
-```
-
-`HUMAN_UI_ACCEPTANCE: PASS` or `FAIL` requires an explicit human decision. `PENDING` means implementation/testing may be otherwise complete, but no final human product-interface acceptance claim may be made yet. `NOT_REQUIRED` must be supported by the owning acceptance authority; it must not be inferred merely because the task forgot to mention a human UI gate.
-
-This boundary does not prevent AI from viewing the interface. It prevents machine observation from being promoted into a human acceptance claim.
-
-## Required-claim coverage
-
-For a material audit/acceptance boundary, identify the claims that must be established before verdict:
-
-```text
-REQUIRED_CLAIMS
-OBSERVED_EVIDENCE
-UNVERIFIED_REQUIRED_CLAIMS
-```
-
-A required claim without adequate evidence remains `UNKNOWN` and cannot be silently omitted from the verdict.
-
-## Final implementation freeze
-
-When exact-head semantic evidence is required:
-
-1. finish intended implementation-relevant source/rule/design edits;
-2. designate the Delivery / Semantic HEAD/tree (or explicit literal Repository HEAD lock when required) as the frozen candidate;
-3. run required semantic verification and independent audit on that candidate;
-4. allow later FILE_CONTROL Task/Status-only reconciliation without semantic retests when equivalence/task conditions permit; ISSUE_CONTROL comments/spec updates do not affect Git semantic tree identity;
-5. re-read current repository-host gates for the literal identity at merge/release.
-
-Any mixed control+implementation commit, material `AGENTS.md` rule change, durable planning/design change, source/config/test/workflow/schema/migration/dependency/runtime change is a new delivery/governance change and must be assessed for fresh evidence.
-
-Do not create final `CI PASS`, `audit PASS` or `ready to merge` control commits solely to memorialize external evidence.
-
-## Human/integrated acceptance loop
-
-A healthy loop is:
-
-```text
-complete bounded architecture/implementation
--> focused construction evidence
--> freeze semantic candidate when ready
--> required integrated verification
--> independent audit/acceptance task where required
--> human UI acceptance for material product-interface changes unless explicitly waived
--> read current host gates
--> bounded corrective task if findings create a distinct objective
--> rerun affected integrated scenarios/evidence
--> repeat human UI acceptance after material interface corrections when required
--> merge/release only when semantic evidence + required human acceptance + live host gates satisfy the boundary
-```
-
-For multi-Skill architecture work, prefer testing composition and positive/negative routing behavior on the frozen architecture rather than proving only that each Skill file loads independently.
-
-## Recording the decision
-
-The mode-selected authorization (FILE_CONTROL `CURRENT_TASK.md`, ISSUE_CONTROL approved Issue spec, or verified current-session direct-user G1/G2 task) records the chosen V0–V3 tier, rationale, checks and material cadence/deferred evidence. Report semantic checks as passing only from evidence for the relevant identity, and host gates as passing only from current host evidence. `no status` or missing evidence is `UNKNOWN`/none, not `PASS`.
+Playwright and comparable automated browser tests are valid machine evidence. Final product-interface acceptance belongs to the human when the project requires it; machine screenshots or AI clicks cannot substitute for that decision.
