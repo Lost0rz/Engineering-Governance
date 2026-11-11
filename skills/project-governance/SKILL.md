@@ -26,4 +26,4 @@ A task can start from a trusted current USER request, an Issue/PR plan, or an ex
 
 ## Optional references
 
-[Skill routing](references/global-routing.md) · [test selection](references/verification-tiers.md) · [Issue collaboration](references/issue-control.md) · [workspace safety](references/workspace-lifecycle.md) · [development flow](references/development-flow.md) · [remote delivery](references/remote-delivery.md) · [adoption](references/adoption.md). Read only the one needed for a concrete decision.
+[Skill routing](references/global-routing.md) · [test selection](references/verification-tiers.md) · [portable CI routing](references/ci-routing.md) · [Issue collaboration](references/issue-control.md) · [workspace safety](references/workspace-lifecycle.md) · [development flow](references/development-flow.md) · [remote delivery](references/remote-delivery.md) · [adoption](references/adoption.md). Read only the one needed for a concrete decision.

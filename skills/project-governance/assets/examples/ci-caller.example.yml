@@ -1,0 +1,33 @@
+# Install as .github/workflows/governed-ci.yml in the consumer repository.
+# Change the tag only after publishing that version in Engineering Governance.
+name: Project CI (Governance router)
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Explicit testing milestone"
+        type: choice
+        required: true
+        default: focused
+        options: [focused, milestone, ready, release, none]
+      focused_test:
+        description: "Catalog ID for focused stage"
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  governed:
+    # Draft changes do not launch tests or consume self-hosted runner time.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    uses: Lost0rz/Engineering-Governance/.github/workflows/ci-router-reusable.yml@v0.10.0
+    with:
+      capabilities_path: .github/ci-capabilities.json
+      stage: ${{ github.event_name == 'workflow_dispatch' && inputs.stage || 'auto' }}
+      focused_test: ${{ inputs.focused_test || '' }}

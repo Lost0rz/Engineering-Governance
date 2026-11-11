@@ -1,0 +1,146 @@
+"""Portable CI router tests: Swift, Node, Python, source identity and runner scope."""
+import importlib.util
+import json
+import subprocess
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+SCRIPT = ROOT / "skills/project-governance/scripts/ci-router.py"
+spec = importlib.util.spec_from_file_location("eg_ci_router", SCRIPT)
+ci = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ci)
+
+
+def catalog():
+    return {
+        "contract": "EG_CI_CAPABILITIES_V1",
+        "documentation_paths": ["docs/**", "README.md"],
+        "fallback_tests": ["smoke"],
+        "tests": [
+            {"id": "swift-unit", "tier": "V1",
+             "paths": ["remote-orbit/Sources/**", "remote-orbit/Tests/**"],
+             "runner": ["self-hosted", "macOS", "ARM64", "remoteorbit"],
+             "cwd": "remote-orbit", "command": ["swift", "test", "--filter", "Keys"],
+             "timeout_minutes": 25},
+            {"id": "node-unit", "tier": "V2",
+             "paths": ["apps/web/**", "packages/shared/**"],
+             "runner": ["ubuntu-latest"], "command": ["npm", "run", "test:web"],
+             "setup": [["npm", "ci"]]},
+            {"id": "python-unit", "tier": "V2",
+             "paths": ["backend/**"],
+             "runner": ["ubuntu-latest"],
+             "command": ["python3", "-m", "pytest", "backend/tests", "-q"]},
+            {"id": "smoke", "tier": "V3", "paths": ["scripts/ci/**"],
+             "runner": ["ubuntu-latest"], "command": ["python3", "-m", "compileall", "backend"]}
+        ]
+    }
+
+
+class GeneralRouterTests(unittest.TestCase):
+    def plan(self, paths, stage="ready", cfg=None, focused=""):
+        return ci.select(cfg or catalog(), paths, stage,
+                         "a" * 40, "b" * 40, "sha256-placeholder", focused)
+
+    def test_small_swift_change_no_release_build(self):
+        p = self.plan(["remote-orbit/Sources/RemoteOrbit/KeyMap.swift"])
+        self.assertEqual(p["selected_test_ids"], ["swift-unit"])
+        self.assertEqual(p["matrix"]["include"][0]["runner"][-1], "remoteorbit")
+        self.assertNotIn("swift build", p["matrix"]["include"][0]["script"])
+        self.assertFalse(p["review_required"])
+
+    def test_node_and_python_cross_domain(self):
+        p = self.plan(["apps/web/src/page.tsx", "backend/rfq/views.py"])
+        self.assertEqual(p["selected_test_ids"], ["node-unit", "python-unit"])
+        self.assertIn("npm ci", p["matrix"]["include"][0]["script"])
+        self.assertEqual(p["coverage"], "SELECTED_PENDING")
+
+    def test_draft_and_manual_do_not_run_full(self):
+        self.assertEqual(self.plan(["remote-orbit/Sources/a.swift"], "draft")["matrix"],
+                         {"include": []})
+        p = self.plan(["backend/a.py"], "focused", focused="swift-unit")
+        self.assertEqual(p["selected_test_ids"], ["swift-unit"])
+        self.assertEqual(p["coverage"], "FOCUSED_ONLY")
+        self.assertFalse(self.plan(["backend/a.py"], "none")["run_tests"])
+
+    def test_release_full_and_docs_only(self):
+        self.assertEqual(len(self.plan(["README.md"], "release")["selected_test_ids"]), 4)
+        doc = self.plan(["docs/proposal.md"])
+        self.assertFalse(doc["run_tests"])
+        self.assertEqual(doc["coverage"], "NO_TESTS_REQUIRED")
+        self.assertFalse(doc["review_required"])
+
+    def test_unknown_does_not_masquerade_as_pass(self):
+        p = self.plan(["unmapped/credential.py"])
+        self.assertEqual(p["selected_test_ids"], ["smoke"])
+        self.assertEqual(p["unmapped_paths"], ["unmapped/credential.py"])
+        self.assertTrue(p["review_required"])
+        self.assertFalse(p["full_suite_claim"])
+        milestone = self.plan(["unmapped/credential.py"], "milestone")
+        self.assertFalse(milestone["review_required"])
+
+    def test_duplicate_id_commands_and_path_escape_are_rejected(self):
+        cfg = catalog()
+        cfg["tests"][1]["id"] = cfg["tests"][0]["id"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+        cfg = catalog()
+        cfg["tests"][0]["command"] = ["bash", "-c", "hello\nhack"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+        cfg = catalog()
+        cfg["tests"][0]["cwd"] = "../elsewhere"
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+
+    def test_glob_is_anchored_and_not_cross_directory_single_star(self):
+        self.assertTrue(ci.match("apps/web/**", "apps/web/src/index.ts"))
+        self.assertFalse(ci.match("apps/web/*.ts", "apps/web/src/index.ts"))
+        self.assertFalse(ci.match("apps/web/**", "other/apps/web/index.ts"))
+        with self.assertRaises(ci.RouteError):
+            ci.match("../source/**", "source/index.py")
+
+    def test_git_base_config_cannot_be_replaced_by_pr(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "router-tests")
+            git("config", "user.email", "router@example.invalid")
+            (repo / ".github").mkdir()
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(catalog()))
+            (repo / "README.md").write_text("base\n")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            cfg = catalog()
+            cfg["tests"][0]["command"] = ["echo", "untrusted"]
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            (repo / "remote-orbit/Sources").mkdir(parents=True)
+            (repo / "remote-orbit/Sources/Key.swift").write_text("changed\n")
+            git("add", "-A")
+            git("commit", "-qm", "PR")
+            head = git("rev-parse", "HEAD")
+            paths = ci.changes(repo, base, head)
+            self.assertIn(".github/ci-capabilities.json", paths)
+            loaded, digest = ci.load(repo, base, ".github/ci-capabilities.json", "base")
+            self.assertNotIn("untrusted", ci.shell(loaded["tests"][0]))
+            plan = ci.select(loaded, paths, "ready", base, head, digest)
+            self.assertTrue(plan["review_required"])  # config changed, not auto-trusted
+            self.assertEqual(plan["config_source"], "ACCEPTED_BASE")
+
+    def test_reusable_workflow_is_pinned_and_delegates_execution(self):
+        flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
+        self.assertIn("workflow_call:", flow)
+        self.assertIn("ref: v0.10.0", flow)
+        self.assertIn("--config-source base", flow)
+        self.assertIn("fromJSON(needs.route.outputs.matrix)", flow)
+        self.assertIn("matrix.runner", flow)
+        self.assertIn("EG_CI_SELECTED_VERIFICATION_COMPLETE", flow)
+
+
+if __name__ == "__main__":
+    unittest.main()

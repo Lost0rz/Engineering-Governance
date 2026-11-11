@@ -58,6 +58,15 @@ class WorkflowContractTests(unittest.TestCase):
                 self.assertEqual(result["selected"], selected)
                 self.assertNotIn("package_preview", result["selected"])
 
+    def test_portable_router_contract_is_discoverable(self):
+        skill = (ROOT / "skills/project-governance/SKILL.md").read_text()
+        self.assertIn("ci-routing.md", skill)
+        self.assertTrue((ROOT / "skills/project-governance/scripts/ci-router.py").exists())
+        example = ROOT / "skills/project-governance/assets/examples/ci-capabilities.example.json"
+        capabilities = json.loads(example.read_text())
+        self.assertEqual(capabilities["contract"], "EG_CI_CAPABILITIES_V1")
+        self.assertGreaterEqual(len(capabilities["tests"]), 3)
+
     def test_ci_draft_is_skipped_and_manual_scope_available(self):
         workflow = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text()
         self.assertIn("github.event.pull_request.draft == false", workflow)

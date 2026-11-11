@@ -110,7 +110,7 @@ jobs:
           from pathlib import Path
           root = Path(".")
           workflows = sorted(p.name for p in (root / ".github/workflows").glob("*.yml"))
-          assert workflows == ["governance-contract-checks.yml"], workflows
+          assert workflows == ["ci-router-reusable.yml", "governance-contract-checks.yml"], workflows
           pkg = json.loads((root / "plugin.json").read_text())
           assert pkg["name"] == "engineering-governance"
           json.loads((root / ".agents/plugins/marketplace.json").read_text())
