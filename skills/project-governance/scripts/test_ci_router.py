@@ -132,6 +132,40 @@ class GeneralRouterTests(unittest.TestCase):
             self.assertTrue(plan["review_required"])  # config changed, not auto-trusted
             self.assertEqual(plan["config_source"], "ACCEPTED_BASE")
 
+    def test_discovery_reads_tracked_files_not_dependency_caches(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            (repo / "Package.swift").write_text("// tracked swift manifest")
+            (repo / "node_modules").mkdir()
+            (repo / "node_modules/package.json").write_text("{}")
+            git("add", "Package.swift")
+            self.assertEqual(ci.discover(repo)["detected"], ["Swift"])
+
+    def test_renamed_path_preserves_original_test_scope(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "apps/web").mkdir(parents=True)
+            (repo / "apps/web/old.ts").write_text("const a=1;\n")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            before = git("rev-parse", "HEAD")
+            (repo / "apps/web/old.ts").rename(repo / "apps/web/new.ts")
+            git("add", "-A")
+            git("commit", "-qm", "rename")
+            changed = ci.changes(repo, before, git("rev-parse", "HEAD"))
+            self.assertIn("apps/web/old.ts", changed)
+            self.assertIn("apps/web/new.ts", changed)
+
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("workflow_call:", flow)

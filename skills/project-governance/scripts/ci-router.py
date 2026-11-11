@@ -209,11 +209,14 @@ def select(config, changed, stage, base, head, digest, focused=""):
 
 
 def discover(repo):
+    # Scan tracked paths, not the full filesystem: node_modules and model
+    # caches can be enormous on a developer workstation.
+    raw = git(repo, "ls-files", "-z")
+    tracked = [p.decode("utf-8", "replace") for p in raw.split(b"\0") if p]
     candidates = [("Package.swift", "Swift"), ("package.json", "Node"),
                   ("pyproject.toml", "Python")]
     languages = [label for file, label in candidates
-                 if any(p.is_file() for p in repo.rglob(file)
-                        if ".git" not in p.parts and "node_modules" not in p.parts)]
+                 if any(p == file or p.endswith("/" + file) for p in tracked)]
     return {"detected": sorted(set(languages)), "action":
             "Review actual test commands and runner labels; commit accepted .github/ci-capabilities.json"}
 
