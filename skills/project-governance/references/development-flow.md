@@ -4,7 +4,7 @@ Use this flow for normal governed product/business engineering. It is a lifecycl
 
 ## 1. Recover authority, task purpose, and planning context
 
-Read `AGENTS.md` mode and the applicable task authority: FILE_CONTROL reads Task/Status; ISSUE_CONTROL fetches the exact selected approved GitHub Issue/spec revision and relevant approval/decision receipts. Read bounded design and live PR evidence when needed. A stale file, unapproved Issue, incidental comment or READY label cannot expand task authorization.
+Read versioned global `CONTROL_POLICY_V1` and independently verified GitHub enrollment for mode: unadopted FILE_CONTROL reads its historical Task/Status; adopted ISSUE_CONTROL fetches the exact selected approved GitHub Issue/spec revision and relevant approval/decision receipts. Project `AGENTS.md` contains only project-specific rules. Read bounded design and live PR evidence when needed. A stale file, unapproved Issue, incidental comment or READY label cannot expand task authorization.
 
 When useful, interpret `TASK_CLASS` as the current engineering purpose: DESIGN, EXECUTION, AUDIT, VERIFY, DIAGNOSIS, CORRECTIVE, CLOSEOUT, or project-equivalent. This metadata does not create a second authority.
 
@@ -36,7 +36,7 @@ At the **next normal, user/project-authorized development task**, read fresh pro
 
 Compare the requested action with the active objective, in/out-of-scope boundary, allowed side effects, verification contract and STOP conditions.
 
-In `ISSUE_CONTROL`, retain the strict/direct or explicitly opted-in delegated approval path by default. Use risk-scoped autonomy only when the accepted `AGENTS.md` opt-in and independent live-host/credential-separation proof both verify; a local grant snapshot never changes that gate. Record governance authority risk G0–G3 separately from verification tier V0–V3 and deviation L0–L3.
+In `ISSUE_CONTROL`, retain the strict/direct or explicitly opted-in delegated approval path by default. Use risk-scoped autonomy only when a separately trusted global policy opt-in and independent live-host/credential-separation proof both verify; a local grant snapshot never changes that gate. Record governance authority risk G0–G3 separately from verification tier V0–V3 and deviation L0–L3.
 
 Keep the same task when the engineering purpose and authorization are materially unchanged across:
 
