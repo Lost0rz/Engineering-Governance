@@ -1,48 +1,22 @@
-# Project artifact / authority lifecycle
+# Artifact ownership and refresh
 
-Reconcile **semantic owners**, not a fixed list of files. A task does not update every project artifact at start or closeout.
+Each fact has one working owner. Update the owner when the underlying meaning changes, and refresh derived views only if they would otherwise mislead readers.
 
-## Classes
+| Artifact | Role |
+| --- | --- |
+| Source/code/schema/API | Implemented behavior and source-owned contracts |
+| Accepted design / domain docs | Product and architecture decisions |
+| Global plugin Skills | Shared engineering workflow and methods |
+| Project `AGENTS.md` | Project-specific enduring constraints |
+| Legacy Task/Status | Selected FILE_CONTROL task and progress projection |
+| GitHub Issue/PR/CI | Issue-backed task, remote change and observed host results |
+| Project Profile / maps / receipts | Derived navigation or evidence, not additional write grants |
 
-| Class | Typical examples | Rule |
-| --- | --- | --- |
-| `NORMATIVE_AUTHORITY` | project `AGENTS.md`, accepted domain/data rules | update when durable MUST/MUST-NOT or ownership semantics change |
-| `DESIGN_AUTHORITY` | accepted architecture/long-lived plan | update when durable design/assumption/dependency/work-package semantics change |
-| `CURRENT_CONTROL` | FILE_CONTROL Task/Status; ISSUE_CONTROL selected approved Issue or independently host-verified current top-level USER-directed bounded G1/G2 task | update only the selected mode's semantic owner, never both |
-| `IMPLEMENTATION_AUTHORITY` | canonical source, schema, config, workflow, persisted contract/state owner for the implementation class | update through authorized implementation when the owned behavior/contract/state semantics change |
-| `DERIVED_PROJECTION` | Project Profile, Domain/navigation map | authority wins; refresh only the affected stale projection when authorized/useful |
-| `OBSERVED_EVIDENCE` | CI/test results, PR/host state, runtime observations, review/audit/probe evidence | read from the owning evidence system; observation alone does not force a control/projection write |
+## Reconciliation
 
-A source file may be evidence about its own contents, but lifecycle reasoning must distinguish **the semantic owner being changed** from **an observation used to prove a claim**.
+1. Identify the changed semantic fact and its owner.
+2. Update that owner, with just the dependent pointers/projections whose meaning became stale.
+3. Leave unrelated artifacts unchanged. A no-op observation needs no new commit.
+4. Keep delivery/provenance and actual host state distinct from documentation claims.
 
-## Reconciliation algorithm
-
-At a state-changing boundary:
-
-```text
-fresh outcome
--> identify materially affected semantic classes
--> identify each class's owner
--> compare owner/projection with current truth
--> update only stale owned semantics
--> leave already-current artifacts untouched
-```
-
-`NO_SEMANTIC_CHANGE -> NO_WRITE -> NO_COMMIT`.
-
-In ISSUE_CONTROL, do not mirror progress or live PR/CI into Task/Status files. **Issue-backed only:** material authorization changes require reapproved Issue revisions; routine comments do not create Git commits or new PRs. **Verified current-session USER-directed G1/G2:** the current USER request is the first task authorization; material scope/risk/effect change needs a fresh explicit host-authenticated user decision, not a fabricated Issue/comment. Preserve PR/commit/test evidence without manufacturing Issue receipts. The following deferred file-reconciliation rule applies only to FILE_CONTROL.
-
-For an external PR merge, distinguish **live observed host truth** from the last persisted control snapshot. An accurate pre-merge `READY_TO_MERGE` record becomes an observable `POST_MERGE_DRIFT` after the host event; do not pre-write `MERGED` or generate a separate control-only PR solely to mirror the event. Read and report verified merge evidence, block any new product mutation under the old task authorization, and combine the terminal-outcome reconciliation with the **initial control-only commit of the next normal authorized task branch/PR** when safe. Refer to [Control plane and task authorization](control-plane.md) for exceptions and `CONTROL_ALIGNMENT: NEEDS_RECONCILIATION` reporting. If immediate safety/authorization resolution is mandatory, STOP and use an explicitly authorized project-compliant correction; do not turn bounded deferral into unlimited stale control authority.
-
-Normative/current authority materially stale for the next mutation must be reconciled before dependent mutation. A stale derived projection does not override its authority; report/refresh it according to task authorization.
-
-## Common lifecycle
-
-- `AGENTS.md`: long-lived; change only for durable project-specific normative rules/boundaries.
-- Project Profile: long-lived derived context/index; one current projection surface (or explicit primary + mirror); refresh when its summaries/pointers become stale.
-- Domain/navigation projection: refresh only affected verified routes; may be superseded by a new accepted navigation authority.
-- durable planning: ACTIVE -> COMPLETED/SUPERSEDED/ARCHIVED as project semantics require; routine task completion alone does not rewrite design.
-- FILE_CONTROL STATUS/TASK: conditionally maintained as the current controls; Git history provides history. ISSUE_CONTROL: retired Task/Status remain Git history, not live controls; either selected approved Issue/receipts or verified current-user G1/G2 task/host evidence owns coordination.
-- implementation authority: follows normal implementation/version/lifecycle rules of the owning system; it is not downgraded to an evidence artifact merely because it is inspected.
-
-Deletion/supersession must preserve a clear successor/pointer when future work would otherwise follow a dead authority path.
+Task/Issue authority and product semantic state can evolve on different schedules. Project history remains discoverable through Git and GitHub rather than copied into routine handoff documents.

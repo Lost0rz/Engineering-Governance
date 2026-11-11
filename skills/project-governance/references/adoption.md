@@ -1,50 +1,18 @@
-# Routing adoption and upgrade
+# Skill installation and routing adoption
 
-Adoption makes the nine Skills discoverable through routing surfaces supported by the current environment. It does not require a daemon, hook, MCP service, background process, or automatic file mutation.
+The source repository publishes reusable Skills; an installed runtime decides whether they are discoverable and what tools/permissions it provides. An installation manifest or repo file is not execution authority.
 
-## Completion contract
+## Adoption checks
 
-Adoption is complete when:
+1. Check the installed plugin source/version against its intended repository/ref; verify the Skill entry is available in that **actual** host.
+2. Exercise a normal repository task: `project-governance` owns task intent and only needed specialist Skills are loaded.
+3. For a genuine cross-context transfer, confirm that `agent-handoff` carries a compact authority reference and change request; receiver verifies its own permissions.
+4. Verify the target repo's local `AGENTS.md` contains only project-specific facts. Governance modes and host grants come from the installed policy.
+5. For authorized source edits, check the real execution host's write capability, not a copied installation result from another machine.
+6. When packaging, verify manifest identity, actual archived files, target platform import and installed version independently. CI success alone is not runtime installation evidence.
 
-1. the intended Plugin payload/version is available and all nine Skills resolve; and
-2. at least one supported authoritative routing surface can select them correctly.
+## Verification routing
 
-If the environment has authoritative global guidance, manage exactly one current Engineering Governance routing block with the shipped markers/template. If not, do not invent one; verify the environment's actual metadata/platform/explicit-selection route.
+The repository's own CI executes a trusted-base `VERIFICATION_PLAN_V1`, selecting affected tests; full test selection and Web preview packaging are separate actions. A target repo maintains its own test commands and dependency map.
 
-## Web and Desktop entry acceptance
-
-When installing/updating Governance, check **separate execution surfaces** only when they are actually targeted, using current runtime evidence:
-
-1. **Web entry**: in a fresh project chat, say "给我施工卡" or "给我审计卡" with a known task context and check actual Governance Skill resolution, correct task/Issue selection, right `agent-handoff` Card schema and truthful handling of missing approval. Plugin manifest descriptions/keywords increase discovery relevance but **do not guarantee** an automatic invocation.
-2. **Codex Desktop/local receive**: in a fresh local session, check actual installed source/version/Skill availability and the accepted repository's authority, selected task, current PR/workspace and necessary permissions before an allowed write. A terminal-only `gh` check does not establish Desktop tool permissions.
-3. **Claude Code/local receive**: inspect the actually installed or symlink-resolved Skill source and the receiving agent's effective permissions; a Codex installation does not prove Claude Code uses the same version.
-4. Negative controls: explanation-only prompts must not auto-create Issues, direct read-only audit must not become construction handoff, inaccessible plugin/GitHub must not be described as success, and a changed/unapproved Issue must not authorize writes.
-
-A source/package check does not establish Web auto-selection, Codex Desktop or Claude Code runtime behavior. Record **source SHA, packaged manifest version and payload digest, Web-installed identity, Codex-installed source and Claude-installed source separately**, reusing existing host/install metadata instead of inventing a runtime controller. A plugin ZIP built from a Draft PR is a test artifact, not an accepted release, and a marketplace `main` ref will not install Draft PR changes.
-
-## Verification router adoption
-
-The reusable V0–V3 selection policy is maintained in `verification-tiers.md`. A repository's CI adapter must fetch its own trusted base/head diff and obtain a deterministic verification plan from an **accepted** selector, never from untrusted PR source; the receiving repository remains responsible for executable test commands, dependency maps, its required check names and actual host acceptance. If those capabilities are absent, preserve existing checks or conservatively execute the relevant full suite rather than silently skipping. A successful scope selector with skipped jobs is not a full-test PASS. Install or upgrade of the Skill source alone does not modify another repository's GitHub Actions.
-
-## Upgrade verification
-
-Verify only relevant surfaces:
-
-- intended Plugin identity/version and exact nine-Skill availability;
-- Project Governance remains normal engineering entry;
-- Project Profile triggers for profile/context-index work, not normal development;
-- Design triggers for bounded UI/UX/frontend interaction/visual design while Solution Design remains engineering architecture/state-ownership authority;
-- mixed frontend workflow routing distinguishes interaction workflow from business/state workflow;
-- selected Skills may make bounded evidence-triggered calls to another capability when a concrete unresolved dependency requires it;
-- each such call has a specific dependency, decision impact, bounded expected return and a return/resume owner or stage;
-- no Skill is invoked merely for enrichment, completeness, a generic second opinion or because it is installed;
-- bounded nested calls return to the originating capability instead of restarting an all-Skill pipeline;
-- routing does not duplicate Skill procedure or project facts;
-- supported global-guidance environments have one current block; environments without it remain functional.
-
-Global routing adoption and target-project governance/profile generation are separate operations. The historical `references/V081_ENTRY_ROUTING_RECEIVER_ACCEPTANCE.md` documents the v0.8.1 nine-field acceptance baseline and must not be treated as a current requirement for the seven-field compatible Handoff; do not rewrite historical acceptance evidence into a new result. A release candidate still needs a fresh live Web, Codex Desktop and Claude Code smoke check against the same accepted source SHA and package manifest identity.
-
-
-## ISSUE_CONTROL project adoption
-
-Skill installation does not switch a consuming project. Versioned CONTROL_POLICY_V1 owns the common default Issue Control workflow. Existing repositories must prove their accepted migration by live GitHub merge-commit ancestry (using the global routing locator, not project `AGENTS.md`), after establishing an approved Issue and verified Web connector/local `gh` access. Unverified or unmigrated projects remain FILE_CONTROL and gain no implicit write permission. Verify cutover, authority uniqueness, issue receipt posting and original PR/human acceptance. Do not add a daemon, runtime router, issue watcher or mandatory per-comment CI validator simply to adopt this source contract.
+Historical FILE_CONTROL-to-ISSUE_CONTROL enrollment must be established from a verified merged migration; consult [issue-control-migration.md](issue-control-migration.md) only for migration or disputed enrollment. A failed or unavailable host trust check cannot be supplied by project prose.
