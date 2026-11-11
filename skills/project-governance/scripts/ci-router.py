@@ -329,10 +329,10 @@ def select(config, changed, stage, base, head, digest, focused="",
         hits = {t["id"] for t in config["tests"]
                 if any(match(pat, path) for pat in t["paths"] for path in changed)}
         unknown = [path for path in changed if path != config_path
+                   and not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
                    and (path in (nonregular_paths or []) or
-                   (not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
-                    and not (descriptive_doc(path) and any(
-                        match(pat, path) for pat in config.get("documentation_paths", [])))))]
+                        not (descriptive_doc(path) and any(
+                            match(pat, path) for pat in config.get("documentation_paths", []))))]
         if unknown:
             hits.update(config.get("fallback_tests", []))
         selected = [t for t in config["tests"] if t["id"] in hits]

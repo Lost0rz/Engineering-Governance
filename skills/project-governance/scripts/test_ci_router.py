@@ -447,6 +447,16 @@ class GeneralRouterTests(unittest.TestCase):
             self.assertEqual(p["selected_test_ids"], ["smoke"])
             self.assertTrue(p["review_required"])
 
+    def test_special_file_with_direct_test_coverage_does_not_force_review(self):
+        cfg = catalog()
+        cfg["tests"][0]["paths"].append("docs/**")
+        p = ci.select(cfg, ["docs/guide.md"], "ready",
+                      "a"*40, "b"*40, "digest",
+                      nonregular_paths=["docs/guide.md"])
+        self.assertEqual(p["selected_test_ids"], ["swift-unit"])
+        self.assertEqual(p["unmapped_paths"], [])
+        self.assertFalse(p["review_required"])
+
     def test_untracked_symlink_is_nonregular(self):
         with tempfile.TemporaryDirectory() as d:
             repo = Path(d)
