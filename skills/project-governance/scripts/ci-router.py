@@ -163,7 +163,7 @@ def validate(config):
             runner = t.get("runner", [])
             if (not isinstance(runner, list) or len(runner) != 1
                     or not isinstance(runner[0], str)
-                    or not re.fullmatch(r"(?:ubuntu|windows|macos)-(?:latest|[0-9]{2}\.[0-9]{2}(?:-[a-z0-9]+)?)", runner[0])):
+                    or not re.fullmatch(r"(?:ubuntu|windows|macos)-(?:latest|[0-9]{2,4}(?:\\.[0-9]{2})?(?:-(?:arm|intel|large))?)", runner[0])):
                 raise RouteError("FORK_SAFE_REQUIRES_GITHUB_HOSTED_RUNNER")
         runner = t.get("runner")
         if (not isinstance(runner, list) or not 1 <= len(runner) <= 8
@@ -317,9 +317,9 @@ def select(config, changed, stage, base, head, digest, focused="",
             "unmapped_paths": unknown, "coverage": coverage,
             # A fallback can prove readiness only if the accepted catalog
             # explicitly declares it sufficient for unknown paths.
-            "review_required": (stage == "ready" and
-                                (bool(fork_blocked) or
-                                 (bool(unknown) and not config.get("fallback_satisfies_ready", False)))),
+            "review_required": ((stage not in ("draft", "none") and bool(fork_blocked)) or
+                                (stage == "ready" and bool(unknown) and
+                                 not config.get("fallback_satisfies_ready", False))),
             "fork_blocked_tests": fork_blocked,
             "source_trust": source_trust,
             "capabilities_changed": config_changed,

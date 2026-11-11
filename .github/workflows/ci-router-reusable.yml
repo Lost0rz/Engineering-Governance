@@ -15,6 +15,10 @@ on:
         type: string
         required: false
         default: ""
+      comparison_base:
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -22,7 +26,6 @@ permissions:
 jobs:
   route:
     name: Select tests from accepted project capabilities
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.select.outputs.matrix }}
@@ -62,6 +65,8 @@ jobs:
           CAPABILITIES_PATH: ${{ inputs.capabilities_path }}
           PR_IS_DRAFT: ${{ github.event.pull_request.draft }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          COMPARISON_BASE: ${{ inputs.comparison_base }}
+          IS_FORK: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           set -euo pipefail
           if [[ "$STAGE_REQUEST" == "auto" ]]; then
@@ -78,15 +83,33 @@ jobs:
             echo "::error::PR verification must select the Ready scope via auto."
             exit 2
           fi
-          if [[ -z "$BASE_SHA" ]]; then
+          source_trust=internal
+          if [[ "$IS_FORK" == "true" ]]; then
+            source_trust=fork
+          fi
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             test -n "$DEFAULT_BRANCH"
             git -C project fetch --no-tags origin "$DEFAULT_BRANCH"
-            BASE_SHA="$(git -C project merge-base HEAD "origin/$DEFAULT_BRANCH")"
+            if [[ -z "$COMPARISON_BASE" ]]; then
+              if [[ "$stage" == "ready" || "$stage" == "milestone" ]]; then
+                echo "::error::Manual affected verification requires an explicit accepted comparison_base SHA."
+                exit 2
+              fi
+              BASE_SHA="$(git -C project rev-parse "origin/$DEFAULT_BRANCH")"
+            else
+              BASE_SHA="$COMPARISON_BASE"
+              if ! git -C project cat-file -e "$BASE_SHA^{commit}" 2>/dev/null ||
+                 ! git -C project merge-base --is-ancestor "$BASE_SHA" "origin/$DEFAULT_BRANCH"; then
+                echo "::error::comparison_base must be a committed ancestor of the accepted default branch."
+                exit 2
+              fi
+            fi
           fi
+          test -n "$BASE_SHA"
           python3 governance/skills/project-governance/scripts/ci-router.py plan \
             --repo-root project --base "$BASE_SHA" --head "$HEAD_SHA" \
             --config-path "$CAPABILITIES_PATH" --config-source base \
-            --stage "$stage" --focused "$FOCUSED_TEST" \
+            --source-trust "$source_trust" --stage "$stage" --focused "$FOCUSED_TEST" \
             --output "$RUNNER_TEMP/eg-ci-plan.json" \
             --github-output "$GITHUB_OUTPUT"
           python3 - "$RUNNER_TEMP/eg-ci-plan.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
@@ -102,6 +125,8 @@ jobs:
           if p.get("proposed_catalog_status"):
               print("- Proposed config: " + p["proposed_catalog_status"])
           print("- Unmapped: " + (", ".join(p["unmapped_paths"]) or "NONE"))
+          print("- Source trust: " + p["source_trust"])
+          print("- Fork-unsafe tests withheld: " + (", ".join(p["fork_blocked_tests"]) or "NONE"))
           print("- Tests are NOT_RUN until the execution job reports its result.")
           PY
 
