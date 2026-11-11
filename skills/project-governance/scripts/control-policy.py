@@ -256,28 +256,37 @@ def interactive_scope_eligibility(
             or not all(isinstance(path, str) for path in paths)
             or len(set(paths)) != len(paths)):
         raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
+    # Directories are explicit trailing-slash scopes, not shell globs.
+    # Never let a broad prefix smuggle in executable trust roots. Host still
+    # checks the actual changed files/effects; this classifier grants no writes.
+    protected_exact = {
+        "plugin.json",
+        "skills/project-governance/assets/control-policy.json",
+        "skills/project-governance/scripts/control-policy.py",
+        "skills/project-governance/scripts/issue-spec-check.py",
+        "skills/project-governance/scripts/verification-plan.py",
+    }
+    protected_dirs = (".github/workflows/", ".agents/", ".codex-plugin/")
     for path in paths:
-        if (not isinstance(path, str) or path.startswith("/") or "\\" in path
+        raw = path[:-1] if path.endswith("/") else path
+        if (not raw or path.startswith("/") or "\\" in path
                 or any(part in ("", ".", "..") or part.casefold() == ".git"
-                       for part in path.split("/"))
+                       for part in raw.split("/"))
                 or any(ord(ch) < 32 or ord(ch) == 127 for ch in path)
                 or "*" in path or "?" in path):
             raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
-        normalized = path.casefold()  # macOS worktrees may be case-insensitive
-        # Path identity is a scope hint, not proof of a privilege change.
-        # Normal AGENTS/Skill Markdown edits are not automatically G3; protect
-        # executable trust roots, packaging identity and host configuration.
-        # Real changed paths and semantic effects are still reviewed by host.
-        protected_exact = {
-            "skills/project-governance/assets/control-policy.json",
-            "skills/project-governance/scripts/control-policy.py",
-            "skills/project-governance/scripts/issue-spec-check.py",
-            "skills/project-governance/scripts/verification-plan.py",
-        }
-        if (normalized == "plugin.json"
-                or normalized in protected_exact
-                or normalized.startswith((".github/workflows/", ".agents/",
-                                          ".codex-plugin/"))):
+        normalized = raw.casefold()  # macOS worktrees may be case-insensitive
+        if path.endswith("/"):
+            prefix = normalized + "/"
+            blocked = (normalized in protected_exact
+                       or any(item.startswith(prefix) for item in protected_exact)
+                       or any(prefix.startswith(d) or d.startswith(prefix)
+                              for d in protected_dirs))
+        else:
+            blocked = (normalized in protected_exact
+                       or any(normalized.startswith(d) or normalized == d[:-1]
+                              for d in protected_dirs))
+        if blocked:
             raise ControlPolicyError("PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT")
     if (type(effects) is not list or not effects
             or not all(isinstance(effect, str) and effect in SESSION_EFFECTS

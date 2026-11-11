@@ -93,8 +93,15 @@ class GlobalControlPolicyTests(unittest.TestCase):
         self.assertEqual(plan["paths"], paths)
         self.assertFalse(plan["source_write_authorized"])
         self.assertFalse(plan["merge_authorized"])
+        folders = ["skills/project-governance/references/", "skills/agent-handoff/",
+                   "documents/notes/"]
+        scoped = policy.interactive_scope_eligibility(paths=folders, **common)
+        self.assertEqual(scoped["paths"], folders)
+        self.assertFalse(scoped["source_write_authorized"])
         for protected in ("skills/project-governance/assets/control-policy.json",
-                          "skills/project-governance/scripts/verification-plan.py"):
+                          "skills/project-governance/scripts/verification-plan.py",
+                          "skills/project-governance/",
+                          ".github/"):
             with self.subTest(protected=protected):
                 with self.assertRaisesRegex(
                         policy.ControlPolicyError,
