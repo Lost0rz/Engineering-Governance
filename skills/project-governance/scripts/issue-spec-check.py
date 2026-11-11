@@ -516,7 +516,8 @@ def main() -> int:
     p.add_argument("--target-ref", help="current local target ref for autonomy-verify")
     p.add_argument("--target-commit", help="current exact target commit for autonomy-verify")
     p.add_argument("--repo", required=True)
-    p.add_argument("--approvers", default="", help="host-verified trusted GitHub approval actors; never inferred from AGENTS.md")
+    p.add_argument("--migration-pr", type=int, help="global routing locator of a merged GitHub migration PR; never read from project AGENTS.md")
+    p.add_argument("--approvers", default="", help="optional restrictive allowlist; each actor must match independently verified live GitHub owner policy")
     p.add_argument("--allow-delegated", action="store_true",
                    help="only if global policy and independent user/host opt-in permit")
     args = p.parse_args()
@@ -532,11 +533,25 @@ def main() -> int:
         elif args.mode == "verify":
             if args.allow_delegated and not delegated_opt_in():
                 raise SpecError("DELEGATION_NOT_GLOBALLY_AUTHORIZED")
+            try:
+                adoption = _POLICY.select_control(args.repo, migration_pr=args.migration_pr)
+                if adoption.get("adoption") != "VERIFIED_MERGED_MIGRATION":
+                    raise _POLICY.ControlPolicyError("MIGRATION_HOST_PROOF_REQUIRED")
+                live_approvers = _POLICY.verified_personal_repo_approvers(args.repo)
+            except _POLICY.ControlPolicyError as exc:
+                raise SpecError(str(exc)) from exc
+            selected = {x.strip() for x in args.approvers.split(",") if x.strip()}
+            if selected and not selected.issubset(live_approvers):
+                raise SpecError("UNTRUSTED_APPROVER_INPUT")
             result = verify_approval(
                 issue, repo=args.repo,
-                approvers={x.strip() for x in args.approvers.split(",") if x.strip()},
+                approvers=(selected if selected else live_approvers),
                 allow_delegated=args.allow_delegated,
             )
+            result["control_policy"] = adoption["contract"]
+            result["adoption"] = adoption["adoption"]
+            result["approver_source"] = "LIVE_GITHUB_PERSONAL_REPO_OWNER"
+            result["source_write_authorized"] = False
         else:
             if args.authorization_json is None:
                 raise SpecError("AUTONOMY_AUTHORIZATION_JSON_REQUIRED")
