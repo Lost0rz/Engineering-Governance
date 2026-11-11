@@ -67,7 +67,7 @@ class VerificationPlanTests(unittest.TestCase):
         for path in ("skills/incident-doctor/SKILL.md",
                      "skills/execution-orchestrator/references/environment-capabilities.md",
                      "skills/project-profile/SKILL.md",
-                     "references/WORKSPACE_CREATION_EFFICIENCY_ACCEPTANCE.md"):
+                     "skills/project-governance/references/control-plane.md"):
             with self.subTest(path=path):
                 p = route(change(path))
                 self.assertEqual(p["tier"], "V2")
