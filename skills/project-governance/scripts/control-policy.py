@@ -63,7 +63,7 @@ def _gh_api(path: str) -> dict | list:
     """Live GitHub REST read via the authenticated local gh client; no shell."""
     try:
         result = subprocess.run(
-            ["gh", "api", path], capture_output=True, text=True,
+            ["gh", "api", "--hostname", "github.com", path], capture_output=True, text=True,
             timeout=15, check=False,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
@@ -91,6 +91,8 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
     if type(migration_pr) is not int or migration_pr < 1:
         raise ControlPolicyError("MIGRATION_PR_REQUIRED")
     pr = _gh_api(f"repos/{repo}/pulls/{migration_pr}")
+    if not isinstance(pr, dict):
+        raise ControlPolicyError("MIGRATION_NOT_HOST_VERIFIED")
     merge_sha = pr.get("merge_commit_sha")
     if (pr.get("merged_at") is None
             or not isinstance(merge_sha, str)
@@ -113,21 +115,24 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
                        if isinstance(file, dict))):
         raise ControlPolicyError("MIGRATION_DIFF_NOT_VERIFIED")
     main = _gh_api(f"repos/{repo}/branches/main")
+    if not isinstance(main, dict):
+        raise ControlPolicyError("UNVERIFIED_MAIN_HEAD")
     main_sha = (main.get("commit") or {}).get("sha")
     if not isinstance(main_sha, str) or re.fullmatch(r"[0-9a-f]{40}", main_sha) is None:
         raise ControlPolicyError("UNVERIFIED_MAIN_HEAD")
     comparison = _gh_api(f"repos/{repo}/compare/{merge_sha}...{main_sha}")
-    if comparison.get("status") not in ("identical", "ahead"):
+    if not isinstance(comparison, dict) or comparison.get("status") not in ("identical", "ahead"):
         raise ControlPolicyError("MIGRATION_NOT_IN_MAIN_ANCESTRY")
     # The historical migration PR alone is insufficient: an older PR may
     # have *added* project-level control selectors. Require the current
     # accepted main AGENTS.md to be free of operative governance selectors.
     accepted = _gh_api(f"repos/{repo}/contents/AGENTS.md?ref={main_sha}")
-    if (accepted.get("type") != "file" or accepted.get("encoding") != "base64"
+    if (not isinstance(accepted, dict)
+            or accepted.get("type") != "file" or accepted.get("encoding") != "base64"
             or not isinstance(accepted.get("content"), str)):
         raise ControlPolicyError("ACCEPTED_PROJECT_RULES_UNVERIFIED")
     try:
-        blob = base64.b64decode(accepted["content"], validate=False)
+        blob = base64.b64decode(re.sub(r"\s+", "", accepted["content"]), validate=True)
         content = blob.decode("utf-8")
     except (ValueError, UnicodeDecodeError, binascii.Error):
         raise ControlPolicyError("ACCEPTED_PROJECT_RULES_UNVERIFIED")
@@ -159,6 +164,8 @@ def verified_personal_repo_approvers(repo: str) -> set[str]:
     if not _valid_repo(repo):
         raise ControlPolicyError("INVALID_REPOSITORY")
     info = _gh_api(f"repos/{repo}")
+    if not isinstance(info, dict):
+        raise ControlPolicyError("TRUSTED_APPROVER_HOST_POLICY_REQUIRED")
     owner = info.get("owner") or {}
     if (info.get("full_name") != repo or owner.get("type") != "User"
             or not isinstance(owner.get("login"), str)
