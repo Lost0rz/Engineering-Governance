@@ -27,7 +27,7 @@ A G0 read-only status lookup is not automatically a code audit or V3 readiness a
 
 ## Scope selection and invocation frequency
 
-Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
+Choose checks by impacted semantics, dependent consumers, and consequence, **not** by commit count, number of workflow slices or availability of a full-suite command. Reducing *test invocations* must not remove useful tests, weaken assertions or hide failures. For material verification decisions, use the accepted FILE_CONTROL Task, selected approved ISSUE_CONTROL Issue/spec, or independently host-verified current USER-directed G1/G2 task to record a compact risk tier, current phase, affected checks now, deferred broader boundary, and any reusable evidence. Do not create a per-edit form, test ledger, new Skill, or separate test task.
 
 Record the governance-risk envelope and verification tier separately when both matter: G0–G3 decides what authority/effects are permitted; V0–V3 decides what evidence is needed to support the result. Never infer a G level from test count or a V level from the size of the source diff.
 
@@ -169,4 +169,4 @@ For multi-Skill architecture work, prefer testing composition and positive/negat
 
 ## Recording the decision
 
-The mode-selected authorization (FILE_CONTROL `CURRENT_TASK.md` or ISSUE_CONTROL approved Issue spec) records the chosen V0–V3 tier, rationale, checks and material cadence/deferred evidence. Report semantic checks as passing only from evidence for the relevant identity, and host gates as passing only from current host evidence. `no status` or missing evidence is `UNKNOWN`/none, not `PASS`.
+The mode-selected authorization (FILE_CONTROL `CURRENT_TASK.md`, ISSUE_CONTROL approved Issue spec, or verified current-session direct-user G1/G2 task) records the chosen V0–V3 tier, rationale, checks and material cadence/deferred evidence. Report semantic checks as passing only from evidence for the relevant identity, and host gates as passing only from current host evidence. `no status` or missing evidence is `UNKNOWN`/none, not `PASS`.

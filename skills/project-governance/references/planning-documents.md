@@ -2,7 +2,7 @@
 
 Use a durable planning/design document only when long-lived context materially helps more than one bounded execution decision. Reuse an accepted architecture/product/design authority when one already owns this role; `documents/**` is a default pattern only when the target project has no better authority.
 
-A planning/design document never independently authorizes execution. Global `CONTROL_POLICY_V1` and independently verified GitHub enrollment select FILE_CONTROL (legacy Task/Status) or ISSUE_CONTROL (approved selected Issue/spec revision) as the sole task authority. Project `AGENTS.md` remains project-specific.
+A planning/design document never independently authorizes execution. Global `CONTROL_POLICY_V1` and independently verified GitHub enrollment select FILE_CONTROL (legacy Task/Status) or ISSUE_CONTROL (selected approved Issue/spec revision or independently host-verified current top-level USER-directed bounded G1/G2 task) as the sole task authority. Project `AGENTS.md` remains project-specific.
 
 ## Ownership model
 
@@ -10,8 +10,8 @@ A planning/design document never independently authorizes execution. Global `CON
 | --- | --- | --- |
 | `AGENTS.md` | durable operating rules and stable repository/project boundaries | live task/progress history |
 | durable planning/design authority | accepted long-lived design, rationale, constraints, work-package structure, whole-plan acceptance boundary | task authorization, live CI/PR/progress log |
-| active task authority | FILE_CONTROL: `CURRENT_TASK.md`; ISSUE_CONTROL: approved selected Issue revision | duplicate long-term design or parallel task contract |
-| task/progress observation | FILE_CONTROL: concise `CURRENT_STATUS.md`; ISSUE_CONTROL: Issue receipts and live GitHub host evidence | new task authorization or detailed durable architecture |
+| active task authority | FILE_CONTROL: `CURRENT_TASK.md`; ISSUE_CONTROL: approved selected Issue revision or verified current-session USER-directed G1/G2 task | duplicate long-term design or parallel task contract |
+| task/progress observation | FILE_CONTROL: concise `CURRENT_STATUS.md`; ISSUE_CONTROL: Issue-backed receipts or direct-user task/PR/CI evidence, plus live host facts | new task authorization or detailed durable architecture |
 | Solution Design output | bounded design decision/evidence before placement in the correct authority | automatic task authorization or second design authority |
 
 Keep one owner per fact/decision class and link instead of copying full contents.
@@ -28,7 +28,7 @@ REASON: <material task-owned semantic change | none>
 DURABLE_DOCUMENT: <path/section | NONE>
 ```
 
-If `YES`, Project Governance reauthorizes the FILE_CONTROL Task or the ISSUE_CONTROL approved Issue spec revision before affected implementation. Writing a design document does not itself authorize execution.
+If `YES`, Project Governance reauthorizes FILE_CONTROL Task; revises/reapproves a selected Issue-backed spec; or obtains a fresh explicit host-authenticated USER decision if the current direct-user G1/G2 scope changed. A design document never grants execution.
 
 ## When durable planning is justified
 
@@ -75,7 +75,7 @@ If a later design change materially alters task-owned prerequisites, scope, acce
 
 ## Status linkage
 
-In FILE_CONTROL, `CURRENT_STATUS.md` summarizes current state. In ISSUE_CONTROL, use bounded Issue comments for observed progress/receipts and PR/CI for code-host truth; do not copy the durable plan into live status-file commits.
+In FILE_CONTROL, `CURRENT_STATUS.md` summarizes current state. In Issue-backed ISSUE_CONTROL use meaningful Issue receipts and PR/CI for host truth. In verified current-user-direct G1/G2 use task/PR/commit/CI evidence without a first Issue/comment or status-file commit.
 
 ## Planning/design alignment at final handoff
 
@@ -90,7 +90,7 @@ If a current Project Profile surface exists and is cheap/available, it may be re
 For actual authority-sensitive decisions, progressively read as needed:
 
 1. applicable `AGENTS.md`;
-2. task authority selected by plugin CONTROL_POLICY_V1 and trusted host enrollment: FILE_CONTROL Task/Status, or ISSUE_CONTROL selected approved Issue/spec revision;
+2. task authority selected by plugin CONTROL_POLICY_V1 and trusted host enrollment: FILE_CONTROL Task/Status, or ISSUE_CONTROL selected approved Issue/spec revision **or verified current USER-directed G1/G2 task**;
 3. relevant Issue decisions/receipts or file-state evidence, as applicable;
 4. the task's bounded related design/plan when present;
 5. additional Domain/source/runtime/evidence only as needed.
