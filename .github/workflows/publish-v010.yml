@@ -42,6 +42,12 @@ jobs:
           zip -q -r "$RUNNER_TEMP/engineering-governance-web-v0.10.0.zip" \
             plugin.json skills references .agents
           unzip -t "$RUNNER_TEMP/engineering-governance-web-v0.10.0.zip" | tail -1
+      - name: Expose release ZIP as a workflow artifact for Web-plugin synchronization
+        uses: actions/upload-artifact@v4
+        with:
+          name: engineering-governance-web-v0.10.0
+          path: ${{ runner.temp }}/engineering-governance-web-v0.10.0.zip
+          retention-days: 7
       - name: Publish v0.10.0 tag, Release and package
         shell: bash
         env:
