@@ -239,7 +239,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("resolution action is **RESOLVE_OR_ESCALATE**", contract)
         self.assertIn("L2 is not synonymous with G3", contract)
         self.assertIn("L2 alone does not imply G3", self.read("skills/project-governance/references/issue-control.md"))
-        self.assertIn("do not invent mandatory WP IDs", orchestrator)
+        self.assertIn("no first Issue, per-WP approval or mandatory WP IDs", orchestrator)
         self.assertIn("without forcing a WP list", design)
         self.assertIn("without requiring nonexistent WP fields", audit)
         self.assertIn("Legacy: increment revision", contract)
