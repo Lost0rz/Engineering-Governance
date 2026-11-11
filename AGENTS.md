@@ -1,55 +1,31 @@
-# Engineering-Governance Repository Rules
+# Engineering-Governance Source Repository Rules
 
 CONTROL_MODE: ISSUE_CONTROL
 ISSUE_APPROVERS: Lost0rz
 ISSUE_WEB_SPEC_AUTHORING: ENABLED
 
-This repository's ISSUE_CONTROL cutover is bound to the **verified merge of migration PR #41**. Older accepted main revisions remain FILE_CONTROL. Bootstrap Issue #40 is migration provenance under the FILE_CONTROL Task 093 bridge, **not** perpetual post-cutover execution authorization. After acceptance/cutover, follow-on source mutations require a separately approved, selected Issue revision with an authenticated `SPEC_APPROVAL_V1` comment by the authorized GitHub approver.
+## Repository purpose
 
-## Purpose
+This repository maintains portable Engineering Governance Skills, routing policy, templates, verification helpers, and acceptance references. It is a **source repository**, not a governance runtime, daemon, scheduler, database, installer, model router, or automatic remediation service.
 
-This repository is the source for reusable Engineering Governance Skills, routing contracts, templates, and acceptance specifications. It is not a governance runtime, daemon, scheduler, database, installer service, or automatic remediation system.
+## Source and documentation ownership
 
-## Repository authority
+- `skills/**` owns reusable engineering workflow, authorization, risk/deviation decisions, verification routing, handoff, lifecycle, and their tests. No copy of those procedures belongs in this file.
+- `documents/**` stores durable capability designs; `references/**` stores shared maintainer guidance and historical acceptance evidence. Neither is an active task authorization source.
+- `plugin.json` owns the source package's declared version; package and installed identities must be checked separately from source.
+- Target repositories own their domain architecture, business data, runtime commands, and project-specific safety constraints. This source repository must not override those project facts.
 
-- `AGENTS.md` contains durable rules for maintaining this source repository.
-- `CONTROL_MODE: ISSUE_CONTROL` takes effect only upon verified merge of the migration PR into `main`; before cutover accepted main remains FILE_CONTROL.
-- In ISSUE_CONTROL, the selected approved GitHub Issue/spec revision is the only task authorization (Issue [#40](https://github.com/Lost0rz/Engineering-Governance/issues/40) documents the migration, not automatic future authority); Issue comments carry decision/receipt evidence, not new scope. A label/body assertion alone never proves approval.
-- `CURRENT_TASK.md` and `CURRENT_STATUS.md` cease to be live controls after cutover and remain recoverable via Git history. PR/CI/merge truth belongs to the GitHub host.
-- Reusable engineering workflow belongs in `skills/**`; do not duplicate Skill procedure here. Issue approval, execution, receipt and migration behavior belongs to `skills/project-governance/references/issue-*.md`.
-- `documents/**` may preserve durable design rationale, but does not replace live controls.
+## Repository-specific engineering constraints
 
-## Capability model
+- Preserve portable Skills: never embed a developer's machine paths, private accounts, specific models, runners, or local capacities as universal framework requirements.
+- Do not introduce a persistent service, central execution controller, privileged installer, or automated enforcement mechanism without an explicit change to this repository's purpose.
+- Keep a single source owner for each framework contract; prefer narrow references over duplicated normative text.
+- Do not change authorization trust boundaries or enable new permissions as a side effect of documentation cleanup or package installation.
+- Keep source changes, reviewed commit identity, GitHub CI/merge status, packaged artifacts, and installed-runtime acceptance as distinct evidence; never infer one from another.
+- Preserve historical acceptance material as history, not proof of the current implementation or installation.
 
-Exactly nine top-level Skills are supported:
+## Canonical workflow owners
 
-1. `project-governance`
-2. `project-profile`
-3. `solution-design`
-4. `design`
-5. `execution-orchestrator`
-6. `agent-handoff`
-7. `evidence-audit`
-8. `domain-navigation`
-9. `incident-doctor`
+The installed Engineering Governance Skills own all reusable control-plane behavior. This file defines no alternative Issue, approval, G/V/L, test-selection, PR, workspace, receipt, or release procedure. Refer to `skills/project-governance/SKILL.md` and its `references/**` for the applicable workflow; `skills/project-governance/references/global-routing.md` owns Skill selection.
 
-Global routing is policy, not another Skill. `design` owns bounded UI/UX and frontend visual-design capability while `solution-design` remains the owner for material engineering/architecture/state-ownership ambiguity. `project-profile` is derived context/navigation, not a replacement for `AGENTS.md`, Domain authority, the selected FILE_CONTROL Task/Status or ISSUE_CONTROL Issue, or durable planning.
-
-## Environment boundary
-
-Reusable source defines what environment capability must be resolved, not concrete machine/platform values. Runtime/model/tool/capacity facts remain owned by the current execution environment unless a project explicitly defines a portable configuration artifact.
-
-## Source development rules
-
-- Inspect actual repository/PR/source evidence before changing governance.
-- Keep one canonical owner per semantic class; link instead of duplicating.
-- Preserve unknown/unique work and existing project authorities.
-- Keep changes proportional; no extra Skill/document/test ceremony without material value.
-- Do not add runtime/daemon/database/model-router/automatic-enforcement behavior unless repository purpose explicitly changes.
-- A routed capability must execute the bounded workflow it owns when materially triggered; merely reading a source/reference file is not sufficient evidence of capability use.
-- Governed user-facing receipts must make the actual routing/Skill composition observable and must not claim Skills that were not actually used.
-- No-op reconciliation means no write and no commit. Issue progress/receipts must not trigger status-only Git commits or PRs; migration is a single approved source transition.
-
-## Release / acceptance boundary
-
-Source construction, installed/runtime acceptance, merge and release are separate lifecycle steps. Do not claim CI, installed behavior or release readiness without evidence for the exact relevant identity.
+The three declarations above are **current compatibility selectors** required by the accepted plugin's existing target-repository parser. They preserve this repository's already-effective settings; they are not a second implementation of the control plane. Their eventual removal requires a separately verified plugin-side control-policy migration.
