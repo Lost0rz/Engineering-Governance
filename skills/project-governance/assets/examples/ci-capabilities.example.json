@@ -51,7 +51,8 @@
         "run",
         "test:web"
       ],
-      "timeout_minutes": 20
+      "timeout_minutes": 20,
+      "fork_safe": true
     },
     {
       "id": "backend-focused",
@@ -90,5 +91,6 @@
       ],
       "timeout_minutes": 10
     }
-  ]
+  ],
+  "fallback_satisfies_ready": false
 }

@@ -17,6 +17,10 @@ on:
         description: "Catalog ID for focused stage"
         type: string
         required: false
+      comparison_base:
+        description: "Required accepted-branch commit SHA for manual ready/milestone scope"
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -30,3 +34,4 @@ jobs:
       capabilities_path: .github/ci-capabilities.json
       stage: ${{ github.event_name == 'workflow_dispatch' && inputs.stage || 'auto' }}
       focused_test: ${{ inputs.focused_test || '' }}
+      comparison_base: ${{ inputs.comparison_base || '' }}

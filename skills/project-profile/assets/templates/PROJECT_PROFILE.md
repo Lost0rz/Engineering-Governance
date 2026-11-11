@@ -13,8 +13,7 @@ Primary/mirror role: <PRIMARY | MIRROR | single surface | UNKNOWN>
 
 ## Authority map
 - Project rules: `AGENTS.md`
-- Current state: `CURRENT_STATUS.md`
-- Active task: `CURRENT_TASK.md`
+- Optional current state / task: relevant Issue, PR or user instruction when one exists (not a mandatory project file)
 - Reusable Engineering Governance capabilities: `skills/**` or installed capability authority
 - Domain/navigation: <path/authority | not established>
 - Durable planning/architecture: <path/authority | not established>

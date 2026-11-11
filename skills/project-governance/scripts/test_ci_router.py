@@ -319,6 +319,34 @@ class GeneralRouterTests(unittest.TestCase):
             self.assertEqual(plan["executed_tests"][0]["outcome"],
                              "CWD_OUTSIDE_WORKSPACE")
 
+    def test_local_cli_stdout_is_single_json_result(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            cfg = {"contract": "EG_CI_CAPABILITIES_V1", "tests": [{
+                "id": "probe", "tier": "V1", "runner": ["ubuntu-latest"],
+                "paths": ["probe.py"],
+                "command": [sys.executable, "-c", "print('child output')"]}]}
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "baseline")
+            head = git("rev-parse", "HEAD")
+            proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "run", "--repo-root", d,
+                 "--base", head, "--head", head, "--stage", "focused",
+                 "--focused", "probe"], text=True, capture_output=True)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertEqual(json.loads(proc.stdout)["test_status"], "PASS")
+            self.assertIn("child output", proc.stderr)
+            self.assertNotIn("child output", proc.stdout)
+
     def test_reusable_caller_separates_manual_and_pr_required_checks(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("EG Ready verification", workflow)

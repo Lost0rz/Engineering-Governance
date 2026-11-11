@@ -4,7 +4,7 @@ Route to the smallest source set sufficient for the current decision.
 
 ## Authority gate
 
-For current-task navigation, identify the selected repository/checkout and verify the applicable task/control authority is current enough for this routing decision. If authority is unavailable/materially stale/contradictory, return `STOP_CURRENT_TASK_NAVIGATION` rather than guess.
+For current-task navigation, identify the selected repository/checkout and current user objective or linked Issue/PR. If context is incomplete, keep read-only discovery bounded and report uncertainty; request a decision only if a proposed write would exceed the actual host-authorized task.
 
 For an explicitly named historical commit/branch/file/symbol, label the result `BOUNDED/HISTORICAL SNAPSHOT NAVIGATION` and do not present it as current task authority.
 

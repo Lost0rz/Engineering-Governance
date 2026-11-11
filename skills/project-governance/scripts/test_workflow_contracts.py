@@ -67,6 +67,23 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertEqual(capabilities["contract"], "EG_CI_CAPABILITIES_V1")
         self.assertGreaterEqual(len(capabilities["tests"]), 3)
 
+    def test_no_live_skill_requires_deleted_task_or_approval_controls(self):
+        live = (
+            "skills/incident-doctor/SKILL.md",
+            "skills/incident-doctor/references/evidence-gate.md",
+            "skills/incident-doctor/assets/templates/INCIDENT.md",
+            "skills/project-profile/assets/templates/PROJECT_PROFILE.md",
+            "skills/domain-navigation/references/mapping-workflow.md",
+        )
+        obsolete = ("FILE_CONTROL", "ISSUE_CONTROL", "CURRENT_TASK.md",
+                    "CURRENT_STATUS.md", "STOP_CURRENT_TASK_NAVIGATION",
+                    "RETURN_TO_PROJECT_GOVERNANCE_FOR_REAUTHORIZATION")
+        for path in live:
+            with self.subTest(path=path):
+                text = (ROOT / path).read_text(encoding="utf-8")
+                for marker in obsolete:
+                    self.assertNotIn(marker, text)
+
     def test_ci_draft_is_skipped_and_manual_scope_available(self):
         workflow = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text()
         self.assertIn("github.event.pull_request.draft == false", workflow)

@@ -14,10 +14,11 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 ## Local agent or desktop invocation
 
     python3 ci-router.py discover --repo-root PROJECT
-    python3 ci-router.py plan --repo-root PROJECT --base BASE --head HEAD --config-source file --stage milestone
+    python3 ci-router.py plan --repo-root PROJECT --base HEAD --head HEAD --worktree --config-source file --stage milestone
+    python3 ci-router.py run --repo-root PROJECT --base HEAD --head HEAD --worktree --config-source base --stage milestone
     python3 ci-router.py run --repo-root PROJECT --base BASE --head HEAD --config-source base --stage focused --focused TEST_ID
 
-`plan` never starts a test. `run` explicitly executes selected commands from the accepted Git base and returns actual PASS/FAILED; `file` mode is planning only. The host must have real machine/runtime permission. Local testing may occur throughout Draft work without generating expensive GitHub Actions runs.
+`--worktree` includes staged, unstaged and untracked changes without requiring a commit; it is rejected in GitHub-output mode. `plan` never starts tests. `run` uses only accepted-base commands; project test output goes to stderr, leaving one JSON result on stdout. `file` mode is planning only. Actual host permission is still required.
 
 ## Remote test cadence
 
@@ -29,12 +30,14 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 
 V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites but does **not** serialize GitHub matrix jobs. Tests needing execution order should use one project-owned command or setup step. Documentation exemptions apply only to descriptive text file types and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
 
-Unmapped files stay visible as `PARTIAL_UNMAPPED`. An accepted-base `fallback_tests` lane may satisfy the selected check without pretending the entire project passed. Without a trusted fallback, an unmatched Ready source change fails coverage rather than silently skipping tests.
+Unmapped files stay visible as `PARTIAL_UNMAPPED`. `fallback_tests` selects a smoke lane but **does not automatically pass Ready**. Only an accepted-base `fallback_satisfies_ready: true` may establish `FALLBACK_COVERED`, and even then the result is not `FULL_SUITE_PASS`. Without credible coverage the Ready check fails rather than silently skipping tests.
 
 ## CI trust and host boundaries
 
+For manual **focused/release** runs, the accepted catalog is taken from the target repo's default branch even if the workflow was dispatched on another branch. Manual **ready/milestone** runs require an explicit `comparison_base` SHA that is an ancestor of the default branch; HEAD-to-HEAD is never accepted as an affected-scope proof.
+
 The reusable workflow loads the approved test catalog from the target repo's **base commit** and its own router from its published `v0.10.0` release. The resulting plan includes base/head SHA, catalog digest, test IDs, real Runner labels and `NOT_RUN` until executed. A PR may propose a new catalog, but its commands are validated as data and not executed before acceptance.
 
-The caller's workflow file itself can be changed in a PR. A centrally pinned router **cannot** stop that PR from removing or skipping the caller Job; the repository host must protect any required check/CI entrypoint through appropriate GitHub branch rules or workflow provenance. Do not claim tamper-proof required CI without such a host control. The PR-ready result and manual scoped result have different status names, avoiding confusing a manual no-test run with PR readiness. Fork PRs are not dispatched onto self-hosted Runner labels by this workflow; real project test code still requires trusted, isolated Runner hosts.
+The caller's workflow file itself can be changed in a PR. A centrally pinned router **cannot** stop that PR from removing or skipping the caller Job; the repository host must protect any required check/CI entrypoint through appropriate GitHub branch rules or workflow provenance. Do not claim tamper-proof required CI without such a host control. The PR-ready result and manual scoped result have different status names, avoiding confusing a manual no-test run with PR readiness. Fork PRs may run only lanes explicitly marked `fork_safe: true` with a GitHub-hosted Runner label. Other lanes (and unsafe dependencies) are withheld and reported; blocked Ready evidence cannot be counted as a pass. Never attach secrets to fork-safe lanes. Actual project test code still requires isolated Runner hosts.
 
-GitHub-hosted Actions execute the routing and test plan, while local/self-hosted Runners retain project runtime setup. Reusable workflow usage requires this PR to be merged and an actual published immutable `v0.10.0` tag. Web plugin installation, GitHub deployment, Mac Runner availability and project onboarding are separate observable states.
+GitHub-hosted Actions execute the routing and test plan, while local/self-hosted Runners retain project runtime setup. Web Skill planning does not by itself provide Workflow Dispatch; an authorized GitHub API or browser workflow action is needed to start a manual remote run. Reusable workflow usage requires this PR to be merged and an actual published immutable `v0.10.0` tag. Web plugin installation, GitHub deployment, Mac Runner availability and project onboarding are separate observable states.
