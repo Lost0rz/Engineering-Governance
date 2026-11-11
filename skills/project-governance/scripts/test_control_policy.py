@@ -90,7 +90,7 @@ class GlobalControlPolicyTests(unittest.TestCase):
 
     def test_project_agents_never_own_controls(self):
         template = (ROOT.parent / "assets" / "templates" / "AGENTS.md").read_text()
-        root = (ROOT.parents[2] / ".." / ".." / "AGENTS.md").resolve().read_text()
+        root = (ROOT.parents[2] / "AGENTS.md").resolve().read_text()
         for forbidden in ("CONTROL_MODE:", "ISSUE_APPROVERS:", "ISSUE_WEB_SPEC_AUTHORING:",
                           "ISSUE_DELEGATED_APPROVAL:", "RISK_SCOPED_AUTONOMY:"):
             self.assertNotIn(forbidden, template)
