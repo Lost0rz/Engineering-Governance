@@ -148,8 +148,12 @@ class GeneralRouterTests(unittest.TestCase):
         real_doc = self.plan(["docs/说明.md"], cfg=cfg)
         self.assertEqual(real_doc["coverage"], "NO_TESTS_REQUIRED")
         source = self.plan(["docs/unsafe.py"], cfg=cfg)
-        self.assertTrue(source["review_required"])
+        self.assertEqual(source["coverage"], "PARTIAL_UNMAPPED")
+        self.assertFalse(source["review_required"])  # accepted fallback is selected
+        self.assertEqual(source["selected_test_ids"], ["smoke"])
         self.assertEqual(source["unmapped_paths"], ["docs/unsafe.py"])
+        cfg["fallback_tests"] = []
+        self.assertTrue(self.plan(["docs/unsafe.py"], cfg=cfg)["review_required"])
 
     def test_integrated_suite_includes_declared_lower_tier_dependency(self):
         cfg = catalog()
