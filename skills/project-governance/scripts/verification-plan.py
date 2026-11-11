@@ -127,6 +127,11 @@ def classify(path: str) -> tuple[str, str]:
         raise SelectionError("INVALID_CHANGE_PATH")
     if path in ESCALATE:
         return "V3", "repository metadata affects trusted diff"
+    # Historical acceptance receipts are not active contract owners.
+    # Keep the exception narrow: unrelated references still use the V2 map.
+    if (path.startswith("references/") and path.count("/") == 1
+            and path.endswith("_ACCEPTANCE.md")):
+        return "V0", "historical acceptance evidence"
     # Exact filenames must not accidentally match longer prefix paths.
     for prefix, tier, reason in SCOPE:
         if path == prefix or (prefix.endswith("/") and path.startswith(prefix)):

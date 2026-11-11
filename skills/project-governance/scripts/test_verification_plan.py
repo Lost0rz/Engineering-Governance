@@ -40,6 +40,17 @@ class VerificationPlanTests(unittest.TestCase):
     def test_descriptive_notes_document_is_v1(self):
         self.assertEqual(route(change("documents/notes/plain.md"))["tier"], "V1")
 
+    def test_historical_acceptance_receipts_do_not_run_integration(self):
+        for path in ("references/V081_ENTRY_ROUTING_RECEIVER_ACCEPTANCE.md",
+                     "references/ISSUE_CONTROL_ACCEPTANCE.md",
+                     "references/WORKSPACE_CREATION_EFFICIENCY_ACCEPTANCE.md"):
+            with self.subTest(path=path):
+                plan = route(change(path))
+                self.assertEqual(plan["tier"], "V0")
+                self.assertEqual(plan["selected"], ["static_scope"])
+        # Active documentation contracts are still part of affected checks.
+        self.assertEqual(route(change("references/SKILL_ENGINEERING.md"))["tier"], "V2")
+
     def test_durable_design_document_is_v2(self):
         self.assertEqual(route(change("documents/plans/architecture.md"))["tier"], "V2")
 
