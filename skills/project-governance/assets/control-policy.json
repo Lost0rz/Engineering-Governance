@@ -1,0 +1,12 @@
+{
+  "contract": "CONTROL_POLICY_V1",
+  "default_mode": "ISSUE_CONTROL",
+  "unenrolled_mode": "FILE_CONTROL",
+  "enrollment_authority": "GITHUB_VERIFIED_MERGED_MIGRATION",
+  "approver_authority": "GITHUB_VERIFIED_ACCOUNT_AND_OWNER_POLICY",
+  "web_issue_authoring": "EXPLICIT_USER_REQUEST_AND_HOST_WRITE",
+  "delegated_approval": "DISABLED",
+  "risk_scoped_autonomy": "DISABLED",
+  "require_host_authority_for_writes": true,
+  "project_agents_control_selectors": "IGNORED"
+}
