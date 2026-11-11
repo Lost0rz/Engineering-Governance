@@ -5,6 +5,12 @@ name: Governance Contract Checks
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      package_preview:
+        description: "Explicit Web preview build; independent of test tier"
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -44,10 +50,10 @@ jobs:
               echo "run_policy=false"
               echo "run_affected=false"
               echo "run_full=true"
-              echo "run_package=true"
+              echo "run_package=false"
               echo "scope_status=SCOPE_GATE_FALLBACK_FULL"
             } >> "$GITHUB_OUTPUT"
-            echo '{"contract":"VERIFICATION_PLAN_V1","tier":"V3","scope_status":"SCOPE_GATE_FALLBACK_FULL","selected":["static_scope","full_contracts","package_preview"],"skipped":[],"test_status":"TESTS_PENDING","full_suite_claim":false}' > "$PLAN_PATH"
+            echo '{"contract":"VERIFICATION_PLAN_V1","tier":"V3","scope_status":"SCOPE_GATE_FALLBACK_FULL","selected":["static_scope","full_contracts"],"skipped":["package_preview"],"test_status":"TESTS_PENDING","full_suite_claim":false}' > "$PLAN_PATH"
           }
           if [[ "$GITHUB_EVENT_NAME" != "pull_request" || -z "$BASE_SHA" || -z "$HEAD_SHA" ]]; then
             fallback_full
@@ -145,7 +151,7 @@ jobs:
           echo "SCOPE_GATE_PASS / TESTS_SKIPPED — not FULL_TESTS_PASS" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Build versioned Web preview package
-        if: steps.scope.outputs.run_package == 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.package_preview == true
         run: |
           python3 - <<'PY'
           import json
@@ -194,7 +200,7 @@ jobs:
           PY
 
       - name: Upload Web preview package (artifact only; no release)
-        if: steps.scope.outputs.run_package == 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.package_preview == true
         uses: actions/upload-artifact@v4
         with:
           name: engineering-governance-web-preview

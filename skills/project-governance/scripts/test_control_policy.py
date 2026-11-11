@@ -65,7 +65,6 @@ class GlobalControlPolicyTests(unittest.TestCase):
             ({"effects": ["source_edit", "merge"]}, "INVALID_SESSION_EFFECTS"),
             ({"paths": ["AGENTS.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": [".github/workflows/ci.yml"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
-            ({"paths": ["skills/project-governance/SKILL.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": ["src/../secrets"]}, "INVALID_SESSION_SCOPE_PATHS"),
             ({"paths": ["src\\private"]}, "INVALID_SESSION_SCOPE_PATHS"),
             ({"paths": [["nested"]]}, "INVALID_SESSION_SCOPE_PATHS"),
@@ -80,6 +79,29 @@ class GlobalControlPolicyTests(unittest.TestCase):
             with self.subTest(delta=delta):
                 with self.assertRaisesRegex(policy.ControlPolicyError, expected):
                     policy.interactive_scope_eligibility(**(common | delta))
+
+    def test_more_than_twelve_nonprivileged_paths_do_not_imply_g3(self):
+        common = {
+            "repo": "Lost0rz/Engineering-Governance", "risk": "G2",
+            "effects": ["source_edit", "focused_test"],
+            "explicit_user_request": True, "active_session": True,
+            "host_write_permission": True,
+        }
+        docs = ["skills/project-governance/SKILL.md",
+                "skills/project-governance/references/development-flow.md",
+                ".github/ISSUE_TEMPLATE/execution-spec.yml"]
+        paths = docs + [f"documents/notes/note-{i}.md" for i in range(20)]
+        plan = policy.interactive_scope_eligibility(paths=paths, **common)
+        self.assertEqual(plan["paths"], paths)
+        self.assertFalse(plan["source_write_authorized"])
+        self.assertFalse(plan["merge_authorized"])
+        for protected in ("skills/project-governance/assets/control-policy.json",
+                          "skills/project-governance/scripts/verification-plan.py"):
+            with self.subTest(protected=protected):
+                with self.assertRaisesRegex(
+                        policy.ControlPolicyError,
+                        "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"):
+                    policy.interactive_scope_eligibility(paths=[protected], **common)
 
     def test_missing_enrollment_does_not_auto_authorize(self):
         r = policy.select_control("Lost0rz/Merloom")
