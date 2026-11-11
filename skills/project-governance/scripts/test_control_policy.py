@@ -64,7 +64,11 @@ class GlobalControlPolicyTests(unittest.TestCase):
             ({"paths": [".github/workflows/ci.yml"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": ["skills/project-governance/SKILL.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": ["src/../secrets"]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": ["src\\\\private"]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": [["nested"]]}, "INVALID_SESSION_SCOPE_PATHS"),
             ({"paths": ["src/**"]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": ["docs/AGENTS.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"effects": [["source_edit"]]}, "INVALID_SESSION_EFFECTS"),
         )
         for delta, expected in cases:
             with self.subTest(delta=delta):
