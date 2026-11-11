@@ -5,6 +5,7 @@ import importlib.util
 import json
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent
@@ -165,6 +166,32 @@ class GlobalControlPolicyTests(unittest.TestCase):
                     policy.ControlPolicyError, "TRUSTED_APPROVER_HOST_POLICY_REQUIRED"
                 ):
                     policy.verified_personal_repo_approvers("Lost0rz/Engineering-Governance")
+
+    def test_gh_reader_pins_github_com_not_environment_default(self):
+        with patch.object(policy.subprocess, "run", return_value=SimpleNamespace(
+            returncode=0, stdout="{}")) as run:
+            policy._gh_api("repos/owner/repo")
+        self.assertEqual(run.call_args.args[0],
+                         ["gh", "api", "--hostname", "github.com", "repos/owner/repo"])
+
+    def test_malformed_host_response_is_a_denial(self):
+        with patch.object(policy, "_gh_api", return_value=[]):
+            with self.assertRaisesRegex(policy.ControlPolicyError,
+                                        "MIGRATION_NOT_HOST_VERIFIED"):
+                policy.verify_migration("Lost0rz/Engineering-Governance", 41)
+            with self.assertRaisesRegex(policy.ControlPolicyError,
+                                        "TRUSTED_APPROVER_HOST_POLICY_REQUIRED"):
+                policy.verified_personal_repo_approvers("Lost0rz/Engineering-Governance")
+
+    def test_active_policy_docs_cannot_reintroduce_agents_approval(self):
+        refs = ROOT.parent / "references"
+        issue = (refs / "issue-control.md").read_text(encoding="utf-8")
+        routing = (ROOT.parent / "assets" / "templates" /
+                   "GLOBAL_AGENTS_ROUTING.md").read_text(encoding="utf-8")
+        for stale in ("AGENTS.md`-authorized", "accepted `ISSUE_APPROVERS`",
+                      "AGENTS.md opt-in", "The author login must be in accepted"):
+            self.assertNotIn(stale, issue)
+        self.assertIn("Project `AGENTS.md` cannot override", routing)
 
     def test_web_authoring_is_only_eligibility(self):
         self.assertFalse(policy.web_authoring_eligible(explicit_user_request=False,
