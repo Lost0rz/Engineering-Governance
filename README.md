@@ -34,19 +34,15 @@ This lets the design capability evolve without installing multiple overlapping d
 - Project Profile — concise descriptive context + pointers to authorities; one current projection surface or explicit primary + mirror;
 - Domain/navigation authority — detailed semantic ownership/source/test/runtime route;
 - durable planning — long-lived design/rationale/work packages when justified;
-- active task control, selected explicitly by `AGENTS.md`: FILE_CONTROL uses legacy Task/Status files; legacy/default ISSUE_CONTROL uses an approved GitHub Issue/spec revision and meaningful decision/final comments. A separately opted-in, independently host-verified G1/G2 autonomy path is a **candidate** and remains inactive until its trust boundary is proven;
+- active task control — selected by each repository's accepted authority, with execution specifics owned by `project-governance` rather than restated here;
 - implementation authority — canonical source/schema/config/workflow/persisted contract/state owner for the implementation class;
 - observed evidence — CI/test results, PR/host state, runtime/review/audit/probe observations.
 
 A Profile or Domain Map is a derived projection. If it conflicts with its authority, the authority wins and the projection is stale.
 
-## Normal route
+## Governance workflow owner
 
-Ordinary software/project work enters `project-governance`. Use narrower capabilities only when their semantic trigger applies. `solution-design` handles engineering architecture/state ownership; `design` handles bounded UI/UX/frontend visual direction and execution. They may compose under one Project Governance task without becoming parallel task authorities.
-
-In legacy/default ISSUE_CONTROL, the selected verified 19-field `EXECUTION_SPEC_V1` and its direct or opted-in delegated exact-revision GitHub approval authorize bounded implementation; meaningful PAUSE/TERMINATE/final Issue receipts are posted while PR/CI remain separate evidence. The proposed G1/G2 risk-scoped path accepts a simpler 8-field `AUTONOMY_SCOPE_V1` policy-only input but still requires independent GitHub host authorization and credential separation before routine Issue comments or exact-digest approval comments can be omitted. The current source deliberately fails closed on that path. An ordinary merge or package release is a separate host-governed action, not automatically G3 by name. See `skills/project-governance/references/issue-control.md`, `issue-execution-contract.md` and `issue-control-migration.md`.
-
-Changing agent/session/machine/context does not create a new task. Same-purpose continuation keeps the task and, when safe, the current PR/workspace. Handoffs transport authority references + fresh delta; they do not restate a second task contract.
+The reusable engineering workflow is owned by the installed Engineering Governance Skills. `project-governance` is the normal entry; capability selection is maintained in [`global-routing.md`](skills/project-governance/references/global-routing.md), while authorization and approval modes are maintained in [`issue-control.md`](skills/project-governance/references/issue-control.md). This README describes repository capabilities but does not define a separate execution or authorization contract.
 
 ## Environment policy
 
@@ -54,7 +50,7 @@ Concrete Sub Agent model/reasoning, parallel capacity, delegation limits, tools,
 
 ## Verification
 
-Authorization risk (`G0`–`G3`), verification evidence (`V0`–`V3`) and execution deviation (`L0`–`L3`) are distinct. Verification follows affected consequence and evidence identity. Semantic evidence and live repository-host gates are separate claims. Missing checks are not PASS. Installed/runtime acceptance is performed only after a frozen source candidate exists.
+Proportional verification and evidence reuse belong to [`verification-tiers.md`](skills/project-governance/references/verification-tiers.md). Authorization risk and deviation contracts belong to [`issue-execution-contract.md`](skills/project-governance/references/issue-execution-contract.md). Current CI/host and installed-runtime evidence remain separate from this documentation.
 
 ## Maintainer references
 
@@ -65,6 +61,6 @@ Authorization risk (`G0`–`G3`), verification evidence (`V0`–`V3`) and execut
 - `skills/agent-handoff/references/handoff-contract.md` — card/receipt contract.
 
 
-### Issue Control local preflight
+### Issue Control tooling
 
-For a repository that **explicitly** adopted ISSUE_CONTROL, read the complete fresh Issue using `gh issue view <number> -R owner/repo --json number,body,state,comments > issue.json`. The lightweight bundled validator at `skills/project-governance/scripts/issue-spec-check.py` supports `digest` (structural spec + SHA256), legacy `verify --approvers <trusted-github-logins>` (authenticated matching SPEC_APPROVAL_V1, or explicit delegated mode), and a separate `autonomy-verify` candidate that always returns STOP without trusted host and credential-separation evidence. None of these checks proves source ownership or replaces real local writer safety. Use `python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v` for the bounded contract scenarios. Legacy/default Issue execution still requires the matching authorized exact-digest approval; in a future independently accepted active autonomy mode, a host grant may replace only that approval-comment prerequisite for in-envelope G1/G2 work. Evidence remains recoverable from the appropriate Issue/PR/commit/CI/receipt surfaces, not Git status-only commits.
+The canonical Issue-spec verifier is [`issue-spec-check.py`](skills/project-governance/scripts/issue-spec-check.py). Its supported commands, opt-in boundaries, and receiver preflight are defined by the owning [`issue-control.md`](skills/project-governance/references/issue-control.md), not by this README. The G1/G2 trusted-host autonomy path remains inactive until independently verified; do not infer execution permission from schema or local snapshots.
