@@ -44,7 +44,7 @@ class VerificationPlanTests(unittest.TestCase):
         self.assertEqual(route(change("documents/plans/architecture.md"))["tier"], "V2")
 
     def test_shared_skill_changes_are_v2_without_full_suite_or_package(self):
-        p = route(change("skills/agent-handoff/SKILL.md"))
+        p = route(change("skills/incident-doctor/SKILL.md"))
         self.assertEqual(p["tier"], "V2")
         self.assertIn("affected_contracts", p["selected"])
         self.assertNotIn("full_contracts", p["selected"])
@@ -54,13 +54,42 @@ class VerificationPlanTests(unittest.TestCase):
 
     def test_g1_g2_low_risk_skill_edits_get_affected_integration(self):
         for path in ("skills/incident-doctor/SKILL.md",
-                     "skills/execution-orchestrator/SKILL.md",
+                     "skills/execution-orchestrator/references/environment-capabilities.md",
                      "skills/project-profile/SKILL.md",
                      "references/WORKSPACE_CREATION_EFFICIENCY_ACCEPTANCE.md"):
             with self.subTest(path=path):
                 p = route(change(path))
                 self.assertEqual(p["tier"], "V2")
                 self.assertEqual(p["selected"], ["static_scope", "affected_contracts"])
+
+    def test_v2_dependency_mapped_test_modules_and_no_package(self):
+        examples = (
+            ("skills/execution-orchestrator/references/environment-capabilities.md", ("test_control_policy.py",
+              "test_eg097_policy_contracts.py", "test_issue_spec_check.py")),
+            ("skills/incident-doctor/SKILL.md", ("test_control_policy.py",
+              "test_eg097_policy_contracts.py", "test_issue_spec_check.py")),
+            ("skills/project-governance/references/capability-composition.md",
+              ("test_control_policy.py", "test_eg097_policy_contracts.py",
+               "test_issue_spec_check.py")),
+            ("skills/project-profile/SKILL.md", ("test_eg097_policy_contracts.py",)),
+            ("documents/plans/architecture.md", ("test_eg097_policy_contracts.py",)),
+        )
+        for path, suites in examples:
+            with self.subTest(path=path):
+                p = route(change(path))
+                self.assertEqual(p["tier"], "V2")
+                self.assertEqual(p["affected_suites"], list(suites))
+                self.assertEqual(p["affected_coverage"], "CROSS_SKILL_CONTRACTS_ONLY")
+                self.assertNotIn("package_preview", p["selected"])
+
+    def test_v2_renames_union_dependencies_without_test_injection(self):
+        p = route(change("skills/project-profile/SKILL.md", "R100",
+                         "skills/execution-orchestrator/references/environment-capabilities.md"))
+        self.assertEqual(p["tier"], "V2")
+        self.assertEqual(p["affected_suites"], [
+            "test_control_policy.py", "test_eg097_policy_contracts.py",
+            "test_issue_spec_check.py"])
+        self.assertEqual(route(change("plugin.json"))["affected_suites"], [])
 
     def test_security_sensitive_contracts_and_release_identity_are_always_v3(self):
         for path in ("skills/project-governance/SKILL.md",
@@ -72,6 +101,30 @@ class VerificationPlanTests(unittest.TestCase):
                      "skills/project-governance/assets/control-policy.json",
                      "skills/agent-handoff/references/handoff-contract.md",
                      "plugin.json", ".agents/plugins/marketplace.json"):
+            with self.subTest(path=path):
+                p = route(change(path))
+                self.assertEqual(p["tier"], "V3")
+                self.assertIn("full_contracts", p["selected"])
+                self.assertIn("package_preview", p["selected"])
+
+    def test_single_line_normative_skill_or_markdown_permission_edit_is_v3(self):
+        sensitive = (
+            "skills/project-governance/references/artifact-lifecycle.md",
+            "skills/project-governance/references/planning-documents.md",
+            "skills/project-governance/references/workspace-lifecycle.md",
+            "skills/project-governance/references/remote-delivery.md",
+            "skills/project-governance/references/control-identity.md",
+            "skills/project-governance/references/adoption.md",
+            "skills/project-governance/assets/templates/EXECUTION_SPEC.md",
+            "skills/agent-handoff/SKILL.md",
+            "skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md",
+            "skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md",
+            "skills/execution-orchestrator/SKILL.md",
+            "skills/solution-design/SKILL.md",
+            "skills/solution-design/references/design-contract.md",
+            "skills/incident-doctor/references/evidence-gate.md",
+        )
+        for path in sensitive:
             with self.subTest(path=path):
                 p = route(change(path))
                 self.assertEqual(p["tier"], "V3")

@@ -127,6 +127,35 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("needs no first Issue/comment", workspace)
         self.assertIn("host-verified top-level USER-requested", workspace)
 
+    def test_rev3_direct_user_authority_converges_across_live_skill_owners(self):
+        required = {
+            "skills/project-governance/references/artifact-lifecycle.md": "current-session USER-directed G1/G2",
+            "skills/project-governance/references/planning-documents.md": "current top-level USER-directed bounded G1/G2",
+            "skills/project-governance/references/control-plane.md": "Missing evidence **for the selected route**",
+            "skills/project-governance/references/verification-tiers.md": "current-session direct-user G1/G2 task",
+            "skills/agent-handoff/SKILL.md": "current USER-directed bounded G1/G2 task",
+            "skills/agent-handoff/references/handoff-contract.md": "receiving host/session",
+            "skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md": "RECEIVING_HOST_PREFLIGHT_REQUIRED",
+            "skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md": "CURRENT_USER_DIRECT_G1_G2_VERIFIED_IN_HOST",
+            "skills/execution-orchestrator/SKILL.md": "current top-level USER-directed G1/G2",
+            "skills/solution-design/SKILL.md": "current-session host-verified USER-directed G1/G2",
+            "skills/solution-design/references/design-contract.md": "fresh explicit host-authenticated USER decision",
+            "skills/incident-doctor/references/evidence-gate.md": "current USER-directed bounded G1/G2",
+            "skills/project-governance/assets/templates/EXECUTION_SPEC.md": "ISSUE-BACKED TEMPLATE ONLY",
+        }
+        for path, phrase in required.items():
+            with self.subTest(path=path):
+                self.assertIn(phrase, self.read(path))
+        handoff = self.read("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md")
+        self.assertNotIn("accepted target `AGENTS.md` opt-in", handoff)
+        self.assertIn("Project `AGENTS.md` cannot activate autonomy.", handoff)
+        self.assertNotIn("When no valid Issue spec/approval exists", handoff)
+        self.assertIn("A quoted user request", handoff)
+        orchestration = self.read("skills/execution-orchestrator/SKILL.md")
+        self.assertNotIn("FILE_CONTROL Task or ISSUE_CONTROL exact approved Issue/spec revision", orchestration)
+        self.assertIn("independently reverify", orchestration)
+        self.assertNotIn("ISSUE_CONTROL selects one approved Issue/spec revision", self.read("skills/project-governance/references/control-plane.md"))
+
     def test_v2_affected_contracts_are_not_unnecessary_full_package(self):
         selector = self.read("skills/project-governance/scripts/verification-plan.py")
         workflow = self.read(".github/workflows/governance-contract-checks.yml")
@@ -182,7 +211,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("using the contract selected by the authorization path", receiver)
         self.assertNotIn("19-field quality, current revision and canonical SHA256 in both authority paths", receiver)
         self.assertIn("8-field parser", receiver)
-        self.assertIn("Legacy uses the 19-field Issue", receiver)
+        self.assertIn("Legacy Issue-backed work uses the 19-field Issue", receiver)
         self.assertIn("For an actual Handoff Card", receipt)
         self.assertNotIn("## Mandatory pre-return gate", receipt)
         self.assertNotIn("SOURCE_CARD_ID_PRESERVED: YES", receipt)
@@ -210,8 +239,8 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("resolution action is **RESOLVE_OR_ESCALATE**", contract)
         self.assertIn("L2 is not synonymous with G3", contract)
         self.assertIn("L2 alone does not imply G3", self.read("skills/project-governance/references/issue-control.md"))
-        self.assertIn("do not invent mandatory WP IDs", orchestrator)
-        self.assertIn("without forcing a WP list", design)
+        self.assertIn("no first Issue, per-WP approval or mandatory WP IDs", orchestrator)
+        self.assertIn("with no first Issue or mandatory WP list", design)
         self.assertIn("without requiring nonexistent WP fields", audit)
         self.assertIn("Legacy: increment revision", contract)
         self.assertIn("G3 requires the applicable explicit owner decision", contract)

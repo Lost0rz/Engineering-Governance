@@ -38,6 +38,22 @@ SCOPE = (
     ("skills/project-governance/references/control-plane.md", "V3", "control owner and alignment"),
     ("skills/project-governance/references/issue-control-migration.md", "V3", "trusted enrollment boundary"),
     ("skills/project-governance/references/verification-tiers.md", "V3", "verification policy owner"),
+    # Normative task / writer / grant boundaries: even one Markdown line is V3.
+    # Ordinary descriptive Skill files remain V2 and use affected contracts.
+    ("skills/project-governance/references/artifact-lifecycle.md", "V3", "task authority lifecycle"),
+    ("skills/project-governance/references/planning-documents.md", "V3", "task authorization in design"),
+    ("skills/project-governance/references/workspace-lifecycle.md", "V3", "writer/workspace permission"),
+    ("skills/project-governance/references/remote-delivery.md", "V3", "source write host gate"),
+    ("skills/project-governance/references/control-identity.md", "V3", "accepted host authority"),
+    ("skills/project-governance/references/adoption.md", "V3", "trusted CI enrollment"),
+    ("skills/project-governance/assets/templates/EXECUTION_SPEC.md", "V3", "Issue-backed approval contract"),
+    ("skills/agent-handoff/SKILL.md", "V3", "handoff authority semantics"),
+    ("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md", "V3", "handoff authority locator"),
+    ("skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md", "V3", "handoff authority receipt"),
+    ("skills/execution-orchestrator/SKILL.md", "V3", "delegation writer authority"),
+    ("skills/solution-design/SKILL.md", "V3", "design source authorization"),
+    ("skills/solution-design/references/design-contract.md", "V3", "design reauthorization"),
+    ("skills/incident-doctor/references/evidence-gate.md", "V3", "incident permission evidence"),
     ("skills/project-governance/scripts/", "V3", "authorization and verification source/tests"),
     ("skills/project-governance/assets/control-policy.json", "V3", "versioned global permission policy"),
     ("skills/project-governance/assets/templates/AGENTS.md", "V3", "project control boundary"),
@@ -54,6 +70,38 @@ SCOPE = (
     (".codex-plugin/", "V3", "plugin installation manifest"),
 )
 ESCALATE = (".gitmodules", ".gitattributes", ".gitignore")
+
+# Explicit V2 dependency map. Tests outside the list cannot be injected by
+# a PR-supplied manifest, and the script itself is always selected from BASE.
+V2_TEST_CROSS = "test_eg097_policy_contracts.py"
+V2_TEST_CONTROL = "test_control_policy.py"
+V2_TEST_ISSUE = "test_issue_spec_check.py"
+V2_ALLOWED_TESTS = frozenset((V2_TEST_CROSS, V2_TEST_CONTROL, V2_TEST_ISSUE))
+
+
+def affected_suites(changes: list[dict[str, str]]) -> list[str]:
+    """Select cross-Skill contracts plus known dependent authority adapters.
+
+    This is a repository-specific contract map, NOT a substitute for consumer
+    product/runtime tests. Unknown source owners escalate to V3 elsewhere.
+    """
+    tests = {V2_TEST_CROSS}
+    for entry in changes:
+        for path in (entry["path"], entry.get("previous_path")):
+            if not path:
+                continue
+            if path.startswith(("skills/agent-handoff/",
+                                "skills/execution-orchestrator/",
+                                "skills/solution-design/",
+                                "skills/incident-doctor/")):
+                tests.add(V2_TEST_ISSUE)
+                tests.add(V2_TEST_CONTROL)
+            if path.startswith("skills/project-governance/references/"):
+                tests.add(V2_TEST_ISSUE)
+                tests.add(V2_TEST_CONTROL)
+    if not tests.issubset(V2_ALLOWED_TESTS):
+        raise SelectionError("UNMAPPED_AFFECTED_TEST_SUITE")
+    return sorted(tests)
 
 
 class SelectionError(ValueError):
@@ -145,6 +193,7 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
             reasons.append({"path": path, "tier": tier, "reason": why})
     tier = TIERS[highest]
     # A PASS for a selector is not a PASS for the omitted tests.
+    suites = affected_suites(changes) if tier == "V2" else []
     selected = ["static_scope"]
     skipped = []
     if tier == "V0":
@@ -164,6 +213,7 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
         "contract": CONTRACT, "base": base, "head": head,
         "tier": tier, "changes": changes, "reasons": reasons,
         "selected": selected, "skipped": skipped,
+        "affected_suites": suites, "affected_coverage": "CROSS_SKILL_CONTRACTS_ONLY",
         "scope_status": "SCOPE_GATE_PASS",
         "test_status": "TESTS_PENDING",
         "policy_source": "TRUSTED_BASE",

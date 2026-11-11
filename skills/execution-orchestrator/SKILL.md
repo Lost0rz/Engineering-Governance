@@ -5,7 +5,7 @@ description: Use when an already-authorized engineering task materially benefits
 
 # Execution Orchestrator
 
-Use only after valid task authority exists (FILE_CONTROL Task or ISSUE_CONTROL exact approved Issue/spec revision). This Skill controls **how authorized work executes**, not what is authorized. Delegated units normally remain inside the same `TASK_ID`.
+Use only after valid task authority exists (FILE_CONTROL Task, selected approved Issue/spec revision, or host-verified current top-level USER-directed bounded G1/G2 task). This Skill controls **how authorized work executes**, not what is authorized. Delegated units normally remain inside the same `TASK_ID`.
 
 Read `references/execution-contract.md`. When Sub Agent delegation is considered, also read `references/subagent-execution.md`. When execution depends on runtime-specific limits/defaults/tools, read `references/environment-capabilities.md`.
 
@@ -67,7 +67,7 @@ A reviewer finding does not automatically authorize a new whole-task reviewer lo
 
 ## ISSUE_CONTROL deterministic execution units
 
-Under legacy/default ISSUE_CONTROL, execution units reference the approved Issue Work Packages. In an **actually activated independently host-verified** G1/G2 compact-scope route, use bounded actions inside the eight-field task/grant path, effect and risk envelope; do not invent mandatory WP IDs. L2 means isolate an unresolved affected action, resolve in-envelope design/diagnostic uncertainty, then recheck affected evidence and continue when safe; ask the user only for a genuine owner-only or expanded-authority decision. L3 still terminates unsafe execution. Delegation, comments and spec revisions never create additional permission, physical worktrees, PRs, agents or model upgrades.
+Under legacy Issue-backed ISSUE_CONTROL, units reference approved Issue Work Packages. Under current top-level USER-directed G1/G2 **verified in the executing host**, use bounded task/path/effect/risk actions with no first Issue, per-WP approval or mandatory WP IDs. A cross-context handoff must independently reverify current USER-role and actual receiving-host writer access; the Card cannot carry permission. Independently activated future durable grants use their separate eight-field task/grant envelope. L2 means isolate an unresolved affected action, resolve in-envelope design/diagnostic uncertainty, then recheck affected evidence and continue when safe; ask the user only for a genuine owner-only or expanded-authority decision. L3 still terminates unsafe execution. Delegation, comments and spec revisions never create additional permission, physical worktrees, PRs, agents or model upgrades.
 
 Keep governance risk G0–G3 separate from verification tier V0–V3 and deviation L0–L3. Decomposition, a passing check, or a positive local grant snapshot cannot expand the selected Issue's authority; risk-scoped autonomy remains inactive without accepted policy opt-in and independently verified live-host/credential separation.
 

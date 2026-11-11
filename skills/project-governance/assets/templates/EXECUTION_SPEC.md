@@ -67,7 +67,7 @@ PENDING
 
 ### DEVIATION_POLICY
 
-<L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE within the fixed objective/risk/effect envelope. Routine G1/G2 comments are optional only after trusted global CONTROL_POLICY_V1 opt-in and independently verified GitHub host grant/credential separation; legacy ISSUE_CONTROL rules remain the default.>
+<L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE inside the fixed objective/risk/effect envelope. THIS IS AN ISSUE-BACKED TEMPLATE ONLY: host-verified current top-level USER-directed bounded G1/G2 tasks need no first Issue or GitHub approval comment. Unattended durable autonomy still requires independent protected global host grant and separated executor credentials.>
 
 ### STOP_AND_SAFETY
 
