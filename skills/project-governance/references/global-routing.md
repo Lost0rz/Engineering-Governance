@@ -14,7 +14,7 @@ This contract governs behavior **after entry** and discoverability guidance, not
 
 - **Entry:** the host discovers/loads the plugin; a Skill file cannot prove runtime installation.
 - **Routing:** this file chooses the smallest capable owner; no execution procedure or permission is defined here.
-- **Execution:** the selected Skill follows its own references and the target project's current authority. A handoff carries a locator and fresh delta, never a grant.
+- **Execution:** the selected Skill follows its own references, verified global CONTROL_POLICY_V1 task authority, and target-project-specific business/safety constraints. A handoff carries a locator and fresh delta, never a grant.
 
 
 ## Routing surfaces
