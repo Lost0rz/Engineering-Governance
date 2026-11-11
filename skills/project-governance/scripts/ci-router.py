@@ -350,10 +350,12 @@ def select(config, changed, stage, base, head, digest, focused="",
     if source_trust == "fork":
         candidate_ids = {t["id"] for t in selected}
         safe_ids = set()
-        for t in selected:
-            if t.get("fork_safe", False) and all(
-                    dep in safe_ids for dep in t.get("requires", [])):
-                safe_ids.add(t["id"])
+        # Resolve safe prerequisites independent of catalog display order.
+        for _ in selected:
+            for t in selected:
+                if t.get("fork_safe", False) and all(
+                        dep in safe_ids for dep in t.get("requires", [])):
+                    safe_ids.add(t["id"])
         fork_blocked = sorted(candidate_ids - safe_ids)
         selected = [t for t in selected if t["id"] in safe_ids]
     matrix = [{"id": t["id"], "runner": t["runner"], "script": shell(t),

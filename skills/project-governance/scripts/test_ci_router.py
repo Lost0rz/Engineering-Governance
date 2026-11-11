@@ -556,6 +556,20 @@ class GeneralRouterTests(unittest.TestCase):
             node = next(x for x in plan["matrix"]["include"] if x["id"] == "node-unit")
             self.assertIn("updated-test", node["script"])
 
+    def test_fork_safe_dependency_selection_is_catalog_order_independent(self):
+        cfg = catalog()
+        cfg["tests"][0]["runner"] = ["ubuntu-latest"]
+        cfg["tests"][0]["fork_safe"] = True
+        cfg["tests"][1]["fork_safe"] = True
+        cfg["tests"][1]["requires"] = ["swift-unit"]
+        # Dependent comes before dependency in project catalog.
+        cfg["tests"] = [cfg["tests"][1], cfg["tests"][0]] + cfg["tests"][2:]
+        plan = ci.select(cfg, ["apps/web/index.ts"], "ready",
+                         "a"*40, "b"*40, "digest", source_trust="fork")
+        self.assertEqual(plan["selected_test_ids"], ["node-unit", "swift-unit"])
+        self.assertEqual(plan["fork_blocked_tests"], [])
+        self.assertFalse(plan["review_required"])
+
     def test_reusable_caller_separates_manual_and_pr_required_checks(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("EG Ready verification", workflow)
