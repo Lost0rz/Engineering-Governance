@@ -33,11 +33,8 @@ SCOPE = (
     # full suite or package merely because its filename is sensitive.
     ("skills/project-governance/SKILL.md", "V2", "global governance entry and authorization"),
     ("skills/project-governance/references/issue-control.md", "V2", "Issue/approval authority contract"),
-    ("skills/project-governance/references/issue-execution-contract.md", "V2", "risk and execution authority"),
     ("skills/project-governance/references/development-flow.md", "V2", "governed execution authorization"),
     ("skills/project-governance/references/global-routing.md", "V2", "global authority routing"),
-    ("skills/project-governance/references/control-plane.md", "V2", "control owner and alignment"),
-    ("skills/project-governance/references/issue-control-migration.md", "V2", "trusted enrollment boundary"),
     ("skills/project-governance/references/verification-tiers.md", "V2", "verification policy owner"),
     # Markdown routes to affected contracts. Executable trust and host wiring
     # still route to V3 with a broad test suite.
@@ -45,9 +42,7 @@ SCOPE = (
     ("skills/project-governance/references/planning-documents.md", "V2", "task authorization in design"),
     ("skills/project-governance/references/workspace-lifecycle.md", "V2", "writer/workspace permission"),
     ("skills/project-governance/references/remote-delivery.md", "V2", "source write host gate"),
-    ("skills/project-governance/references/control-identity.md", "V2", "accepted host authority"),
     ("skills/project-governance/references/adoption.md", "V2", "trusted CI enrollment"),
-    ("skills/project-governance/assets/templates/EXECUTION_SPEC.md", "V2", "Issue-backed approval contract"),
     ("skills/agent-handoff/SKILL.md", "V2", "handoff authority semantics"),
     ("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md", "V2", "handoff authority locator"),
     ("skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md", "V2", "handoff authority receipt"),
@@ -75,36 +70,18 @@ ESCALATE = (".gitmodules", ".gitattributes", ".gitignore")
 
 # Explicit V2 dependency map. Tests outside the list cannot be injected by
 # a PR-supplied manifest, and the script itself is always selected from BASE.
-V2_TEST_CROSS = "test_eg097_policy_contracts.py"
-V2_TEST_CONTROL = "test_control_policy.py"
-V2_TEST_ISSUE = "test_issue_spec_check.py"
-V2_ALLOWED_TESTS = frozenset((V2_TEST_CROSS, V2_TEST_CONTROL, V2_TEST_ISSUE))
+V2_TEST_WORKFLOW = "test_workflow_contracts.py"
+V2_TEST_ROUTER = "test_verification_plan.py"
+V2_ALLOWED_TESTS = frozenset((V2_TEST_WORKFLOW, V2_TEST_ROUTER))
 
 
 def affected_suites(changes: list[dict[str, str]]) -> list[str]:
-    """Select cross-Skill contracts plus known dependent authority adapters.
-
-    This is a repository-specific contract map, NOT a substitute for consumer
-    product/runtime tests. Unknown source owners escalate to V3 elsewhere.
-    """
-    tests = {V2_TEST_CROSS}
-    for entry in changes:
-        for path in (entry["path"], entry.get("previous_path")):
-            if not path:
-                continue
-            if (path.startswith(("skills/agent-handoff/",
-                                  "skills/execution-orchestrator/",
-                                  "skills/solution-design/",
-                                  "skills/incident-doctor/"))
-                    or path == "skills/project-governance/SKILL.md"
-                    or path == "AGENTS.md"
-                    or path.startswith("skills/project-governance/assets/templates/")
-                    or path.startswith(".github/ISSUE_TEMPLATE/")):
-                tests.add(V2_TEST_ISSUE)
-                tests.add(V2_TEST_CONTROL)
-            if path.startswith("skills/project-governance/references/"):
-                tests.add(V2_TEST_ISSUE)
-                tests.add(V2_TEST_CONTROL)
+    """Select affected behavioral contracts without relying on Issue approvals."""
+    tests = {V2_TEST_WORKFLOW}
+    touched = {p for e in changes for p in
+               (e["path"], e.get("previous_path")) if p}
+    if any(p.endswith("/verification-tiers.md") for p in touched):
+        tests.add(V2_TEST_ROUTER)
     if not tests.issubset(V2_ALLOWED_TESTS):
         raise SelectionError("UNMAPPED_AFFECTED_TEST_SUITE")
     return sorted(tests)
@@ -282,7 +259,6 @@ def main() -> int:
                 "run_policy": str("policy_contracts" in plan["selected"]).lower(),
                 "run_affected": str("affected_contracts" in plan["selected"]).lower(),
                 "run_full": str("full_contracts" in plan["selected"]).lower(),
-                "run_package": str("package_preview" in plan["selected"]).lower(),
                 "scope_status": plan["scope_status"],
             }
             with args.github_output.open("a", encoding="utf-8") as output:
