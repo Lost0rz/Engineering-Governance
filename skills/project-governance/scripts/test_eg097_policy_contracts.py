@@ -121,6 +121,9 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn('"persistent_grant": False', policy)
         self.assertIn('"source_write_authorized": False', policy)
         self.assertIn("unattended", issue)
+        workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
+        self.assertIn("needs no first Issue/comment", workspace)
+        self.assertIn("host-verified top-level USER-requested", workspace)
 
     def test_v2_affected_contracts_are_not_unnecessary_full_package(self):
         selector = self.read("skills/project-governance/scripts/verification-plan.py")
