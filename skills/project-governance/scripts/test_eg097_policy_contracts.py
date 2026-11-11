@@ -113,7 +113,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("first 19-field Issue approval comment", execution)
         self.assertIn("current top-level user request", self.read("skills/project-governance/SKILL.md"))
         self.assertIn("no first Issue", issue)
-        self.assertIn("no first Issue/comment", flow)
+        self.assertIn("without a first Issue/comment", flow)
         self.assertIn("Issue-backed only", issue)
         self.assertIn("no 19-field Issue, digest or approval comment", issue)
         self.assertIn("a fresh explicit host-authenticated user decision", flow)
