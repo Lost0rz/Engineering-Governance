@@ -201,4 +201,8 @@ jobs:
             echo "::error::Unmapped source paths require a test capability decision."
             exit 1
           fi
-          echo "EG_CI_SELECTED_VERIFICATION_COMPLETE (not FULL_SUITE_PASS)"
+          if [[ "$RUN_TESTS" == "true" ]]; then
+            echo "EG_CI_SELECTED_VERIFICATION_COMPLETE (not FULL_SUITE_PASS)"
+          else
+            echo "EG_CI_NO_TESTS_EXECUTED: stage=$STAGE coverage=$COVERAGE"
+          fi

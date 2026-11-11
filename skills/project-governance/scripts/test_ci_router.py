@@ -426,6 +426,13 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertIn('explicit accepted comparison_base SHA', workflow)
         self.assertIn('merge-base --is-ancestor', workflow)
         self.assertIn('--source-trust "$source_trust"', workflow)
+        self.assertEqual(workflow.count('ref: ${{ github.sha }}'), 2)
+        self.assertIn('--config-ref "$CONFIG_REF"', workflow)
+        self.assertIn('TRUSTED_DEFAULT="refs/remotes/origin/$DEFAULT_BRANCH"', workflow)
+        self.assertNotIn('git -C project fetch --no-tags', workflow)
+        self.assertIn('EG_CI_NO_TESTS_EXECUTED', workflow)
+        caller = (ROOT / "skills/project-governance/assets/examples/ci-caller.example.yml").read_text()
+        self.assertIn("default: none", caller)
 
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()

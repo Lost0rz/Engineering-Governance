@@ -8,13 +8,13 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "Explicit testing milestone"
+        description: "Default: plan only. Select focused and enter a test ID to execute a specific lane."
         type: choice
         required: true
-        default: focused
+        default: none
         options: [focused, milestone, ready, release, none]
       focused_test:
-        description: "Catalog ID for focused stage"
+        description: "Catalog ID (required when stage=focused)"
         type: string
         required: false
       comparison_base:

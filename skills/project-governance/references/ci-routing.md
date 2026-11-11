@@ -7,7 +7,7 @@ The installed `project-governance` Skill guides test selection and initial adopt
 1. Inspect existing workflows, product tests and Runner labels. Use `ci-router.py discover --repo-root PROJECT` as a **hint**, not an automatic command authority.
 2. **Phase A:** add a minimal reviewed [ci-capabilities.json](../assets/examples/ci-capabilities.example.json) to the project's default branch while its existing CI is still operational. This file owns test commands, paths, optional `requires` dependencies, labels and relevant setup. New executable commands are not taken from a PR-supplied copy.
 3. **Phase B:** after the config is accepted on the default branch, adopt the small [caller](../assets/examples/ci-caller.example.yml), and retire overlapping old heavy triggers in the same change. Keep genuine release/deployment jobs project-owned.
-4. Check Ready scope, manual focused tests, true Runner labels, required-check identity and rollback. New/updated catalog commands are used by CI **only after acceptance into the trusted base**.
+4. Check Ready scope, manual focused tests, true Runner labels, required-check identity and rollback. New/updated catalog commands are used by CI **only after acceptance into the trusted base**. When adding or changing a test lane, run a focused check against that accepted version before relying on it; there is no automatic full-CI run merely because a catalog was edited.
 
 There is no per-Issue, writer handoff, comment or special approver requirement. Ordinary updates to the catalog use the same repository write permissions as other project files; CI syntax-checks the proposed catalog but executes **only accepted-base** commands. A config-only update is not blocked merely because the file changed.
 
@@ -16,10 +16,10 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
     python3 ci-router.py discover --repo-root PROJECT
     HEAD_SHA=$(git -C PROJECT rev-parse HEAD)
     python3 ci-router.py plan --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --config-source file --stage milestone
-    python3 ci-router.py run --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --config-source base --stage milestone
-    python3 ci-router.py run --repo-root PROJECT --base BASE --head HEAD --config-source base --stage focused --focused TEST_ID
+    python3 ci-router.py run --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --trusted-ref refs/remotes/origin/main --stage milestone
+    python3 ci-router.py run --repo-root PROJECT --base BASE --head HEAD --trusted-ref refs/remotes/origin/main --stage focused --focused TEST_ID
 
-`--worktree` includes staged, unstaged and untracked changes without requiring a commit; it is rejected in GitHub-output mode. `plan` never starts tests. `run` uses only accepted-base commands; project test output goes to stderr, leaving one JSON result on stdout. `file` mode is planning only. Actual host permission is still required.
+`--worktree` includes staged, unstaged and untracked changes without requiring a commit; it is rejected in GitHub-output mode. `plan` never starts tests. `run` requires an explicit host-selected accepted remote-tracking ref (`--trusted-ref refs/remotes/origin/<default-branch>`; replace `main` in examples if needed). It reads executable commands from that ref, not from task HEAD or an arbitrary comparison BASE. Project logs go to stderr, leaving one JSON result on stdout. `file` mode is planning only. Actual host permission is still required.
 
 ## Remote test cadence
 
@@ -29,15 +29,15 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 - **Ready PR:** accumulate affected paths from the trusted base and run matching tests plus `requires` prerequisites. Unknown source dependencies are reported; tests remain unverified until their coverage is established.
 - **Release:** execute the complete accepted test catalog, including any project release suites; an incomplete catalog cannot prove complete release acceptance.
 
-V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites but does **not** serialize GitHub matrix jobs. Tests needing execution order should use one project-owned command or setup step. Documentation exemptions apply only to descriptive text file types and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
+V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites but does **not** serialize GitHub matrix jobs. Tests needing execution order should use one project-owned command or setup step. Documentation exemptions apply only to descriptive text file types, ordinary Git file modes and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
 
 Unmapped files stay visible as `PARTIAL_UNMAPPED`. `fallback_tests` selects a smoke lane but **does not automatically pass Ready**. Only an accepted-base `fallback_satisfies_ready: true` may establish `FALLBACK_COVERED`, and even then the result is not `FULL_SUITE_PASS`. Without credible coverage the Ready check fails rather than silently skipping tests.
 
 ## CI trust and host boundaries
 
-For manual **focused/release** runs, the accepted catalog is taken from the target repo's default branch even if the workflow was dispatched on another branch. Manual **ready/milestone** runs require an explicit `comparison_base` SHA that is an ancestor of the default branch; HEAD-to-HEAD is never accepted as an affected-scope proof.
+For manual **focused/release** runs, the accepted catalog is taken from the target repo's current default branch, independent of comparison scope. The UI defaults to **none (plan only)**; choose `focused` and give the test ID to execute one lane, or deliberately choose `release` to execute the catalog. Manual **ready/milestone** runs require an explicit `comparison_base` SHA that is an ancestor of both the default branch and tested HEAD. The router's `--config-ref` is the separate accepted test-catalog commit, never the arbitrary historical comparison SHA. No HEAD-to-HEAD affected-scope proof is accepted.
 
-The reusable workflow loads the approved test catalog from the target repo's **base commit** and its own router from its published `v0.10.0` release. The resulting plan includes base/head SHA, catalog digest, test IDs, real Runner labels and `NOT_RUN` until executed. A PR may propose a new catalog, but its commands are validated as data and not executed before acceptance.
+The reusable workflow loads the approved test catalog from the target repo's **accepted config commit** and its own router from its published `v0.10.0` release. For PRs, scope is computed from original base and head, but the **test executor runs GitHub's PR merge revision** so integration mismatches are visible. The checkout fetches all refs (`fetch-depth: 0`) with no retained credential; private repositories do not need an unauthenticated second `git fetch`. The resulting plan includes base/head SHA, catalog digest, test IDs, real Runner labels and `NOT_RUN` until executed. A PR may propose a new catalog, but its commands are validated as data and not executed before acceptance.
 
 The caller's workflow file itself can be changed in a PR. A centrally pinned router **cannot** stop that PR from removing or skipping the caller Job; the repository host must protect any required check/CI entrypoint through appropriate GitHub branch rules or workflow provenance. Do not claim tamper-proof required CI without such a host control. The PR-ready result and manual scoped result have different status names, avoiding confusing a manual no-test run with PR readiness. Fork PRs may run only lanes explicitly marked `fork_safe: true` with a GitHub-hosted Runner label. Other lanes (and unsafe dependencies) are withheld and reported; blocked Ready evidence cannot be counted as a pass. Never attach secrets to fork-safe lanes. Actual project test code still requires isolated Runner hosts.
 
