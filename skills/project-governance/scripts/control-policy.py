@@ -15,6 +15,15 @@ from pathlib import Path
 POLICY_PATH = Path(__file__).resolve().parent.parent / "assets" / "control-policy.json"
 REPO_RE = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z")
 CONTRACT = "CONTROL_POLICY_V1"
+
+def _valid_repo(repo: object) -> bool:
+    """GitHub owner and repository are names, never filesystem path segments."""
+    if not isinstance(repo, str) or REPO_RE.fullmatch(repo) is None:
+        return False
+    owner, name = repo.split("/", 1)
+    return owner not in (".", "..") and name not in (".", "..") and not owner.startswith(".")
+
+
 EXPECTED = {
     "contract": CONTRACT,
     "default_mode": "ISSUE_CONTROL",
@@ -75,7 +84,7 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
     preference; neither it nor project AGENTS.md is itself proof of adoption.
     """
     load_policy()
-    if not isinstance(repo, str) or not REPO_RE.fullmatch(repo):
+    if not _valid_repo(repo):
         raise ControlPolicyError("INVALID_REPOSITORY")
     if type(migration_pr) is not int or migration_pr < 1:
         raise ControlPolicyError("MIGRATION_PR_REQUIRED")
@@ -124,7 +133,7 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
 def select_control(repo: str, *, migration_pr: int | None = None) -> dict:
     """Read-only selector. Missing adoption never becomes implicit Issue authority."""
     load_policy()
-    if not REPO_RE.fullmatch(repo):
+    if not _valid_repo(repo):
         raise ControlPolicyError("INVALID_REPOSITORY")
     if migration_pr is None:
         return {
