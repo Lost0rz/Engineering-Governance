@@ -1,6 +1,6 @@
 # Mode-aware control selector
 
-`AGENTS.md` selects exactly one task authority: FILE_CONTROL retains the legacy contract below; ISSUE_CONTROL selects one approved Issue/spec revision and puts meaningful execution/decision receipts in its comments. In ISSUE_CONTROL, legacy Task/Status files are not active, Issue comments/labels are not independent authorization, and PR/CI/merge evidence remains host owned. See [Issue authority](issue-control.md), [deterministic execution](issue-execution-contract.md), and [migration](issue-control-migration.md). A mandatory Issue-mode alignment check rereads approved revision, relevant receipts and host gates; it never requires a new control-only Git PR. Missing/unverified Issue approval blocks mutation.
+Versioned global `CONTROL_POLICY_V1` with independently verified GitHub enrollment selects exactly one task authority; `AGENTS.md` holds only project-specific facts. FILE_CONTROL retains the legacy contract below; ISSUE_CONTROL selects one approved Issue/spec revision and puts meaningful execution/decision receipts in its comments. In ISSUE_CONTROL, legacy Task/Status files are not active, Issue comments/labels are not independent authorization, and PR/CI/merge evidence remains host owned. See [Issue authority](issue-control.md), [deterministic execution](issue-execution-contract.md), and [migration](issue-control-migration.md). A mandatory Issue-mode alignment check rereads approved revision, relevant receipts and host gates; it never requires a new control-only Git PR. Missing/unverified Issue approval blocks mutation.
 
 ---
 
@@ -16,7 +16,7 @@ Durable planning/design authorities may exist separately when justified, but the
 
 | Control | Owns | It is not |
 | --- | --- | --- |
-| `AGENTS.md` | durable operating rules, stable project/repository boundaries, durable workflow rules, pointers to authoritative sources | current task/progress log |
+| `AGENTS.md` | project-specific architecture, business, runtime and data safety rules; pointers to project authorities | global mode, approver permissions, generic workflow or task progress |
 | `CURRENT_STATUS.md` | concise verified current snapshot, active blockers/state, next milestone, small still-material non-blocking Follow-ups when useful | backlog DB, active authorization, delivery identity authority |
 | `CURRENT_TASK.md` | single active authorization: objective/scope/baseline/risk/verification/acceptance/STOP/workspace/handoff lifecycle plus optional task-purpose metadata such as `TASK_CLASS` | durable rules, long-term plan, implementation identity |
 
