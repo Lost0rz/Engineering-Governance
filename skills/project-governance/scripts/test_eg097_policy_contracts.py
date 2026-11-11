@@ -240,7 +240,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("L2 is not synonymous with G3", contract)
         self.assertIn("L2 alone does not imply G3", self.read("skills/project-governance/references/issue-control.md"))
         self.assertIn("no first Issue, per-WP approval or mandatory WP IDs", orchestrator)
-        self.assertIn("without forcing a WP list", design)
+        self.assertIn("with no first Issue or mandatory WP list", design)
         self.assertIn("without requiring nonexistent WP fields", audit)
         self.assertIn("Legacy: increment revision", contract)
         self.assertIn("G3 requires the applicable explicit owner decision", contract)
