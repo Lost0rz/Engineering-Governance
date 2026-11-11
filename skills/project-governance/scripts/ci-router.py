@@ -452,6 +452,8 @@ def main():
     p.add_argument("--head", default="")
     p.add_argument("--config-path", default=".github/ci-capabilities.json")
     p.add_argument("--config-source", choices=("base", "file"), default="base")
+    p.add_argument("--config-ref", default="", help="Accepted config commit (independent of comparison base)")
+    p.add_argument("--trusted-ref", default="", help="Required for local run, e.g. refs/remotes/origin/main")
     p.add_argument("--stage", choices=STAGES, default="ready")
     p.add_argument("--worktree", action="store_true", help="Include staged, unstaged and untracked changes in local mode")
     p.add_argument("--source-trust", choices=("internal", "fork"), default="internal")
@@ -471,16 +473,31 @@ def main():
                                          include_worktree=args.worktree)
             if args.mode == "run" and args.config_source != "base":
                 raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
-            cfg, digest = load(args.repo_root, args.base, args.config_path, args.config_source)
+            config_ref = args.config_ref or args.base
+            if args.mode == "run":
+                # Do not treat the task branch/--base as trusted command authority.
+                # The host chooses an already accepted remote-tracking branch.
+                prefix = "refs/remotes/origin/"
+                if not args.trusted_ref.startswith(prefix) or not safe_path(
+                        args.trusted_ref[len(prefix):]):
+                    raise RouteError("LOCAL_RUN_REQUIRES_TRUSTED_REMOTE_REF")
+                trusted_sha = git(args.repo_root, "rev-parse", "--verify",
+                                  "--end-of-options", args.trusted_ref + "^{commit}")
+                config_ref = trusted_sha.decode().strip()
+                if args.config_ref and args.config_ref != config_ref:
+                    raise RouteError("TRUSTED_CONFIG_REF_MISMATCH")
+            cfg, digest = load(args.repo_root, config_ref, args.config_path, args.config_source)
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
                             args.head, digest, args.focused, args.config_path,
                             args.source_trust, special)
+            result["config_ref"] = config_ref if args.config_source == "base" else "LOCAL_FILE"
             if args.config_source == "base" and args.config_path in changed:
-                # Inspect PR config as data only. Never use its commands or runner
-                # labels to build an executable matrix before it becomes base.
+                # Validate the candidate as data, never run its new commands.
+                # Local worktree changes may not yet be committed.
                 proposed, proposed_digest = load(
-                    args.repo_root, args.head, args.config_path, "base")
+                    args.repo_root, args.head if not args.worktree else "",
+                    args.config_path, "file" if args.worktree else "base")
                 result["proposed_catalog_status"] = "VALIDATED_NOT_EXECUTED"
                 result["proposed_config_sha256"] = proposed_digest
             if args.mode == "run":
