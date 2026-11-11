@@ -89,6 +89,28 @@ class GlobalControlPolicyTests(unittest.TestCase):
         with self.assertRaisesRegex(policy.ControlPolicyError, "MIGRATION_HOST_PROOF_REQUIRED"):
             policy.source_write_gate(r, user_requested=True, trusted_approvers={"Lost0rz"})
 
+    def test_direct_user_gate_requires_real_receiving_host_provenance(self):
+        adopted = {"adoption": "VERIFIED_MERGED_MIGRATION"}
+        for value in (False, None):
+            with self.subTest(user_requested=value):
+                with self.assertRaisesRegex(policy.ControlPolicyError,
+                                            "ACTIVE_USER_REQUEST_REQUIRED"):
+                    policy.source_write_gate(
+                        adopted, user_requested=value,
+                        authority_route="CURRENT_USER_DIRECT_G1_G2")
+        # A caller's True flag is not host authentication.
+        with self.assertRaisesRegex(policy.ControlPolicyError,
+                                    "DIRECT_USER_RUNTIME_HOST_AUTHORIZATION_REQUIRED"):
+            policy.source_write_gate(
+                adopted, user_requested=True, trusted_approvers={"Lost0rz"},
+                authority_route="CURRENT_USER_DIRECT_G1_G2")
+        for route in ("G3", "UNATTENDED", "DELEGATED", "ISSUE_BY_OTHER"):
+            with self.subTest(route=route):
+                with self.assertRaisesRegex(policy.ControlPolicyError,
+                                            "UNTRUSTED_AUTHORITY_ROUTE"):
+                    policy.source_write_gate(adopted, user_requested=True,
+                                             authority_route=route)
+
     def test_host_unavailable_fails_closed(self):
         with patch.object(policy, "_gh_api", side_effect=policy.ControlPolicyError("GITHUB_HOST_READ_DENIED")):
             with self.assertRaisesRegex(policy.ControlPolicyError, "GITHUB_HOST_READ_DENIED"):

@@ -199,15 +199,29 @@ def select_control(repo: str, *, migration_pr: int | None = None) -> dict:
 
 
 def source_write_gate(selection: dict, *, user_requested: bool = False,
-                      trusted_approvers: set[str] | None = None) -> None:
-    """Refuse source writes on a mode selector alone; exact task approval required."""
+                      trusted_approvers: set[str] | None = None,
+                      authority_route: str = "ISSUE_BACKED") -> None:
+    """Return a precise fail-closed host preflight for the selected task route.
+
+    This portable source helper has NO trusted live USER-role or tool writer
+    permission channel. It must not mint an authority from caller booleans.
+    In particular, current-session G1/G2 does NOT require an Issue comment,
+    but still needs the receiving HOST to authenticate that user's request.
+    """
     load_policy()
-    if selection.get("adoption") != "VERIFIED_MERGED_MIGRATION":
+    if not isinstance(selection, dict) or selection.get("adoption") != "VERIFIED_MERGED_MIGRATION":
         raise ControlPolicyError("MIGRATION_HOST_PROOF_REQUIRED")
-    if not user_requested or not trusted_approvers:
+    if authority_route == "CURRENT_USER_DIRECT_G1_G2":
+        if user_requested is not True:
+            raise ControlPolicyError("ACTIVE_USER_REQUEST_REQUIRED")
+        # Never convert a caller boolean into host proof or source permissions.
+        raise ControlPolicyError("DIRECT_USER_RUNTIME_HOST_AUTHORIZATION_REQUIRED")
+    if authority_route != "ISSUE_BACKED":
+        raise ControlPolicyError("UNTRUSTED_AUTHORITY_ROUTE")
+    if user_requested is not True or not trusted_approvers:
         raise ControlPolicyError("EXACT_TASK_AUTHORIZATION_REQUIRED")
-    # No success result: actual Issue digest, authenticated comment, credential
-    # separation and target permissions are verified by their own host gates.
+    # No success result: GitHub exact-spec approval and writer permission are
+    # separate host-verifiable facts. Legacy Issue path stays fail-closed here.
     raise ControlPolicyError("ISSUE_APPROVAL_HOST_PREFLIGHT_REQUIRED")
 
 
