@@ -33,7 +33,7 @@ Ordinary software/project/repository engineering enters `project-governance` unl
 | Requested outcome / condition | Route |
 | --- | --- |
 | establish/reconcile task authority, scope, lifecycle, verification, final alignment | `project-governance` |
-| create/revise a GitHub Issue execution-spec draft after explicit user direction | `project-governance` (Web Agent A authoring only under the accepted target `AGENTS.md` opt-in; not approval or execution) |
+| create/revise a GitHub Issue execution-spec draft after explicit user direction | `project-governance` (only after explicit user request and independently verified GitHub write permission per global CONTROL_POLICY_V1; not approval or execution) |
 | create/rebuild/shrink/audit compact project context/profile and authority pointers | `project-profile` |
 | resolve material engineering intent/architecture/state ownership/API/data-flow/implementation-boundary ambiguity | `solution-design` |
 | audit/create/redesign/review bounded UI/UX or frontend interaction/visual design | `design` |
