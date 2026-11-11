@@ -117,6 +117,8 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("Issue-backed only", issue)
         self.assertIn("no 19-field Issue, digest or approval comment", issue)
         self.assertIn("a fresh explicit host-authenticated user decision", flow)
+        governance = self.read("skills/project-governance/SKILL.md")
+        self.assertIn("no Issue to approve or reconcile", governance)
 
         self.assertIn('"persistent_grant": False', policy)
         self.assertIn('"source_write_authorized": False', policy)
