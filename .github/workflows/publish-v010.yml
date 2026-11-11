@@ -1,0 +1,60 @@
+name: Publish Engineering Governance v0.10.0
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-v010.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Versioned plugin release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("plugin.json").read_text())
+          assert manifest["name"] == "engineering-governance"
+          assert manifest["version"] == "0.10.0"
+          for name in ("skills/project-governance/SKILL.md",
+                       "skills/project-governance/scripts/ci-router.py",
+                       ".github/workflows/ci-router-reusable.yml"):
+              assert Path(name).is_file(), name
+          assert not Path("skills/project-governance/scripts/issue-spec-check.py").exists()
+          print("V010_RELEASE_SOURCE_PASS")
+          PY
+      - name: Package Web plugin source
+        shell: bash
+        run: |
+          set -euo pipefail
+          zip -q -r "$RUNNER_TEMP/engineering-governance-web-v0.10.0.zip" \
+            plugin.json skills references .agents
+          unzip -t "$RUNNER_TEMP/engineering-governance-web-v0.10.0.zip" | tail -1
+      - name: Publish v0.10.0 tag, Release and package
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view v0.10.0 >/dev/null 2>&1; then
+            echo "::notice::v0.10.0 already exists; publishing is idempotent."
+            exit 0
+          fi
+          gh release create v0.10.0 \
+            "$RUNNER_TEMP/engineering-governance-web-v0.10.0.zip#Engineering Governance Web plugin v0.10.0" \
+            --target "$GITHUB_SHA" \
+            --title "Engineering Governance v0.10.0" \
+            --notes "Portable, lean Engineering Governance Skills and cross-repository CI routing. Replaces mandatory legacy execution-spec and approval gates. Project commands stay project-owned. GitHub Actions reusable router is pinned at this release. Verified on PR #64: 48 Python tests passed, 0 failed."
+          gh release view v0.10.0 --json tagName,url,targetCommitish,assets
