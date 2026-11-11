@@ -2,6 +2,7 @@
 
 CONTROL_MODE: ISSUE_CONTROL
 ISSUE_APPROVERS: Lost0rz
+ISSUE_WEB_SPEC_AUTHORING: ENABLED
 
 This repository's ISSUE_CONTROL cutover is bound to the **verified merge of migration PR #41**. Older accepted main revisions remain FILE_CONTROL. Bootstrap Issue #40 is migration provenance under the FILE_CONTROL Task 093 bridge, **not** perpetual post-cutover execution authorization. After acceptance/cutover, follow-on source mutations require a separately approved, selected Issue revision with an authenticated `SPEC_APPROVAL_V1` comment by the authorized GitHub approver.
 
