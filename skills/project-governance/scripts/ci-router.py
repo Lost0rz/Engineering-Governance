@@ -224,9 +224,47 @@ def discover(repo):
             "Review actual test commands and runner labels; commit accepted .github/ci-capabilities.json"}
 
 
+def execute_local(result, config, repo):
+    """Explicit local execution only; plan mode never runs commands."""
+    selected = set(result["selected_test_ids"])
+    outcomes = []
+    for test in config["tests"]:
+        if test["id"] not in selected:
+            continue
+        workdir = repo / test.get("cwd", ".")
+        code = 0
+        detail = "PASS"
+        for argv in test.get("setup", []) + [test["command"]]:
+            try:
+                p = subprocess.run(argv, cwd=workdir,
+                                   timeout=test.get("timeout_minutes", 20) * 60,
+                                   check=False)
+                code = p.returncode
+            except subprocess.TimeoutExpired:
+                code, detail = 124, "TIMEOUT"
+            except OSError:
+                code, detail = 127, "COMMAND_UNAVAILABLE"
+            if code:
+                if detail == "PASS":
+                    detail = "FAILED"
+                break
+        outcomes.append({"id": test["id"], "outcome": detail, "exit_code": code})
+        if code:
+            break
+    result["executed_tests"] = outcomes
+    if any(item["exit_code"] for item in outcomes):
+        result["test_status"] = "FAILED"
+        return 1
+    if result["review_required"]:
+        result["test_status"] = "PARTIAL_REVIEW_REQUIRED"
+        return 3
+    result["test_status"] = "PASS" if outcomes else "NOT_RUN"
+    return 0
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("mode", choices=("plan", "discover"))
+    p.add_argument("mode", choices=("plan", "discover", "run"))
     p.add_argument("--repo-root", type=Path, required=True)
     p.add_argument("--base", default="")
     p.add_argument("--head", default="")
@@ -237,6 +275,7 @@ def main():
     p.add_argument("--output", type=Path)
     p.add_argument("--github-output", type=Path)
     args = p.parse_args()
+    exit_code = 0
     try:
         if args.mode == "discover":
             result = discover(args.repo_root)
@@ -246,6 +285,8 @@ def main():
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
                             args.head, digest, args.focused, args.config_path)
+            if args.mode == "run":
+                exit_code = execute_local(result, cfg, args.repo_root)
         if args.output:
             args.output.write_text(json.dumps(result, sort_keys=True, indent=2) + "\n")
         if args.github_output and args.mode == "plan":
@@ -258,7 +299,7 @@ def main():
                 for key, value in values.items():
                     out.write(key + "=" + value + "\n")
         print(json.dumps(result, sort_keys=True))
-        return 0
+        return exit_code
     except (RouteError, OSError) as exc:
         print("EG_CI_ROUTE_FAILED: " + str(exc), file=sys.stderr)
         return 2

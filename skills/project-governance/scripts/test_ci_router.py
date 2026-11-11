@@ -171,6 +171,24 @@ class GeneralRouterTests(unittest.TestCase):
             self.assertIn("apps/web/old.ts", changed)
             self.assertIn("apps/web/new.ts", changed)
 
+    def test_explicit_local_run_reports_actual_outcome(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            cfg = {"contract": "EG_CI_CAPABILITIES_V1", "tests": [{
+                "id": "probe", "tier": "V1", "runner": ["ubuntu-latest"],
+                "paths": ["sample.py"],
+                "command": [sys.executable, "-c", "print('probe ok')"]}]}
+            planned = ci.select(cfg, ["sample.py"], "focused",
+                                "LOCAL", "b" * 40, "digest", "probe")
+            self.assertEqual(planned["test_status"], "NOT_RUN")
+            self.assertEqual(ci.execute_local(planned, cfg, Path(d)), 0)
+            self.assertEqual(planned["test_status"], "PASS")
+            cfg["tests"][0]["command"] = [sys.executable, "-c", "raise SystemExit(7)"]
+            again = ci.select(cfg, ["sample.py"], "focused",
+                              "LOCAL", "b" * 40, "digest", "probe")
+            self.assertEqual(ci.execute_local(again, cfg, Path(d)), 1)
+            self.assertEqual(again["test_status"], "FAILED")
+
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("workflow_call:", flow)

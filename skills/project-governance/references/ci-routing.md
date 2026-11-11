@@ -18,8 +18,9 @@ The portable script is included in the plugin's skills/ package, and can be run 
 
     python3 ci-router.py discover --repo-root /path/to/project
     python3 ci-router.py plan --repo-root /path/to/project --base BASE_SHA --head HEAD_SHA --config-source file --stage milestone
+    python3 ci-router.py run --repo-root /path/to/project --base BASE_SHA --head HEAD_SHA --config-source base --stage focused --focused test-id
 
-The second command generates a plan for an already accepted local test mapping; it does not run commands. The host or user chooses whether/where to execute each selected command. For production CI, always use the accepted-base config mode instead of file mode.
+The plan command does not execute tests. The optional run command executes the selected, accepted-base argv commands locally and reports actual PASS/FAILED (or NOT_RUN). It must be explicitly invoked under real local host permission; it never grants permissions or runs on its own. For production CI always use accepted-base config mode instead of file mode.
 
 ## Remote (GitHub Actions)
 
