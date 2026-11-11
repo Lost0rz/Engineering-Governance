@@ -30,6 +30,8 @@ jobs:
       review_required: ${{ steps.select.outputs.review_required }}
       coverage: ${{ steps.select.outputs.coverage }}
       selected: ${{ steps.select.outputs.selected }}
+      stage: ${{ steps.select.outputs.stage }}
+      capabilities_changed: ${{ steps.select.outputs.capabilities_changed }}
     steps:
       - name: Checkout exact caller HEAD
         uses: actions/checkout@v4
@@ -71,6 +73,11 @@ jobs:
           else
             stage="$STAGE_REQUEST"
           fi
+          # A PR's merge check cannot be downgraded to focused/none by input.
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" && "$STAGE_REQUEST" != "auto" ]]; then
+            echo "::error::PR verification must select the Ready scope via auto."
+            exit 2
+          fi
           if [[ -z "$BASE_SHA" ]]; then
             test -n "$DEFAULT_BRANCH"
             git -C project fetch --no-tags origin "$DEFAULT_BRANCH"
@@ -89,6 +96,11 @@ jobs:
           for key in ("base", "head", "stage", "coverage", "config_sha256"):
               print("- " + key + ": " + str(p[key]))
           print("- Selected: " + (", ".join(p["selected_test_ids"]) or "NONE"))
+          if p["capabilities_changed"]:
+              print("- Capabilities: PR format checked; accepted-base commands used.")
+              print("- New commands must be evaluated after they enter the trusted baseline.")
+          if p.get("proposed_catalog_status"):
+              print("- Proposed config: " + p["proposed_catalog_status"])
           print("- Unmapped: " + (", ".join(p["unmapped_paths"]) or "NONE"))
           print("- Tests are NOT_RUN until the execution job reports its result.")
           PY
@@ -114,7 +126,8 @@ jobs:
         run: ${{ matrix.script }}
 
   result:
-    name: Engineering Governance CI result
+    # Manual focused checks must not impersonate the PR's required status.
+    name: ${{ github.event_name == 'pull_request' && 'EG Ready verification' || 'EG Manual scoped verification' }}
     needs: [route, execute]
     if: always()
     runs-on: ubuntu-latest
@@ -128,16 +141,25 @@ jobs:
           RUN_TESTS: ${{ needs.route.outputs.run_tests }}
           REVIEW_REQUIRED: ${{ needs.route.outputs.review_required }}
           COVERAGE: ${{ needs.route.outputs.coverage }}
+          STAGE: ${{ needs.route.outputs.stage }}
+          EVENT_NAME: ${{ github.event_name }}
+          CAPABILITIES_CHANGED: ${{ needs.route.outputs.capabilities_changed }}
         run: |
           set -euo pipefail
           {
             echo "### Engineering Governance CI"
             echo "- Selected: ${SELECTED:-NONE}"
             echo "- Coverage: ${COVERAGE:-UNKNOWN}"
+            echo "- Stage: ${STAGE:-UNKNOWN}"
+            echo "- Capabilities changed: ${CAPABILITIES_CHANGED:-UNKNOWN}"
             echo "- Route: $ROUTE_RESULT"
             echo "- Executor: $EXECUTE_RESULT"
           } >> "$GITHUB_STEP_SUMMARY"
           [[ "$ROUTE_RESULT" == "success" ]] || exit 1
+          if [[ "$EVENT_NAME" == "pull_request" && "$STAGE" != "ready" ]]; then
+            echo "::error::PR readiness cannot be satisfied by a deferred or focused run."
+            exit 1
+          fi
           if [[ "$RUN_TESTS" == "true" ]]; then
             [[ "$EXECUTE_RESULT" == "success" ]] || exit 1
           fi

@@ -73,8 +73,9 @@ class GeneralRouterTests(unittest.TestCase):
 
     def test_capability_policy_edits_never_autogrant_new_commands(self):
         p = self.plan([".github/ci-capabilities.json"])
-        self.assertEqual(p["coverage"], "CAPABILITIES_CHANGE_REVIEW")
-        self.assertTrue(p["review_required"])
+        self.assertEqual(p["coverage"], "BASELINE_CAPABILITIES_USED")
+        self.assertTrue(p["capabilities_changed"])
+        self.assertFalse(p["review_required"])
 
     def test_unknown_does_not_masquerade_as_pass(self):
         p = self.plan(["unmapped/credential.py"])
@@ -106,6 +107,104 @@ class GeneralRouterTests(unittest.TestCase):
         with self.assertRaises(ci.RouteError):
             ci.match("../source/**", "source/index.py")
 
+    def test_real_unicode_paths_and_controls(self):
+        self.assertTrue(ci.safe_path("docs/产品设计.md"))
+        self.assertTrue(ci.safe_path("src/étude.py"))
+        self.assertFalse(ci.safe_path("src/../secret.py"))
+        self.assertFalse(ci.safe_path("docs/name\\ncontrol.md"))
+        self.assertFalse(ci.safe_path(".git/config"))
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "docs").mkdir()
+            (repo / "docs/产品设计.md").write_text("one")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            (repo / "docs/产品设计.md").write_text("two")
+            git("add", "-A")
+            git("commit", "-qm", "head")
+            self.assertIn("docs/产品设计.md", ci.changes(repo, base, git("rev-parse", "HEAD")))
+
+    def test_overwide_doc_rules_cannot_hide_python_code(self):
+        cfg = catalog()
+        cfg["documentation_paths"] = ["**"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+        cfg["documentation_paths"] = ["*.md"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+        cfg = catalog()
+        real_doc = self.plan(["docs/说明.md"], cfg=cfg)
+        self.assertEqual(real_doc["coverage"], "NO_TESTS_REQUIRED")
+        source = self.plan(["docs/unsafe.py"], cfg=cfg)
+        self.assertTrue(source["review_required"])
+        self.assertEqual(source["unmapped_paths"], ["docs/unsafe.py"])
+
+    def test_integrated_suite_includes_declared_lower_tier_dependency(self):
+        cfg = catalog()
+        cfg["tests"][1]["requires"] = ["swift-unit"]
+        plan = self.plan(["apps/web/src/index.ts"], cfg=cfg)
+        self.assertEqual(plan["selected_test_ids"], ["swift-unit", "node-unit"])
+        self.assertEqual(plan["effective_tier"], "V2")
+        cfg["tests"][0]["requires"] = ["node-unit"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+        cfg = catalog()
+        cfg["tests"][1]["requires"] = [["bad"]]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+        cfg = catalog()
+        cfg["fallback_tests"] = [{}]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+
+    def test_source_config_change_is_validated_without_running_pr_commands(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(catalog()))
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            changed = catalog()
+            changed["tests"][0]["command"] = ["echo", "new untrusted command"]
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(changed))
+            git("add", "-A")
+            git("commit", "-qm", "config change")
+            head = git("rev-parse", "HEAD")
+            process = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", base, "--head", head], capture_output=True, text=True)
+            self.assertEqual(process.returncode, 0, process.stderr)
+            plan = json.loads(process.stdout)
+            self.assertEqual(plan["proposed_catalog_status"], "VALIDATED_NOT_EXECUTED")
+            self.assertFalse(plan["review_required"])
+            self.assertNotIn("new untrusted command", json.dumps(plan["matrix"]))
+            invalid = catalog()
+            invalid["tests"][0]["tier"] = "V9"
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(invalid))
+            git("add", "-A")
+            git("commit", "-qm", "invalid proposed config")
+            invalid_head = git("rev-parse", "HEAD")
+            failed = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", base, "--head", invalid_head], capture_output=True, text=True)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertIn("INVALID_TEST_TIER", failed.stderr)
+
     def test_git_base_config_cannot_be_replaced_by_pr(self):
         with tempfile.TemporaryDirectory() as d:
             repo = Path(d)
@@ -134,7 +233,8 @@ class GeneralRouterTests(unittest.TestCase):
             loaded, digest = ci.load(repo, base, ".github/ci-capabilities.json", "base")
             self.assertNotIn("untrusted", ci.shell(loaded["tests"][0]))
             plan = ci.select(loaded, paths, "ready", base, head, digest)
-            self.assertTrue(plan["review_required"])  # config changed, not auto-trusted
+            self.assertFalse(plan["review_required"])  # base commands remain authoritative
+            self.assertTrue(plan["capabilities_changed"])
             self.assertEqual(plan["config_source"], "ACCEPTED_BASE")
 
     def test_discovery_reads_tracked_files_not_dependency_caches(self):

@@ -367,7 +367,9 @@ def main():
                           "run_tests": str(result["run_tests"]).lower(),
                           "review_required": str(result["review_required"]).lower(),
                           "coverage": result["coverage"],
-                          "selected": ",".join(result["selected_test_ids"])}
+                          "selected": ",".join(result["selected_test_ids"]),
+                          "stage": result["stage"],
+                          "capabilities_changed": str(result["capabilities_changed"]).lower()}
                 for key, value in values.items():
                     out.write(key + "=" + value + "\n")
         print(json.dumps(result, sort_keys=True))
