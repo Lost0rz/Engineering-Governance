@@ -433,6 +433,8 @@ def verify_approval(issue: dict, *, repo: str, approvers: set[str],
     GitHub actor authentication cannot independently prove ChatGPT user intent.
     The caller must independently verify trusted approvers via live host evidence.
     """
+    if allow_delegated and not _POLICY.delegated_enabled():
+        raise SpecError("DELEGATION_NOT_GLOBALLY_AUTHORIZED")
     if not approvers:
         raise SpecError("NO_TRUSTED_APPROVERS")
     if issue.get("state") not in ("OPEN", "open"):
