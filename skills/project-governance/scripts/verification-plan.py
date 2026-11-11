@@ -55,6 +55,38 @@ SCOPE = (
 )
 ESCALATE = (".gitmodules", ".gitattributes", ".gitignore")
 
+# Explicit V2 dependency map. Tests outside the list cannot be injected by
+# a PR-supplied manifest, and the script itself is always selected from BASE.
+V2_TEST_CROSS = "test_eg097_policy_contracts.py"
+V2_TEST_CONTROL = "test_control_policy.py"
+V2_TEST_ISSUE = "test_issue_spec_check.py"
+V2_ALLOWED_TESTS = frozenset((V2_TEST_CROSS, V2_TEST_CONTROL, V2_TEST_ISSUE))
+
+
+def affected_suites(changes: list[dict[str, str]]) -> list[str]:
+    """Select cross-Skill contracts plus known dependent authority adapters.
+
+    This is a repository-specific contract map, NOT a substitute for consumer
+    product/runtime tests. Unknown source owners escalate to V3 elsewhere.
+    """
+    tests = {V2_TEST_CROSS}
+    for entry in changes:
+        for path in (entry["path"], entry.get("previous_path")):
+            if not path:
+                continue
+            if path.startswith(("skills/agent-handoff/",
+                                "skills/execution-orchestrator/",
+                                "skills/solution-design/",
+                                "skills/incident-doctor/")):
+                tests.add(V2_TEST_ISSUE)
+                tests.add(V2_TEST_CONTROL)
+            if path.startswith("skills/project-governance/references/"):
+                tests.add(V2_TEST_ISSUE)
+                tests.add(V2_TEST_CONTROL)
+    if not tests.issubset(V2_ALLOWED_TESTS):
+        raise SelectionError("UNMAPPED_AFFECTED_TEST_SUITE")
+    return sorted(tests)
+
 
 class SelectionError(ValueError):
     pass
@@ -145,6 +177,7 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
             reasons.append({"path": path, "tier": tier, "reason": why})
     tier = TIERS[highest]
     # A PASS for a selector is not a PASS for the omitted tests.
+    suites = affected_suites(changes) if tier == "V2" else []
     selected = ["static_scope"]
     skipped = []
     if tier == "V0":
@@ -164,6 +197,7 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
         "contract": CONTRACT, "base": base, "head": head,
         "tier": tier, "changes": changes, "reasons": reasons,
         "selected": selected, "skipped": skipped,
+        "affected_suites": suites, "affected_coverage": "CROSS_SKILL_CONTRACTS_ONLY",
         "scope_status": "SCOPE_GATE_PASS",
         "test_status": "TESTS_PENDING",
         "policy_source": "TRUSTED_BASE",

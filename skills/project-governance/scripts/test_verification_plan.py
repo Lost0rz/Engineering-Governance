@@ -62,6 +62,35 @@ class VerificationPlanTests(unittest.TestCase):
                 self.assertEqual(p["tier"], "V2")
                 self.assertEqual(p["selected"], ["static_scope", "affected_contracts"])
 
+    def test_v2_dependency_mapped_test_modules_and_no_package(self):
+        examples = (
+            ("skills/agent-handoff/SKILL.md", ("test_control_policy.py",
+              "test_eg097_policy_contracts.py", "test_issue_spec_check.py")),
+            ("skills/execution-orchestrator/SKILL.md", ("test_control_policy.py",
+              "test_eg097_policy_contracts.py", "test_issue_spec_check.py")),
+            ("skills/project-governance/references/artifact-lifecycle.md",
+              ("test_control_policy.py", "test_eg097_policy_contracts.py",
+               "test_issue_spec_check.py")),
+            ("skills/project-profile/SKILL.md", ("test_eg097_policy_contracts.py",)),
+            ("documents/plans/architecture.md", ("test_eg097_policy_contracts.py",)),
+        )
+        for path, suites in examples:
+            with self.subTest(path=path):
+                p = route(change(path))
+                self.assertEqual(p["tier"], "V2")
+                self.assertEqual(p["affected_suites"], list(suites))
+                self.assertEqual(p["affected_coverage"], "CROSS_SKILL_CONTRACTS_ONLY")
+                self.assertNotIn("package_preview", p["selected"])
+
+    def test_v2_renames_union_dependencies_without_test_injection(self):
+        p = route(change("skills/project-profile/SKILL.md", "R100",
+                         "skills/agent-handoff/SKILL.md"))
+        self.assertEqual(p["tier"], "V2")
+        self.assertEqual(p["affected_suites"], [
+            "test_control_policy.py", "test_eg097_policy_contracts.py",
+            "test_issue_spec_check.py"])
+        self.assertEqual(route(change("plugin.json"))["affected_suites"], [])
+
     def test_security_sensitive_contracts_and_release_identity_are_always_v3(self):
         for path in ("skills/project-governance/SKILL.md",
                      "skills/project-governance/references/issue-control.md",

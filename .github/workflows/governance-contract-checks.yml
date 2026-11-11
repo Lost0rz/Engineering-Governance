@@ -108,9 +108,31 @@ jobs:
 
       - name: Run affected cross-Skill integration contracts
         if: steps.scope.outputs.run_affected == 'true'
+        shell: bash
+        env:
+          PLAN_PATH: ${{ runner.temp }}/verification-plan.json
         run: |
-          python3 -m unittest discover -s skills/project-governance/scripts -p 'test_eg097_policy_contracts.py' -v
-          python3 -m unittest discover -s skills/project-governance/scripts -p 'test_control_policy.py' -v
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          plan = json.loads(Path(os.environ["PLAN_PATH"]).read_text(encoding="utf-8"))
+          allowed = {"test_eg097_policy_contracts.py", "test_control_policy.py",
+                     "test_issue_spec_check.py"}
+          suites = plan.get("affected_suites")
+          assert plan["policy_source"] == "TRUSTED_BASE"
+          assert plan["tier"] == "V2"
+          assert plan["selected"] == ["static_scope", "affected_contracts"]
+          assert isinstance(suites, list) and suites and len(set(suites)) == len(suites)
+          assert all(isinstance(s, str) and s in allowed for s in suites)
+          for suite in suites:
+              subprocess.run(["python3", "-m", "unittest", "discover", "-s",
+                              "skills/project-governance/scripts", "-p", suite, "-v"],
+                             check=True)
+          print("V2_AFFECTED_CONTRACTS_PASS; coverage=CONTRACT_ONLY_NOT_RUNTIME")
+          PY
 
       - name: Run full governance contract tests
         if: steps.scope.outputs.run_full == 'true'
