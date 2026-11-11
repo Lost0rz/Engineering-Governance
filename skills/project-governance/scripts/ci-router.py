@@ -165,9 +165,10 @@ def validate(config):
     # A domain/integration test may declare its prerequisite test lanes.
     for t in tests:
         required = t.get("requires", [])
-        if (not isinstance(required, list) or len(set(required)) != len(required)
-                or any(not isinstance(name, str) or name not in by_id or name == t["id"]
-                       for name in required)):
+        if (not isinstance(required, list)
+                or any(not isinstance(name, str) for name in required)
+                or len(set(required)) != len(required)
+                or any(name not in by_id or name == t["id"] for name in required)):
             raise RouteError("INVALID_TEST_DEPENDENCIES")
         for name in required:
             if int(by_id[name]["tier"][1]) > int(t["tier"][1]):
@@ -186,7 +187,9 @@ def validate(config):
     for name in names:
         visit(name, set(), done)
     fallback = config.get("fallback_tests", [])
-    if (not isinstance(fallback, list) or len(set(fallback)) != len(fallback)
+    if (not isinstance(fallback, list)
+            or any(not isinstance(name, str) for name in fallback)
+            or len(set(fallback)) != len(fallback)
             or any(name not in names for name in fallback)):
         raise RouteError("INVALID_FALLBACK")
     return config
@@ -341,10 +344,19 @@ def main():
             result = discover(args.repo_root)
         else:
             changed = changes(args.repo_root, args.base, args.head)
+            if args.mode == "run" and args.config_source != "base":
+                raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
             cfg, digest = load(args.repo_root, args.base, args.config_path, args.config_source)
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
                             args.head, digest, args.focused, args.config_path)
+            if args.config_source == "base" and args.config_path in changed:
+                # Inspect PR config as data only. Never use its commands or runner
+                # labels to build an executable matrix before it becomes base.
+                proposed, proposed_digest = load(
+                    args.repo_root, args.head, args.config_path, "base")
+                result["proposed_catalog_status"] = "VALIDATED_NOT_EXECUTED"
+                result["proposed_config_sha256"] = proposed_digest
             if args.mode == "run":
                 exit_code = execute_local(result, cfg, args.repo_root)
         if args.output:
