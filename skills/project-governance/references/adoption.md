@@ -22,6 +22,10 @@ When installing/updating Governance, check **separate execution surfaces** only 
 
 A source/package check does not establish Web auto-selection, Codex Desktop or Claude Code runtime behavior. Record **source SHA, packaged manifest version and payload digest, Web-installed identity, Codex-installed source and Claude-installed source separately**, reusing existing host/install metadata instead of inventing a runtime controller. A plugin ZIP built from a Draft PR is a test artifact, not an accepted release, and a marketplace `main` ref will not install Draft PR changes.
 
+## Verification router adoption
+
+The reusable V0–V3 selection policy is maintained in `verification-tiers.md`. A repository's CI adapter must fetch its own trusted base/head diff and obtain a deterministic verification plan from an **accepted** selector, never from untrusted PR source; the receiving repository remains responsible for executable test commands, dependency maps, its required check names and actual host acceptance. If those capabilities are absent, preserve existing checks or conservatively execute the relevant full suite rather than silently skipping. A successful scope selector with skipped jobs is not a full-test PASS. Install or upgrade of the Skill source alone does not modify another repository's GitHub Actions.
+
 ## Upgrade verification
 
 Verify only relevant surfaces:

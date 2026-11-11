@@ -40,6 +40,14 @@ Include transitive dependents/shared interfaces in scope; unknown impact require
 
 A green CI scope-selector with product jobs skipped is `SCOPE_GATE_PASS / TESTS_SKIPPED`, **not** `FULL_TESTS_PASS`. Semantic equivalence may support evidence reuse across pure control-only drift, but live status checks/required reviews for the literal current HEAD must independently be satisfied. This policy does not change project CI configuration.
 
+## Machine-readable verification routing (VERIFICATION_PLAN_V1)
+
+The policy owner remains this Skill reference. The bundled `scripts/verification-plan.py` is a deterministic, stdlib **decision adapter**, not a new top-level Skill, authorization system, required-check waiver, or global runner. Its JSON contract is `VERIFICATION_PLAN_V1` with exact trusted base/head SHA, complete changed paths (both old and new on renames), selected/omitted checks, affected-tier rationale, `SCOPE_GATE_PASS` and a separate `TESTS_PENDING` state. Tests skipped by scope selection are explicitly `TESTS_SKIPPED`, never full-suite PASS.
+
+CI must load the routing implementation from the **accepted/protected base** and discover the GitHub-host-provided exact base/head changes itself. It must not execute a PR-supplied selector, accept a PR-provided risk classification, trust a truncated diff, or infer safety solely from file extensions. Invalid input or unavailable trusted base policy triggers a conservative full-suite fallback. Changes to the selector, host workflow, normative `AGENTS.md`, permissions, shared contracts or unknown dependencies escalate to broad affected testing. A stable required status context must still report real results, including skipped checks; GitHub live required checks and approval gates remain independent.
+
+The initial Engineering Governance repository mapping is intentionally conservative: historical descriptive archives may use V0 static checks; README and descriptive planning files receive relevant policy tests; shared Skill/manifest contracts require V2; authority, selector and CI interfaces require V3. Other repositories own their actual test commands and dependency maps; plugin policy chooses evidence scope, while the hosting GitHub Actions or local runner merely executes and reports it. No project copies reusable test workflow into `AGENTS.md`.
+
 ## Verification cadence
 
 ### Construction
