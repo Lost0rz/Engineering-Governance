@@ -34,6 +34,7 @@ Apply `references/control-plane.md` only for a relevant task-control or terminal
 3. Stay within the authorized task/risk/effect envelope. `references/issue-execution-contract.md` owns G0–G3 and L0–L3; L2 first resolves affected uncertainty in-envelope and requests an external decision only when necessary.
 4. Use narrower Skills only for material dependencies; Sub Agents and extra worktrees are never default workflow steps.
 5. Implement the smallest safe change and verify proportionally under `references/verification-tiers.md`. Human UI acceptance remains a distinct human decision.
+   For material verification plans, use the machine-readable `VERIFICATION_PLAN_V1` contract in `references/verification-tiers.md`; its `scripts/verification-plan.py` adapter is source policy consumed only from a trusted base by the target repository's own CI. Never treat an untrusted PR's own plan as permission to skip required tests.
 6. For repository delivery, use `references/remote-delivery.md`; local commits alone do not prove remote push. At merge/release, check actual host gates.
 7. Reconcile only the semantic owners changed by a material task/terminal event under `references/artifact-lifecycle.md`; no status-only commit on a no-op.
 
