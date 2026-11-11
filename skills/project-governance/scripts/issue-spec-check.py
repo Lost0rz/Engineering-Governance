@@ -11,10 +11,17 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import importlib.util
 import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+# The versioned Skill package, not target-project AGENTS.md, owns control policy.
+_POLICY_SPEC = importlib.util.spec_from_file_location(
+    "eg_global_control_policy", Path(__file__).with_name("control-policy.py"))
+_POLICY = importlib.util.module_from_spec(_POLICY_SPEC)
+_POLICY_SPEC.loader.exec_module(_POLICY)
 
 CONTRACT = "EXECUTION_SPEC_V1"
 FIELDS = (
@@ -221,49 +228,19 @@ def _record(comment: dict, kind: str) -> dict[str, str] | None:
     return entries
 
 
-def _single_operative_opt_in(agents_text: str, key: str) -> bool:
-    """Accept one exact top-level ENABLED declaration, never a Markdown example."""
-    entries: list[str] = []
-    fence: tuple[str, int] | None = None
-    html_comment = False
-    for line in _lines(agents_text).split("\n"):
-        marker = re.match(r"^[ \t]{0,3}(`{3,}|~{3,})([^\n]*)$", line)
-        if marker:
-            token, suffix = marker.groups()
-            if fence is None:
-                fence = (token[0], len(token))
-            elif token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
-                fence = None
-            continue
-        if fence is not None:
-            continue
-        if html_comment:
-            if "-->" in line:
-                html_comment = False
-            continue
-        if "<!--" in line:
-            # Multi-line Markdown HTML comments are not operative directives.
-            html_comment = "-->" not in line.split("<!--", 1)[1]
-            continue
-        # Indented code, quoted examples and prose are not policy declarations.
-        if line.startswith(key + ":"):
-            entries.append(line.rstrip(" \t"))
-    return entries == [key + ": ENABLED"]
+def delegated_opt_in(_project_agents_text: str = "") -> bool:
+    """Legacy read-only compatibility shim; project text never grants control."""
+    return _POLICY.delegated_enabled()
 
 
-def delegated_opt_in(agents_text: str) -> bool:
-    """Allow one operative delegated-approval opt-in, never a Markdown example."""
-    return _single_operative_opt_in(agents_text, "ISSUE_DELEGATED_APPROVAL")
+def web_spec_authoring_opt_in(_project_agents_text: str = "") -> bool:
+    """A project text directive is never a Web Issue writing opt-in."""
+    return False  # use global policy + explicit user request + verified GitHub write
 
 
-def web_spec_authoring_opt_in(agents_text: str) -> bool:
-    """Allow one operative Issue-spec-authoring opt-in, default deny."""
-    return _single_operative_opt_in(agents_text, "ISSUE_WEB_SPEC_AUTHORING")
-
-
-def risk_scoped_autonomy_opt_in(agents_text: str) -> bool:
-    """Recognize one operative opt-in; this does not prove accepted-main origin."""
-    return _single_operative_opt_in(agents_text, "RISK_SCOPED_AUTONOMY")
+def risk_scoped_autonomy_opt_in(_project_agents_text: str = "") -> bool:
+    """G1/G2 host authority is never obtained from project AGENTS.md."""
+    return _POLICY.autonomy_enabled()
 
 
 def _autonomy_timestamp(value: object, field: str) -> datetime:
@@ -303,7 +280,7 @@ def _path_within_allowed(path: str, allowed_path: str) -> bool:
 
 
 def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
-                             approvers: set[str], agents_text: str,
+                             approvers: set[str], policy_autonomy_enabled: bool,
                              target_ref: str, target_commit_sha: str,
                              now: datetime | None = None) -> dict:
     """Validate a proposed grant snapshot, but never treat local JSON as host authority.
@@ -311,7 +288,7 @@ def verify_autonomy_snapshot(issue: dict, authorization: dict, *, repo: str,
     This source version intentionally has no trusted GitHub host reader or credential
     separation verifier. A structurally valid snapshot therefore remains inactive.
     """
-    if not risk_scoped_autonomy_opt_in(agents_text):
+    if policy_autonomy_enabled is not True or not _POLICY.autonomy_enabled():
         raise SpecError("AUTONOMY_NOT_OPTED_IN")
     if not approvers:
         raise SpecError("NO_TRUSTED_APPROVERS")
@@ -452,9 +429,9 @@ def verify_approval(issue: dict, *, repo: str, approvers: set[str],
                     allow_delegated: bool = False) -> dict:
     """Verify exact-spec approval. Delegation is lower-assurance and opt-in only.
 
-    The caller must resolve allow_delegated from accepted repository AGENTS.md.
-    The CLI additionally requires an AGENTS file when delegated mode is enabled.
+    The accepted global CONTROL_POLICY_V1 owns delegated-mode eligibility.
     GitHub actor authentication cannot independently prove ChatGPT user intent.
+    The caller must independently verify trusted approvers via live host evidence.
     """
     if not approvers:
         raise SpecError("NO_TRUSTED_APPROVERS")
@@ -537,11 +514,9 @@ def main() -> int:
     p.add_argument("--target-ref", help="current local target ref for autonomy-verify")
     p.add_argument("--target-commit", help="current exact target commit for autonomy-verify")
     p.add_argument("--repo", required=True)
-    p.add_argument("--approvers", default="", help="comma-separated trusted GitHub logins from AGENTS.md")
+    p.add_argument("--approvers", default="", help="host-verified trusted GitHub approval actors; never inferred from AGENTS.md")
     p.add_argument("--allow-delegated", action="store_true",
-                   help="opt-in only: requires accepted AGENTS.md policy")
-    p.add_argument("--agents-file", type=Path,
-                   help="target AGENTS.md; local content alone cannot prove accepted-main origin")
+                   help="only if global policy and independent user/host opt-in permit")
     args = p.parse_args()
     try:
         if args.issue_json is None:
@@ -553,11 +528,8 @@ def main() -> int:
                       "task_id": fields["TASK_ID"], "spec_revision": fields["SPEC_REVISION"],
                       "spec_sha256": h}
         elif args.mode == "verify":
-            if args.allow_delegated:
-                if args.agents_file is None:
-                    raise SpecError("DELEGATION_AGENTS_FILE_REQUIRED")
-                if not delegated_opt_in(args.agents_file.read_text(encoding="utf-8")):
-                    raise SpecError("DELEGATION_NOT_OPTED_IN")
+            if args.allow_delegated and not delegated_opt_in():
+                raise SpecError("DELEGATION_NOT_GLOBALLY_AUTHORIZED")
             result = verify_approval(
                 issue, repo=args.repo,
                 approvers={x.strip() for x in args.approvers.split(",") if x.strip()},
@@ -566,18 +538,15 @@ def main() -> int:
         else:
             if args.authorization_json is None:
                 raise SpecError("AUTONOMY_AUTHORIZATION_JSON_REQUIRED")
-            if args.agents_file is None:
-                raise SpecError("AUTONOMY_AGENTS_FILE_REQUIRED")
             if not args.target_ref:
                 raise SpecError("AUTONOMY_TARGET_REF_REQUIRED")
             if not args.target_commit:
                 raise SpecError("AUTONOMY_TARGET_COMMIT_REQUIRED")
             authorization = json.loads(args.authorization_json.read_text(encoding="utf-8"))
-            agents_text = args.agents_file.read_text(encoding="utf-8")
             result = verify_autonomy_snapshot(
                 issue, authorization, repo=args.repo,
                 approvers={x.strip() for x in args.approvers.split(",") if x.strip()},
-                agents_text=agents_text, target_ref=args.target_ref,
+                policy_autonomy_enabled=_POLICY.autonomy_enabled(), target_ref=args.target_ref,
                 target_commit_sha=args.target_commit,
             )
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
