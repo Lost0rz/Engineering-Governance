@@ -107,6 +107,12 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("source_write_authorized=false", execution)
         self.assertIn("independently validates", flow)
         self.assertIn("host_action_authorization_required", policy)
+        self.assertIn('"initial_issue_approval_required": False', policy)
+        self.assertIn("initial task authorization", issue)
+        self.assertIn("first task authorization", flow)
+        self.assertIn("first 19-field Issue approval comment", execution)
+        self.assertIn("current top-level user request", self.read("skills/project-governance/SKILL.md"))
+
         self.assertIn('"persistent_grant": False', policy)
         self.assertIn('"source_write_authorized": False', policy)
         self.assertIn("unattended", issue)

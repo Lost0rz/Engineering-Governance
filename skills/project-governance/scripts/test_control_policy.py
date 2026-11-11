@@ -41,6 +41,9 @@ class GlobalControlPolicyTests(unittest.TestCase):
                 self.assertFalse(plan["merge_authorized"])
                 self.assertFalse(plan["release_authorized"])
                 self.assertFalse(plan["per_wp_approval_comment_required"])
+                self.assertFalse(plan["initial_issue_approval_required"])
+                self.assertTrue(plan["user_direct_request_is_initial_task_authority_candidate"])
+                self.assertTrue(plan["host_user_role_provenance_required"])
                 self.assertTrue(plan["host_action_authorization_required"])
 
     def test_interactive_session_must_not_be_unattended_or_self_permitted(self):

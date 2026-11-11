@@ -262,6 +262,11 @@ def interactive_scope_eligibility(
         "paths": list(paths), "effects": list(effects),
         "route": "ACTIVE_SESSION_USER_DIRECT",
         "per_wp_approval_comment_required": False,
+        # A genuine top-level host USER turn supplies initial task intent.
+        # This flag is eligibility metadata only; input flags are untrusted.
+        "initial_issue_approval_required": False,
+        "user_direct_request_is_initial_task_authority_candidate": True,
+        "host_user_role_provenance_required": True,
         "host_action_authorization_required": True,
         "source_write_authorized": False,
         "persistent_grant": False,
