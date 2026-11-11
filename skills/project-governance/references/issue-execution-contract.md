@@ -1,6 +1,6 @@
 # Execution Spec / Deviation / Receipt — ISSUE_CONTROL
 
-This is a reusable **source contract**, not a daemon, form-only validator, model router, second task authority or separate Skill. Project Governance owns authorization; Solution Design resolves architecture; Agent Handoff transports a reference + delta. Detailed legacy executors use the approved Work Packages; compact autonomous tasks use their authorized objective and bounded scope.
+This is an **on-demand legacy Issue execution contract**, not the startup checklist for current host-authenticated user-directed G1/G2 work. Project Governance owns authority; normal in-envelope fixes need no 19-field Issue or WP ritual. Detailed legacy executors retain their approved Work Packages; a handoff transports reference + delta, never approval.
 
 ## EXECUTION_SPEC_V1 (Issue body)
 
@@ -96,7 +96,7 @@ Risk and tests stay orthogonal: G1 can need V3 if it touches a security boundary
 | --- | --- | --- | --- |
 | L0 `CONTINUE` | Proven nonsemantic discrepancy; target intent/interface unchanged | Bounded locator adaptation, carry on | concise final receipt note when material |
 | L1 `LOCAL_CORRECT` | Clearly diagnosable implementation/test defect inside already approved scope | Focused fix, focused retest, continue within risk/cadence limit | final receipt meaningful changes/checks |
-| L2 `PAUSE_AND_ASK` | Material uncertainty, an unverified interface/contract choice, or possible scope/writer/risk change | Pause the *affected action* for bounded design/diagnostic resolution. If existing authority still covers G1/G2 effects, verify and resume without user approval; if outside authority or truly owner-only, request a decision | Focused evidence; external decision record only when needed and required by active mode |
+| L2 `RESOLVE_OR_ESCALATE` (legacy label `PAUSE_AND_ASK`) | Material uncertainty, an unverified interface/contract choice, or possible scope/writer/risk change | Resolve with focused design/diagnostic evidence inside existing authority; pause only the affected unsafe mutation. Ask only for a genuinely new owner/scope/effect decision | Focused evidence; external decision record only when needed and required by active mode |
 | L3 `TERMINATE` | Revoked/invalid authority, destructive/security/data integrity risk, unresolvable conflict or exhausted bounded correction without safe path | End current execution attempt; retain unique work and evidence; no automatic rollback/reset/cleanup | Issue comment `EXECUTION_TERMINATED_V1` |
 
 Never interpret failed tests alone as universal permission to broaden scope. Do not silently upgrade a L2 to L1 by asking the same low-reasoning model to invent the missing architecture. Task-specific stricter STOP rules take precedence. L2 PAUSE is not a reason to create a new PR/Issue or restart all other verified work. L3 termination is an execution outcome, not necessarily cancellation/closure of the Issue.
