@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""CONTROL_POLICY_V1: portable policy defaults and independently queried GitHub enrollment.
+
+A machine or project AGENTS.md is not an approval, grant, or repository control selector.
+This adapter does not grant source writes, issue approval, merge, release or G1/G2 autonomy.
+The hosting execution environment owns actual GitHub permission checks and user intent.
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+from pathlib import Path
+
+POLICY_PATH = Path(__file__).resolve().parent.parent / "assets" / "control-policy.json"
+REPO_RE = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z")
+CONTRACT = "CONTROL_POLICY_V1"
+EXPECTED = {
+    "contract": CONTRACT,
+    "default_mode": "ISSUE_CONTROL",
+    "unenrolled_mode": "FILE_CONTROL",
+    "enrollment_authority": "GITHUB_VERIFIED_MERGED_MIGRATION",
+    "approver_authority": "GITHUB_VERIFIED_ACCOUNT_AND_OWNER_POLICY",
+    "web_issue_authoring": "EXPLICIT_USER_REQUEST_AND_HOST_WRITE",
+    "delegated_approval": "DISABLED",
+    "risk_scoped_autonomy": "DISABLED",
+    "require_host_authority_for_writes": True,
+    "project_agents_control_selectors": "IGNORED",
+}
+
+
+class ControlPolicyError(ValueError):
+    pass
+
+
+def load_policy() -> dict:
+    """Only the shipped, versioned Skill artifact is the default rule source.
+
+    Do not load an arbitrary project AGENTS.md, task Issue, local JSON file or
+    untrusted PR-provided replacement as the global policy authority.
+    """
+    try:
+        policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise ControlPolicyError("GLOBAL_POLICY_UNAVAILABLE") from exc
+    if type(policy) is not dict or policy != EXPECTED:
+        raise ControlPolicyError("GLOBAL_POLICY_SCHEMA_OR_DEFAULTS_MISMATCH")
+    return policy
+
+
+def _gh_api(path: str) -> dict:
+    """Live GitHub REST read via the authenticated local gh client; no shell."""
+    try:
+        result = subprocess.run(
+            ["gh", "api", path], capture_output=True, text=True,
+            timeout=15, check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ControlPolicyError("GITHUB_HOST_READ_UNAVAILABLE") from exc
+    if result.returncode != 0:
+        raise ControlPolicyError("GITHUB_HOST_READ_DENIED")
+    try:
+        obj = json.loads(result.stdout)
+    except ValueError as exc:
+        raise ControlPolicyError("GITHUB_HOST_INVALID_RESPONSE") from exc
+    if not isinstance(obj, dict):
+        raise ControlPolicyError("GITHUB_HOST_INVALID_RESPONSE")
+    return obj
+
+
+def verify_migration(repo: str, migration_pr: int) -> dict:
+    """Host-verify a migration PR and that its merge commit belongs to live main.
+
+    A PR number is merely a locator supplied through a global user routing
+    preference; neither it nor project AGENTS.md is itself proof of adoption.
+    """
+    load_policy()
+    if not isinstance(repo, str) or not REPO_RE.fullmatch(repo):
+        raise ControlPolicyError("INVALID_REPOSITORY")
+    if type(migration_pr) is not int or migration_pr < 1:
+        raise ControlPolicyError("MIGRATION_PR_REQUIRED")
+    pr = _gh_api(f"repos/{repo}/pulls/{migration_pr}")
+    merge_sha = pr.get("merge_commit_sha")
+    if (pr.get("merged_at") is None
+            or not isinstance(merge_sha, str)
+            or re.fullmatch(r"[0-9a-f]{40}", merge_sha) is None
+            or (pr.get("base") or {}).get("ref") != "main"
+            or (pr.get("head") or {}).get("repo") is None):
+        raise ControlPolicyError("MIGRATION_NOT_HOST_VERIFIED")
+    main = _gh_api(f"repos/{repo}/branches/main")
+    main_sha = (main.get("commit") or {}).get("sha")
+    if not isinstance(main_sha, str) or re.fullmatch(r"[0-9a-f]{40}", main_sha) is None:
+        raise ControlPolicyError("UNVERIFIED_MAIN_HEAD")
+    comparison = _gh_api(f"repos/{repo}/compare/{merge_sha}...{main_sha}")
+    if comparison.get("status") not in ("identical", "ahead"):
+        raise ControlPolicyError("MIGRATION_NOT_IN_MAIN_ANCESTRY")
+    return {
+        "contract": CONTRACT,
+        "repository": repo,
+        "mode": "ISSUE_CONTROL",
+        "adoption": "VERIFIED_MERGED_MIGRATION",
+        "migration_pr": migration_pr,
+        "migration_merge_sha": merge_sha,
+        "main_sha": main_sha,
+        "source": "LIVE_GITHUB_HOST",
+        "execution_authorized": False,
+    }
+
+
+def select_control(repo: str, *, migration_pr: int | None = None) -> dict:
+    """Read-only selector. Missing adoption never becomes implicit Issue authority."""
+    load_policy()
+    if not REPO_RE.fullmatch(repo):
+        raise ControlPolicyError("INVALID_REPOSITORY")
+    if migration_pr is None:
+        return {
+            "contract": CONTRACT, "repository": repo,
+            "mode": "FILE_CONTROL", "adoption": "UNVERIFIED_LEGACY",
+            "execution_authorized": False, "reason": "MIGRATION_HOST_PROOF_REQUIRED",
+        }
+    return verify_migration(repo, migration_pr)
+
+
+def source_write_gate(selection: dict, *, user_requested: bool = False,
+                      trusted_approvers: set[str] | None = None) -> None:
+    """Refuse source writes on a mode selector alone; exact task approval required."""
+    load_policy()
+    if selection.get("adoption") != "VERIFIED_MERGED_MIGRATION":
+        raise ControlPolicyError("MIGRATION_HOST_PROOF_REQUIRED")
+    if not user_requested or not trusted_approvers:
+        raise ControlPolicyError("EXACT_TASK_AUTHORIZATION_REQUIRED")
+    # No success result: actual Issue digest, authenticated comment, credential
+    # separation and target permissions are verified by their own host gates.
+    raise ControlPolicyError("ISSUE_APPROVAL_HOST_PREFLIGHT_REQUIRED")
+
+
+def web_authoring_eligible(*, explicit_user_request: bool,
+                           verified_github_write: bool) -> bool:
+    """Eligibility only, never issue/source approval or permission by itself."""
+    load_policy()
+    return explicit_user_request is True and verified_github_write is True
+
+
+def delegated_enabled() -> bool:
+    return load_policy()["delegated_approval"] == "ENABLED"
+
+
+def autonomy_enabled() -> bool:
+    return load_policy()["risk_scoped_autonomy"] == "ENABLED"
