@@ -342,9 +342,11 @@ class GeneralRouterTests(unittest.TestCase):
             git("add", "-A")
             git("commit", "-qm", "baseline")
             head = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/main", head)
             proc = subprocess.run(
                 [sys.executable, str(SCRIPT), "run", "--repo-root", d,
                  "--base", head, "--head", head, "--stage", "focused",
+                 "--trusted-ref", "refs/remotes/origin/main",
                  "--focused", "probe"], text=True, capture_output=True)
             self.assertEqual(proc.returncode, 0, proc.stderr)
             self.assertEqual(json.loads(proc.stdout)["test_status"], "PASS")
@@ -414,6 +416,135 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertEqual(plan["selected_test_ids"], [])
         self.assertEqual(plan["fork_blocked_tests"], ["node-unit", "swift-unit"])
         self.assertTrue(plan["review_required"])
+
+    def test_nonregular_doc_symlink_requires_test_coverage(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "docs").mkdir()
+            doc = repo / "docs/guide.md"
+            doc.write_text("normal text")
+            git("add", "-A")
+            git("commit", "-qm", "normal")
+            before = git("rev-parse", "HEAD")
+            doc.unlink()
+            doc.symlink_to("other.md")
+            git("add", "-A")
+            git("commit", "-qm", "symlink")
+            after = git("rev-parse", "HEAD")
+            changed = ci.changes(repo, before, after)
+            special = ci.nonregular_changes(repo, before, after)
+            self.assertEqual(changed, ["docs/guide.md"])
+            self.assertEqual(special, ["docs/guide.md"])
+            p = ci.select(catalog(), changed, "ready", before, after,
+                          "digest", nonregular_paths=special)
+            self.assertEqual(p["unmapped_paths"], ["docs/guide.md"])
+            self.assertEqual(p["selected_test_ids"], ["smoke"])
+            self.assertTrue(p["review_required"])
+
+    def test_untracked_symlink_is_nonregular(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "README.md").write_text("original")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            head = git("rev-parse", "HEAD")
+            (repo / "docs").mkdir()
+            (repo / "docs/guide.md").symlink_to("missing.md")
+            self.assertEqual(ci.nonregular_changes(repo, head, head, True),
+                             ["docs/guide.md"])
+
+    def test_local_run_uses_explicit_accepted_remote_ref(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            config = {"contract": "EG_CI_CAPABILITIES_V1", "tests": [{
+                "id": "probe", "tier": "V1", "runner": ["ubuntu-latest"],
+                "paths": ["sample.py"],
+                "command": [sys.executable, "-c", "print('safe')"]}]}
+            path = repo / ".github/ci-capabilities.json"
+            path.write_text(json.dumps(config))
+            git("add", "-A")
+            git("commit", "-qm", "accepted")
+            accepted = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/main", accepted)
+            config["tests"][0]["command"] = [sys.executable, "-c", "print('BAD_UNTRUSTED')"]
+            path.write_text(json.dumps(config))
+            git("add", "-A")
+            git("commit", "-qm", "task")
+            task = git("rev-parse", "HEAD")
+            args = [sys.executable, str(SCRIPT), "run", "--repo-root", d,
+                    "--base", task, "--head", task,
+                    "--stage", "focused", "--focused", "probe"]
+            blocked = subprocess.run(args, capture_output=True, text=True)
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn("LOCAL_RUN_REQUIRES_TRUSTED_REMOTE_REF", blocked.stderr)
+            passed = subprocess.run(args + [
+                "--trusted-ref", "refs/remotes/origin/main"],
+                capture_output=True, text=True)
+            self.assertEqual(passed.returncode, 0, passed.stderr)
+            plan = json.loads(passed.stdout)
+            self.assertEqual(plan["config_ref"], accepted)
+            self.assertIn("safe", passed.stderr)
+            self.assertNotIn("BAD_UNTRUSTED", passed.stderr)
+            mismatch = subprocess.run(args + [
+                "--trusted-ref", "refs/remotes/origin/main",
+                "--config-ref", task], capture_output=True, text=True)
+            self.assertNotEqual(mismatch.returncode, 0)
+            self.assertIn("TRUSTED_CONFIG_REF_MISMATCH", mismatch.stderr)
+
+    def test_comparison_base_and_accepted_config_revision_are_independent(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            catalog_file = repo / ".github/ci-capabilities.json"
+            cfg = catalog()
+            catalog_file.write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            cfg["tests"][1]["command"] = ["npm", "run", "updated-test"]
+            catalog_file.write_text(json.dumps(cfg))
+            (repo / "apps/web").mkdir(parents=True)
+            (repo / "apps/web/page.tsx").write_text("updated")
+            git("add", "-A")
+            git("commit", "-qm", "new accepted config")
+            head = git("rev-parse", "HEAD")
+            proc = subprocess.run([
+                sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                "--base", base, "--head", head, "--config-ref", head],
+                capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            plan = json.loads(proc.stdout)
+            self.assertEqual(plan["base"], base)
+            self.assertEqual(plan["config_ref"], head)
+            node = next(x for x in plan["matrix"]["include"] if x["id"] == "node-unit")
+            self.assertIn("updated-test", node["script"])
 
     def test_reusable_caller_separates_manual_and_pr_required_checks(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
