@@ -208,9 +208,11 @@ def load(repo, base, path, source):
 
 
 def shell(t):
-    lines = ["set -euo pipefail"]
+    lines = ["set -euo pipefail", 'workspace_root="$(pwd -P)"']
     if t.get("cwd", ".") != ".":
-        lines.append("cd " + shlex.quote(t["cwd"]))
+        lines.append("cd -- " + shlex.quote(t["cwd"]))
+        lines.append('case "$(pwd -P)/" in "$workspace_root/"*) ;; '
+                     '*) echo "CI_CWD_OUTSIDE_WORKSPACE" >&2; exit 2;; esac')
     for argv in t.get("setup", []) + [t["command"]]:
         lines.append(shlex.join(argv))
     return "\n".join(lines)
@@ -266,7 +268,10 @@ def select(config, changed, stage, base, head, digest, focused="",
             "config_sha256": digest, "changed_paths": changed,
             "selected_test_ids": [t["id"] for t in selected],
             "unmapped_paths": unknown, "coverage": coverage,
-            "review_required": stage == "ready" and bool(unknown),
+            # A trusted-base fallback lane may cover previously unseen paths.
+            # Still show PARTIAL_UNMAPPED; never report an all-tests PASS.
+            "review_required": (stage == "ready" and bool(unknown)
+                                and not bool(config.get("fallback_tests", []))),
             "capabilities_changed": config_changed,
             "effective_tier": max((t["tier"] for t in selected), default="V0"),
             "run_tests": bool(matrix), "test_status": "NOT_RUN",
@@ -294,7 +299,11 @@ def execute_local(result, config, repo):
     for test in config["tests"]:
         if test["id"] not in selected:
             continue
-        workdir = repo / test.get("cwd", ".")
+        workdir = (repo / test.get("cwd", ".")).resolve()
+        if not workdir.is_relative_to(repo.resolve()):
+            outcomes.append({"id": test["id"], "outcome": "CWD_OUTSIDE_WORKSPACE",
+                             "exit_code": 2})
+            break
         code = 0
         detail = "PASS"
         for argv in test.get("setup", []) + [test["command"]]:

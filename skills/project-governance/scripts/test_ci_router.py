@@ -81,8 +81,13 @@ class GeneralRouterTests(unittest.TestCase):
         p = self.plan(["unmapped/credential.py"])
         self.assertEqual(p["selected_test_ids"], ["smoke"])
         self.assertEqual(p["unmapped_paths"], ["unmapped/credential.py"])
-        self.assertTrue(p["review_required"])
+        # Trusted-base fallback keeps work moving while coverage stays explicit.
+        self.assertFalse(p["review_required"])
+        self.assertEqual(p["coverage"], "PARTIAL_UNMAPPED")
         self.assertFalse(p["full_suite_claim"])
+        without_fallback = catalog()
+        without_fallback["fallback_tests"] = []
+        self.assertTrue(self.plan(["unmapped/credential.py"], cfg=without_fallback)["review_required"])
         milestone = self.plan(["unmapped/credential.py"], "milestone")
         self.assertFalse(milestone["review_required"])
 
@@ -288,6 +293,35 @@ class GeneralRouterTests(unittest.TestCase):
                               "LOCAL", "b" * 40, "digest", "probe")
             self.assertEqual(ci.execute_local(again, cfg, Path(d)), 1)
             self.assertEqual(again["test_status"], "FAILED")
+
+    def test_symlink_cwd_escape_is_rejected_locally_and_in_ci_script(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            repo = base / "project"
+            repo.mkdir()
+            outside = base / "outside"
+            outside.mkdir()
+            (repo / "alias").symlink_to(outside, target_is_directory=True)
+            cfg = {"contract": "EG_CI_CAPABILITIES_V1", "tests": [{
+                "id": "probe", "tier": "V1", "runner": ["ubuntu-latest"],
+                "paths": ["sample.py"], "cwd": "alias",
+                "command": [sys.executable, "-c", "print('should not run')"]}]}
+            self.assertIn("CI_CWD_OUTSIDE_WORKSPACE", ci.shell(cfg["tests"][0]))
+            plan = ci.select(cfg, ["sample.py"], "focused",
+                             "LOCAL", "b"*40, "digest", "probe")
+            self.assertEqual(ci.execute_local(plan, cfg, repo), 1)
+            self.assertEqual(plan["test_status"], "FAILED")
+            self.assertEqual(plan["executed_tests"][0]["outcome"],
+                             "CWD_OUTSIDE_WORKSPACE")
+
+    def test_reusable_caller_separates_manual_and_pr_required_checks(self):
+        workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
+        self.assertIn("EG Ready verification", workflow)
+        self.assertIn("EG Manual scoped verification", workflow)
+        self.assertIn('PR verification must select the Ready scope via auto.', workflow)
+        self.assertIn('STAGE" != "ready"', workflow)
+        self.assertIn('capabilities_changed:', workflow)
 
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()

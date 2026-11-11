@@ -27,7 +27,9 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 - **Ready PR:** accumulate affected paths from the trusted base and run matching tests plus `requires` prerequisites. Unknown source dependencies are reported; tests remain unverified until their coverage is established.
 - **Release:** execute the complete accepted test catalog, including any project release suites; an incomplete catalog cannot prove complete release acceptance.
 
-V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; tests declare explicit path matches and dependencies. Documentation exemptions apply only to descriptive text file types and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
+V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites but does **not** serialize GitHub matrix jobs. Tests needing execution order should use one project-owned command or setup step. Documentation exemptions apply only to descriptive text file types and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
+
+Unmapped files stay visible as `PARTIAL_UNMAPPED`. An accepted-base `fallback_tests` lane may satisfy the selected check without pretending the entire project passed. Without a trusted fallback, an unmatched Ready source change fails coverage rather than silently skipping tests.
 
 ## CI trust and host boundaries
 
