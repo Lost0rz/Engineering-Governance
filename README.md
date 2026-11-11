@@ -34,7 +34,7 @@ This lets the design capability evolve without installing multiple overlapping d
 - Project Profile — concise descriptive context + pointers to authorities; one current projection surface or explicit primary + mirror;
 - Domain/navigation authority — detailed semantic ownership/source/test/runtime route;
 - durable planning — long-lived design/rationale/work packages when justified;
-- active task control — selected by each repository's accepted authority, with execution specifics owned by `project-governance` rather than restated here;
+- active task control — selected by installed versioned CONTROL_POLICY_V1 and independently verified GitHub repository enrollment; project AGENTS.md contains only project-specific facts and cannot grant workflow permissions;
 - implementation authority — canonical source/schema/config/workflow/persisted contract/state owner for the implementation class;
 - observed evidence — CI/test results, PR/host state, runtime/review/audit/probe observations.
 
@@ -42,7 +42,7 @@ A Profile or Domain Map is a derived projection. If it conflicts with its author
 
 ## Governance workflow owner
 
-The reusable engineering workflow is owned by the installed Engineering Governance Skills. `project-governance` is the normal entry; capability selection is maintained in [`global-routing.md`](skills/project-governance/references/global-routing.md), while authorization and approval modes are maintained in [`issue-control.md`](skills/project-governance/references/issue-control.md). This README describes repository capabilities but does not define a separate execution or authorization contract.
+The reusable engineering workflow is owned by the installed Engineering Governance Skills. `project-governance` is the normal entry; capability selection is maintained in [`global-routing.md`](skills/project-governance/references/global-routing.md), while the default control/authorization settings are maintained in versioned [`control-policy.json`](skills/project-governance/assets/control-policy.json), with task/approval trust rules explained by [`issue-control.md`](skills/project-governance/references/issue-control.md). This README describes repository capabilities but does not define a separate execution or authorization contract.
 
 ## Environment policy
 

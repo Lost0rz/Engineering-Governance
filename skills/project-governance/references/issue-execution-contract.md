@@ -115,7 +115,7 @@ Do not ask the user solely because L2 was identified. First resolve the uncertai
 
 ### RESUME_CONTRACT_V1 — risk-based resolution
 
-An L2 external decision in **legacy ISSUE_CONTROL** uses a traceable `DECISION_RESOLUTION_V1` by an accepted GitHub `ISSUE_APPROVERS` actor, linked to current blocker, Issue, revision/digest and affected WPs. An opted-in Web proxy may record an explicit user decision with `AUTHORIZATION_CHANNEL: CHATGPT_WEB` and `PROVENANCE: ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF`; this is lower assurance, not independent proof of chat intent or new scope. Verify current Issue/approval/dependencies before choosing a resume outcome. An in-envelope decision under a trusted active G1/G2 grant needs no extra Issue decision comment.
+An L2 external decision in **legacy ISSUE_CONTROL** uses a traceable `DECISION_RESOLUTION_V1` by an independently host-verified globally trusted GitHub approver, linked to current blocker, Issue, revision/digest and affected WPs. An opted-in Web proxy may record an explicit user decision with `AUTHORIZATION_CHANNEL: CHATGPT_WEB` and `PROVENANCE: ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF`; this is lower assurance, not independent proof of chat intent or new scope. Verify current Issue/approval/dependencies before choosing a resume outcome. An in-envelope decision under a trusted active G1/G2 grant needs no extra Issue decision comment.
 
 | Outcome | Allowed only when | Authorization / next action |
 | --- | --- | --- |

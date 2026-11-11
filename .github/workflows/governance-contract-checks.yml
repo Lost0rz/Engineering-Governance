@@ -77,9 +77,17 @@ jobs:
               data = json.loads((root / name).read_text(encoding="utf-8"))
               assert isinstance(data, dict), name
           agents = (root / "AGENTS.md").read_text(encoding="utf-8")
-          assert agents.splitlines().count("CONTROL_MODE: ISSUE_CONTROL") == 1
-          assert agents.splitlines().count("ISSUE_APPROVERS: Lost0rz") == 1
-          assert agents.splitlines().count("ISSUE_WEB_SPEC_AUTHORING: ENABLED") <= 1
+          template = (root / "skills/project-governance/assets/templates/AGENTS.md").read_text(encoding="utf-8")
+          policy = json.loads((root / "skills/project-governance/assets/control-policy.json").read_text(encoding="utf-8"))
+          assert policy["contract"] == "CONTROL_POLICY_V1"
+          assert policy["default_mode"] == "ISSUE_CONTROL"
+          assert policy["require_host_authority_for_writes"] is True
+          assert policy["risk_scoped_autonomy"] == "DISABLED"
+          assert policy["delegated_approval"] == "DISABLED"
+          for content in (agents, template):
+              for key in ("CONTROL_MODE:", "ISSUE_APPROVERS:", "ISSUE_WEB_SPEC_AUTHORING:",
+                          "ISSUE_DELEGATED_APPROVAL:", "RISK_SCOPED_AUTONOMY:"):
+                  assert not any(line.startswith(key) for line in content.splitlines()), key
           PY
 
       - name: Compile governance checker and tests

@@ -1,9 +1,5 @@
 # Engineering-Governance Source Repository Rules
 
-CONTROL_MODE: ISSUE_CONTROL
-ISSUE_APPROVERS: Lost0rz
-ISSUE_WEB_SPEC_AUTHORING: ENABLED
-
 ## Repository purpose
 
 This repository maintains portable Engineering Governance Skills, routing policy, templates, verification helpers, and acceptance references. It is a **source repository**, not a governance runtime, daemon, scheduler, database, installer, model router, or automatic remediation service.
@@ -28,4 +24,4 @@ This repository maintains portable Engineering Governance Skills, routing policy
 
 The installed Engineering Governance Skills own all reusable control-plane behavior. This file defines no alternative Issue, approval, G/V/L, test-selection, PR, workspace, receipt, or release procedure. Refer to `skills/project-governance/SKILL.md` and its `references/**` for the applicable workflow; `skills/project-governance/references/global-routing.md` owns Skill selection.
 
-The three declarations above are **current compatibility selectors** required by the accepted plugin's existing target-repository parser. They preserve this repository's already-effective settings; they are not a second implementation of the control plane. Their eventual removal requires a separately verified plugin-side control-policy migration.
+Repository control-mode selection, approver eligibility, Issue authoring, delegation and G1/G2 policy belong exclusively to the versioned installed Engineering Governance control policy. This project file defines no operative governance selectors.

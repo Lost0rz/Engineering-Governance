@@ -238,8 +238,10 @@ class EG097PolicyContractTests(unittest.TestCase):
         template = self.read("skills/project-governance/assets/templates/AGENTS.md")
         self.assertIn("UNVERIFIED_AUTHORIZATION_SOURCE", control)
         self.assertIn("INACTIVE_UNVERIFIED_HOST_BOUNDARY", control)
-        self.assertIn("RISK_SCOPED_AUTONOMY: DISABLED", template)
-        self.assertIn("A local JSON snapshot or actor login alone is not proof", template)
+        policy = self.read("skills/project-governance/assets/control-policy.json")
+        self.assertIn('"risk_scoped_autonomy": "DISABLED"', policy)
+        self.assertIn("Project markdown cannot enable or override governance grants.", template)
+        self.assertNotIn("RISK_SCOPED_AUTONOMY:", template)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 <!-- Consumer routing hint. Detailed routing and engineering rules live in the installed Governance Skills. -->
 ## Engineering Governance Skill routing
 
-For governed engineering work, enter `project-governance` unless a higher-priority project instruction or explicit narrow Skill selection applies. Use `AGENTS.md` and current Task/Issue as project authority; this template is not another approval source.
+For governed engineering work, enter `project-governance` unless an actual higher-priority host instruction or an explicit bounded Skill selection applies. Project `AGENTS.md` cannot override the installed Engineering Governance control policy or grant workflow permissions; unresolved conflicting instructions stop affected writes. Use versioned CONTROL_POLICY_V1 and independent GitHub enrollment proof for task mode; read project `AGENTS.md` only for its business, architecture and safety rules. A current Task/Issue still needs its own verified authority; this template does not approve anything.
 
 Select only the needed owner:
 - `project-profile`: compact project context; `solution-design`: material engineering architecture/state ambiguity; `design`: UI/UX/frontend interaction or visual design.

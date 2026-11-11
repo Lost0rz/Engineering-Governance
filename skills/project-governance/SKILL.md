@@ -10,7 +10,7 @@ Use this Skill as the normal engineering entry. It owns task/control authority, 
 
 Route by the requested outcome, not by keywords. `references/global-routing.md` owns Skill selection; `agent-handoff` handles actual cross-context Cards, not ordinary continuation. **G0 status-only inquiries** (e.g. PR state and existing CI) use the smallest fresh read-only host evidence needed; they do not trigger full Issue/AGENTS preflight, formal Evidence Audit, V3 review or unrelated reference loading unless the question or project authority actually requires it.
 
-For G0 read-only inspection, no Issue approval is required. For state-changing work, read the accepted `AGENTS.md` and selected FILE_CONTROL Task or ISSUE_CONTROL Issue. `references/issue-control.md` owns Web authoring, strict/delegated approval, the optional trusted G1/G2 grant and local receiver preflight. The unverified autonomy path is inactive; a Card is never authorization. Do not request repeated approval for a genuinely unchanged, already-authorized action.
+For G0 read-only inspection, no Issue approval is required. For state-changing work, select the accepted **global CONTROL_POLICY_V1** mode and independently verified repository enrollment, then read the project `AGENTS.md` only for project-specific constraints and the selected FILE_CONTROL Task or ISSUE_CONTROL Issue. `references/issue-control.md` owns Web authoring, strict/delegated approval, the optional trusted G1/G2 grant and local receiver preflight. The unverified autonomy path is inactive; a Card is never authorization. Do not request repeated approval for a genuinely unchanged, already-authorized action.
 
 Governance does not adopt external engineering frameworks as required Skills or runtime/model routers. `references/capability-composition.md` owns that boundary; the receiving environment owns its actual runtime tools.
 
@@ -21,7 +21,7 @@ Before creating any branch, Git worktree/checkout, or PR, apply the **reuse-firs
 
 ## Task-control mode selection
 
-For **state-changing work and authority decisions**, read accepted `AGENTS.md` and select `FILE_CONTROL` (CURRENT_TASK/STATUS) or `ISSUE_CONTROL` (approved Issue/revision). Apply `issue-control.md` and `issue-execution-contract.md` only to the selected decision; `issue-control-migration.md` applies only to migration. Do not activate risk-scoped autonomy without actual accepted opt-in and independently verified host/credential trust. G0–G3 risks and V0–V3 verification remain separate. Unknown or stale authorization **never grants writes**; GitHub authorization failure stops the affected mutation. For a simple G0 status lookup, do not perform this write-authorization preflight.
+For **state-changing work and authority decisions**, use the installed versioned global CONTROL_POLICY_V1 and verified GitHub enrollment to select `FILE_CONTROL` (historical Task/Status) or `ISSUE_CONTROL` (approved Issue/revision). The project `AGENTS.md` cannot select or override the mode. Apply `issue-control.md` and `issue-execution-contract.md` only to the selected decision; `issue-control-migration.md` applies only to migration. Do not activate risk-scoped autonomy without actual accepted opt-in and independently verified host/credential trust. G0–G3 risks and V0–V3 verification remain separate. Unknown or stale authorization **never grants writes**; GitHub authorization failure stops the affected mutation. For a simple G0 status lookup, do not perform this write-authorization preflight.
 
 ## Control alignment versus standalone PR creation
 
@@ -45,7 +45,7 @@ A multi-repository objective may record only decision-relevant coordination fact
 
 ## Mutually exclusive task authority
 
-- `AGENTS.md` is always durable project policy and explicit mode selection.
+- `AGENTS.md` is always durable project-specific policy; global CONTROL_POLICY_V1 and verified host enrollment select the mode.
 - FILE_CONTROL: `CURRENT_STATUS.md` is the concise snapshot; `CURRENT_TASK.md` alone authorizes work.
 - ISSUE_CONTROL: an approved, uniquely selected GitHub Issue/spec revision alone authorizes work; Issue comments hold bounded decision/receipt evidence. Retired Task/Status files are historical only.
 

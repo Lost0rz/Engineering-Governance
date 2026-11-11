@@ -67,7 +67,7 @@ PENDING
 
 ### DEVIATION_POLICY
 
-<L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE within the fixed objective/risk/effect envelope. Routine G1/G2 comments are optional only after accepted RISK_SCOPED_AUTONOMY opt-in and independent host-grant verification; legacy ISSUE_CONTROL rules remain the default.>
+<L0 CONTINUE, L1 LOCAL_CORRECT, L2 PAUSE_AND_ASK, L3 TERMINATE within the fixed objective/risk/effect envelope. Routine G1/G2 comments are optional only after trusted global CONTROL_POLICY_V1 opt-in and independently verified GitHub host grant/credential separation; legacy ISSUE_CONTROL rules remain the default.>
 
 ### STOP_AND_SAFETY
 
