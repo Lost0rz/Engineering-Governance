@@ -481,6 +481,7 @@ class IssueContractTests(unittest.TestCase):
             mod.verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
                 agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
 
     def test_autonomy_untrusted_grant_actor_stops(self):
@@ -490,6 +491,7 @@ class IssueContractTests(unittest.TestCase):
             mod.verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
                 agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
 
     def test_autonomy_replayed_after_spec_change_stops(self):
@@ -509,6 +511,7 @@ class IssueContractTests(unittest.TestCase):
             mod.verify_autonomy_snapshot(
                 issue(), revoked, repo=REPO, approvers={"Lost0rz"},
                 agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
         expired = autonomy_snapshot()
         expired["issued_at"] = "2026-11-08T00:00:00Z"
