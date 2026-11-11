@@ -28,15 +28,30 @@ SCOPE = (
     ("README.md", "V1", "README is consumed by governance policy tests"),
     ("documents/notes/", "V1", "descriptive notes; targeted policy checks"),
     ("documents/", "V2", "durable design or unknown documentation owner"),
+    # Normative auth/control and test-router entry points must never be downgraded
+    # merely because their change looks like a small Markdown edit.
+    ("skills/project-governance/SKILL.md", "V3", "global governance entry and authorization"),
+    ("skills/project-governance/references/issue-control.md", "V3", "Issue/approval authority contract"),
+    ("skills/project-governance/references/issue-execution-contract.md", "V3", "risk and execution authority"),
+    ("skills/project-governance/references/development-flow.md", "V3", "governed execution authorization"),
+    ("skills/project-governance/references/global-routing.md", "V3", "global authority routing"),
+    ("skills/project-governance/references/control-plane.md", "V3", "control owner and alignment"),
+    ("skills/project-governance/references/issue-control-migration.md", "V3", "trusted enrollment boundary"),
     ("skills/project-governance/references/verification-tiers.md", "V3", "verification policy owner"),
+    ("skills/project-governance/scripts/", "V3", "authorization and verification source/tests"),
+    ("skills/project-governance/assets/control-policy.json", "V3", "versioned global permission policy"),
+    ("skills/project-governance/assets/templates/AGENTS.md", "V3", "project control boundary"),
+    ("skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md", "V3", "global trusted routing"),
+    ("skills/agent-handoff/references/handoff-contract.md", "V3", "handoff never grants authority"),
     (SCRIPT, "V3", "verification selector implementation"),
     ("skills/project-governance/scripts/test_verification_plan.py", "V3", "verification selector test"),
     ("AGENTS.md", "V3", "normative repository authorization"),
     (".github/", "V3", "workflow and trusted host interface"),
     ("skills/", "V2", "reusable Skill contracts or behavior"),
     ("references/", "V2", "shared engineering contracts"),
-    ("plugin.json", "V2", "plugin manifest/package identity"),
-    (".agents/", "V2", "plugin install and marketplace metadata"),
+    ("plugin.json", "V3", "plugin manifest and release identity"),
+    (".agents/", "V3", "plugin installation and marketplace authority"),
+    (".codex-plugin/", "V3", "plugin installation manifest"),
 )
 ESCALATE = (".gitmodules", ".gitattributes", ".gitignore")
 
@@ -136,10 +151,15 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
         skipped = ["policy_contracts", "full_contracts", "package_preview"]
     elif tier == "V1":
         selected.append("policy_contracts")
-        skipped = ["full_contracts", "package_preview"]
+        skipped = ["affected_contracts", "full_contracts", "package_preview"]
+    elif tier == "V2":
+        # Integrate the affected cross-Skill behavior without the entire
+        # security regression or a release artifact on every ordinary edit.
+        selected.append("affected_contracts")
+        skipped = ["policy_contracts_separate", "full_contracts", "package_preview"]
     else:
         selected.extend(["full_contracts", "package_preview"])
-        skipped = ["policy_contracts_separate"]  # covered by full_contracts
+        skipped = ["policy_contracts_separate", "affected_contracts_separate"]
     return {
         "contract": CONTRACT, "base": base, "head": head,
         "tier": tier, "changes": changes, "reasons": reasons,
@@ -193,6 +213,7 @@ def main() -> int:
             flags = {
                 "tier": plan["tier"],
                 "run_policy": str("policy_contracts" in plan["selected"]).lower(),
+                "run_affected": str("affected_contracts" in plan["selected"]).lower(),
                 "run_full": str("full_contracts" in plan["selected"]).lower(),
                 "run_package": str("package_preview" in plan["selected"]).lower(),
                 "scope_status": plan["scope_status"],
