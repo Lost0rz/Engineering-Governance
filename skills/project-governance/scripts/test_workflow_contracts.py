@@ -84,6 +84,23 @@ class WorkflowContractTests(unittest.TestCase):
                 for marker in obsolete:
                     self.assertNotIn(marker, text)
 
+    def test_shared_workflow_and_caller_yaml_syntax_when_ruby_available(self):
+        import shutil
+        import subprocess
+        ruby = shutil.which("ruby")
+        if not ruby:
+            self.skipTest("Ruby YAML parser is unavailable on this host")
+        paths = (
+            ROOT / ".github/workflows/ci-router-reusable.yml",
+            ROOT / "skills/project-governance/assets/examples/ci-caller.example.yml",
+        )
+        for path in paths:
+            with self.subTest(path=path.name):
+                proc = subprocess.run(
+                    [ruby, "-r", "yaml", "-e", "YAML.parse_file(ARGV.fetch(0))",
+                     str(path)], capture_output=True, text=True)
+                self.assertEqual(proc.returncode, 0, proc.stderr)
+
     def test_ci_draft_is_skipped_and_manual_scope_available(self):
         workflow = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text()
         self.assertIn("github.event.pull_request.draft == false", workflow)
