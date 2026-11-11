@@ -42,7 +42,7 @@ A Profile or Domain Map is a derived projection. If it conflicts with its author
 
 ## Governance workflow owner
 
-The reusable engineering workflow is owned by the installed Engineering Governance Skills. `project-governance` is the normal entry; capability selection is maintained in [`global-routing.md`](skills/project-governance/references/global-routing.md), while authorization and approval modes are maintained in [`issue-control.md`](skills/project-governance/references/issue-control.md). This README describes repository capabilities but does not define a separate execution or authorization contract.
+The reusable engineering workflow is owned by the installed Engineering Governance Skills. `project-governance` is the normal entry; capability selection is maintained in [`global-routing.md`](skills/project-governance/references/global-routing.md), while the default control/authorization settings are maintained in versioned [`control-policy.json`](skills/project-governance/assets/control-policy.json), with task/approval trust rules explained by [`issue-control.md`](skills/project-governance/references/issue-control.md). This README describes repository capabilities but does not define a separate execution or authorization contract.
 
 ## Environment policy
 
