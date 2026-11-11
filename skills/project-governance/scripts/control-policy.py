@@ -211,6 +211,62 @@ def source_write_gate(selection: dict, *, user_requested: bool = False,
     raise ControlPolicyError("ISSUE_APPROVAL_HOST_PREFLIGHT_REQUIRED")
 
 
+# This helper classifies one *interactive* user-directed action. Caller-provided
+# booleans, paths or risk labels cannot attest an authenticated user or host grant.
+# Real source writes still require the current runtime's independent authorization.
+SESSION_EFFECTS = frozenset({"source_edit", "focused_test", "task_branch_push", "draft_pr"})
+
+
+def interactive_scope_eligibility(
+    *, repo: str, risk: str, paths: list[str], effects: list[str],
+    explicit_user_request: bool, active_session: bool,
+    host_write_permission: bool, unattended: bool = False,
+) -> dict:
+    """Return a bounded *eligibility plan*, never a transferable write grant."""
+    load_policy()
+    if not _valid_repo(repo):
+        raise ControlPolicyError("INVALID_REPOSITORY")
+    if risk not in ("G1", "G2"):
+        raise ControlPolicyError("SESSION_SCOPE_RISK_NOT_ALLOWED")
+    if unattended:
+        raise ControlPolicyError("INDEPENDENT_PERSISTENT_GRANT_REQUIRED")
+    if explicit_user_request is not True or active_session is not True:
+        raise ControlPolicyError("ACTIVE_USER_REQUEST_REQUIRED")
+    if host_write_permission is not True:
+        raise ControlPolicyError("LIVE_HOST_WRITE_PERMISSION_REQUIRED")
+    if (type(paths) is not list or not paths or len(paths) > 12
+            or len(set(paths)) != len(paths)):
+        raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
+    for path in paths:
+        if (not isinstance(path, str) or path.startswith("/") or "\\\\" in path
+                or any(part in ("", ".", "..") or part.casefold() == ".git"
+                       for part in path.split("/"))
+                or any(ord(ch) < 32 or ord(ch) == 127 for ch in path)
+                or "*" in path or "?" in path):
+            raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
+        if (path in ("AGENTS.md", "plugin.json")
+                or path.startswith((".github/", ".agents/", ".codex-plugin/",
+                                    "skills/project-governance/"))
+                or path == "skills/agent-handoff/references/handoff-contract.md"):
+            raise ControlPolicyError("PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT")
+    if (type(effects) is not list or not effects or len(effects) != len(set(effects))
+            or not all(isinstance(effect, str) and effect in SESSION_EFFECTS
+                       for effect in effects)):
+        raise ControlPolicyError("INVALID_SESSION_EFFECTS")
+    return {
+        "contract": "INTERACTIVE_SCOPE_ELIGIBILITY_V1",
+        "repository": repo, "risk": risk,
+        "paths": paths, "effects": effects,
+        "route": "ACTIVE_SESSION_USER_DIRECT",
+        "per_wp_approval_comment_required": False,
+        "host_action_authorization_required": True,
+        "source_write_authorized": False,
+        "persistent_grant": False,
+        "merge_authorized": False, "release_authorized": False,
+        "status": "ELIGIBLE_ONLY_HOST_PREFLIGHT_REQUIRED",
+    }
+
+
 def web_authoring_eligible(*, explicit_user_request: bool,
                            verified_github_write: bool) -> bool:
     """Eligibility only, never issue/source approval or permission by itself."""
