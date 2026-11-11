@@ -109,8 +109,12 @@ class EG097PolicyContractTests(unittest.TestCase):
         for surface in ("Web-installed", "Codex-installed", "Claude-installed"):
             self.assertIn(surface, adoption)
         workflow = self.read(".github/workflows/governance-contract-checks.yml")
-        for path in ("'plugin.json'", "'AGENTS.md'", "'.agents/plugins/**'"):
-            self.assertIn(path, workflow)
+        self.assertIn("pull_request:", workflow)
+        self.assertIn("name: Python governance contracts", workflow)
+        self.assertIn("fetch-depth: 0", workflow)
+        self.assertIn("trusted-verification-plan.py", workflow)
+        self.assertIn("git show", workflow)
+        self.assertIn("run_full", workflow)
 
     def test_compact_scope_is_separate_from_legacy_approval(self):
         source = self.read("skills/project-governance/scripts/issue-spec-check.py")
