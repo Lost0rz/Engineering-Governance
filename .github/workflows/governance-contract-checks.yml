@@ -1,16 +1,9 @@
 name: Governance Contract Checks
 
+# One stable required status on every PR. The verification plan chooses tests;
+# the workflow must never skip the entire status context.
 on:
   pull_request:
-    paths:
-      - 'skills/**'
-      - 'documents/**'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.github/workflows/governance-contract-checks.yml'
-      - 'README.md'
-      - 'AGENTS.md'
-      - 'plugin.json'
-      - '.agents/plugins/**'
   workflow_dispatch:
 
 permissions:
@@ -22,24 +15,93 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out exact PR source
+      - name: Check out exact PR source and full trusted history
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
           persist-credentials: false
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Select verification from protected base policy
+        id: scope
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          SELECTOR="skills/project-governance/scripts/verification-plan.py"
+          PLAN_PATH="$RUNNER_TEMP/verification-plan.json"
+          fallback_full() {
+            echo "::warning::Trusted base verification selector not available or evidence invalid; running full contracts."
+            {
+              echo "tier=V3"
+              echo "run_policy=false"
+              echo "run_full=true"
+              echo "run_package=true"
+              echo "scope_status=SCOPE_GATE_FALLBACK_FULL"
+            } >> "$GITHUB_OUTPUT"
+            echo '{"contract":"VERIFICATION_PLAN_V1","tier":"V3","scope_status":"SCOPE_GATE_FALLBACK_FULL","selected":["static_scope","full_contracts","package_preview"],"skipped":[],"test_status":"TESTS_PENDING","full_suite_claim":false}' > "$PLAN_PATH"
+          }
+          if [[ "$GITHUB_EVENT_NAME" != "pull_request" || -z "$BASE_SHA" || -z "$HEAD_SHA" ]]; then
+            fallback_full
+          elif ! git cat-file -e "$BASE_SHA:$SELECTOR" 2>/dev/null; then
+            fallback_full
+          else
+            # The selector is read from the accepted base, never from the PR head.
+            git show "$BASE_SHA:$SELECTOR" > "$RUNNER_TEMP/trusted-verification-plan.py"
+            if python3 "$RUNNER_TEMP/trusted-verification-plan.py" \
+                --repo-root "$GITHUB_WORKSPACE" \
+                --base "$BASE_SHA" --head "$HEAD_SHA" \
+                --output "$PLAN_PATH" --github-output "$GITHUB_OUTPUT"; then
+              echo "Verification routed by trusted base."
+            else
+              fallback_full
+            fi
+          fi
+          cat "$PLAN_PATH" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Static manifest and repository authority checks
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path(".")
+          for name in ("plugin.json", ".agents/plugins/marketplace.json"):
+              data = json.loads((root / name).read_text(encoding="utf-8"))
+              assert isinstance(data, dict), name
+          agents = (root / "AGENTS.md").read_text(encoding="utf-8")
+          assert agents.splitlines().count("CONTROL_MODE: ISSUE_CONTROL") == 1
+          assert agents.splitlines().count("ISSUE_APPROVERS: Lost0rz") == 1
+          assert agents.splitlines().count("ISSUE_WEB_SPEC_AUTHORING: ENABLED") <= 1
+          PY
+
       - name: Compile governance checker and tests
+        if: steps.scope.outputs.run_full == 'true'
         run: python3 -m compileall -q skills/project-governance/scripts
-      - name: Validate plugin manifest and marketplace JSON
-        run: python3 -c 'import json,pathlib; files=["plugin.json",".agents/plugins/marketplace.json"]; [json.loads(pathlib.Path(p).read_text(encoding="utf-8")) for p in files]'
-      - name: Run focused governance contract tests
+
+      - name: Run scoped governance policy contracts
+        if: steps.scope.outputs.run_policy == 'true'
+        run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_eg097_policy_contracts.py' -v
+
+      - name: Run full governance contract tests
+        if: steps.scope.outputs.run_full == 'true'
         run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v
 
+      - name: Report intentionally skipped test coverage
+        if: steps.scope.outputs.run_full != 'true'
+        shell: bash
+        run: |
+          echo "SCOPE_GATE_PASS / TESTS_SKIPPED — not FULL_TESTS_PASS" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build versioned Web preview package
-        if: success()
+        if: steps.scope.outputs.run_package == 'true'
         run: |
           python3 - <<'PY'
           import json
@@ -47,11 +109,11 @@ jobs:
           from pathlib import Path
           import zipfile
 
-          version = "0.8.4"
           repo = Path(".")
           original = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
           assert original["name"] == "engineering-governance"
-          original["version"] = version
+          version = original["version"]  # single canonical version owner
+          assert version and isinstance(version, str)
 
           codex_manifest = {
               "interface": {
@@ -86,8 +148,9 @@ jobs:
           print(f"WEB_PREVIEW_SOURCE_SHA={head}")
           print(f"WEB_PREVIEW_FILE_COUNT={len(entries) + 3}")
           PY
+
       - name: Upload Web preview package (artifact only; no release)
-        if: success()
+        if: steps.scope.outputs.run_package == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: engineering-governance-web-preview
