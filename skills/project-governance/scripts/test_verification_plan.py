@@ -37,8 +37,11 @@ class VerificationPlanTests(unittest.TestCase):
         self.assertIn("policy_contracts", p["selected"])
         self.assertNotIn("full_contracts", p["selected"])
 
-    def test_descriptive_planning_document_is_v1(self):
-        self.assertEqual(route(change("documents/plans/notes.md"))["tier"], "V1")
+    def test_descriptive_notes_document_is_v1(self):
+        self.assertEqual(route(change("documents/notes/plain.md"))["tier"], "V1")
+
+    def test_durable_design_document_is_v2(self):
+        self.assertEqual(route(change("documents/plans/architecture.md"))["tier"], "V2")
 
     def test_shared_skill_changes_are_v2(self):
         self.assertEqual(route(change("skills/agent-handoff/SKILL.md"))["tier"], "V2")
@@ -161,6 +164,32 @@ class VerificationPlanTests(unittest.TestCase):
             plan = mod.collect(root, base, head)
             self.assertEqual(plan["tier"], "V1")
             self.assertEqual(plan["selected"], ["static_scope", "policy_contracts"])
+
+
+    def test_deleted_symlink_is_v3_using_base_tree_modes(self):
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", tmp, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+            git("init", "-q")
+            git("config", "user.email", "tests@example.invalid")
+            git("config", "user.name", "Scoped Test")
+            folder = root / "documents" / "archive"
+            folder.mkdir(parents=True)
+            path = folder / "linked.md"
+            path.symlink_to("outside.md")
+            git("add", "-A")
+            git("commit", "-qm", "base symlink")
+            base = git("rev-parse", "HEAD")
+            path.unlink()
+            git("add", "-A")
+            git("commit", "-qm", "delete symlink")
+            head = git("rev-parse", "HEAD")
+            self.assertEqual(mod.collect(root, base, head)["tier"], "V3")
 
 
 
