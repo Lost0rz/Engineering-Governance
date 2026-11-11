@@ -114,6 +114,12 @@ jobs:
               fi
             fi
           fi
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] && \
+             [[ "$stage" == "ready" || "$stage" == "milestone" ]] && \
+             [[ "$BASE_SHA" == "$HEAD_SHA" ]]; then
+            echo "::error::Affected verification requires comparison_base different from tested HEAD."
+            exit 2
+          fi
           test -n "$BASE_SHA" && test -n "$CONFIG_REF"
           python3 governance/skills/project-governance/scripts/ci-router.py plan \
             --repo-root project --base "$BASE_SHA" --head "$HEAD_SHA" \

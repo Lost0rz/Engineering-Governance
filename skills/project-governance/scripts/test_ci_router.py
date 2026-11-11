@@ -343,6 +343,7 @@ class GeneralRouterTests(unittest.TestCase):
             git("commit", "-qm", "baseline")
             head = git("rev-parse", "HEAD")
             git("update-ref", "refs/remotes/origin/main", head)
+            git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
             proc = subprocess.run(
                 [sys.executable, str(SCRIPT), "run", "--repo-root", d,
                  "--base", head, "--head", head, "--stage", "focused",
@@ -496,6 +497,7 @@ class GeneralRouterTests(unittest.TestCase):
             git("commit", "-qm", "accepted")
             accepted = git("rev-parse", "HEAD")
             git("update-ref", "refs/remotes/origin/main", accepted)
+            git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
             config["tests"][0]["command"] = [sys.executable, "-c", "print('BAD_UNTRUSTED')"]
             path.write_text(json.dumps(config))
             git("add", "-A")
@@ -520,6 +522,97 @@ class GeneralRouterTests(unittest.TestCase):
                 "--config-ref", task], capture_output=True, text=True)
             self.assertNotEqual(mismatch.returncode, 0)
             self.assertIn("TRUSTED_CONFIG_REF_MISMATCH", mismatch.stderr)
+
+    def test_local_run_automatically_includes_dirty_worktree(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            cfg = {"contract": "EG_CI_CAPABILITIES_V1", "tests": [{
+                "id": "probe", "tier": "V1", "runner": ["ubuntu-latest"],
+                "paths": ["src/**"], "command": [sys.executable, "-c", "print('PASS')"]}]}
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            (repo / "src").mkdir()
+            (repo / "src/file.py").write_text("print('original')")
+            git("add", "-A")
+            git("commit", "-qm", "baseline")
+            head = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/main", head)
+            git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+            (repo / "src/file.py").write_text("print('edited')")
+            (repo / "src/untracked.py").write_text("print('untracked')")
+            run = subprocess.run([
+                sys.executable, str(SCRIPT), "run", "--repo-root", d,
+                "--base", head, "--head", head, "--stage", "milestone",
+                "--trusted-ref", "refs/remotes/origin/main"],
+                capture_output=True, text=True)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            plan = json.loads(run.stdout)
+            self.assertTrue(plan["worktree_included"])
+            self.assertEqual(plan["changed_paths"], ["src/file.py", "src/untracked.py"])
+            self.assertEqual(plan["selected_test_ids"], ["probe"])
+            self.assertEqual(plan["tested_checkout_head"], head)
+            self.assertEqual(plan["test_status"], "PASS")
+            # The user-supplied identity must be this checkout, not an older SHA.
+            git("commit", "--allow-empty", "-qm", "later")
+            drift = subprocess.run([
+                sys.executable, str(SCRIPT), "run", "--repo-root", d,
+                "--base", head, "--head", head, "--stage", "focused",
+                "--focused", "probe", "--trusted-ref", "refs/remotes/origin/main"],
+                capture_output=True, text=True)
+            self.assertNotEqual(drift.returncode, 0)
+            self.assertIn("WORKTREE_HEAD_MISMATCH", drift.stderr)
+
+    def test_local_trusted_ref_must_match_default_branch(self):
+        import sys
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            cfg = {"contract": "EG_CI_CAPABILITIES_V1", "tests": [{
+                "id": "probe", "tier": "V1", "runner": ["ubuntu-latest"],
+                "paths": ["src/**"], "command": [sys.executable, "-c", "pass"]}]}
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "baseline")
+            head = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/main", head)
+            git("update-ref", "refs/remotes/origin/feature", head)
+            git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+            args = [sys.executable, str(SCRIPT), "run", "--repo-root", d,
+                    "--base", head, "--head", head,
+                    "--stage", "focused", "--focused", "probe"]
+            wrong = subprocess.run(args + [
+                "--trusted-ref", "refs/remotes/origin/feature"],
+                capture_output=True, text=True)
+            self.assertNotEqual(wrong.returncode, 0)
+            self.assertIn("TRUSTED_REF_NOT_DEFAULT_BRANCH", wrong.stderr)
+            mismatch = subprocess.run(args + [
+                "--trusted-ref", "refs/remotes/origin/main", "--default-branch", "feature"],
+                capture_output=True, text=True)
+            self.assertNotEqual(mismatch.returncode, 0)
+            self.assertIn("DEFAULT_BRANCH_IDENTITY_MISMATCH", mismatch.stderr)
+            git("symbolic-ref", "--delete", "refs/remotes/origin/HEAD")
+            unknown = subprocess.run(args + [
+                "--trusted-ref", "refs/remotes/origin/main"],
+                capture_output=True, text=True)
+            self.assertNotEqual(unknown.returncode, 0)
+            self.assertIn("DEFAULT_BRANCH_UNKNOWN_USE_DEFAULT_BRANCH", unknown.stderr)
+            explicit = subprocess.run(args + [
+                "--trusted-ref", "refs/remotes/origin/main", "--default-branch", "main"],
+                capture_output=True, text=True)
+            self.assertEqual(explicit.returncode, 0, explicit.stderr)
 
     def test_comparison_base_and_accepted_config_revision_are_independent(self):
         import sys

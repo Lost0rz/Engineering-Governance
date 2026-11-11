@@ -455,7 +455,8 @@ def main():
     p.add_argument("--config-path", default=".github/ci-capabilities.json")
     p.add_argument("--config-source", choices=("base", "file"), default="base")
     p.add_argument("--config-ref", default="", help="Accepted config commit (independent of comparison base)")
-    p.add_argument("--trusted-ref", default="", help="Required for local run, e.g. refs/remotes/origin/main")
+    p.add_argument("--trusted-ref", default="", help="Accepted origin default branch ref for local run")
+    p.add_argument("--default-branch", default="", help="Host-declared default branch when origin/HEAD is unavailable")
     p.add_argument("--stage", choices=STAGES, default="ready")
     p.add_argument("--worktree", action="store_true", help="Include staged, unstaged and untracked changes in local mode")
     p.add_argument("--source-trust", choices=("internal", "fork"), default="internal")
@@ -468,11 +469,13 @@ def main():
         if args.mode == "discover":
             result = discover(args.repo_root)
         else:
-            if args.worktree and args.github_output:
+            include_worktree = args.worktree or args.mode == "run"
+            if include_worktree and args.github_output:
                 raise RouteError("WORKTREE_NOT_ALLOWED_IN_GITHUB")
-            changed = changes(args.repo_root, args.base, args.head, include_worktree=args.worktree)
+            changed = changes(args.repo_root, args.base, args.head,
+                              include_worktree=include_worktree)
             special = nonregular_changes(args.repo_root, args.base, args.head,
-                                         include_worktree=args.worktree)
+                                         include_worktree=include_worktree)
             if args.mode == "run" and args.config_source != "base":
                 raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
             config_ref = args.config_ref or args.base
@@ -483,6 +486,26 @@ def main():
                 if not args.trusted_ref.startswith(prefix) or not safe_path(
                         args.trusted_ref[len(prefix):]):
                     raise RouteError("LOCAL_RUN_REQUIRES_TRUSTED_REMOTE_REF")
+                # Prefer the actual default branch advertised by origin/HEAD.
+                # A host can declare it explicitly for clones without that ref.
+                try:
+                    remote_default = git(
+                        args.repo_root, "symbolic-ref", "-q",
+                        "refs/remotes/origin/HEAD").decode().strip()
+                except RouteError:
+                    remote_default = ""
+                if args.default_branch:
+                    if not safe_path(args.default_branch):
+                        raise RouteError("INVALID_DEFAULT_BRANCH")
+                    declared_default = prefix + args.default_branch
+                    if remote_default and declared_default != remote_default:
+                        raise RouteError("DEFAULT_BRANCH_IDENTITY_MISMATCH")
+                elif remote_default:
+                    declared_default = remote_default
+                else:
+                    raise RouteError("DEFAULT_BRANCH_UNKNOWN_USE_DEFAULT_BRANCH")
+                if args.trusted_ref != declared_default:
+                    raise RouteError("TRUSTED_REF_NOT_DEFAULT_BRANCH")
                 trusted_sha = git(args.repo_root, "rev-parse", "--verify",
                                   "--end-of-options", args.trusted_ref + "^{commit}")
                 config_ref = trusted_sha.decode().strip()
@@ -494,12 +517,15 @@ def main():
                             args.head, digest, args.focused, args.config_path,
                             args.source_trust, special)
             result["config_ref"] = config_ref if args.config_source == "base" else "LOCAL_FILE"
+            result["worktree_included"] = include_worktree
+            if args.mode == "run":
+                result["tested_checkout_head"] = args.head
             if args.config_source == "base" and args.config_path in changed:
                 # Validate the candidate as data, never run its new commands.
                 # Local worktree changes may not yet be committed.
                 proposed, proposed_digest = load(
-                    args.repo_root, args.head if not args.worktree else "",
-                    args.config_path, "file" if args.worktree else "base")
+                    args.repo_root, args.head if not include_worktree else "",
+                    args.config_path, "file" if include_worktree else "base")
                 result["proposed_catalog_status"] = "VALIDATED_NOT_EXECUTED"
                 result["proposed_config_sha256"] = proposed_digest
             if args.mode == "run":

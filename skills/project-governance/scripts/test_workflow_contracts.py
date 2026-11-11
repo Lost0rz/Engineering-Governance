@@ -101,6 +101,14 @@ class WorkflowContractTests(unittest.TestCase):
                      str(path)], capture_output=True, text=True)
                 self.assertEqual(proc.returncode, 0, proc.stderr)
 
+    def test_scoped_ci_prevents_empty_comparison_and_offers_router_test(self):
+        workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
+        self.assertIn('[[ "$BASE_SHA" == "$HEAD_SHA" ]]', workflow)
+        self.assertIn("Affected verification requires comparison_base different", workflow)
+        own_ci = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text()
+        self.assertIn("          - test_ci_router.py", own_ci)
+        self.assertIn("test_verification_plan.py|test_ci_router.py) ;;", own_ci)
+
     def test_ci_draft_is_skipped_and_manual_scope_available(self):
         workflow = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text()
         self.assertIn("github.event.pull_request.draft == false", workflow)

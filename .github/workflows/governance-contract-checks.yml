@@ -25,6 +25,7 @@ on:
         options:
           - test_workflow_contracts.py
           - test_verification_plan.py
+          - test_ci_router.py
       package_preview:
         description: "Build optional preview independently of test scope"
         type: boolean
@@ -168,7 +169,7 @@ jobs:
         run: |
           set -euo pipefail
           case "$FOCUSED_SUITE" in
-            test_workflow_contracts.py|test_verification_plan.py) ;;
+            test_workflow_contracts.py|test_verification_plan.py|test_ci_router.py) ;;
             *) echo "::error::Focused suite not in allowed list"; exit 2;;
           esac
           python3 -m unittest discover -s skills/project-governance/scripts -p "$FOCUSED_SUITE" -v
