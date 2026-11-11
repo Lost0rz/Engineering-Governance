@@ -84,7 +84,7 @@ Record:
 
 ## DESIGN_SPEC completion (only when claimed)
 
-Ensure the task-level design is grounded, implementable, does not change protected state/data authority and has met its pre-build design gate. A standalone specification does not grant implementation authorization. The evidence fields below are optional receipt detail, not a universal visible checklist.
+Ensure the task-level design is grounded, implementable, does not change protected state/data authority and has resolved material open design questions before implementation. A standalone specification does not grant implementation authorization. The evidence fields below are optional receipt detail, not a universal visible checklist.
 
 ### `DESIGN_SPEC`
 

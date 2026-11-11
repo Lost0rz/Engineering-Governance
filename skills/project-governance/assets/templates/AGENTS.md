@@ -1,28 +1,15 @@
-# Project-specific engineering rules
+# Project-specific engineering context
 
-This file is reserved for the target project's own business, architecture,
-domain ownership, data integrity, runtime constraints, and project-specific
-security requirements. Do not add governance control-mode, approver, Issue
-authoring, delegated-approval or autonomy configuration in this file.
+State this project's stable product/domain constraints, canonical code and runtime/data safety rules. Keep sources and tests owned by the project.
 
-## Project architecture and domain boundaries
+Shared task methods, Skill routing, Issue coordination, verification tiers and host permissions belong to the installed Engineering Governance plugin and actual runtime; do not copy global workflow rules here.
 
-[Document the product's canonical source, storage ownership, APIs, and data flows.]
+## Project ownership
 
-## Project-specific safety requirements
+- Product/domain facts:
+- Canonical source/API/schema owners:
+- Runtime and data safety constraints:
+- Relevant verification commands:
+- Human acceptance or deployment constraints specific to this product:
 
-[Describe unique irreversible data operations, credentials and permissions,
-production runtime boundaries, and human acceptance requirements.]
-
-## Local commands and scoped verification
-
-[Document commands and project-owned test dependencies, without duplicating
-V0-V3 verification policy or GitHub Actions governance rules.]
-
-## Canonical project references
-
-[Link to the project's actual design, Domain Map and durable product contracts.]
-
-Reusable workflow, task authorization, verification selection and lifecycle are
-owned by the installed Engineering Governance Skills and their versioned
-CONTROL_POLICY_V1. Project markdown cannot enable or override governance grants.
+Keep this file concise. Link authoritative project docs rather than repeating the plugin.

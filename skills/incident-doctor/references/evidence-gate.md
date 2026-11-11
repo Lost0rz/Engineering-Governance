@@ -4,7 +4,7 @@ Complete these steps in order before adding any probe or diagnostic instrumentat
 
 1. **Blocked Question:** State the specific next decision that cannot yet be made safely.
 2. **Real Observed Problem:** Describe the real failure, unexplained behavior, or unsafe ambiguity that makes the question relevant. Keep a user report labeled as a report until directly observed.
-3. **Existing Evidence Review:** Inspect what applies: selected FILE_CONTROL Task, approved ISSUE_CONTROL Issue/spec revision or current USER-directed bounded G1/G2 task independently verified in this host, source, tests, runtime identity, build identity, configuration, canonical state, logs, prior captures, accepted semantic-authority sources, and existing navigation evidence. Record source identity, revision, and freshness where relevant; do not assume unlike captures belong to one event. If the relevant authority/code/symbol/test location is unclear, Domain Navigation may be used only to locate and verify candidate evidence; it does not decide the diagnosis.
+3. **Existing Evidence Review:** Inspect what applies: current trusted user objective, optional Issue/PR plan and actual host/tool write permissions, source, tests, runtime identity, build identity, configuration, canonical state, logs, prior captures, accepted semantic-authority sources, and existing navigation evidence. Record source identity, revision, and freshness where relevant; do not assume unlike captures belong to one event. If the relevant authority/code/symbol/test location is unclear, Domain Navigation may be used only to locate and verify candidate evidence; it does not decide the diagnosis.
 4. **Evidence Sufficiency Decision:** Decide whether the reviewed evidence supports the next safe decision, and state why.
 5. **Missing Fact, if any:** If evidence is insufficient, name one concrete `MISSING_FACT` that is not established.
 6. **Decision Blocked by that Missing Fact:** State the exact `BLOCKED_DECISION` that cannot be made safely because that fact is missing. “Need more logs” is not a fact or an adequate gap; say what those logs must establish.
@@ -18,7 +18,7 @@ Choose `SUFFICIENT` when existing evidence supports the relevant safe next decis
 
 **NO NEW PROBE.** Do not instrument merely to make diagnostics more complete.
 
-Evidence sufficiency does not grant task authorization. Before any state-changing fix or side effect, check the mode-selected current task authorization. If the needed change is not already authorized, return to Project Governance for reconciliation/re-authorization before changing behavior.
+Evidence sufficiency does not grant task authorization. Before a state-changing fix, use the current trusted user task and real host permissions. Continue in-scope corrections directly; ask the user only for a material objective, privilege, security or irreversible-effect change.
 
 ### INSUFFICIENT
 

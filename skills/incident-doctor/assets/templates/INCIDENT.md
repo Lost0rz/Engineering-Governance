@@ -28,7 +28,7 @@ Record applicable identities and mark missing values `unknown`: `REPOSITORY_REVI
 
 ## Existing Evidence
 
-[Evidence reviewed as applicable: `CURRENT_TASK.md`, source, tests, runtime/build/configuration, canonical state, logs, prior captures, accepted semantic-authority sources, and existing navigation evidence. Cite paths/identities, revision or observation time, and freshness. If code/authority location was unclear, Domain Navigation may be cited only as the route used to locate evidence; it does not decide diagnosis.]
+[Evidence reviewed as applicable: current user objective or Issue/PR plan (when relevant), source, tests, runtime/build/configuration, canonical state, logs, prior captures, accepted semantic-authority sources, and existing navigation evidence. Cite paths/identities, revision or observation time, and freshness. If code/authority location was unclear, Domain Navigation may be cited only as the route used to locate evidence; it does not decide diagnosis.]
 
 ## Evidence Sufficiency Decision
 
@@ -102,7 +102,7 @@ Explain why existing evidence cannot answer the question. Prefer read-only canon
 
 ## Authorization / Next Owner
 
-[State whether the active `CURRENT_TASK.md` already authorizes the minimum fix and required side effects. If not, record `RETURN_TO_PROJECT_GOVERNANCE_FOR_REAUTHORIZATION` before any behavior change. Incident Doctor does not grant authorization itself.]
+[State whether the current trusted task and host permissions cover the minimum fix. Continue ordinary in-scope corrections; request a user decision only for material new scope, privilege, security or irreversible effects. The incident record itself does not grant write permission.]
 
 ## Regression Verification
 

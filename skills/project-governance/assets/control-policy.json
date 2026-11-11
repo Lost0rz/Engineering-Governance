@@ -1,12 +1,10 @@
 {
-  "contract": "CONTROL_POLICY_V1",
-  "default_mode": "ISSUE_CONTROL",
-  "unenrolled_mode": "FILE_CONTROL",
-  "enrollment_authority": "GITHUB_VERIFIED_MERGED_MIGRATION",
-  "approver_authority": "GITHUB_VERIFIED_ACCOUNT_AND_OWNER_POLICY",
-  "web_issue_authoring": "EXPLICIT_USER_REQUEST_AND_HOST_WRITE",
-  "delegated_approval": "DISABLED",
-  "risk_scoped_autonomy": "DISABLED",
+  "contract": "CONTROL_POLICY_V2",
+  "task_authority": "CURRENT_HOST_AUTHENTICATED_USER_AND_TOOL_PERMISSION",
+  "issue_role": "OPTIONAL_PLANNING_AND_CROSS_CONTEXT_EVIDENCE",
+  "workflow": "OUTCOME_ROUTED_PROPORTIONAL_VERIFICATION",
   "require_host_authority_for_writes": true,
+  "escalate_only": "MATERIAL_SCOPE_PRIVILEGE_SECURITY_OR_IRREVERSIBLE_EFFECT",
+  "unattended_grants": "NOT_PROVIDED_BY_PLUGIN",
   "project_agents_control_selectors": "IGNORED"
 }

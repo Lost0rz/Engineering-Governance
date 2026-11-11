@@ -1,13 +1,13 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-governance",
-  "version": "0.9.0",
-  "description": "Engineering Governance for repository engineering: source-grounded plans, approved GitHub Issue execution, construction/execution cards (施工卡), audit/review cards (审计卡), local Codex handoffs and execution receipts, with explicit routing and receiver preflight.",
+  "version": "0.10.0",
+  "description": "Reusable AI engineering Skill routing, practical work methods, optional Issue collaboration and proportionate verification. User/host permissions govern actual writes.",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Engineering Governance",
-        "shortDescription": "Engineering plans, Issue approvals, Codex construction/audit handoffs, and verified receipts."
+        "shortDescription": "Engineering Skills, optional issue plans and focused verification."
       }
     }
   }

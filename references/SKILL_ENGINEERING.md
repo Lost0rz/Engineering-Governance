@@ -37,7 +37,7 @@ Project Profile must not trigger merely because a project exists; normal develop
 
 ## Authority discipline
 
-No Skill may create a hidden replacement for project `AGENTS.md`, `CURRENT_STATUS.md`, `CURRENT_TASK.md`, accepted product/domain/data/runtime truth or durable planning authority.
+No Skill may create a hidden replacement for project `AGENTS.md`, accepted product/domain/data/runtime truth, the current user task or the actual GitHub Issue/PR evidence. Shared plans and derived artifacts do not grant credentials or define additional approval stages.
 
 Derived Profile/Domain projections and transport/evidence artifacts remain non-authoritative. Environment-specific runtime observations remain evidence about that environment, not reusable Plugin defaults.
 

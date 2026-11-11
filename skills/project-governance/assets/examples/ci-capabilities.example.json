@@ -1,0 +1,96 @@
+{
+  "contract": "EG_CI_CAPABILITIES_V1",
+  "documentation_paths": [
+    "README.md",
+    "docs/**"
+  ],
+  "fallback_tests": [
+    "contract-smoke"
+  ],
+  "tests": [
+    {
+      "id": "swift-focused",
+      "tier": "V1",
+      "paths": [
+        "remote-orbit/Sources/**",
+        "remote-orbit/Tests/**"
+      ],
+      "runner": [
+        "self-hosted",
+        "macOS",
+        "ARM64",
+        "remoteorbit"
+      ],
+      "cwd": "remote-orbit",
+      "command": [
+        "swift",
+        "test",
+        "--filter",
+        "KeyMappingTests"
+      ],
+      "timeout_minutes": 25
+    },
+    {
+      "id": "web-focused",
+      "tier": "V2",
+      "paths": [
+        "apps/web/**",
+        "packages/shared/**"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "setup": [
+        [
+          "npm",
+          "ci"
+        ]
+      ],
+      "command": [
+        "npm",
+        "run",
+        "test:web"
+      ],
+      "timeout_minutes": 20,
+      "fork_safe": true
+    },
+    {
+      "id": "backend-focused",
+      "tier": "V2",
+      "paths": [
+        "backend/**"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "command": [
+        "python3",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q"
+      ],
+      "timeout_minutes": 25
+    },
+    {
+      "id": "contract-smoke",
+      "tier": "V3",
+      "paths": [
+        "scripts/ci/**",
+        ".github/ci-capabilities.json"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "command": [
+        "python3",
+        "-m",
+        "compileall",
+        "-q",
+        "backend"
+      ],
+      "timeout_minutes": 10
+    }
+  ],
+  "fallback_satisfies_ready": false
+}
