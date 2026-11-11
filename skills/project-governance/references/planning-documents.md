@@ -2,7 +2,7 @@
 
 Use a durable planning/design document only when long-lived context materially helps more than one bounded execution decision. Reuse an accepted architecture/product/design authority when one already owns this role; `documents/**` is a default pattern only when the target project has no better authority.
 
-A planning/design document never independently authorizes execution. `AGENTS.md` selects FILE_CONTROL (legacy Task/Status) or ISSUE_CONTROL (approved selected Issue/spec revision) as the sole task authority.
+A planning/design document never independently authorizes execution. Global `CONTROL_POLICY_V1` and independently verified GitHub enrollment select FILE_CONTROL (legacy Task/Status) or ISSUE_CONTROL (approved selected Issue/spec revision) as the sole task authority. Project `AGENTS.md` remains project-specific.
 
 ## Ownership model
 
@@ -90,7 +90,7 @@ If a current Project Profile surface exists and is cheap/available, it may be re
 For actual authority-sensitive decisions, progressively read as needed:
 
 1. applicable `AGENTS.md`;
-2. task authority by `CONTROL_MODE`: FILE_CONTROL Task/Status, or ISSUE_CONTROL selected approved Issue/spec revision;
+2. task authority selected by plugin CONTROL_POLICY_V1 and trusted host enrollment: FILE_CONTROL Task/Status, or ISSUE_CONTROL selected approved Issue/spec revision;
 3. relevant Issue decisions/receipts or file-state evidence, as applicable;
 4. the task's bounded related design/plan when present;
 5. additional Domain/source/runtime/evidence only as needed.
