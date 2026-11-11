@@ -73,6 +73,13 @@ jobs:
           import json
           from pathlib import Path
           root = Path(".")
+          # A single current read-only CI workflow owns verification. Historical
+          # per-version release Actions must never re-enter the active tree.
+          active_workflows = sorted(
+              file.name for file in (root / ".github/workflows").iterdir()
+              if file.is_file() and file.suffix in (".yml", ".yaml")
+          )
+          assert active_workflows == ["governance-contract-checks.yml"], active_workflows
           for name in ("plugin.json", ".agents/plugins/marketplace.json"):
               data = json.loads((root / name).read_text(encoding="utf-8"))
               assert isinstance(data, dict), name
