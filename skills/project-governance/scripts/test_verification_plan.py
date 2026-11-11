@@ -111,6 +111,58 @@ class VerificationPlanTests(unittest.TestCase):
         self.assertEqual(p["policy_source"], "TRUSTED_BASE")
         self.assertEqual(p["scope_status"], "SCOPE_GATE_PASS")
 
+    def test_real_git_diff_and_rename_include_previous_identity(self):
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", tmp, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+            git("init", "-q")
+            git("config", "user.email", "tests@example.invalid")
+            git("config", "user.name", "Scoped Test")
+            (root / "AGENTS.md").write_text("accepted authority\n", encoding="utf-8")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            (root / "documents" / "archive").mkdir(parents=True)
+            (root / "AGENTS.md").rename(root / "documents" / "archive" / "old.md")
+            git("add", "-A")
+            git("commit", "-qm", "rename")
+            head = git("rev-parse", "HEAD")
+            plan = mod.collect(root, base, head)
+            self.assertEqual(plan["tier"], "V3")
+            self.assertEqual(plan["base"], base)
+            self.assertEqual(plan["head"], head)
+            self.assertEqual(plan["changes"][0]["previous_path"], "AGENTS.md")
+
+    def test_real_git_diff_and_scope_select_readme_v1(self):
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", tmp, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+            git("init", "-q")
+            git("config", "user.email", "tests@example.invalid")
+            git("config", "user.name", "Scoped Test")
+            (root / "README.md").write_text("description\n", encoding="utf-8")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            (root / "README.md").write_text("new description\n", encoding="utf-8")
+            git("add", "-A")
+            git("commit", "-qm", "change")
+            head = git("rev-parse", "HEAD")
+            plan = mod.collect(root, base, head)
+            self.assertEqual(plan["tier"], "V1")
+            self.assertEqual(plan["selected"], ["static_scope", "policy_contracts"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
