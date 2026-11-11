@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """CONTROL_POLICY_V1 invariants; no real GitHub operations in unit tests."""
+import base64
 import importlib.util
 import json
 import unittest
@@ -45,10 +46,12 @@ class GlobalControlPolicyTests(unittest.TestCase):
             [{"filename": "AGENTS.md"}],
             {"commit": {"sha": final}},
             {"status": "ahead"},
+            {"type": "file", "encoding": "base64", "content": base64.b64encode(
+                b"# Project facts only\\n").decode("ascii")},
         ]
         with patch.object(policy, "_gh_api", side_effect=events) as gh:
             r = policy.select_control("Lost0rz/Engineering-Governance", migration_pr=41)
-        self.assertEqual(gh.call_count, 4)
+        self.assertEqual(gh.call_count, 5)
         self.assertEqual(r["mode"], "ISSUE_CONTROL")
         self.assertEqual(r["source"], "LIVE_GITHUB_HOST")
         self.assertFalse(r["execution_authorized"])
@@ -95,6 +98,42 @@ class GlobalControlPolicyTests(unittest.TestCase):
         with patch.object(policy, "_gh_api", side_effect=events):
             with self.assertRaisesRegex(policy.ControlPolicyError, "MIGRATION_DIFF_NOT_VERIFIED"):
                 policy.verify_migration("Lost0rz/Engineering-Governance", 123)
+
+    def test_old_control_selectors_on_accepted_main_are_not_migrated(self):
+        sha = "a" * 40
+        accepted = b"CONTROL_MODE: ISSUE_CONTROL\\nISSUE_APPROVERS: owner\\n"
+        events = [
+            {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+             "body": "EG_CONTROL_MIGRATION_V1",
+             "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
+            [{"filename": "AGENTS.md"}],
+            {"commit": {"sha": "b" * 40}},
+            {"status": "ahead"},
+            {"type": "file", "encoding": "base64",
+             "content": base64.b64encode(accepted).decode("ascii")},
+        ]
+        with patch.object(policy, "_gh_api", side_effect=events):
+            with self.assertRaisesRegex(
+                policy.ControlPolicyError, "PROJECT_CONTROL_SELECTORS_NOT_MIGRATED"
+            ):
+                policy.verify_migration("Lost0rz/Engineering-Governance", 41)
+
+    def test_accepted_main_agreement_requires_verifiable_file(self):
+        sha = "a" * 40
+        events = [
+            {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+             "body": "EG_CONTROL_MIGRATION_V1",
+             "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
+            [{"filename": "AGENTS.md"}],
+            {"commit": {"sha": "b" * 40}},
+            {"status": "ahead"},
+            {"type": "file", "encoding": "none", "content": "not authenticated"},
+        ]
+        with patch.object(policy, "_gh_api", side_effect=events):
+            with self.assertRaisesRegex(
+                policy.ControlPolicyError, "ACCEPTED_PROJECT_RULES_UNVERIFIED"
+            ):
+                policy.verify_migration("Lost0rz/Engineering-Governance", 41)
 
     def test_invalid_repositories_and_numbers_stop(self):
         for repo in ("", "../Merloom", "foo", "owner/repo/extra", "a;rm -rf /b"):
