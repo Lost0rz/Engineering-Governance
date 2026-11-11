@@ -396,6 +396,15 @@ class GeneralRouterTests(unittest.TestCase):
         with self.assertRaises(ci.RouteError):
             ci.validate(cfg)
 
+    def test_github_hosted_fork_runner_versions_are_recognized(self):
+        for label in ("ubuntu-latest", "ubuntu-24.04", "ubuntu-24.04-arm",
+                      "macos-15", "macos-15-intel", "windows-2025"):
+            with self.subTest(label=label):
+                cfg = catalog()
+                cfg["tests"][1]["runner"] = [label]
+                cfg["tests"][1]["fork_safe"] = True
+                ci.validate(cfg)
+
     def test_fork_requires_safe_dependencies(self):
         cfg = catalog()
         cfg["tests"][1]["fork_safe"] = True

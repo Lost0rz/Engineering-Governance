@@ -163,7 +163,7 @@ def validate(config):
             runner = t.get("runner", [])
             if (not isinstance(runner, list) or len(runner) != 1
                     or not isinstance(runner[0], str)
-                    or not re.fullmatch(r"(?:ubuntu|windows|macos)-(?:latest|[0-9]{2,4}(?:\\.[0-9]{2})?(?:-(?:arm|intel|large))?)", runner[0])):
+                    or not re.fullmatch(r"(?:ubuntu|windows|macos)-(?:latest|[0-9]{2,4}(?:\.[0-9]{2})?(?:-(?:arm|intel|large))?)", runner[0])):
                 raise RouteError("FORK_SAFE_REQUIRES_GITHUB_HOSTED_RUNNER")
         runner = t.get("runner")
         if (not isinstance(runner, list) or not 1 <= len(runner) <= 8

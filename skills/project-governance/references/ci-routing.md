@@ -14,8 +14,9 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 ## Local agent or desktop invocation
 
     python3 ci-router.py discover --repo-root PROJECT
-    python3 ci-router.py plan --repo-root PROJECT --base HEAD --head HEAD --worktree --config-source file --stage milestone
-    python3 ci-router.py run --repo-root PROJECT --base HEAD --head HEAD --worktree --config-source base --stage milestone
+    HEAD_SHA=$(git -C PROJECT rev-parse HEAD)
+    python3 ci-router.py plan --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --config-source file --stage milestone
+    python3 ci-router.py run --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --config-source base --stage milestone
     python3 ci-router.py run --repo-root PROJECT --base BASE --head HEAD --config-source base --stage focused --focused TEST_ID
 
 `--worktree` includes staged, unstaged and untracked changes without requiring a commit; it is rejected in GitHub-output mode. `plan` never starts tests. `run` uses only accepted-base commands; project test output goes to stderr, leaving one JSON result on stdout. `file` mode is planning only. Actual host permission is still required.
