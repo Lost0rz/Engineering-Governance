@@ -7,6 +7,7 @@ import re
 import shlex
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 CONTRACT = "EG_CI_CAPABILITIES_V1"
@@ -21,9 +22,28 @@ class RouteError(ValueError):
 
 
 def safe_path(s):
-    return (isinstance(s, str) and bool(s) and not s.startswith("/")
-            and "\\" not in s and all(p not in ("", ".", "..") for p in s.split("/"))
-            and all(32 <= ord(c) < 127 for c in s))
+    """Accept Unicode, reject traversal and control characters."""
+    return (isinstance(s, str) and 0 < len(s) <= 2048 and not s.startswith("/")
+            and "\\" not in s
+            and all(p not in ("", ".", "..") and p.casefold() != ".git" for p in s.split("/"))
+            and all(not unicodedata.category(c).startswith("C") for c in s))
+
+
+DOC_SUFFIXES = (".md", ".markdown", ".rst", ".txt", ".adoc")
+ROOT_DOCS = {"readme.md", "changelog.md", "contributing.md", "license",
+             "license.md", "authors.md", "code_of_conduct.md"}
+
+
+def descriptive_doc(path):
+    name = path.rsplit("/", 1)[-1].lower()
+    return name in ROOT_DOCS or name.endswith(DOC_SUFFIXES)
+
+
+def validate_doc_pattern(pattern):
+    if (pattern in ("**", "*") or pattern.startswith("**/")
+            or ("/" not in pattern and ("*" in pattern or "?" in pattern))):
+        raise RouteError("OVERBROAD_DOCUMENTATION_PATTERN")
+    match(pattern, "docs/example.md")
 
 
 def git(repo, *args):
@@ -105,6 +125,7 @@ def validate(config):
     if not isinstance(tests, list) or not 1 <= len(tests) <= 48:
         raise RouteError("INVALID_TEST_CATALOG")
     names = set()
+    by_id = {}
     for t in tests:
         if not isinstance(t, dict):
             raise RouteError("INVALID_TEST_ENTRY")
@@ -112,6 +133,7 @@ def validate(config):
         if not isinstance(name, str) or not ID.fullmatch(name) or name in names:
             raise RouteError("DUPLICATE_OR_INVALID_TEST_ID")
         names.add(name)
+        by_id[name] = t
         if t.get("tier") not in ("V1", "V2", "V3"):
             raise RouteError("INVALID_TEST_TIER")
         runner = t.get("runner")
@@ -139,7 +161,30 @@ def validate(config):
     if not isinstance(docs, list):
         raise RouteError("INVALID_DOCUMENTATION_PATHS")
     for pattern in docs:
-        match(pattern, "example.md")
+        validate_doc_pattern(pattern)
+    # A domain/integration test may declare its prerequisite test lanes.
+    for t in tests:
+        required = t.get("requires", [])
+        if (not isinstance(required, list) or len(set(required)) != len(required)
+                or any(not isinstance(name, str) or name not in by_id or name == t["id"]
+                       for name in required)):
+            raise RouteError("INVALID_TEST_DEPENDENCIES")
+        for name in required:
+            if int(by_id[name]["tier"][1]) > int(t["tier"][1]):
+                raise RouteError("DEPENDENCY_TIER_ORDER")
+    def visit(name, active, done):
+        if name in active:
+            raise RouteError("CYCLIC_TEST_DEPENDENCIES")
+        if name in done:
+            return
+        active.add(name)
+        for dep in by_id[name].get("requires", []):
+            visit(dep, active, done)
+        active.remove(name)
+        done.add(name)
+    done = set()
+    for name in names:
+        visit(name, set(), done)
     fallback = config.get("fallback_tests", [])
     if (not isinstance(fallback, list) or len(set(fallback)) != len(fallback)
             or any(name not in names for name in fallback)):
