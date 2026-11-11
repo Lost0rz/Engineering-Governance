@@ -24,6 +24,63 @@ class GlobalControlPolicyTests(unittest.TestCase):
         self.assertFalse(policy.delegated_enabled())
         self.assertFalse(policy.autonomy_enabled())
 
+
+    def test_interactive_g1_g2_requires_host_proof_and_never_grants_writes(self):
+        common = {
+            "repo": "Lost0rz/Engineering-Governance",
+            "paths": ["skills/incident-doctor/SKILL.md"],
+            "effects": ["source_edit", "focused_test"],
+            "explicit_user_request": True, "active_session": True,
+            "host_write_permission": True,
+        }
+        for risk in ("G1", "G2"):
+            with self.subTest(risk=risk):
+                plan = policy.interactive_scope_eligibility(risk=risk, **common)
+                self.assertFalse(plan["source_write_authorized"])
+                self.assertFalse(plan["persistent_grant"])
+                self.assertFalse(plan["merge_authorized"])
+                self.assertFalse(plan["release_authorized"])
+                self.assertFalse(plan["per_wp_approval_comment_required"])
+                self.assertFalse(plan["initial_issue_approval_required"])
+                self.assertTrue(plan["user_direct_request_is_initial_task_authority_candidate"])
+                self.assertTrue(plan["host_user_role_provenance_required"])
+                self.assertTrue(plan["host_action_authorization_required"])
+
+    def test_interactive_session_must_not_be_unattended_or_self_permitted(self):
+        common = {
+            "repo": "Lost0rz/Engineering-Governance",
+            "risk": "G1", "paths": ["skills/incident-doctor/SKILL.md"],
+            "effects": ["source_edit"],
+            "explicit_user_request": True, "active_session": True,
+            "host_write_permission": True,
+        }
+        cases = (
+            ({"risk": "G3"}, "SESSION_SCOPE_RISK_NOT_ALLOWED"),
+            ({"risk": "G0"}, "SESSION_SCOPE_RISK_NOT_ALLOWED"),
+            ({"unattended": True}, "INDEPENDENT_PERSISTENT_GRANT_REQUIRED"),
+            ({"explicit_user_request": False}, "ACTIVE_USER_REQUEST_REQUIRED"),
+            ({"active_session": False}, "ACTIVE_USER_REQUEST_REQUIRED"),
+            ({"host_write_permission": False}, "LIVE_HOST_WRITE_PERMISSION_REQUIRED"),
+            ({"effects": ["source_edit", "release"]}, "INVALID_SESSION_EFFECTS"),
+            ({"effects": ["source_edit", "merge"]}, "INVALID_SESSION_EFFECTS"),
+            ({"paths": ["AGENTS.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"paths": [".github/workflows/ci.yml"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"paths": ["skills/project-governance/SKILL.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"paths": ["src/../secrets"]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": ["src\\private"]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": [["nested"]]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": ["src/**"]}, "INVALID_SESSION_SCOPE_PATHS"),
+            ({"paths": ["docs/AGENTS.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"paths": ["docs/agents.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"paths": [".GitHub/workflows/CI.yml"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"paths": ["plugin.JSON"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
+            ({"effects": [["source_edit"]]}, "INVALID_SESSION_EFFECTS"),
+        )
+        for delta, expected in cases:
+            with self.subTest(delta=delta):
+                with self.assertRaisesRegex(policy.ControlPolicyError, expected):
+                    policy.interactive_scope_eligibility(**(common | delta))
+
     def test_missing_enrollment_does_not_auto_authorize(self):
         r = policy.select_control("Lost0rz/Merloom")
         self.assertEqual(r["mode"], "FILE_CONTROL")

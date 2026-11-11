@@ -97,6 +97,47 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("source-write** grant never implicitly authorizes merge", issue)
         self.assertIn("policy-only future path", execution)
 
+    def test_interactive_session_path_never_mints_persistent_authority(self):
+        issue = self.read("skills/project-governance/references/issue-control.md")
+        flow = self.read("skills/project-governance/references/development-flow.md")
+        execution = self.read("skills/project-governance/references/issue-execution-contract.md")
+        policy = self.read("skills/project-governance/scripts/control-policy.py")
+        self.assertIn("INTERACTIVE_SCOPE_ELIGIBILITY_V1", execution)
+        self.assertIn("ELIGIBLE_ONLY_HOST_PREFLIGHT_REQUIRED", issue)
+        self.assertIn("source_write_authorized=false", execution)
+        self.assertIn("verifies that user-role message", flow)
+        self.assertIn("host_action_authorization_required", policy)
+        self.assertIn('"initial_issue_approval_required": False', policy)
+        self.assertIn("sufficient task authorization for the first action", issue)
+        self.assertIn("first task authorization", flow)
+        self.assertIn("first 19-field Issue approval comment", execution)
+        self.assertIn("current top-level user request", self.read("skills/project-governance/SKILL.md"))
+        self.assertIn("no first Issue", issue)
+        self.assertIn("without a first Issue/comment", flow)
+        self.assertIn("Issue-backed only", issue)
+        self.assertIn("no 19-field Issue, digest or approval comment", issue)
+        self.assertIn("a fresh explicit host-authenticated user decision", flow)
+        governance = self.read("skills/project-governance/SKILL.md")
+        self.assertIn("no Issue to approve or reconcile", governance)
+
+        self.assertIn('"persistent_grant": False', policy)
+        self.assertIn('"source_write_authorized": False', policy)
+        self.assertIn("unattended", issue)
+        workspace = self.read("skills/project-governance/references/workspace-lifecycle.md")
+        self.assertIn("needs no first Issue/comment", workspace)
+        self.assertIn("host-verified top-level USER-requested", workspace)
+
+    def test_v2_affected_contracts_are_not_unnecessary_full_package(self):
+        selector = self.read("skills/project-governance/scripts/verification-plan.py")
+        workflow = self.read(".github/workflows/governance-contract-checks.yml")
+        tiers = self.read("skills/project-governance/references/verification-tiers.md")
+        self.assertIn('"affected_contracts"', selector)
+        self.assertIn("run_affected", selector)
+        self.assertIn("Run affected cross-Skill integration contracts", workflow)
+        self.assertIn("run_affected", workflow)
+        self.assertIn("skips the full security suite", tiers)
+        self.assertIn("trusted-verification-plan.py", workflow)
+
     def test_source_plugin_identity_and_all_install_surfaces(self):
         import json
         plugin = json.loads(self.read("plugin.json"))
@@ -146,7 +187,9 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertNotIn("## Mandatory pre-return gate", receipt)
         self.assertNotIn("SOURCE_CARD_ID_PRESERVED: YES", receipt)
         self.assertIn("only if supplied", receipt)
-        self.assertIn("Legacy/default: run `digest/verify`", issue)
+        self.assertIn("Legacy Issue-backed only:", issue)
+        self.assertIn("run `digest/verify`", issue)
+        self.assertIn("In ISSUE_CONTROL, **either**", issue)
         self.assertIn("In a **verified active** G1/G2 grant mode", issue)
 
     def test_control_alignment_is_mode_and_event_scoped_everywhere(self):

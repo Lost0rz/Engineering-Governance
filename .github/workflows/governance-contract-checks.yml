@@ -42,6 +42,7 @@ jobs:
             {
               echo "tier=V3"
               echo "run_policy=false"
+              echo "run_affected=false"
               echo "run_full=true"
               echo "run_package=true"
               echo "scope_status=SCOPE_GATE_FALLBACK_FULL"
@@ -104,6 +105,12 @@ jobs:
       - name: Run scoped governance policy contracts
         if: steps.scope.outputs.run_policy == 'true'
         run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_eg097_policy_contracts.py' -v
+
+      - name: Run affected cross-Skill integration contracts
+        if: steps.scope.outputs.run_affected == 'true'
+        run: |
+          python3 -m unittest discover -s skills/project-governance/scripts -p 'test_eg097_policy_contracts.py' -v
+          python3 -m unittest discover -s skills/project-governance/scripts -p 'test_control_policy.py' -v
 
       - name: Run full governance contract tests
         if: steps.scope.outputs.run_full == 'true'

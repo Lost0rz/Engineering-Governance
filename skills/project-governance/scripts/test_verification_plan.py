@@ -43,9 +43,40 @@ class VerificationPlanTests(unittest.TestCase):
     def test_durable_design_document_is_v2(self):
         self.assertEqual(route(change("documents/plans/architecture.md"))["tier"], "V2")
 
-    def test_shared_skill_changes_are_v2(self):
-        self.assertEqual(route(change("skills/agent-handoff/SKILL.md"))["tier"], "V2")
-        self.assertIn("full_contracts", route(change("skills/agent-handoff/SKILL.md"))["selected"])
+    def test_shared_skill_changes_are_v2_without_full_suite_or_package(self):
+        p = route(change("skills/agent-handoff/SKILL.md"))
+        self.assertEqual(p["tier"], "V2")
+        self.assertIn("affected_contracts", p["selected"])
+        self.assertNotIn("full_contracts", p["selected"])
+        self.assertNotIn("package_preview", p["selected"])
+        self.assertIn("full_contracts", p["skipped"])
+        self.assertFalse(p["full_suite_claim"])
+
+    def test_g1_g2_low_risk_skill_edits_get_affected_integration(self):
+        for path in ("skills/incident-doctor/SKILL.md",
+                     "skills/execution-orchestrator/SKILL.md",
+                     "skills/project-profile/SKILL.md",
+                     "references/WORKSPACE_CREATION_EFFICIENCY_ACCEPTANCE.md"):
+            with self.subTest(path=path):
+                p = route(change(path))
+                self.assertEqual(p["tier"], "V2")
+                self.assertEqual(p["selected"], ["static_scope", "affected_contracts"])
+
+    def test_security_sensitive_contracts_and_release_identity_are_always_v3(self):
+        for path in ("skills/project-governance/SKILL.md",
+                     "skills/project-governance/references/issue-control.md",
+                     "skills/project-governance/references/issue-execution-contract.md",
+                     "skills/project-governance/references/global-routing.md",
+                     "skills/project-governance/scripts/control-policy.py",
+                     "skills/project-governance/scripts/test_control_policy.py",
+                     "skills/project-governance/assets/control-policy.json",
+                     "skills/agent-handoff/references/handoff-contract.md",
+                     "plugin.json", ".agents/plugins/marketplace.json"):
+            with self.subTest(path=path):
+                p = route(change(path))
+                self.assertEqual(p["tier"], "V3")
+                self.assertIn("full_contracts", p["selected"])
+                self.assertIn("package_preview", p["selected"])
 
     def test_governance_authorization_and_selector_are_v3(self):
         for path in ("AGENTS.md", ".github/workflows/governance-contract-checks.yml",
