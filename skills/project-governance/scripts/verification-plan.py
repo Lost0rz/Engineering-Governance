@@ -20,48 +20,50 @@ TIERS = ("V0", "V1", "V2", "V3")
 SHA = re.compile(r"(?:[0-9a-f]{40}|[0-9a-f]{64})\Z")
 SCRIPT = "skills/project-governance/scripts/verification-plan.py"
 
-# These are conservative mappings for THIS repository; target projects own
-# their actual test commands. An unknown or shared semantic owner is V3.
+# Repository-specific dependency cues, not a substitute for semantic review.
+# Markdown contracts get affected suites; executable trust/unknown owners are
+# V3. Target projects own their actual test commands.
 SCOPE = (
     ("documents/archive/", "V0", "historical descriptive document"),
     ("documents/historical/", "V0", "historical descriptive document"),
     ("README.md", "V1", "README is consumed by governance policy tests"),
     ("documents/notes/", "V1", "descriptive notes; targeted policy checks"),
     ("documents/", "V2", "durable design or unknown documentation owner"),
-    # Normative auth/control and test-router entry points must never be downgraded
-    # merely because their change looks like a small Markdown edit.
-    ("skills/project-governance/SKILL.md", "V3", "global governance entry and authorization"),
-    ("skills/project-governance/references/issue-control.md", "V3", "Issue/approval authority contract"),
-    ("skills/project-governance/references/issue-execution-contract.md", "V3", "risk and execution authority"),
-    ("skills/project-governance/references/development-flow.md", "V3", "governed execution authorization"),
-    ("skills/project-governance/references/global-routing.md", "V3", "global authority routing"),
-    ("skills/project-governance/references/control-plane.md", "V3", "control owner and alignment"),
-    ("skills/project-governance/references/issue-control-migration.md", "V3", "trusted enrollment boundary"),
-    ("skills/project-governance/references/verification-tiers.md", "V3", "verification policy owner"),
-    # Normative task / writer / grant boundaries: even one Markdown line is V3.
-    # Ordinary descriptive Skill files remain V2 and use affected contracts.
-    ("skills/project-governance/references/artifact-lifecycle.md", "V3", "task authority lifecycle"),
-    ("skills/project-governance/references/planning-documents.md", "V3", "task authorization in design"),
-    ("skills/project-governance/references/workspace-lifecycle.md", "V3", "writer/workspace permission"),
-    ("skills/project-governance/references/remote-delivery.md", "V3", "source write host gate"),
-    ("skills/project-governance/references/control-identity.md", "V3", "accepted host authority"),
-    ("skills/project-governance/references/adoption.md", "V3", "trusted CI enrollment"),
-    ("skills/project-governance/assets/templates/EXECUTION_SPEC.md", "V3", "Issue-backed approval contract"),
-    ("skills/agent-handoff/SKILL.md", "V3", "handoff authority semantics"),
-    ("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md", "V3", "handoff authority locator"),
-    ("skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md", "V3", "handoff authority receipt"),
-    ("skills/execution-orchestrator/SKILL.md", "V3", "delegation writer authority"),
-    ("skills/solution-design/SKILL.md", "V3", "design source authorization"),
-    ("skills/solution-design/references/design-contract.md", "V3", "design reauthorization"),
-    ("skills/incident-doctor/references/evidence-gate.md", "V3", "incident permission evidence"),
+    # Normative Markdown requires affected behavioral contract tests, not a
+    # full suite or package merely because its filename is sensitive.
+    ("skills/project-governance/SKILL.md", "V2", "global governance entry and authorization"),
+    ("skills/project-governance/references/issue-control.md", "V2", "Issue/approval authority contract"),
+    ("skills/project-governance/references/issue-execution-contract.md", "V2", "risk and execution authority"),
+    ("skills/project-governance/references/development-flow.md", "V2", "governed execution authorization"),
+    ("skills/project-governance/references/global-routing.md", "V2", "global authority routing"),
+    ("skills/project-governance/references/control-plane.md", "V2", "control owner and alignment"),
+    ("skills/project-governance/references/issue-control-migration.md", "V2", "trusted enrollment boundary"),
+    ("skills/project-governance/references/verification-tiers.md", "V2", "verification policy owner"),
+    # Markdown routes to affected contracts. Executable trust and host wiring
+    # still route to V3 with a broad test suite.
+    ("skills/project-governance/references/artifact-lifecycle.md", "V2", "task authority lifecycle"),
+    ("skills/project-governance/references/planning-documents.md", "V2", "task authorization in design"),
+    ("skills/project-governance/references/workspace-lifecycle.md", "V2", "writer/workspace permission"),
+    ("skills/project-governance/references/remote-delivery.md", "V2", "source write host gate"),
+    ("skills/project-governance/references/control-identity.md", "V2", "accepted host authority"),
+    ("skills/project-governance/references/adoption.md", "V2", "trusted CI enrollment"),
+    ("skills/project-governance/assets/templates/EXECUTION_SPEC.md", "V2", "Issue-backed approval contract"),
+    ("skills/agent-handoff/SKILL.md", "V2", "handoff authority semantics"),
+    ("skills/agent-handoff/assets/templates/HANDOFF_REQUEST.md", "V2", "handoff authority locator"),
+    ("skills/agent-handoff/assets/templates/HANDOFF_RECEIPT.md", "V2", "handoff authority receipt"),
+    ("skills/execution-orchestrator/SKILL.md", "V2", "delegation writer authority"),
+    ("skills/solution-design/SKILL.md", "V2", "design source authorization"),
+    ("skills/solution-design/references/design-contract.md", "V2", "design reauthorization"),
+    ("skills/incident-doctor/references/evidence-gate.md", "V2", "incident permission evidence"),
     ("skills/project-governance/scripts/", "V3", "authorization and verification source/tests"),
     ("skills/project-governance/assets/control-policy.json", "V3", "versioned global permission policy"),
-    ("skills/project-governance/assets/templates/AGENTS.md", "V3", "project control boundary"),
-    ("skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md", "V3", "global trusted routing"),
+    ("skills/project-governance/assets/templates/AGENTS.md", "V2", "project control boundary"),
+    ("skills/project-governance/assets/templates/GLOBAL_AGENTS_ROUTING.md", "V2", "global trusted routing"),
     ("skills/agent-handoff/references/handoff-contract.md", "V3", "handoff never grants authority"),
     (SCRIPT, "V3", "verification selector implementation"),
     ("skills/project-governance/scripts/test_verification_plan.py", "V3", "verification selector test"),
-    ("AGENTS.md", "V3", "normative repository authorization"),
+    ("AGENTS.md", "V2", "normative repository authorization"),
+    (".github/ISSUE_TEMPLATE/", "V2", "execution-spec documentation and form shape"),
     (".github/", "V3", "workflow and trusted host interface"),
     ("skills/", "V2", "reusable Skill contracts or behavior"),
     ("references/", "V2", "shared engineering contracts"),
@@ -90,10 +92,14 @@ def affected_suites(changes: list[dict[str, str]]) -> list[str]:
         for path in (entry["path"], entry.get("previous_path")):
             if not path:
                 continue
-            if path.startswith(("skills/agent-handoff/",
-                                "skills/execution-orchestrator/",
-                                "skills/solution-design/",
-                                "skills/incident-doctor/")):
+            if (path.startswith(("skills/agent-handoff/",
+                                  "skills/execution-orchestrator/",
+                                  "skills/solution-design/",
+                                  "skills/incident-doctor/"))
+                    or path == "skills/project-governance/SKILL.md"
+                    or path == "AGENTS.md"
+                    or path.startswith("skills/project-governance/assets/templates/")
+                    or path.startswith(".github/ISSUE_TEMPLATE/")):
                 tests.add(V2_TEST_ISSUE)
                 tests.add(V2_TEST_CONTROL)
             if path.startswith("skills/project-governance/references/"):
@@ -124,6 +130,8 @@ def classify(path: str) -> tuple[str, str]:
     # Exact filenames must not accidentally match longer prefix paths.
     for prefix, tier, reason in SCOPE:
         if path == prefix or (prefix.endswith("/") and path.startswith(prefix)):
+            if prefix == "skills/" and not path.endswith((".md", ".txt")):
+                return "V3", "unmapped Skill code or structured asset"
             return tier, reason
     return "V3", "unknown dependency or file owner"
 
@@ -207,8 +215,9 @@ def select(changes: list[dict[str, str]], *, base: str, head: str,
         selected.append("affected_contracts")
         skipped = ["policy_contracts_separate", "full_contracts", "package_preview"]
     else:
-        selected.extend(["full_contracts", "package_preview"])
-        skipped = ["policy_contracts_separate", "affected_contracts_separate"]
+        selected.append("full_contracts")
+        skipped = ["policy_contracts_separate", "affected_contracts_separate",
+                   "package_preview"]
     return {
         "contract": CONTRACT, "base": base, "head": head,
         "tier": tier, "changes": changes, "reasons": reasons,

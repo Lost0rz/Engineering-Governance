@@ -236,7 +236,11 @@ def interactive_scope_eligibility(
     explicit_user_request: bool, active_session: bool,
     host_write_permission: bool, unattended: bool = False,
 ) -> dict:
-    """Return a bounded *eligibility plan*, never a transferable write grant."""
+    """Classify an interactive task; only the real host can authorize writes.
+
+    The path list expresses scope, not a file-count risk score. Review actual
+    effects and changed paths at the receiving host before each mutation.
+    """
     load_policy()
     if not _valid_repo(repo):
         raise ControlPolicyError("INVALID_REPOSITORY")
@@ -248,7 +252,7 @@ def interactive_scope_eligibility(
         raise ControlPolicyError("ACTIVE_USER_REQUEST_REQUIRED")
     if host_write_permission is not True:
         raise ControlPolicyError("LIVE_HOST_WRITE_PERMISSION_REQUIRED")
-    if (type(paths) is not list or not paths or len(paths) > 12
+    if (type(paths) is not list or not paths
             or not all(isinstance(path, str) for path in paths)
             or len(set(paths)) != len(paths)):
         raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
@@ -260,10 +264,20 @@ def interactive_scope_eligibility(
                 or "*" in path or "?" in path):
             raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
         normalized = path.casefold()  # macOS worktrees may be case-insensitive
-        if (normalized.split("/")[-1] == "agents.md" or normalized == "plugin.json"
-                or normalized.startswith((".github/", ".agents/", ".codex-plugin/",
-                                          "skills/project-governance/"))
-                or normalized == "skills/agent-handoff/references/handoff-contract.md"):
+        # Path identity is a scope hint, not proof of a privilege change. Only
+        # executable trust roots / host configuration are excluded here.
+        # Real changed paths and semantic effects are still reviewed by host.
+        protected_exact = {
+            "skills/project-governance/assets/control-policy.json",
+            "skills/project-governance/scripts/control-policy.py",
+            "skills/project-governance/scripts/issue-spec-check.py",
+            "skills/project-governance/scripts/verification-plan.py",
+        }
+        if (normalized.split("/")[-1] == "agents.md"
+                or normalized == "plugin.json"
+                or normalized in protected_exact
+                or normalized.startswith((".github/workflows/", ".agents/",
+                                          ".codex-plugin/"))):
             raise ControlPolicyError("PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT")
     if (type(effects) is not list or not effects
             or not all(isinstance(effect, str) and effect in SESSION_EFFECTS
