@@ -5,6 +5,7 @@ import importlib.util
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 MODULE = Path(__file__).with_name("issue-spec-check.py")
 spec = importlib.util.spec_from_file_location("issue_spec_check", MODULE)
@@ -131,6 +132,12 @@ def autonomy_snapshot(obj=None):
             "revocation_readback": True,
         },
     }
+
+
+def structural_verify_autonomy_snapshot(*args, **kwargs):
+    """Structural test only; the shipped global policy still disables this route."""
+    with patch.object(mod._POLICY, "autonomy_enabled", return_value=True):
+        return mod.verify_autonomy_snapshot(*args, **kwargs)
 
 
 class IssueContractTests(unittest.TestCase):
@@ -299,98 +306,30 @@ class IssueContractTests(unittest.TestCase):
         with self.assertRaisesRegex(mod.SpecError, "REVISION_REUSED"):
             mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
 
-    def test_delegation_requires_exact_accepted_agents_opt_in(self):
-        self.assertFalse(mod.delegated_opt_in("CONTROL_MODE: ISSUE_CONTROL\n"))
-        self.assertTrue(mod.delegated_opt_in(
-            "CONTROL_MODE: ISSUE_CONTROL\nISSUE_DELEGATED_APPROVAL: ENABLED\n"))
-        self.assertFalse(mod.delegated_opt_in(
-            "ISSUE_DELEGATED_APPROVAL: ENABLED\nISSUE_DELEGATED_APPROVAL: DISABLED\n"))
-        self.assertFalse(mod.delegated_opt_in("ISSUE_DELEGATED_APPROVAL: enable\n"))
-
-
-    def test_delegation_fenced_backtick_example_not_policy(self):
-        self.assertFalse(mod.delegated_opt_in(
-            "## Example\n```md\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"))
-
-    def test_delegation_fenced_tilde_example_not_policy(self):
-        self.assertFalse(mod.delegated_opt_in(
-            "~~~text\nISSUE_DELEGATED_APPROVAL: ENABLED\n~~~\n"))
-
-    def test_delegation_indented_example_not_policy(self):
-        self.assertFalse(mod.delegated_opt_in(
-            "    ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
-        self.assertFalse(mod.delegated_opt_in(
-            "  ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
-
-    def test_delegation_blockquote_example_not_policy(self):
-        self.assertFalse(mod.delegated_opt_in(
-            "> ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
-
-    def test_delegation_bare_directive_outside_example(self):
-        self.assertTrue(mod.delegated_opt_in(
-            "## Policy\n```md\nISSUE_DELEGATED_APPROVAL: DISABLED\n```\n"
-            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
-
-    def test_delegation_html_comment_example_not_policy(self):
-        self.assertFalse(mod.delegated_opt_in(
-            "<!--\nISSUE_DELEGATED_APPROVAL: ENABLED\n-->\n"))
-        self.assertTrue(mod.delegated_opt_in(
-            "<!--\nISSUE_DELEGATED_APPROVAL: DISABLED\n-->\n"
-            "ISSUE_DELEGATED_APPROVAL: ENABLED\n"))
-
-    def test_delegation_duplicate_real_declarations_denied_with_fence(self):
-        self.assertFalse(mod.delegated_opt_in(
+    def test_project_agents_control_selectors_are_ignored(self):
+        """No AGENTS.md declaration may enable Issue authoring, delegation or autonomy."""
+        controls = (
+            "CONTROL_MODE: ISSUE_CONTROL\n"
+            "ISSUE_APPROVERS: Lost0rz\n"
             "ISSUE_DELEGATED_APPROVAL: ENABLED\n"
-            "```text\nISSUE_DELEGATED_APPROVAL: ENABLED\n```\n"
-            "ISSUE_DELEGATED_APPROVAL: DISABLED\n"))
-
-    def test_web_spec_authoring_defaults_to_deny(self):
-        self.assertFalse(mod.web_spec_authoring_opt_in("CONTROL_MODE: ISSUE_CONTROL\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "ISSUE_WEB_SPEC_AUTHORING: DISABLED\n"))
-
-    def test_web_spec_authoring_requires_one_exact_enabled_declaration(self):
-        self.assertTrue(mod.web_spec_authoring_opt_in(
-            "CONTROL_MODE: ISSUE_CONTROL\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\nISSUE_WEB_SPEC_AUTHORING: DISABLED\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in("ISSUE_WEB_SPEC_AUTHORING: enabled\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in("ISSUE_WEB_SPEC_AUTHORING : ENABLED\n"))
-
-    def test_web_spec_authoring_ignores_markdown_examples(self):
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "```md\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n```\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "~~~text\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n~~~\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "    ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "> ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
-        self.assertFalse(mod.web_spec_authoring_opt_in(
-            "<!--\nISSUE_WEB_SPEC_AUTHORING: ENABLED\n-->\n"))
-        self.assertTrue(mod.web_spec_authoring_opt_in(
-            "```md\nISSUE_WEB_SPEC_AUTHORING: DISABLED\n```\n"
-            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
-
-    def test_web_authoring_opt_in_does_not_approve_a_draft(self):
-        self.assertTrue(mod.web_spec_authoring_opt_in(
-            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"))
+            "ISSUE_WEB_SPEC_AUTHORING: ENABLED\n"
+            "RISK_SCOPED_AUTONOMY: ENABLED\n"
+        )
+        self.assertFalse(mod.delegated_opt_in(controls))
+        self.assertFalse(mod.web_spec_authoring_opt_in(controls))
+        self.assertFalse(mod.risk_scoped_autonomy_opt_in(controls))
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
             mod.verify_approval(issue(), repo=REPO, approvers={"Lost0rz"})
 
-    def test_autonomy_opt_in_requires_one_operative_declaration(self):
-        self.assertTrue(mod.risk_scoped_autonomy_opt_in(AUTONOMY_AGENTS))
-        self.assertFalse(mod.risk_scoped_autonomy_opt_in(
-            "```text\nRISK_SCOPED_AUTONOMY: ENABLED\n```\n"))
-        self.assertFalse(mod.risk_scoped_autonomy_opt_in(
-            "RISK_SCOPED_AUTONOMY: ENABLED\nRISK_SCOPED_AUTONOMY: DISABLED\n"))
+    def test_delegated_direct_contract_still_keeps_provenance(self):
+        with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
+            mod.verify_approval(issue(), repo=REPO, approvers={"Lost0rz"},
+                                allow_delegated=True)
 
     def test_valid_g1_snapshot_is_policy_only_and_remains_fail_closed(self):
-        result = mod.verify_autonomy_snapshot(
+        result = structural_verify_autonomy_snapshot(
             issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
-            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             now=datetime(2026, 11, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(result["policy_shape"], "PASS_LOCAL_SNAPSHOT_ONLY")
@@ -413,9 +352,9 @@ class IssueContractTests(unittest.TestCase):
         self.assertEqual(len(fields), 8)
         grant = autonomy_snapshot()
         grant["spec_sha256"] = sha
-        result = mod.verify_autonomy_snapshot(
+        result = structural_verify_autonomy_snapshot(
             compact, grant, repo=REPO, approvers={"Lost0rz"},
-            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+            policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093",
             target_commit_sha="a"*40, now=datetime(2026, 11, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(result["result"], "STOP")
@@ -440,9 +379,9 @@ class IssueContractTests(unittest.TestCase):
                 changed = copy.deepcopy(grant)
                 changed["spec_sha256"] = new_sha
                 with self.assertRaisesRegex(mod.SpecError, err):
-                    mod.verify_autonomy_snapshot(
+                    structural_verify_autonomy_snapshot(
                         different, changed, repo=REPO, approvers={"Lost0rz"},
-                        agents_text=AUTONOMY_AGENTS,
+                        policy_autonomy_enabled=True,
                         target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
                     )
 
@@ -460,17 +399,17 @@ class IssueContractTests(unittest.TestCase):
             grant["allowed_paths"] = [unsafe]
             with self.subTest(path=repr(unsafe)):
                 with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_ALLOWED_PATHS"):
-                    mod.verify_autonomy_snapshot(
+                    structural_verify_autonomy_snapshot(
                         issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                        agents_text=AUTONOMY_AGENTS,
+                        policy_autonomy_enabled=True,
                         target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
                     )
 
     def test_autonomy_missing_opt_in_stops(self):
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_NOT_OPTED_IN"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
-                agents_text="CONTROL_MODE: ISSUE_CONTROL\n",
+                policy_autonomy_enabled=False,
                 target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
 
@@ -478,9 +417,9 @@ class IssueContractTests(unittest.TestCase):
         grant = autonomy_snapshot()
         grant["grant_event"]["executor_credential_id"] = "independent-grant-credential"
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_SELF_AUTHORIZATION"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
                 now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
 
@@ -488,9 +427,9 @@ class IssueContractTests(unittest.TestCase):
         grant = autonomy_snapshot()
         grant["grant_event"]["actor_login"] = "outsider"
         with self.assertRaisesRegex(mod.SpecError, "UNTRUSTED_AUTONOMY_GRANT_ACTOR"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
                 now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
 
@@ -499,42 +438,42 @@ class IssueContractTests(unittest.TestCase):
         changed["body"] = changed["body"].replace(
             "Implement exactly the approved scoped fix", "Implement a different scope")
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_TASK_BINDING_MISMATCH"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 changed, autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
 
     def test_autonomy_revoked_or_expired_snapshot_stops(self):
         revoked = autonomy_snapshot()
         revoked["revoked_at"] = "2026-11-10T12:00:00Z"
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_GRANT_REVOKED"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), revoked, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
                 now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
         expired = autonomy_snapshot()
         expired["issued_at"] = "2026-11-08T00:00:00Z"
         expired["expires_at"] = "2026-11-09T00:00:00Z"
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_GRANT_EXPIRED"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), expired, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
                 now=datetime(2026, 11, 10, tzinfo=timezone.utc),
             )
 
     def test_autonomy_target_change_stops(self):
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_TARGET_MISMATCH"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/other-task", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/other-task", target_commit_sha="a"*40,
             )
 
     def test_autonomy_replay_after_target_commit_change_stops(self):
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_COMMIT_MISMATCH"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093",
                 target_commit_sha="b"*40,
             )
 
@@ -542,9 +481,9 @@ class IssueContractTests(unittest.TestCase):
         grant = autonomy_snapshot()
         grant["requested_paths"] = ["skills/project-governance-escape/attack.py"]
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_PATH_OUTSIDE_ENVELOPE"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093",
                 target_commit_sha="a"*40,
             )
 
@@ -553,9 +492,9 @@ class IssueContractTests(unittest.TestCase):
         grant["allowed_paths"] = [".git"]
         grant["requested_paths"] = [".git/config"]
         with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_ALLOWED_PATHS"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093",
                 target_commit_sha="a"*40,
             )
 
@@ -564,9 +503,9 @@ class IssueContractTests(unittest.TestCase):
         grant["allowed_effects"].append("pr_merge")
         grant["requested_effects"].append("pr_merge")
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_UNSUPPORTED_OR_OUTSIDE_EFFECT_ENVELOPE"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093",
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093",
                 target_commit_sha="a"*40,
             )
 
@@ -575,27 +514,27 @@ class IssueContractTests(unittest.TestCase):
                            "refs/heads/topic/", "refs/heads/a@{b}"):
             with self.subTest(target_ref=target_ref):
                 with self.assertRaisesRegex(mod.SpecError, "INVALID_AUTONOMY_TARGET_REF"):
-                    mod.verify_autonomy_snapshot(
+                    structural_verify_autonomy_snapshot(
                         issue(), autonomy_snapshot(), repo=REPO, approvers={"Lost0rz"},
-                        agents_text=AUTONOMY_AGENTS, target_ref=target_ref, target_commit_sha="a"*40,
+                        policy_autonomy_enabled=True, target_ref=target_ref, target_commit_sha="a"*40,
                     )
 
     def test_autonomy_g3_risk_is_outside_g1_g2_envelope(self):
         grant = autonomy_snapshot()
         grant["requested_risk"] = "G3"
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_RISK_OUTSIDE_ENVELOPE"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
 
     def test_float_tabs_208_debug_only_test_seam_is_g1_policy_only(self):
         grant = autonomy_snapshot()
         grant["max_risk"] = "G1"
         grant["requested_effects"] = ["repository_tests"]
-        result = mod.verify_autonomy_snapshot(
+        result = structural_verify_autonomy_snapshot(
             issue(), grant, repo=REPO, approvers={"Lost0rz"},
-            agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+            policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             now=datetime(2026, 11, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(result["requested_risk"], "G1")
@@ -607,9 +546,9 @@ class IssueContractTests(unittest.TestCase):
         grant["allowed_effects"].append("human_ui_acceptance")
         grant["requested_effects"].append("human_ui_acceptance")
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_HARD_EXCLUDED_EFFECT"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
 
     def test_merloom_632_rawsku_overwrite_is_hard_denied(self):
@@ -617,26 +556,26 @@ class IssueContractTests(unittest.TestCase):
         grant["allowed_effects"].append("destructive_data_overwrite")
         grant["requested_effects"].append("destructive_data_overwrite")
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_HARD_EXCLUDED_EFFECT"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
 
     def test_remoteorbit_51_privileged_hid_helper_is_g3_and_hard_excluded(self):
         grant = autonomy_snapshot()
         grant["requested_risk"] = "G3"
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_RISK_OUTSIDE_ENVELOPE"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
         grant["requested_risk"] = "G2"
         grant["allowed_effects"].append("privileged_install")
         grant["requested_effects"].append("privileged_install")
         with self.assertRaisesRegex(mod.SpecError, "AUTONOMY_HARD_EXCLUDED_EFFECT"):
-            mod.verify_autonomy_snapshot(
+            structural_verify_autonomy_snapshot(
                 issue(), grant, repo=REPO, approvers={"Lost0rz"},
-                agents_text=AUTONOMY_AGENTS, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
+                policy_autonomy_enabled=True, target_ref="refs/heads/codex/eg-093", target_commit_sha="a"*40,
             )
 
 
