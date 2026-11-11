@@ -100,20 +100,30 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
             or (pr.get("base") or {}).get("ref") != "main"
             or (pr.get("head") or {}).get("repo") is None):
         raise ControlPolicyError("MIGRATION_NOT_HOST_VERIFIED")
-    # A random merged PR is not a migration. Verify its explicit transition intent
-    # and its changed files using the same live authenticated GitHub host.
-    body = str(pr.get("body") or "")
-    historical_intent = (
-        "ISSUE_CONTROL" in body and "AGENTS.md" in body
-        and ("migration" in body.lower() or "cutover" in body.lower())
-    )
-    if not (("EG_CONTROL_MIGRATION_V1" in body) or historical_intent):
-        raise ControlPolicyError("PR_NOT_GOVERNANCE_MIGRATION")
+    # A PR body/title is mutable after merge and cannot prove a migration.
+    # Require immutable GitHub source diff introducing the original mode
+    # transition or removing one of the legacy AGENTS control selectors.
+    # The accepted main must additionally be selector-free (verified below).
     files = _gh_api(f"repos/{repo}/pulls/{migration_pr}/files?per_page=100&page=1")
-    if (not isinstance(files, list) or not files or len(files) >= 100
-            or not any(file.get("filename") == "AGENTS.md" for file in files
-                       if isinstance(file, dict))):
+    if not isinstance(files, list) or len(files) >= 100:
         raise ControlPolicyError("MIGRATION_DIFF_NOT_VERIFIED")
+    matching = [entry for entry in files if isinstance(entry, dict)
+                and entry.get("filename") == "AGENTS.md"
+                and entry.get("status") in ("modified", "added")]
+    if len(matching) != 1 or not isinstance(matching[0].get("patch"), str):
+        raise ControlPolicyError("MIGRATION_DIFF_NOT_VERIFIED")
+    patch_lines = matching[0]["patch"].splitlines()
+    legacy_added_issue_mode = any(
+        line == "+CONTROL_MODE: ISSUE_CONTROL" for line in patch_lines)
+    legacy_removed_control = any(
+        line.startswith("-" + key)
+        for key in ("CONTROL_MODE:", "ISSUE_APPROVERS:",
+                    "ISSUE_WEB_SPEC_AUTHORING:", "ISSUE_DELEGATED_APPROVAL:",
+                    "RISK_SCOPED_AUTONOMY:")
+        for line in patch_lines
+    )
+    if not (legacy_added_issue_mode or legacy_removed_control):
+        raise ControlPolicyError("PR_NOT_GOVERNANCE_MIGRATION")
     main = _gh_api(f"repos/{repo}/branches/main")
     if not isinstance(main, dict):
         raise ControlPolicyError("UNVERIFIED_MAIN_HEAD")
