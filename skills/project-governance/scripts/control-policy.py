@@ -235,23 +235,25 @@ def interactive_scope_eligibility(
     if host_write_permission is not True:
         raise ControlPolicyError("LIVE_HOST_WRITE_PERMISSION_REQUIRED")
     if (type(paths) is not list or not paths or len(paths) > 12
+            or not all(isinstance(path, str) for path in paths)
             or len(set(paths)) != len(paths)):
         raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
     for path in paths:
-        if (not isinstance(path, str) or path.startswith("/") or "\\\\" in path
+        if (not isinstance(path, str) or path.startswith("/") or "\\" in path
                 or any(part in ("", ".", "..") or part.casefold() == ".git"
                        for part in path.split("/"))
                 or any(ord(ch) < 32 or ord(ch) == 127 for ch in path)
                 or "*" in path or "?" in path):
             raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
-        if (path in ("AGENTS.md", "plugin.json")
+        if (path.split("/")[-1] == "AGENTS.md" or path == "plugin.json"
                 or path.startswith((".github/", ".agents/", ".codex-plugin/",
                                     "skills/project-governance/"))
                 or path == "skills/agent-handoff/references/handoff-contract.md"):
             raise ControlPolicyError("PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT")
-    if (type(effects) is not list or not effects or len(effects) != len(set(effects))
+    if (type(effects) is not list or not effects
             or not all(isinstance(effect, str) and effect in SESSION_EFFECTS
-                       for effect in effects)):
+                       for effect in effects)
+            or len(effects) != len(set(effects))):
         raise ControlPolicyError("INVALID_SESSION_EFFECTS")
     return {
         "contract": "INTERACTIVE_SCOPE_ELIGIBILITY_V1",
