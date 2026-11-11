@@ -84,6 +84,12 @@ Governance risk bounds authority and allowed effects:
 
 Risk follows **actual side effect and consequence**, not operation name or file count. G0–G3 determine authority; V0–V3 determine verification, and L0–L3 classify execution deviations. An ordinary protected PR merge may be G2 only through its separate host gate; production/privileged/security-boundary operations are G3. G3 decisions require the applicable explicit user/owner confirmation, which may be recorded by an opted-in authorized proxy only when that assurance suffices. No proxy comment replaces independent host protection; current autonomy is inactive.
 
+### Same-session G1/G2 eligibility versus durable autonomy
+
+For an explicitly user-directed, **currently active** action with independently verified runtime identity, repository write access, named target paths and bounded nonprivileged effects, use the host's own action-authorization gate instead of generating a new 19-field Issue and approval comment for each local WP. The `INTERACTIVE_SCOPE_ELIGIBILITY_V1` classifier returns `source_write_authorized=false`, never a standalone write credential; a caller-controlled flag cannot prove the user's instruction. A missing host action channel means legacy approved Issue authority or STOP, not guessed user consent. L0/L1 and in-envelope L2 may continue without redundant comments; new material scope/permission/owner/merge/release gates remain distinct. Never treat direct live-session work as permission to run unattended across sessions or future unrelated tasks.
+
+Risk and tests stay orthogonal: G1 can need V3 if it touches a security boundary; an ordinary G2 multi-file correction may use V1/V2 focused or affected integration checks if authority permits. The task's original risk ceiling and project-specific safety constraints still apply.
+
 ## EXECUTION_DEVIATION_V1
 
 | Level | Condition | Permitted action | Evidence |
