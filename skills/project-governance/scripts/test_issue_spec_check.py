@@ -134,6 +134,12 @@ def autonomy_snapshot(obj=None):
     }
 
 
+def structural_verify_approval(*args, **kwargs):
+    """Legacy structural contract test under a simulated trusted global opt-in."""
+    with patch.object(mod._POLICY, "delegated_enabled", return_value=True):
+        return mod.verify_approval(*args, **kwargs)
+
+
 def structural_verify_autonomy_snapshot(*args, **kwargs):
     """Structural test only; the shipped global policy still disables this route."""
     with patch.object(mod._POLICY, "autonomy_enabled", return_value=True):
@@ -142,37 +148,37 @@ def structural_verify_autonomy_snapshot(*args, **kwargs):
 
 class IssueContractTests(unittest.TestCase):
     def test_valid_approved_spec(self):
-        result = mod.verify_approval(approve(issue()), repo=REPO, approvers={"Lost0rz"})
+        result = structural_verify_approval(approve(issue()), repo=REPO, approvers={"Lost0rz"})
         self.assertEqual(result["result"], "STRUCTURE_AND_APPROVAL_PASS")
         self.assertEqual(result["semantic_source_check"], "REQUIRED_SEPARATELY")
 
     def test_only_comment_timestamp_changes(self):
         x = approve(issue())
         x["comments"].append({"id": 19, "author": {"login": "someone"}, "body": "progress"})
-        self.assertEqual(mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})["result"],
+        self.assertEqual(structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})["result"],
                          "STRUCTURE_AND_APPROVAL_PASS")
 
     def test_material_body_change_same_rev_is_denied(self):
         x = approve(issue())
         x["body"] = x["body"].replace("expected scoped contract", "other behavior")
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})
 
     def test_revision_bump_without_approval_denied(self):
         x = approve(issue())
         x["body"] = x["body"].replace("### SPEC_REVISION\n\n2", "### SPEC_REVISION\n\n3")
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})
 
     def test_untrusted_actor_cannot_approve(self):
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(approve(issue(), actor="outsider"), repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(approve(issue(), actor="outsider"), repo=REPO, approvers={"Lost0rz"})
 
     def test_ready_label_does_not_approve(self):
         x = issue()
         x["labels"] = [{"name": "READY_TO_EXECUTE"}]
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})
 
     def test_missing_field_stops(self):
         x = issue()
@@ -220,7 +226,7 @@ class IssueContractTests(unittest.TestCase):
         x = approve(issue())
         approve(x, hash_value="a" * 64)
         with self.assertRaisesRegex(mod.SpecError, "REVISION_REUSED"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})
 
     def test_revocation_blocks_execution(self):
         x = approve(issue())
@@ -229,13 +235,13 @@ class IssueContractTests(unittest.TestCase):
             "body": "SPEC_REVOCATION_V1\nTASK_ID: EG-093\nSPEC_REVISION: 2\nDECISION: REVOKED",
         })
         with self.assertRaisesRegex(mod.SpecError, "APPROVAL_REVOKED"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})
 
     def test_closed_issue_is_denied(self):
         x = approve(issue())
         x["state"] = "CLOSED"
         with self.assertRaisesRegex(mod.SpecError, "ISSUE_NOT_OPEN"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"})
 
     def test_identical_form_and_markdown_have_same_digest(self):
         a = body()
@@ -245,10 +251,10 @@ class IssueContractTests(unittest.TestCase):
 
     def test_delegation_defaults_off(self):
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(delegate(issue()), repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(delegate(issue()), repo=REPO, approvers={"Lost0rz"})
 
     def test_explicit_delegation_accepts_matching_exact_spec(self):
-        result = mod.verify_approval(delegate(issue()), repo=REPO,
+        result = structural_verify_approval(delegate(issue()), repo=REPO,
                                      approvers={"Lost0rz"}, allow_delegated=True)
         self.assertEqual(result["result"], "STRUCTURE_AND_DELEGATED_APPROVAL_PASS")
         self.assertEqual(result["approval_assurance"], "DELEGATED_ACCOUNT_ATTESTED")
@@ -256,27 +262,27 @@ class IssueContractTests(unittest.TestCase):
 
     def test_direct_approval_still_preferred_with_delegation_opt_in(self):
         x = approve(delegate(issue()))
-        r = mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+        r = structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
         self.assertEqual(r["result"], "STRUCTURE_AND_APPROVAL_PASS")
         self.assertEqual(r["approval_assurance"], "DIRECT_GITHUB_ACTOR")
 
     def test_delegation_untrusted_account_denied(self):
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(delegate(issue(), actor="outsider"), repo=REPO,
+            structural_verify_approval(delegate(issue(), actor="outsider"), repo=REPO,
                                 approvers={"Lost0rz"}, allow_delegated=True)
 
     def test_delegation_stale_digest_denied(self):
         x = delegate(issue())
         x["body"] = x["body"].replace("expected scoped contract", "changed scope")
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
 
     def test_delegation_missing_required_attestation_denied(self):
         x = delegate(issue())
         x["comments"][0]["body"] = x["comments"][0]["body"].replace(
             "PROVENANCE: ACCOUNT_PROXY_NO_INDEPENDENT_CHAT_PROOF", "")
         with self.assertRaisesRegex(mod.SpecError, "INVALID_DELEGATED_APPROVAL_FIELDS"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
 
     def test_delegation_incorrect_attestation_denied(self):
         x = delegate(issue())
@@ -284,12 +290,12 @@ class IssueContractTests(unittest.TestCase):
             "USER_DECISION: EXPLICIT_APPROVAL_OF_CURRENT_SPEC",
             "USER_DECISION: AUTO_APPROVED")
         with self.assertRaisesRegex(mod.SpecError, "INVALID_DELEGATED_ATTESTATION"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
 
     def test_delegation_empty_decision_summary_denied(self):
         x = delegate(issue(), summary=" ")
         with self.assertRaisesRegex(mod.SpecError, "INVALID_DELEGATED_ATTESTATION"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
 
     def test_delegation_revoked_denied(self):
         x = delegate(issue())
@@ -298,13 +304,18 @@ class IssueContractTests(unittest.TestCase):
             "body": "SPEC_REVOCATION_V1\nTASK_ID: EG-093\nSPEC_REVISION: 2\nDECISION: REVOKED",
         })
         with self.assertRaisesRegex(mod.SpecError, "APPROVAL_REVOKED"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
 
     def test_delegation_reused_revision_digest_conflict_denied(self):
         x = delegate(issue())
         delegate(x, hash_value="c" * 64)
         with self.assertRaisesRegex(mod.SpecError, "REVISION_REUSED"):
-            mod.verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+            structural_verify_approval(x, repo=REPO, approvers={"Lost0rz"}, allow_delegated=True)
+
+    def test_delegated_caller_flag_cannot_override_global_policy(self):
+        with self.assertRaisesRegex(mod.SpecError, "DELEGATION_NOT_GLOBALLY_AUTHORIZED"):
+            mod.verify_approval(delegate(issue()), repo=REPO, approvers={"Lost0rz"},
+                                allow_delegated=True)
 
     def test_project_agents_control_selectors_are_ignored(self):
         """No AGENTS.md declaration may enable Issue authoring, delegation or autonomy."""
@@ -319,11 +330,11 @@ class IssueContractTests(unittest.TestCase):
         self.assertFalse(mod.web_spec_authoring_opt_in(controls))
         self.assertFalse(mod.risk_scoped_autonomy_opt_in(controls))
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(issue(), repo=REPO, approvers={"Lost0rz"})
+            structural_verify_approval(issue(), repo=REPO, approvers={"Lost0rz"})
 
     def test_delegated_direct_contract_still_keeps_provenance(self):
         with self.assertRaisesRegex(mod.SpecError, "NO_MATCHING"):
-            mod.verify_approval(issue(), repo=REPO, approvers={"Lost0rz"},
+            structural_verify_approval(issue(), repo=REPO, approvers={"Lost0rz"},
                                 allow_delegated=True)
 
     def test_valid_g1_snapshot_is_policy_only_and_remains_fail_closed(self):
