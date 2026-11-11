@@ -63,4 +63,4 @@ Proportional verification and evidence reuse belong to [`verification-tiers.md`]
 
 ### Issue Control tooling
 
-The canonical Issue-spec verifier is [`issue-spec-check.py`](skills/project-governance/scripts/issue-spec-check.py). Its supported commands, opt-in boundaries, and receiver preflight are defined by the owning [`issue-control.md`](skills/project-governance/references/issue-control.md), not by this README. The G1/G2 trusted-host autonomy path remains inactive until independently verified; do not infer execution permission from schema or local snapshots.
+The canonical Issue-spec verifier is [`issue-spec-check.py`](skills/project-governance/scripts/issue-spec-check.py). Its supported commands, opt-in boundaries, and receiver preflight are defined by the owning [`issue-control.md`](skills/project-governance/references/issue-control.md), not by this README. The separately opted-in, independently host-verified G1/G2 route uses the 8-field `AUTONOMY_SCOPE_V1` as policy-only input. It remains inactive until trusted host evidence is established; do not infer execution permission from schema or local snapshots.
