@@ -48,7 +48,7 @@ def load_policy() -> dict:
     return policy
 
 
-def _gh_api(path: str) -> dict:
+def _gh_api(path: str) -> dict | list:
     """Live GitHub REST read via the authenticated local gh client; no shell."""
     try:
         result = subprocess.run(
@@ -63,7 +63,7 @@ def _gh_api(path: str) -> dict:
         obj = json.loads(result.stdout)
     except ValueError as exc:
         raise ControlPolicyError("GITHUB_HOST_INVALID_RESPONSE") from exc
-    if not isinstance(obj, dict):
+    if not isinstance(obj, (dict, list)):
         raise ControlPolicyError("GITHUB_HOST_INVALID_RESPONSE")
     return obj
 
@@ -87,6 +87,20 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
             or (pr.get("base") or {}).get("ref") != "main"
             or (pr.get("head") or {}).get("repo") is None):
         raise ControlPolicyError("MIGRATION_NOT_HOST_VERIFIED")
+    # A random merged PR is not a migration. Verify its explicit transition intent
+    # and its changed files using the same live authenticated GitHub host.
+    body = str(pr.get("body") or "")
+    historical_intent = (
+        "ISSUE_CONTROL" in body and "AGENTS.md" in body
+        and ("migration" in body.lower() or "cutover" in body.lower())
+    )
+    if not (("EG_CONTROL_MIGRATION_V1" in body) or historical_intent):
+        raise ControlPolicyError("PR_NOT_GOVERNANCE_MIGRATION")
+    files = _gh_api(f"repos/{repo}/pulls/{migration_pr}/files?per_page=100&page=1")
+    if (not isinstance(files, list) or not files or len(files) >= 100
+            or not any(file.get("filename") == "AGENTS.md" for file in files
+                       if isinstance(file, dict))):
+        raise ControlPolicyError("MIGRATION_DIFF_NOT_VERIFIED")
     main = _gh_api(f"repos/{repo}/branches/main")
     main_sha = (main.get("commit") or {}).get("sha")
     if not isinstance(main_sha, str) or re.fullmatch(r"[0-9a-f]{40}", main_sha) is None:
