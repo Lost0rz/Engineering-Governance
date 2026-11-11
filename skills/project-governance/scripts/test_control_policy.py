@@ -44,7 +44,7 @@ class GlobalControlPolicyTests(unittest.TestCase):
             {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
              "body": "EG_CONTROL_MIGRATION_V1",
              "base": {"ref": "main"}, "head": {"repo": {"name": "Engineering-Governance"}}},
-            [{"filename": "AGENTS.md"}],
+            [{"filename": "AGENTS.md", "status": "modified", "patch": "@@ -1,2 +1,2 @@\n-CONTROL_MODE: FILE_CONTROL\n+CONTROL_MODE: ISSUE_CONTROL"}],
             {"commit": {"sha": final}},
             {"status": "ahead"},
             {"type": "file", "encoding": "base64", "content": base64.b64encode(
@@ -70,7 +70,7 @@ class GlobalControlPolicyTests(unittest.TestCase):
             {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
              "body": "EG_CONTROL_MIGRATION_V1",
              "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
-            [{"filename": "AGENTS.md"}],
+            [{"filename": "AGENTS.md", "status": "modified", "patch": "@@ -1,2 +1,2 @@\n-CONTROL_MODE: FILE_CONTROL\n+CONTROL_MODE: ISSUE_CONTROL"}],
             {"commit": {"sha": "b" * 40}},
             {"status": "diverged"},
         ]
@@ -80,12 +80,29 @@ class GlobalControlPolicyTests(unittest.TestCase):
 
     def test_unrelated_merged_pr_is_not_adoption(self):
         sha = "a" * 40
-        with patch.object(policy, "_gh_api", return_value={
-            "merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
-            "body": "Fix documentation typo",
-            "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}},
-        }):
+        events = [
+            {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
+             "body": "EG_CONTROL_MIGRATION_V1 changed after merge",
+             "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
+            [{"filename": "AGENTS.md", "status": "modified",
+              "patch": "@@ -1,2 +1,2 @@\\n-old business rule\\n+new business rule"}],
+        ]
+        with patch.object(policy, "_gh_api", side_effect=events):
             with self.assertRaisesRegex(policy.ControlPolicyError, "PR_NOT_GOVERNANCE_MIGRATION"):
+                policy.verify_migration("Lost0rz/Engineering-Governance", 123)
+
+    def test_mutable_pr_body_cannot_authorize_migration(self):
+        """Even a post-merge edited PR title/body cannot replace a control diff."""
+        with patch.object(policy, "_gh_api", side_effect=[
+            {"merged_at": "2026-11-01T00:00:00Z",
+             "merge_commit_sha": "a" * 40,
+             "body": "EG_CONTROL_MIGRATION_V1 AGENTS.md ISSUE_CONTROL migration",
+             "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
+            [{"filename": "AGENTS.md", "status": "modified",
+              "patch": "@@ -1,2 +1,2 @@\\n-old note\\n+new note"}],
+        ]):
+            with self.assertRaisesRegex(policy.ControlPolicyError,
+                                        "PR_NOT_GOVERNANCE_MIGRATION"):
                 policy.verify_migration("Lost0rz/Engineering-Governance", 123)
 
     def test_migration_missing_agents_diff_stops(self):
@@ -107,7 +124,7 @@ class GlobalControlPolicyTests(unittest.TestCase):
             {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
              "body": "EG_CONTROL_MIGRATION_V1",
              "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
-            [{"filename": "AGENTS.md"}],
+            [{"filename": "AGENTS.md", "status": "modified", "patch": "@@ -1,2 +1,2 @@\n-CONTROL_MODE: FILE_CONTROL\n+CONTROL_MODE: ISSUE_CONTROL"}],
             {"commit": {"sha": "b" * 40}},
             {"status": "ahead"},
             {"type": "file", "encoding": "base64",
@@ -125,7 +142,7 @@ class GlobalControlPolicyTests(unittest.TestCase):
             {"merged_at": "2026-11-01T00:00:00Z", "merge_commit_sha": sha,
              "body": "EG_CONTROL_MIGRATION_V1",
              "base": {"ref": "main"}, "head": {"repo": {"name": "sample"}}},
-            [{"filename": "AGENTS.md"}],
+            [{"filename": "AGENTS.md", "status": "modified", "patch": "@@ -1,2 +1,2 @@\n-CONTROL_MODE: FILE_CONTROL\n+CONTROL_MODE: ISSUE_CONTROL"}],
             {"commit": {"sha": "b" * 40}},
             {"status": "ahead"},
             {"type": "file", "encoding": "none", "content": "not authenticated"},
