@@ -130,6 +130,24 @@ def verify_migration(repo: str, migration_pr: int) -> dict:
     }
 
 
+def verified_personal_repo_approvers(repo: str) -> set[str]:
+    """Conservatively derive one trusted personal owner from live GitHub host.
+
+    Organization repositories require an independently governed org approver
+    policy and cannot be guessed from the current agent/token or markdown.
+    """
+    load_policy()
+    if not _valid_repo(repo):
+        raise ControlPolicyError("INVALID_REPOSITORY")
+    info = _gh_api(f"repos/{repo}")
+    owner = info.get("owner") or {}
+    if (info.get("full_name") != repo or owner.get("type") != "User"
+            or not isinstance(owner.get("login"), str)
+            or owner["login"] != repo.split("/", 1)[0]):
+        raise ControlPolicyError("TRUSTED_APPROVER_HOST_POLICY_REQUIRED")
+    return {owner["login"]}
+
+
 def select_control(repo: str, *, migration_pr: int | None = None) -> dict:
     """Read-only selector. Missing adoption never becomes implicit Issue authority."""
     load_policy()
