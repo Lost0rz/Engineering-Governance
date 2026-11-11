@@ -1,33 +1,33 @@
 # Engineering Governance
 
-Reusable AI engineering **workflow, methods, and proportional quality standards**. Project-specific product, source and runtime constraints stay in each project. This repository is the experiment/source for the installed plugin.
+Reusable AI engineering **workflow, methods and proportional verification**, not a mandatory Issue/approval system. Project-specific source, runtime and business constraints remain with their project.
 
-## Default method
+## Working method
 
-Understand the task → locate the owning code → implement inside the actual user/host authority → verify affected behavior → deliver observed evidence.
+Understand → route to the needed specialist → implement → test affected behavior at sensible milestones → deliver observed evidence.
 
-Clear current-session G1/G2 development can proceed without first creating an Issue. Long-running/legacy Issue tasks use their selected authority. Actual high-consequence permission, destructive-data and release operations retain appropriate host/owner decisions. File location and change count alone are not risk verdicts.
-
-## Skills
-
-| Skill | Use when |
+| Skill | Responsibility |
 | --- | --- |
-| `project-governance` | Default repository task and authority |
-| `domain-navigation` | Source/owner/test route is unclear |
-| `solution-design` | Material engineering architecture or API choice |
-| `design` | UI/UX or visual design |
-| `incident-doctor` | Blocking failure needs evidence-led diagnosis |
-| `execution-orchestrator` | Delegation/parallelism genuinely helps |
-| `agent-handoff` | An actual cross-context handoff is needed |
-| `evidence-audit` | A formal independent evidence verdict is requested |
-| `project-profile` | Compact project context index needs creation/refresh |
+| `project-governance` | Default engineering task, safety and delivery |
+| `design` | UI/UX and visual design |
+| `solution-design` | Architecture, API and state ownership |
+| `evidence-audit` | Formal evidence/readiness audit |
+| `incident-doctor` | Blocking fault diagnosis |
+| `domain-navigation` | Unclear source or test owner |
+| `execution-orchestrator` | Useful delegation and parallelism |
+| `agent-handoff` | Real cross-context transfer |
+| `project-profile` | Derived project context |
 
-Read [the main entry](skills/project-governance/SKILL.md) and [Skill routing](skills/project-governance/references/global-routing.md) only as needed. [Global policy](skills/project-governance/assets/control-policy.json) owns control defaults; [Issue Control](skills/project-governance/references/issue-control.md) describes the optional selected Issue path.
+Routing details: [global routing](skills/project-governance/references/global-routing.md).
 
-## Verification and installation
+## Task coordination
 
-[Verification tiers](skills/project-governance/references/verification-tiers.md) choose focused/affected tests, not a universal full suite. GitHub Actions reads the selector from a trusted base; preview packaging is an explicit manual action and is separate from CI verification.
+Work can start from an authenticated current user instruction or use an existing Issue/PR plan. Issues are optional collaboration, not approvals. Anyone with real GitHub write capability and authorized task intent may create/update them; comments and fixed fields are not required.
 
-An installed runtime must independently confirm its actual Skill version, tools and write permissions. A repository commit, successful CI or preview package does not establish Web/Desktop/local installation. Existing plugin manifests and runtime-specific instructions remain the sources for installation identity.
+Write permission comes from the real execution host. G3-like privilege/security/destructive changes require a separate responsible decision. Routine scope-preserving code adjustments do not.
 
-The legacy [Issue-spec checker](skills/project-governance/scripts/issue-spec-check.py) remains for selected approved Issue tasks; it is not the default entry for ordinary development.
+## Testing and installation
+
+[Verification tiers](skills/project-governance/references/verification-tiers.md) select test scope. Draft development does not auto-run broad GitHub CI; targeted checks are available and readiness/integration runs broader affected or full checks when justified. Plugin preview/build is separate.
+
+The current source [policy](skills/project-governance/assets/control-policy.json) is not an execution token. The installed Web/Desktop/local version and actual host permissions must be verified independently.

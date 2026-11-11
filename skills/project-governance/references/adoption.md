@@ -1,18 +1,12 @@
-# Skill installation and routing adoption
+# Adoption across repositories and hosts
 
-The source repository publishes reusable Skills; an installed runtime decides whether they are discoverable and what tools/permissions it provides. An installation manifest or repo file is not execution authority.
+The plugin provides reusable work methods, not remote write credentials or a new task database.
 
-## Adoption checks
+1. Install the intended plugin version in each execution host and verify the Skill entry/routing actually works there.
+2. Leave project `AGENTS.md` with project-specific product, source, data/runtime constraints; remove duplicated generic approval, Issue and CI workflow rules from target repositories when migrating.
+3. Use an Issue as an **optional** shared plan. Existing old-format Issue content may be read as historical task context, but former mandatory approval/digest mechanics are not supported.
+4. Keep real GitHub/local writer permissions and project safety constraints. Cross-host transfer of a URL does not transfer credentials or user authorization.
+5. A target repository maps affected tests and CI events to its own commands. Draft iterative edits should not trigger broad CI; significant integration/release boundaries should.
+6. Verify installation, package and runtime identity separately from source commit or a passing CI.
 
-1. Check the installed plugin source/version against its intended repository/ref; verify the Skill entry is available in that **actual** host.
-2. Exercise a normal repository task: `project-governance` owns task intent and only needed specialist Skills are loaded.
-3. For a genuine cross-context transfer, confirm that `agent-handoff` carries a compact authority reference and change request; receiver verifies its own permissions.
-4. Verify the target repo's local `AGENTS.md` contains only project-specific facts. Governance modes and host grants come from the installed policy.
-5. For authorized source edits, check the real execution host's write capability, not a copied installation result from another machine.
-6. When packaging, verify manifest identity, actual archived files, target platform import and installed version independently. CI success alone is not runtime installation evidence.
-
-## Verification routing
-
-The repository's own CI executes a trusted-base `VERIFICATION_PLAN_V1`, selecting affected tests; full test selection and Web preview packaging are separate actions. A target repo maintains its own test commands and dependency map.
-
-Historical FILE_CONTROL-to-ISSUE_CONTROL enrollment must be established from a verified merged migration; consult [issue-control-migration.md](issue-control-migration.md) only for migration or disputed enrollment. A failed or unavailable host trust check cannot be supplied by project prose.
+Future repositories should switch to this workflow **explicitly when updated**; do not claim their old control files, workflow triggers, Issues or installed plugins have been migrated solely because this source PR exists. No mass rewrite of other repos occurs here.

@@ -1,21 +1,19 @@
-# Global Skill routing
+# Outcome-based Skill routing
 
-The host discovers and loads the plugin; routing documentation does not establish installation or permissions. Choose a Skill by the **requested outcome**, not a word in the prompt. Start with `project-governance` for ordinary repository work; call another Skill only for a real dependency.
+Start from the requested outcome. Only invoke a specialist when its method will materially help; do not load all Skills as a checklist.
 
-| Need | Capability |
+| Requested result | Skill |
 | --- | --- |
-| Task scope, permission boundary, lifecycle, verification or delivery | `project-governance` |
-| Code/domain ownership or dependency unclear | `domain-navigation` |
-| Material engineering architecture or state/API design choice | `solution-design` |
-| UI/UX design, layouts or visual review | `design` |
-| Genuine blocked failure or missing evidence | `incident-doctor` |
-| Useful decomposition, parallelism or Sub Agent delegation | `execution-orchestrator` |
-| Actual cross-context instruction or receipt | `agent-handoff` |
-| Explicit formal independent acceptance/review verdict | `evidence-audit` |
-| Creation/revision of durable project context index | `project-profile` |
+| Normal code change, coordination, test/delivery decisions | `project-governance` |
+| UI/UX concept, visual implementation, design review | `design` |
+| Engineering architecture, API or state ownership | `solution-design` |
+| Unknown code owner, source, dependency or test route | `domain-navigation` |
+| Evidence-led failure investigation | `incident-doctor` |
+| Parallel work, subagents or delegated execution | `execution-orchestrator` |
+| A real cross-context transfer needing structured context | `agent-handoff` |
+| Explicit formal audit or acceptance/readiness verdict | `evidence-audit` |
+| Create/refresh compact derived project context | `project-profile` |
 
-Use only the needed specialist and return its verified result to the owning task. A routine PR status inquiry is a small host read, not automatically a formal audit; a clear implementation defect needs no separate incident process.
+Use the selected Skill's **own** design/audit/diagnostic methods and acceptance standards. Return its result to the current task instead of starting a new authorization chain. A status query is not automatically a formal audit, and a known bug is not automatically an incident.
 
-For frontend work, visual interaction belongs to `design`; state ownership/API architecture belongs to `solution-design` only when material. An existing Project Profile is context, not a reason to run Profile creation again. A handoff transports an authority reference and relevant delta, never new permissions.
-
-Actual tools/models, working directories and live host permissions belong to the receiving execution environment.
+For a Web/local task, a linked Issue/PR and short current instruction often replace a separate Card. Receiving environments own actual tools, model choices and writer permissions.
