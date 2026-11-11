@@ -1,6 +1,6 @@
 ## ISSUE_CONTROL design reauthorization
 
-A material accepted design change never silently changes the executable Issue. Project Governance updates the Issue's material spec revision, obtains verified reapproval and checks dependencies before the affected WP resumes. A Solution Design result alone is not permission to mutate source.
+A material accepted design change never silently widens the **selected task authority**. Issue-backed work revises and reapproves its selected Issue/spec. Verified current-session USER-directed G1/G2 requires a fresh explicit host-authenticated USER decision if paths, effects, risk or requested purpose change. Cross-session handoff cannot reuse unverified USER provenance. A Solution Design result alone is never source-write permission.
 
 # Design contract
 
@@ -55,7 +55,7 @@ When an accepted durable decision is replaced, mark the old record/section clear
 
 ## Task reconciliation
 
-Before implementation compare the accepted design with selected FILE_CONTROL Task or ISSUE_CONTROL approved Issue/spec revision:
+Before implementation compare the accepted design with selected FILE_CONTROL Task, approved ISSUE_CONTROL Issue/spec revision or current USER-directed G1/G2 task verified in this host:
 
 ```text
 TASK_RECONCILIATION_REQUIRED: YES | NO
