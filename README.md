@@ -30,4 +30,6 @@ Write permission comes from the real execution host. G3-like privilege/security/
 
 [Verification tiers](skills/project-governance/references/verification-tiers.md) select test scope. Draft development does not auto-run broad GitHub CI; targeted checks are available and readiness/integration runs broader affected or full checks when justified. Plugin preview/build is separate.
 
+Portable cross-repository CI uses the [shared router](skills/project-governance/references/ci-routing.md): a single released policy in this repository plus a small trusted test-capabilities file and caller workflow per consumer repository. The installed Web/Desktop/local Skill can plan or help adopt the route; an authorized GitHub Actions event actually starts the Runner.
+
 The current source [policy](skills/project-governance/assets/control-policy.json) is not an execution token. The installed Web/Desktop/local version and actual host permissions must be verified independently.

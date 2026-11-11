@@ -25,7 +25,7 @@ The second command generates a plan for an already accepted local test mapping; 
 
 Use the [caller example](../assets/examples/ci-caller.example.yml) with the released Governance workflow reference matching the router checkout tag. GitHub Actions owns the actual run and status; Governance owns test selection. The caller's default branch must contain the trusted capabilities config first. The central workflow does **not** inherit arbitrary project secrets.
 
-The reusable workflow uses a GitHub-hosted planner, then schedules the selected test matrix on caller-available runner labels. Self-hosted runners are available for workflows from the same owner/organization when the caller permits them.
+The reusable workflow uses a GitHub-hosted planner, then schedules the selected test matrix on caller-available runner labels. The caller uses its real default branch (which need not be named main); test-capability changes remain pending review at Ready until accepted in the base. Self-hosted runners are available for workflows from the same owner/organization when the caller permits them.
 
 ## Stage / tier decisions
 

@@ -21,6 +21,7 @@ A task can start from a trusted current USER request, an Issue/PR plan, or an ex
 1. Read only relevant task, project-specific `AGENTS.md`, source and evidence.
 2. Route to Design, Solution Design, Domain Navigation, Incident Doctor or a formal Evidence Audit only when the requested outcome or unresolved question warrants it.
 3. Implement and self-correct in scope. Delegate only when useful; do not create a new Issue, Card, worktree or review step merely because another context is involved.
+   When asked to manage a repository's tests or CI Runner, load [portable CI routing](references/ci-routing.md): inspect existing project test commands and Actions, generate/validate its small capability map, and replace overlapping heavy triggers as one authorized integration change. Do not claim a repo is onboarded until its default-branch caller and current shared workflow version are live.
 4. Test affected components at sensible milestones, not after every small edit. Wider tests are appropriate at significant integration, high-impact or version boundaries.
 5. Report changed code, actual test/PR state, blockers and remaining human acceptance without inventing a PASS.
 

@@ -168,7 +168,8 @@ def shell(t):
     return "\n".join(lines)
 
 
-def select(config, changed, stage, base, head, digest, focused=""):
+def select(config, changed, stage, base, head, digest, focused="",
+           config_path=".github/ci-capabilities.json"):
     validate(config)
     if stage not in STAGES:
         raise RouteError("INVALID_STAGE")
@@ -194,15 +195,17 @@ def select(config, changed, stage, base, head, digest, focused=""):
     matrix = [{"id": t["id"], "runner": t["runner"], "script": shell(t),
                "tier": t["tier"], "timeout_minutes": t.get("timeout_minutes", 20)}
               for t in selected]
+    config_changed = config_path in changed
     coverage = ("DEFERRED" if stage in ("draft", "none") else
                 "FOCUSED_ONLY" if stage == "focused" else
+                "CAPABILITIES_CHANGE_REVIEW" if config_changed and stage == "ready" else
                 "PARTIAL_UNMAPPED" if unknown else
                 "NO_TESTS_REQUIRED" if not matrix else "SELECTED_PENDING")
     return {"contract": PLAN, "base": base, "head": head, "stage": stage,
             "config_sha256": digest, "changed_paths": changed,
             "selected_test_ids": [t["id"] for t in selected],
             "unmapped_paths": unknown, "coverage": coverage,
-            "review_required": bool(unknown) and stage == "ready",
+            "review_required": stage == "ready" and bool(unknown or config_changed),
             "run_tests": bool(matrix), "test_status": "NOT_RUN",
             "full_suite_claim": False, "matrix": {"include": matrix},
             "config_source": "ACCEPTED_BASE" if base != "LOCAL" else "LOCAL_FILE"}
@@ -242,7 +245,7 @@ def main():
             cfg, digest = load(args.repo_root, args.base, args.config_path, args.config_source)
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
-                            args.head, digest, args.focused)
+                            args.head, digest, args.focused, args.config_path)
         if args.output:
             args.output.write_text(json.dumps(result, sort_keys=True, indent=2) + "\n")
         if args.github_output and args.mode == "plan":

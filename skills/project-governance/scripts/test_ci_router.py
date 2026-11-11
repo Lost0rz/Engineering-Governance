@@ -71,6 +71,11 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertEqual(doc["coverage"], "NO_TESTS_REQUIRED")
         self.assertFalse(doc["review_required"])
 
+    def test_capability_policy_edits_never_autogrant_new_commands(self):
+        p = self.plan([".github/ci-capabilities.json"])
+        self.assertEqual(p["coverage"], "CAPABILITIES_CHANGE_REVIEW")
+        self.assertTrue(p["review_required"])
+
     def test_unknown_does_not_masquerade_as_pass(self):
         p = self.plan(["unmapped/credential.py"])
         self.assertEqual(p["selected_test_ids"], ["smoke"])
