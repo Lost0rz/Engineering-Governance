@@ -36,10 +36,10 @@ jobs:
       stage: ${{ steps.select.outputs.stage }}
       capabilities_changed: ${{ steps.select.outputs.capabilities_changed }}
     steps:
-      - name: Checkout exact caller HEAD
+      - name: Checkout tested event revision (PR merged tree or manual commit)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
           path: project
@@ -87,28 +87,37 @@ jobs:
           if [[ "$IS_FORK" == "true" ]]; then
             source_trust=fork
           fi
+          # Trust commands from the accepted base, not the PR's new config.
+          CONFIG_REF="$BASE_SHA"
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             test -n "$DEFAULT_BRANCH"
-            git -C project fetch --no-tags origin "$DEFAULT_BRANCH"
+            # fetch-depth=0 retrieves origin/*; no private repo credentials needed.
+            TRUSTED_DEFAULT="refs/remotes/origin/$DEFAULT_BRANCH"
+            git -C project show-ref --verify --quiet "$TRUSTED_DEFAULT" || {
+              echo "::error::Default branch remote ref unavailable after checkout."
+              exit 2
+            }
+            CONFIG_REF="$(git -C project rev-parse --verify "$TRUSTED_DEFAULT^{commit}")"
             if [[ -z "$COMPARISON_BASE" ]]; then
               if [[ "$stage" == "ready" || "$stage" == "milestone" ]]; then
                 echo "::error::Manual affected verification requires an explicit accepted comparison_base SHA."
                 exit 2
               fi
-              BASE_SHA="$(git -C project rev-parse "origin/$DEFAULT_BRANCH")"
+              BASE_SHA="$CONFIG_REF"
             else
               BASE_SHA="$COMPARISON_BASE"
               if ! git -C project cat-file -e "$BASE_SHA^{commit}" 2>/dev/null ||
-                 ! git -C project merge-base --is-ancestor "$BASE_SHA" "origin/$DEFAULT_BRANCH"; then
-                echo "::error::comparison_base must be a committed ancestor of the accepted default branch."
+                 ! git -C project merge-base --is-ancestor "$BASE_SHA" "$CONFIG_REF" ||
+                 ! git -C project merge-base --is-ancestor "$BASE_SHA" "$HEAD_SHA"; then
+                echo "::error::comparison_base must be an ancestor of default branch and tested HEAD."
                 exit 2
               fi
             fi
           fi
-          test -n "$BASE_SHA"
+          test -n "$BASE_SHA" && test -n "$CONFIG_REF"
           python3 governance/skills/project-governance/scripts/ci-router.py plan \
             --repo-root project --base "$BASE_SHA" --head "$HEAD_SHA" \
-            --config-path "$CAPABILITIES_PATH" --config-source base \
+            --config-ref "$CONFIG_REF" --config-path "$CAPABILITIES_PATH" --config-source base \
             --source-trust "$source_trust" --stage "$stage" --focused "$FOCUSED_TEST" \
             --output "$RUNNER_TEMP/eg-ci-plan.json" \
             --github-output "$GITHUB_OUTPUT"
@@ -116,7 +125,7 @@ jobs:
           import json, sys
           p = json.load(open(sys.argv[1]))
           print("### Engineering Governance selected tests")
-          for key in ("base", "head", "stage", "coverage", "config_sha256"):
+          for key in ("base", "head", "stage", "coverage", "config_ref", "config_sha256"):
               print("- " + key + ": " + str(p[key]))
           print("- Selected: " + (", ".join(p["selected_test_ids"]) or "NONE"))
           if p["capabilities_changed"]:
@@ -140,10 +149,10 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: ${{ matrix.timeout_minutes }}
     steps:
-      - name: Checkout exact caller HEAD
+      - name: Checkout tested event revision (PR merged tree or manual commit)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Execute accepted-base test command
