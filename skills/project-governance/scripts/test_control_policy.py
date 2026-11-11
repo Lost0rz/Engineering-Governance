@@ -106,6 +106,27 @@ class GlobalControlPolicyTests(unittest.TestCase):
                 with self.assertRaisesRegex(policy.ControlPolicyError, "MIGRATION_PR_REQUIRED"):
                     policy.verify_migration("Lost0rz/Merloom", number)
 
+    def test_personal_owner_approver_comes_from_host(self):
+        with patch.object(policy, "_gh_api", return_value={
+            "full_name": "Lost0rz/Engineering-Governance",
+            "owner": {"type": "User", "login": "Lost0rz"},
+        }):
+            self.assertEqual(policy.verified_personal_repo_approvers(
+                "Lost0rz/Engineering-Governance"), {"Lost0rz"})
+
+    def test_org_and_mismatched_owner_never_infer_approver(self):
+        for host in (
+            {"full_name": "Lost0rz/Engineering-Governance",
+             "owner": {"type": "Organization", "login": "Lost0rz"}},
+            {"full_name": "attacker/repository",
+             "owner": {"type": "User", "login": "attacker"}},
+        ):
+            with self.subTest(host=host), patch.object(policy, "_gh_api", return_value=host):
+                with self.assertRaisesRegex(
+                    policy.ControlPolicyError, "TRUSTED_APPROVER_HOST_POLICY_REQUIRED"
+                ):
+                    policy.verified_personal_repo_approvers("Lost0rz/Engineering-Governance")
+
     def test_web_authoring_is_only_eligibility(self):
         self.assertFalse(policy.web_authoring_eligible(explicit_user_request=False,
                                                       verified_github_write=True))
