@@ -105,6 +105,62 @@ def changes(repo, base, head, include_worktree=False):
     return sorted(set(paths))
 
 
+def nonregular_changes(repo, base, head, include_worktree=False):
+    """Identify special Git modes; a symlink named *.md is not ordinary prose."""
+    commands = []
+    if base != head:
+        commands.append(("diff", "--raw", "-z", "-M", base + "..." + head))
+    if include_worktree:
+        commands.extend((("diff", "--raw", "-z", "-M", "--cached"),
+                         ("diff", "--raw", "-z", "-M")))
+    special = set()
+    for command in commands:
+        raw = git(repo, *command)
+        if raw and not raw.endswith(b"\0"):
+            raise RouteError("TRUNCATED_RAW_DIFF")
+        fields = raw[:-1].split(b"\0") if raw else []
+        i = 0
+        while i < len(fields):
+            try:
+                record = fields[i].decode("ascii")
+            except UnicodeError as exc:
+                raise RouteError("INVALID_RAW_DIFF") from exc
+            i += 1
+            parts = record.split(" ")
+            if len(parts) != 5 or not parts[0].startswith(":"):
+                raise RouteError("INVALID_RAW_DIFF")
+            old_mode, new_mode = parts[0][1:], parts[1]
+            status = parts[4]
+            if not re.fullmatch(r"(?:[AMDTUXB]|[RC][0-9]{1,3})", status):
+                raise RouteError("INVALID_RAW_STATUS")
+            count = 2 if status[0] in "RC" else 1
+            if i + count > len(fields):
+                raise RouteError("TRUNCATED_RAW_DIFF")
+            try:
+                names = [x.decode("utf-8", "strict") for x in fields[i:i + count]]
+            except UnicodeError as exc:
+                raise RouteError("INVALID_PATH_ENCODING") from exc
+            if any(not safe_path(p) for p in names):
+                raise RouteError("UNSAFE_PATH")
+            i += count
+            if old_mode not in ("000000", "100644", "100755") or new_mode not in (
+                    "000000", "100644", "100755"):
+                special.update(names)
+    if include_worktree:
+        import stat
+        raw = git(repo, "ls-files", "--others", "--exclude-standard", "-z")
+        for item in (p for p in raw.split(b"\0") if p):
+            try:
+                path = item.decode("utf-8")
+                mode = (repo / path).lstat().st_mode
+            except (UnicodeError, OSError) as exc:
+                raise RouteError("INVALID_UNTRACKED_FILE_MODE") from exc
+            if not stat.S_ISREG(mode):
+                special.add(path)
+    return sorted(special)
+
+
+
 def match(pattern, path):
     if not safe_path(pattern) or "[" in pattern or "]" in pattern:
         raise RouteError("UNSUPPORTED_GLOB")
@@ -252,7 +308,8 @@ def shell(t):
 
 
 def select(config, changed, stage, base, head, digest, focused="",
-           config_path=".github/ci-capabilities.json", source_trust="internal"):
+           config_path=".github/ci-capabilities.json", source_trust="internal",
+           nonregular_paths=None):
     validate(config)
     if stage not in STAGES:
         raise RouteError("INVALID_STAGE")
@@ -272,9 +329,10 @@ def select(config, changed, stage, base, head, digest, focused="",
         hits = {t["id"] for t in config["tests"]
                 if any(match(pat, path) for pat in t["paths"] for path in changed)}
         unknown = [path for path in changed if path != config_path
-                   and not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
-                   and not (descriptive_doc(path) and any(
-                       match(pat, path) for pat in config.get("documentation_paths", [])))]
+                   and (path in (nonregular_paths or []) or
+                   (not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
+                    and not (descriptive_doc(path) and any(
+                        match(pat, path) for pat in config.get("documentation_paths", []))))]
         if unknown:
             hits.update(config.get("fallback_tests", []))
         selected = [t for t in config["tests"] if t["id"] in hits]
@@ -314,7 +372,8 @@ def select(config, changed, stage, base, head, digest, focused="",
     return {"contract": PLAN, "base": base, "head": head, "stage": stage,
             "config_sha256": digest, "changed_paths": changed,
             "selected_test_ids": [t["id"] for t in selected],
-            "unmapped_paths": unknown, "coverage": coverage,
+            "unmapped_paths": unknown, "nonregular_paths": nonregular_paths or [],
+            "coverage": coverage,
             # A fallback can prove readiness only if the accepted catalog
             # explicitly declares it sufficient for unknown paths.
             "review_required": ((stage not in ("draft", "none") and bool(fork_blocked)) or
@@ -408,13 +467,15 @@ def main():
             if args.worktree and args.github_output:
                 raise RouteError("WORKTREE_NOT_ALLOWED_IN_GITHUB")
             changed = changes(args.repo_root, args.base, args.head, include_worktree=args.worktree)
+            special = nonregular_changes(args.repo_root, args.base, args.head,
+                                         include_worktree=args.worktree)
             if args.mode == "run" and args.config_source != "base":
                 raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
             cfg, digest = load(args.repo_root, args.base, args.config_path, args.config_source)
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
                             args.head, digest, args.focused, args.config_path,
-                            args.source_trust)
+                            args.source_trust, special)
             if args.config_source == "base" and args.config_path in changed:
                 # Inspect PR config as data only. Never use its commands or runner
                 # labels to build an executable matrix before it becomes base.
