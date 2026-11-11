@@ -108,7 +108,7 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertIn("verifies that user-role message", flow)
         self.assertIn("host_action_authorization_required", policy)
         self.assertIn('"initial_issue_approval_required": False', policy)
-        self.assertIn("initial task authorization", issue)
+        self.assertIn("sufficient task authorization for the first action", issue)
         self.assertIn("first task authorization", flow)
         self.assertIn("first 19-field Issue approval comment", execution)
         self.assertIn("current top-level user request", self.read("skills/project-governance/SKILL.md"))
@@ -182,7 +182,9 @@ class EG097PolicyContractTests(unittest.TestCase):
         self.assertNotIn("## Mandatory pre-return gate", receipt)
         self.assertNotIn("SOURCE_CARD_ID_PRESERVED: YES", receipt)
         self.assertIn("only if supplied", receipt)
-        self.assertIn("Legacy/default: run `digest/verify`", issue)
+        self.assertIn("Legacy Issue-backed only:", issue)
+        self.assertIn("run `digest/verify`", issue)
+        self.assertIn("In ISSUE_CONTROL, **either**", issue)
         self.assertIn("In a **verified active** G1/G2 grant mode", issue)
 
     def test_control_alignment_is_mode_and_event_scoped_everywhere(self):
