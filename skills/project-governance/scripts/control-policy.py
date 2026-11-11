@@ -245,10 +245,11 @@ def interactive_scope_eligibility(
                 or any(ord(ch) < 32 or ord(ch) == 127 for ch in path)
                 or "*" in path or "?" in path):
             raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
-        if (path.split("/")[-1] == "AGENTS.md" or path == "plugin.json"
-                or path.startswith((".github/", ".agents/", ".codex-plugin/",
-                                    "skills/project-governance/"))
-                or path == "skills/agent-handoff/references/handoff-contract.md"):
+        normalized = path.casefold()  # macOS worktrees may be case-insensitive
+        if (normalized.split("/")[-1] == "agents.md" or normalized == "plugin.json"
+                or normalized.startswith((".github/", ".agents/", ".codex-plugin/",
+                                          "skills/project-governance/"))
+                or normalized == "skills/agent-handoff/references/handoff-contract.md"):
             raise ControlPolicyError("PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT")
     if (type(effects) is not list or not effects
             or not all(isinstance(effect, str) and effect in SESSION_EFFECTS
@@ -258,7 +259,7 @@ def interactive_scope_eligibility(
     return {
         "contract": "INTERACTIVE_SCOPE_ELIGIBILITY_V1",
         "repository": repo, "risk": risk,
-        "paths": paths, "effects": effects,
+        "paths": list(paths), "effects": list(effects),
         "route": "ACTIVE_SESSION_USER_DIRECT",
         "per_wp_approval_comment_required": False,
         "host_action_authorization_required": True,
