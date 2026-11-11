@@ -81,9 +81,13 @@ class GeneralRouterTests(unittest.TestCase):
         p = self.plan(["unmapped/credential.py"])
         self.assertEqual(p["selected_test_ids"], ["smoke"])
         self.assertEqual(p["unmapped_paths"], ["unmapped/credential.py"])
-        # Trusted-base fallback keeps work moving while coverage stays explicit.
-        self.assertFalse(p["review_required"])
+        self.assertTrue(p["review_required"])  # smoke alone is not readiness proof
         self.assertEqual(p["coverage"], "PARTIAL_UNMAPPED")
+        accepted = catalog()
+        accepted["fallback_satisfies_ready"] = True
+        covered = self.plan(["unmapped/credential.py"], cfg=accepted)
+        self.assertFalse(covered["review_required"])
+        self.assertEqual(covered["coverage"], "FALLBACK_COVERED")
         self.assertFalse(p["full_suite_claim"])
         without_fallback = catalog()
         without_fallback["fallback_tests"] = []
@@ -149,7 +153,7 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertEqual(real_doc["coverage"], "NO_TESTS_REQUIRED")
         source = self.plan(["docs/unsafe.py"], cfg=cfg)
         self.assertEqual(source["coverage"], "PARTIAL_UNMAPPED")
-        self.assertFalse(source["review_required"])  # accepted fallback is selected
+        self.assertTrue(source["review_required"])  # smoke cannot certify unknown source
         self.assertEqual(source["selected_test_ids"], ["smoke"])
         self.assertEqual(source["unmapped_paths"], ["docs/unsafe.py"])
         cfg["fallback_tests"] = []
@@ -345,7 +349,62 @@ class GeneralRouterTests(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, proc.stderr)
             self.assertEqual(json.loads(proc.stdout)["test_status"], "PASS")
             self.assertIn("child output", proc.stderr)
-            self.assertNotIn("child output", proc.stdout)
+            self.assertEqual(proc.stdout.count(chr(10)), 1)  # JSON is one line
+
+    def test_local_worktree_staged_unstaged_untracked(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "apps/web").mkdir(parents=True)
+            (repo / "apps/web/p.ts").write_text("old")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            head = git("rev-parse", "HEAD")
+            (repo / "apps/web/p.ts").write_text("new")
+            (repo / "backend").mkdir()
+            (repo / "backend/fix.py").write_text("print(1)")
+            git("add", "backend/fix.py")
+            (repo / "docs").mkdir()
+            (repo / "docs/产品设计.md").write_text("untracked")
+            self.assertEqual(ci.changes(repo, head, head), [])
+            actual = ci.changes(repo, head, head, include_worktree=True)
+            self.assertEqual(actual, ["apps/web/p.ts", "backend/fix.py", "docs/产品设计.md"])
+            scoped = ci.select(catalog(), actual, "milestone", head, head, "digest")
+            self.assertEqual(scoped["selected_test_ids"], ["node-unit", "python-unit"])
+            with self.assertRaises(ci.RouteError):
+                ci.changes(repo, "a"*40, head, include_worktree=True)
+
+    def test_fork_hosted_lane_and_selfhosted_exclusion(self):
+        cfg = catalog()
+        cfg["tests"][1]["fork_safe"] = True
+        safe = ci.select(cfg, ["apps/web/p.ts"], "ready",
+                         "a"*40, "b"*40, "digest", source_trust="fork")
+        self.assertEqual(safe["selected_test_ids"], ["node-unit"])
+        self.assertFalse(safe["review_required"])
+        blocked = ci.select(cfg, ["remote-orbit/Sources/key.swift"], "ready",
+                            "a"*40, "b"*40, "digest", source_trust="fork")
+        self.assertEqual(blocked["selected_test_ids"], [])
+        self.assertEqual(blocked["fork_blocked_tests"], ["swift-unit"])
+        self.assertTrue(blocked["review_required"])
+        self.assertEqual(blocked["coverage"], "FORK_PARTIAL")
+        cfg["tests"][0]["fork_safe"] = True
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+
+    def test_fork_requires_safe_dependencies(self):
+        cfg = catalog()
+        cfg["tests"][1]["fork_safe"] = True
+        cfg["tests"][1]["requires"] = ["swift-unit"]
+        plan = ci.select(cfg, ["apps/web/p.ts"], "ready",
+                         "a"*40, "b"*40, "digest", source_trust="fork")
+        self.assertEqual(plan["selected_test_ids"], [])
+        self.assertEqual(plan["fork_blocked_tests"], ["node-unit", "swift-unit"])
+        self.assertTrue(plan["review_required"])
 
     def test_reusable_caller_separates_manual_and_pr_required_checks(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
@@ -354,6 +413,10 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertIn('PR verification must select the Ready scope via auto.', workflow)
         self.assertIn('STAGE" != "ready"', workflow)
         self.assertIn('capabilities_changed:', workflow)
+        self.assertIn('comparison_base:', workflow)
+        self.assertIn('explicit accepted comparison_base SHA', workflow)
+        self.assertIn('merge-base --is-ancestor', workflow)
+        self.assertIn('--source-trust "$source_trust"', workflow)
 
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
