@@ -132,6 +132,7 @@ class VerificationPlanTests(unittest.TestCase):
     def test_unmapped_skill_code_cannot_silently_use_document_tier(self):
         self.assertEqual(route(change("skills/new-skill/worker.py"))["tier"], "V3")
         self.assertEqual(route(change("skills/new-skill/contract.json"))["tier"], "V3")
+        self.assertEqual(route(change(".github/ISSUE_TEMPLATE/unsafe.sh"))["tier"], "V3")
 
     def test_renames_include_old_and_new_identity(self):
         p = route(change("documents/archive/renamed.md", "R100", "AGENTS.md"))

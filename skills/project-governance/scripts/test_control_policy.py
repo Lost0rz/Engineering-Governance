@@ -63,14 +63,11 @@ class GlobalControlPolicyTests(unittest.TestCase):
             ({"host_write_permission": False}, "LIVE_HOST_WRITE_PERMISSION_REQUIRED"),
             ({"effects": ["source_edit", "release"]}, "INVALID_SESSION_EFFECTS"),
             ({"effects": ["source_edit", "merge"]}, "INVALID_SESSION_EFFECTS"),
-            ({"paths": ["AGENTS.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": [".github/workflows/ci.yml"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": ["src/../secrets"]}, "INVALID_SESSION_SCOPE_PATHS"),
             ({"paths": ["src\\private"]}, "INVALID_SESSION_SCOPE_PATHS"),
             ({"paths": [["nested"]]}, "INVALID_SESSION_SCOPE_PATHS"),
             ({"paths": ["src/**"]}, "INVALID_SESSION_SCOPE_PATHS"),
-            ({"paths": ["docs/AGENTS.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
-            ({"paths": ["docs/agents.md"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": [".GitHub/workflows/CI.yml"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"paths": ["plugin.JSON"]}, "PROTECTED_AUTHORITY_PATH_REQUIRES_G3_PREFLIGHT"),
             ({"effects": [["source_edit"]]}, "INVALID_SESSION_EFFECTS"),
@@ -89,6 +86,7 @@ class GlobalControlPolicyTests(unittest.TestCase):
         }
         docs = ["skills/project-governance/SKILL.md",
                 "skills/project-governance/references/development-flow.md",
+                "AGENTS.md", "docs/agents.md",
                 ".github/ISSUE_TEMPLATE/execution-spec.yml"]
         paths = docs + [f"documents/notes/note-{i}.md" for i in range(20)]
         plan = policy.interactive_scope_eligibility(paths=paths, **common)

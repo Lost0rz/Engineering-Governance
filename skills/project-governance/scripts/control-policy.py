@@ -264,8 +264,9 @@ def interactive_scope_eligibility(
                 or "*" in path or "?" in path):
             raise ControlPolicyError("INVALID_SESSION_SCOPE_PATHS")
         normalized = path.casefold()  # macOS worktrees may be case-insensitive
-        # Path identity is a scope hint, not proof of a privilege change. Only
-        # executable trust roots / host configuration are excluded here.
+        # Path identity is a scope hint, not proof of a privilege change.
+        # Normal AGENTS/Skill Markdown edits are not automatically G3; protect
+        # executable trust roots, packaging identity and host configuration.
         # Real changed paths and semantic effects are still reviewed by host.
         protected_exact = {
             "skills/project-governance/assets/control-policy.json",
@@ -273,8 +274,7 @@ def interactive_scope_eligibility(
             "skills/project-governance/scripts/issue-spec-check.py",
             "skills/project-governance/scripts/verification-plan.py",
         }
-        if (normalized.split("/")[-1] == "agents.md"
-                or normalized == "plugin.json"
+        if (normalized == "plugin.json"
                 or normalized in protected_exact
                 or normalized.startswith((".github/workflows/", ".agents/",
                                           ".codex-plugin/"))):

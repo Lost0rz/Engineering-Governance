@@ -132,6 +132,9 @@ def classify(path: str) -> tuple[str, str]:
         if path == prefix or (prefix.endswith("/") and path.startswith(prefix)):
             if prefix == "skills/" and not path.endswith((".md", ".txt")):
                 return "V3", "unmapped Skill code or structured asset"
+            if (prefix == ".github/ISSUE_TEMPLATE/"
+                    and not path.endswith((".md", ".yml", ".yaml"))):
+                return "V3", "unmapped executable in Issue template directory"
             return tier, reason
     return "V3", "unknown dependency or file owner"
 
