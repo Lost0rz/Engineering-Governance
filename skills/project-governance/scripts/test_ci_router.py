@@ -685,7 +685,8 @@ class GeneralRouterTests(unittest.TestCase):
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("workflow_call:", flow)
-        self.assertIn("ref: v0.10.0", flow)
+        published_version = json.loads((ROOT / "plugin.json").read_text())["version"]
+        self.assertIn(f"ref: v{published_version}", flow)
         self.assertIn("--config-source base", flow)
         self.assertIn("fromJSON(needs.route.outputs.matrix)", flow)
         self.assertIn("matrix.runner", flow)
