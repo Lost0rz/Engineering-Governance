@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: v0.10.0
+          ref: v0.10.1
           persist-credentials: false
           path: governance
 

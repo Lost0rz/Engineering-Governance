@@ -109,6 +109,13 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertIn("          - test_ci_router.py", own_ci)
         self.assertIn("test_verification_plan.py|test_ci_router.py) ;;", own_ci)
 
+    def test_release_pin_matches_manifest(self):
+        version = json.loads((ROOT / "plugin.json").read_text())["version"]
+        workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
+        self.assertIn(f"ref: v{version}", workflow)
+        doc = (ROOT / "skills/project-governance/references/ci-routing.md").read_text()
+        self.assertIn(f"`v{version}`", doc)
+
     def test_executor_checkout_has_pr_base_parent_without_credentials(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         route = workflow.split("  route:\n", 1)[1].split("\n  execute:\n", 1)[0]
