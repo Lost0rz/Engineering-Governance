@@ -109,6 +109,15 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertIn("          - test_ci_router.py", own_ci)
         self.assertIn("test_verification_plan.py|test_ci_router.py) ;;", own_ci)
 
+    def test_executor_checkout_has_pr_base_parent_without_credentials(self):
+        workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
+        route = workflow.split("  route:\n", 1)[1].split("\n  execute:\n", 1)[0]
+        execute = workflow.split("\n  execute:\n", 1)[1].split("\n  result:\n", 1)[0]
+        self.assertIn("fetch-depth: 0", route)
+        self.assertIn("fetch-depth: 2", execute)
+        self.assertIn("persist-credentials: false", execute)
+        self.assertNotIn("fetch-depth: 0", execute)
+
     def test_ci_draft_is_skipped_and_manual_scope_available(self):
         workflow = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text()
         self.assertIn("github.event.pull_request.draft == false", workflow)
