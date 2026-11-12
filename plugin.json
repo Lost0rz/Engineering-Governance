@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-governance",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Reusable AI engineering Skill routing, practical work methods, optional Issue collaboration and proportionate verification. User/host permissions govern actual writes.",
   "extensions": {
     "com.openai": {

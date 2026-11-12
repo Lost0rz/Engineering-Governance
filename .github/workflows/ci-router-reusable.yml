@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: v0.10.0
+          ref: v0.10.1
           persist-credentials: false
           path: governance
 
@@ -159,6 +159,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
+          # PR merge commit parent 1 is the accepted base. Depth 2 lets a
+          # project-owned test executor read its trusted catalog without a
+          # network fetch (including in private repositories).
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Execute accepted-base test command
