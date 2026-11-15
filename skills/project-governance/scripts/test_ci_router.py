@@ -38,6 +38,121 @@ def catalog():
     }
 
 
+
+class ImportOnlyRoutingTests(unittest.TestCase):
+    def test_only_module_import_targets_may_change(self):
+        old = b"from old.connection import connect\n\ndef use():\n    return connect()\n"
+        new = b"from new.shared import connect\n\ndef use():\n    return connect()\n"
+        self.assertTrue(ci._import_only_python(old, new))
+        self.assertFalse(ci._import_only_python(old, old))
+        self.assertFalse(ci._import_only_python(old, new.replace(b"connect()", b"connect(1)")))
+        self.assertFalse(ci._import_only_python(old, new.replace(b"import connect", b"import open")))
+        self.assertFalse(ci._import_only_python(old, b"from new.shared import *\n\ndef use():\n    return connect()\n"))
+        self.assertFalse(ci._import_only_python(
+            b"from __future__ import annotations\nx=1\n",
+            b"from __future__ import division\nx=1\n"))
+        self.assertTrue(ci._import_only_python(
+            b"import old.lib as client\nvalue=client.run()\n",
+            b"import new.lib as client\nvalue=client.run()\n"))
+        self.assertFalse(ci._import_only_python(
+            b"import old.lib\nvalue=1\n",
+            b"import new.lib\nvalue=1\n"))
+        self.assertFalse(ci._import_only_python(b"x=1\n", b"x=2\n"))
+        self.assertFalse(ci._import_only_python(b"from old import x\n", b"def bad(:\n"))
+
+    @staticmethod
+    def routing_catalog():
+        return {
+            "contract": "EG_CI_CAPABILITIES_V1",
+            "tests": [
+                {"id": "imports", "tier": "V1", "paths": ["backend/**"],
+                 "runner": ["ubuntu-latest"], "command": ["python3", "-m", "compileall", "backend"]},
+                {"id": "wide", "tier": "V3", "paths": ["backend/shared/**"],
+                 "runner": ["ubuntu-latest"], "command": ["python3", "-m", "pytest"],
+                 "requires": ["domain"], "import_only_alternatives": ["imports"]},
+                {"id": "domain", "tier": "V2", "paths": ["backend/domain/**"],
+                 "runner": ["ubuntu-latest"], "command": ["python3", "-m", "unittest"]},
+            ],
+        }
+
+    def test_explicit_opt_in_scopes_without_hiding_behavioral_changes(self):
+        cfg = self.routing_catalog()
+        path = "backend/shared/connection.py"
+        kwargs = {"import_only_paths": [path]}
+        scoped = ci.select(cfg, [path], "ready", "a"*40, "b"*40, "digest", **kwargs)
+        self.assertEqual(scoped["selected_test_ids"], ["imports"])
+        self.assertEqual(scoped["import_only_substitutions"]["wide"]["alternatives"], ["imports"])
+        self.assertFalse(scoped["review_required"])
+        self.assertFalse(scoped["full_suite_claim"])
+        unproved = ci.select(cfg, [path], "ready", "a"*40, "b"*40, "digest")
+        self.assertEqual(unproved["selected_test_ids"], ["imports", "wide", "domain"])
+        mixed = ci.select(cfg, [path, "backend/shared/behavior.py"], "ready",
+                          "a"*40, "b"*40, "digest", **kwargs)
+        self.assertEqual(mixed["selected_test_ids"], ["imports", "wide", "domain"])
+        manual = ci.select(cfg, [path], "focused", "a"*40, "b"*40,
+                           "digest", focused="wide", **kwargs)
+        self.assertEqual(manual["selected_test_ids"], ["wide", "domain"])
+        release = ci.select(cfg, [path], "release", "a"*40, "b"*40, "digest", **kwargs)
+        self.assertEqual(release["selected_test_ids"], ["imports", "wide", "domain"])
+        dependent = self.routing_catalog()
+        dependent["tests"][2]["requires"] = ["wide"]
+        forced = ci.select(dependent, [path, "backend/domain/other.py"], "ready",
+                           "a"*40, "b"*40, "digest", **kwargs)
+        self.assertEqual(forced["selected_test_ids"], ["imports", "wide", "domain"])
+        self.assertEqual(forced["import_only_substitutions"], {})
+
+    def test_opt_in_catalog_validation_rejects_invalid_targets(self):
+        for alternatives in ("imports", ["missing"], ["wide"], ["imports", "imports"], [42]):
+            with self.subTest(alternatives=alternatives):
+                cfg = self.routing_catalog()
+                cfg["tests"][1]["import_only_alternatives"] = alternatives
+                with self.assertRaises(ci.RouteError):
+                    ci.validate(cfg)
+        cfg = self.routing_catalog()
+        cfg["tests"][0]["import_only_alternatives"] = ["domain"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(cfg)
+
+    def test_import_only_evidence_is_from_git_not_user_assertion(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL).decode().strip()
+            git("init", "-q")
+            git("config", "user.name", "test")
+            git("config", "user.email", "test@example.invalid")
+            directory = root / "backend/shared"
+            directory.mkdir(parents=True)
+            path = directory / "connection.py"
+            before = "from old.adapter import connection\n\ndef connect():\n    return connection()\n"
+            after = before.replace("old.adapter", "new.adapter")
+            path.write_text(before)
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+            path.write_text(after)
+            git("add", "-A")
+            git("commit", "-qm", "import path")
+            head = git("rev-parse", "HEAD")
+            matched = ci.python_import_only_paths(root, base, head)
+            self.assertEqual(matched, ["backend/shared/connection.py"])
+            plan = ci.select(self.routing_catalog(), ci.changes(root, base, head),
+                             "ready", base, head, "digest", import_only_paths=matched)
+            self.assertEqual(plan["selected_test_ids"], ["imports"])
+            path.write_text(after.replace("connection()", "connection(1)"))
+            self.assertEqual(ci.python_import_only_paths(root, base, head), matched)
+            self.assertEqual(ci.python_import_only_paths(root, base, head, True), [])
+            git("add", "-A")
+            git("commit", "-qm", "behavioral")
+            final = git("rev-parse", "HEAD")
+            self.assertEqual(ci.python_import_only_paths(root, base, final), [])
+            git("mv", "backend/shared/connection.py", "backend/shared/renamed.py")
+            git("commit", "-qm", "rename")
+            renamed = git("rev-parse", "HEAD")
+            self.assertEqual(ci.python_import_only_paths(root, final, renamed), [])
+
+
 class GeneralRouterTests(unittest.TestCase):
     def plan(self, paths, stage="ready", cfg=None, focused=""):
         return ci.select(cfg or catalog(), paths, stage,
