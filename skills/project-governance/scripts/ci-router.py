@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Portable CI router. Plan by default; run only when explicitly requested."""
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -161,6 +162,103 @@ def nonregular_changes(repo, base, head, include_worktree=False):
 
 
 
+
+def _import_only_python(old: bytes, new: bytes) -> bool:
+    """Conservative hint: only top-level import targets changed, never behavior proof."""
+    if old == new or max(len(old), len(new)) > 512_000:
+        return False
+    try:
+        before, after = ast.parse(old), ast.parse(new)
+    except (SyntaxError, ValueError, UnicodeError):
+        return False
+    imports_before = [n for n in before.body if isinstance(n, (ast.Import, ast.ImportFrom))]
+    imports_after = [n for n in after.body if isinstance(n, (ast.Import, ast.ImportFrom))]
+    if not imports_before or len(imports_before) != len(imports_after):
+        return False
+    for left, right in zip(imports_before, imports_after):
+        if type(left) is not type(right):
+            return False
+        if isinstance(left, ast.ImportFrom):
+            if left.module == "__future__" or right.module == "__future__":
+                return False
+            if any(a.name == "*" for a in left.names + right.names):
+                return False
+            if ast.dump(ast.Tuple(elts=left.names, ctx=ast.Load())) != ast.dump(
+                    ast.Tuple(elts=right.names, ctx=ast.Load())):
+                return False
+        else:
+            # Preserve each imported binding; only explicitly aliased import
+            # targets may change. "import a.b" binds "a" and is not eligible.
+            if any(alias.asname is None for alias in left.names + right.names):
+                return False
+            if [a.asname for a in left.names] != [a.asname for a in right.names]:
+                return False
+    def rest(tree):
+        return ast.dump(ast.Module(
+            body=[n for n in tree.body if not isinstance(n, (ast.Import, ast.ImportFrom))],
+            type_ignores=tree.type_ignores,
+        ))
+    return (rest(before) == rest(after) and
+            any(ast.dump(x) != ast.dump(y) for x, y in zip(imports_before, imports_after)))
+
+
+def python_import_only_paths(repo, base, head, include_worktree=False):
+    """Return proven syntax-limited import edits; all uncertainty routes broadly.
+
+    Only ordinary in-place Git modifications with unchanged modes qualify.
+    Additions, copies, moves, deletes, untracked files, mode changes and
+    non-Python changes never qualify. The accepted catalog must separately
+    opt in and nominate actual alternative tests before this affects routing.
+    """
+    commands = []
+    if base != head:
+        commands.append(("diff", "--raw", "-z", "-M", base + "..." + head))
+    if include_worktree:
+        commands.extend((("diff", "--raw", "-z", "-M", "--cached"),
+                         ("diff", "--raw", "-z", "-M")))
+    statuses = {}
+    for command in commands:
+        raw = git(repo, *command)
+        if raw and not raw.endswith(b"\0"):
+            raise RouteError("TRUNCATED_RAW_DIFF")
+        parts = raw[:-1].split(b"\0") if raw else []
+        i = 0
+        while i < len(parts):
+            try:
+                record = parts[i].decode("ascii").split(" ")
+                if len(record) != 5 or not record[0].startswith(":"):
+                    raise ValueError("bad raw diff")
+                old_mode, new_mode, status = record[0][1:], record[1], record[4]
+                count = 2 if status.startswith(("R", "C")) else 1
+                names = [p.decode("utf-8", "strict") for p in parts[i+1:i+1+count]]
+                if len(names) != count:
+                    raise ValueError("truncated raw diff")
+            except (UnicodeError, ValueError) as exc:
+                raise RouteError("INVALID_RAW_DIFF") from exc
+            eligible = status == "M" and old_mode == new_mode and old_mode in ("100644", "100755")
+            for name in names:
+                if not safe_path(name):
+                    raise RouteError("UNSAFE_PATH")
+                statuses.setdefault(name, []).append(eligible)
+            i += count + 1
+    if not statuses:
+        return []
+    old_ref = git(repo, "merge-base", base, head).decode().strip() if base != head else base
+    eligible_paths = []
+    for path, flags in sorted(statuses.items()):
+        if not path.endswith(".py") or not all(flags):
+            continue
+        try:
+            old = git(repo, "show", old_ref + ":" + path)
+            new = ((repo / path).read_bytes() if include_worktree
+                   else git(repo, "show", head + ":" + path))
+        except (OSError, RouteError):
+            continue
+        if _import_only_python(old, new):
+            eligible_paths.append(path)
+    return eligible_paths
+
+
 def match(pattern, path):
     if not safe_path(pattern) or "[" in pattern or "]" in pattern:
         raise RouteError("UNSUPPORTED_GLOB")
@@ -237,6 +335,12 @@ def validate(config):
             raise RouteError("INVALID_SETUP")
         for args in setup:
             arguments(args)
+        alternatives = t.get("import_only_alternatives", [])
+        if (not isinstance(alternatives, list) or
+                len(alternatives) > 12 or
+                any(not isinstance(name, str) for name in alternatives) or
+                len(set(alternatives)) != len(alternatives)):
+            raise RouteError("INVALID_IMPORT_ONLY_ALTERNATIVES")
         pats = t.get("paths")
         if not isinstance(pats, list) or not pats:
             raise RouteError("MISSING_PATHS")
@@ -247,6 +351,13 @@ def validate(config):
         raise RouteError("INVALID_DOCUMENTATION_PATHS")
     for pattern in docs:
         validate_doc_pattern(pattern)
+    # The import-only opt-in is trusted catalog data, never a PR-body claim.
+    for t in tests:
+        alternatives = t.get("import_only_alternatives", [])
+        if any(name not in by_id or name == t["id"] for name in alternatives):
+            raise RouteError("UNKNOWN_IMPORT_ONLY_ALTERNATIVE")
+        if alternatives and t["tier"] == "V1":
+            raise RouteError("IMPORT_ONLY_REQUIRES_BROAD_LANE")
     # A domain/integration test may declare its prerequisite test lanes.
     for t in tests:
         required = t.get("requires", [])
@@ -309,7 +420,7 @@ def shell(t):
 
 def select(config, changed, stage, base, head, digest, focused="",
            config_path=".github/ci-capabilities.json", source_trust="internal",
-           nonregular_paths=None):
+           nonregular_paths=None, import_only_paths=None):
     validate(config)
     if stage not in STAGES:
         raise RouteError("INVALID_STAGE")
@@ -319,6 +430,8 @@ def select(config, changed, stage, base, head, digest, focused="",
     if stage == "focused" and focused not in by_id:
         raise RouteError("UNKNOWN_FOCUSED_TEST")
     unknown = []
+    substitutions = {}
+    import_only = set(import_only_paths or []) & set(changed)
     if stage in ("draft", "none"):
         selected = []
     elif stage == "focused":
@@ -326,8 +439,21 @@ def select(config, changed, stage, base, head, digest, focused="",
     elif stage == "release":
         selected = config["tests"][:]
     else:
-        hits = {t["id"] for t in config["tests"]
-                if any(match(pat, path) for pat in t["paths"] for path in changed)}
+        hits = set()
+        for test in config["tests"]:
+            matching = [path for path in changed if any(
+                match(pattern, path) for pattern in test["paths"])]
+            if not matching:
+                continue
+            alternatives = test.get("import_only_alternatives", [])
+            if (stage in ("ready", "milestone") and alternatives and
+                    all(path in import_only for path in matching)):
+                substitutions[test["id"]] = {
+                    "paths": matching, "alternatives": alternatives,
+                }
+                hits.update(alternatives)
+            else:
+                hits.add(test["id"])
         unknown = [path for path in changed if path != config_path
                    and not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
                    and (path in (nonregular_paths or []) or
@@ -346,6 +472,9 @@ def select(config, changed, stage, base, head, digest, focused="",
     for item in list(ids):
         include_dependencies(item)
     selected = [t for t in config["tests"] if t["id"] in ids]
+    # Another selected lane may still require a costly lane. Report only
+    # substitutions that actually reduced the final selected test set.
+    substitutions = {name: data for name, data in substitutions.items() if name not in ids}
     fork_blocked = []
     if source_trust == "fork":
         candidate_ids = {t["id"] for t in selected}
@@ -373,6 +502,7 @@ def select(config, changed, stage, base, head, digest, focused="",
                 "NO_TESTS_REQUIRED" if not matrix else "SELECTED_PENDING")
     return {"contract": PLAN, "base": base, "head": head, "stage": stage,
             "config_sha256": digest, "changed_paths": changed,
+            "import_only_paths": sorted(import_only), "import_only_substitutions": substitutions,
             "selected_test_ids": [t["id"] for t in selected],
             "unmapped_paths": unknown, "nonregular_paths": nonregular_paths or [],
             "coverage": coverage,
@@ -512,10 +642,15 @@ def main():
                 if args.config_ref and args.config_ref != config_ref:
                     raise RouteError("TRUSTED_CONFIG_REF_MISMATCH")
             cfg, digest = load(args.repo_root, config_ref, args.config_path, args.config_source)
+            import_only = []
+            if (args.stage in ("ready", "milestone") and any(
+                    t.get("import_only_alternatives") for t in cfg["tests"])):
+                import_only = python_import_only_paths(
+                    args.repo_root, args.base, args.head, include_worktree)
             result = select(cfg, changed, args.stage,
                             args.base if args.config_source == "base" else "LOCAL",
                             args.head, digest, args.focused, args.config_path,
-                            args.source_trust, special)
+                            args.source_trust, special, import_only)
             result["config_ref"] = config_ref if args.config_source == "base" else "LOCAL_FILE"
             result["worktree_included"] = include_worktree
             if args.mode == "run":
