@@ -95,10 +95,14 @@ class ImportOnlyRoutingTests(unittest.TestCase):
         release = ci.select(cfg, [path], "release", "a"*40, "b"*40, "digest", **kwargs)
         self.assertEqual(release["selected_test_ids"], ["imports", "wide", "domain"])
         dependent = self.routing_catalog()
-        dependent["tests"][2]["requires"] = ["wide"]
-        forced = ci.select(dependent, [path, "backend/domain/other.py"], "ready",
+        dependent["tests"].append({
+            "id": "dependent", "tier": "V3", "paths": ["backend/direct/**"],
+            "runner": ["ubuntu-latest"], "command": ["python3", "-m", "pytest"],
+            "requires": ["wide"],
+        })
+        forced = ci.select(dependent, [path, "backend/direct/other.py"], "ready",
                            "a"*40, "b"*40, "digest", **kwargs)
-        self.assertEqual(forced["selected_test_ids"], ["imports", "wide", "domain"])
+        self.assertEqual(forced["selected_test_ids"], ["imports", "wide", "domain", "dependent"])
         self.assertEqual(forced["import_only_substitutions"], {})
 
     def test_opt_in_catalog_validation_rejects_invalid_targets(self):
