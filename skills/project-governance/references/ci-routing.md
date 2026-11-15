@@ -29,6 +29,25 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 - **Ready PR:** accumulate affected paths from the trusted base and run matching tests plus `requires` prerequisites. Unknown source dependencies are reported; tests remain unverified until their coverage is established.
 - **Release:** execute the complete accepted test catalog, including any project release suites; an incomplete catalog cannot prove complete release acceptance.
 
+
+### Optional Python import-only routing (trusted opt-in)
+
+A **project-owned, accepted-base** capability can declare `"import_only_alternatives": ["import-contracts"]` on an expensive V2/V3 test lane. `import-contracts` must be an existing test capability containing meaningful import/runtime interface checks for that project, not merely `compileall`. No new global approval, project classifier, or CI matrix is required. Example:
+
+~~~json
+{"id": "shared-backend-fanout", "tier": "V3",
+ "paths": ["backend/shared/connection.py"],
+ "requires": ["backend-a", "backend-b"],
+ "import_only_alternatives": ["import-contracts"],
+ "runner": ["ubuntu-latest"], "command": ["python3", "-m", "compileall", "backend"]}
+~~~
+
+For an ordinary **in-place Python modification** changing only top-level import targets while preserving imported bindings and the remaining Python AST, the affected Ready/Milestone plan substitutes the nominated import-contracts lane. The alternative runs before a plan can count as verified. The diff must be proven from Git; a PR comment or self-declared "refactor" does not count. The planner reports `import_only_paths` and `import_only_substitutions` in its JSON result.
+
+This optimization is intentionally narrow and **disabled unless the trusted catalog opts in**. A modified function, syntax error, changing imported bindings, future import, wildcard import, new/deleted/renamed file, mode change, non-Python edit, missing comparison data, or any mixed matching change keeps the original heavy lane and its `requires` fanout. The original lane also remains selected for focused/release stages, or when another selected test depends on it. Unknown files still trigger the existing fallback/review behavior. Python imports can have side effects: the AST hint is **not proof of semantic equivalence**, so project owners must provide a real import/runtime contract test and should not opt in for modules whose import-time side effects are themselves a consequential behavior boundary.
+
+This only governs suites called through the Engineering Governance capability catalog. Separate project-owned Browser/real-provider/cross-repo workflow selectors need their own scoped path rules or migration into the catalog; installing this router alone does not suppress those workflows.
+
 V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites but does **not** serialize GitHub matrix jobs. Tests needing execution order should use one project-owned command or setup step. Documentation exemptions apply only to descriptive text file types, ordinary Git file modes and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
 
 Unmapped files stay visible as `PARTIAL_UNMAPPED`. `fallback_tests` selects a smoke lane but **does not automatically pass Ready**. Only an accepted-base `fallback_satisfies_ready: true` may establish `FALLBACK_COVERED`, and even then the result is not `FULL_SUITE_PASS`. Without credible coverage the Ready check fails rather than silently skipping tests.
