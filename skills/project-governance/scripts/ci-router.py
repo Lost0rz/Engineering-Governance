@@ -175,6 +175,13 @@ def _import_only_python(old: bytes, new: bytes) -> bool:
     imports_after = [n for n in after.body if isinstance(n, (ast.Import, ast.ImportFrom))]
     if not imports_before or len(imports_before) != len(imports_after):
         return False
+    # When two imports bind the same name, swapping their targets can change
+    # the winning binding even if every statement stays in its original slot.
+    # Such ambiguous shadowing is never eligible for the lightweight route.
+    bound_names = [alias.asname or alias.name for node in imports_before
+                   for alias in node.names]
+    if len(bound_names) != len(set(bound_names)):
+        return False
     for left, right in zip(imports_before, imports_after):
         if type(left) is not type(right):
             return False
