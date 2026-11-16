@@ -197,6 +197,18 @@ class PortableSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "H1 title"):
             validate_note(mismatched_h1)
 
+    def test_verified_knowledge_cannot_have_unavailable_material_evidence(self):
+        raw = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        verified_without_access = raw.replace(
+            "knowledge_status: provisional", "knowledge_status: verified", 1
+        ).replace("source_access: partial", "source_access: unavailable", 1)
+        with self.assertRaisesRegex(ValueError, "requires accessible material"):
+            validate_note(verified_without_access)
+        # Inaccessible sources may still support a clearly labeled provisional
+        # or hypothesis outline; this preflight never verifies the facts.
+        provisional = raw.replace("source_access: partial", "source_access: unavailable", 1)
+        self.assertEqual(validate_note(provisional)["source_access"], "unavailable")
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"

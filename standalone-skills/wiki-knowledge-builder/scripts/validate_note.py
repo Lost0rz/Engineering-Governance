@@ -92,6 +92,8 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
     for field, accepted in ALLOWED.items():
         if not isinstance(meta[field], str) or meta[field] not in accepted:
             raise ValueError("Invalid enum: " + field)
+    if meta["knowledge_status"] == "verified" and meta["source_access"] == "unavailable":
+        raise ValueError("Verified knowledge requires accessible material evidence")
     if not isinstance(meta["title"], str) or not meta["title"].strip():
         raise ValueError("Invalid title")
     creation = meta["created"]

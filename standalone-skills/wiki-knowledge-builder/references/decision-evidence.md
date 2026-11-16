@@ -66,3 +66,5 @@ Use [context resolution](context-resolution.md), [evidence audit depth](evidence
 ## Evidence-integrity distinction
 
 `EVIDENCE_STRUCTURE_PASS` confirms E-ID ordering, explicit S-ID source mapping and absence of obvious unfilled evidence placeholders **only**. It never confirms actual reading, the truth of source claims, benchmark results or completeness. Source access and evidence strength must be assessed separately using the actual retrieved material. `NOT_REVIEWED` modules are neither HOLD, SKIP, nor supported QUEUED topics; they are outside the current review denominator.
+
+Frontmatter consistency: do not mark `knowledge_status: verified` when material `source_access` is `unavailable`. An inaccessible but promising source can be HOLD or an explicitly bounded hypothesis/provisional note, never an invented implementation verification.
