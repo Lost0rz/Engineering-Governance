@@ -179,6 +179,8 @@ def _import_only_python(old: bytes, new: bytes) -> bool:
         if type(left) is not type(right):
             return False
         if isinstance(left, ast.ImportFrom):
+            if left.level != right.level:
+                return False
             if left.module == "__future__" or right.module == "__future__":
                 return False
             if any(a.name == "*" for a in left.names + right.names):
@@ -193,14 +195,28 @@ def _import_only_python(old: bytes, new: bytes) -> bool:
                 return False
             if [a.asname for a in left.names] != [a.asname for a in right.names]:
                 return False
-    def rest(tree):
-        return ast.dump(ast.Module(
-            body=[n for n in tree.body if not isinstance(n, (ast.Import, ast.ImportFrom))],
-            type_ignores=tree.type_ignores,
-        ))
-    return (rest(before) == rest(after) and
-            any(ast.dump(x) != ast.dump(y) for x, y in zip(imports_before, imports_after)))
+    # Keep every top-level statement in place. Import target paths may change,
+    # but binding names, relative import levels and execution order may not.
+    # Dropping import nodes would misclassify a moved import as harmless.
+    def normalized(tree):
+        body = []
+        for node in tree.body:
+            if isinstance(node, ast.ImportFrom):
+                body.append(ast.ImportFrom(
+                    module="__eg_import_target__", names=node.names,
+                    level=node.level,
+                ))
+            elif isinstance(node, ast.Import):
+                body.append(ast.Import(names=[
+                    ast.alias(name="__eg_import_target__", asname=alias.asname)
+                    for alias in node.names
+                ]))
+            else:
+                body.append(node)
+        return ast.dump(ast.Module(body=body, type_ignores=tree.type_ignores))
 
+    return (normalized(before) == normalized(after) and
+            any(ast.dump(x) != ast.dump(y) for x, y in zip(imports_before, imports_after)))
 
 def python_import_only_paths(repo, base, head, include_worktree=False):
     """Return proven syntax-limited import edits; all uncertainty routes broadly.
