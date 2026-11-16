@@ -59,6 +59,16 @@ class ImportOnlyRoutingTests(unittest.TestCase):
             b"import new.lib\nvalue=1\n"))
         self.assertFalse(ci._import_only_python(b"x=1\n", b"x=2\n"))
         self.assertFalse(ci._import_only_python(b"from old import x\n", b"def bad(:\n"))
+        self.assertFalse(ci._import_only_python(
+            b"from old.gateway import api\nvalue = api.load()\n",
+            b"value = api.load()\nfrom new.gateway import api\n"))
+        self.assertFalse(ci._import_only_python(
+            b"from old.one import a\nfrom old.two import b\n",
+            b"from new.two import b\nfrom new.one import a\n"))
+        self.assertFalse(ci._import_only_python(
+            b"from .old import api\n", b"from ..new import api\n"))
+        self.assertTrue(ci._import_only_python(
+            b"from .old import api\n", b"from .new import api\n"))
 
     @staticmethod
     def routing_catalog():
