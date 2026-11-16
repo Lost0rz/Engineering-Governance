@@ -83,6 +83,43 @@ class RepositoryIsolationTests(unittest.TestCase):
             self.assertNotEqual(blocked.returncode, 0)
             self.assertIn("PACKAGE_TESTS_STOP", blocked.stderr)
 
+    def test_package_runner_rejects_skip_only_and_zero_case_suites(self):
+        runner = REPO / "standalone-skills/tests/run_package_tests.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            suite = root / "skip-only"
+            (suite / "tests").mkdir(parents=True)
+            (suite / "SKILL.md").write_text("---\nname: skip-only\ndescription: fixture\n---\n")
+            cases = suite / "tests/test_cases.py"
+            cases.write_text(
+                "import unittest\nclass Skipped(unittest.TestCase):\n"
+                "    @unittest.skip('unavailable')\n"
+                "    def test_never_executed(self): self.assertTrue(True)\n")
+            skipped = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root), "--no-install"],
+                capture_output=True, text=True, timeout=60)
+            self.assertNotEqual(skipped.returncode, 0)
+            self.assertIn("PACKAGE_TESTS_STOP", skipped.stderr)
+            self.assertIn("executed=0", skipped.stderr)
+            cases.write_text("# Test file exists but contains zero test cases.\n")
+            zero = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root), "--no-install"],
+                capture_output=True, text=True, timeout=60)
+            self.assertNotEqual(zero.returncode, 0)
+            self.assertIn("executed=0", zero.stderr)
+            # A skipped test is acceptable only if there was also a real pass.
+            cases.write_text(
+                "import unittest\nclass Mixed(unittest.TestCase):\n"
+                "    @unittest.skip('optional')\n"
+                "    def test_skipped(self): pass\n"
+                "    def test_real(self): self.assertTrue(True)\n")
+            mixed = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root), "--no-install"],
+                capture_output=True, text=True, timeout=60)
+            self.assertEqual(mixed.returncode, 0, mixed.stdout + mixed.stderr)
+            self.assertIn("executed=1", mixed.stdout)
+            self.assertIn("skipped=1", mixed.stdout)
+
     def test_governance_workflow_manifest_recognizes_new_ci(self):
         manifest = sorted(x.name for x in (REPO / ".github/workflows").glob("*.yml"))
         self.assertEqual(manifest, [

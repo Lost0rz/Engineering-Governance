@@ -42,11 +42,11 @@ def main(argv: list[str] | None = None) -> int:
             subprocess.run([sys.executable, "-m", "compileall", "-q", str(scripts)],
                            check=True, timeout=30)
         outcome = subprocess.run(
-            [sys.executable, "-m", "unittest", "discover", "-s", str(testdir),
-             "-p", "test_*.py", "-v"],
+            [sys.executable, str(Path(__file__).with_name("execute_suite.py")),
+             "--tests-dir", str(testdir)],
             cwd=root, check=False, timeout=90)
         if outcome.returncode:
-            print(f"PACKAGE_TESTS_STOP failed suite: {package.name}", file=sys.stderr)
+            print(f"PACKAGE_TESTS_STOP failed or skipped-only suite: {package.name}", file=sys.stderr)
             return outcome.returncode
         print(f"PACKAGE_TESTS_PASS {package.name}", flush=True)
     print(f"STANDALONE_PACKAGE_COUNT={len(packages)}", flush=True)

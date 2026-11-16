@@ -40,6 +40,37 @@ def frontmatter(raw: str) -> dict:
     return meta
 
 
+def prose_without_fences(raw: str) -> str:
+    """Ignore code fences during structural Markdown validation (read-only)."""
+    body = raw.split("\n---\n", 1)[1]
+    out = []
+    fence = None
+    for line in body.splitlines():
+        line = line.rstrip("\r")
+        if fence is None:
+            match = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+            if match:
+                marker = match.group(1)
+                if marker[0] == "`" and "`" in match.group(2):
+                    out.append(line)
+                    continue
+                fence = (marker[0], len(marker))
+                out.append("")
+                continue
+            out.append(line)
+            continue
+        end = re.fullmatch(
+            r" {0,3}" + re.escape(fence[0]) + "{" + str(fence[1]) + r",}[ \t]*",
+            line,
+        )
+        if end:
+            fence = None
+        out.append("")
+    if fence is not None:
+        raise ValueError("Unclosed Markdown code fence")
+    return "\n".join(out) + "\n"
+
+
 def validate_note(raw: str, *, template: bool = False) -> dict:
     """Validate format; evidence authenticity and Wiki parser support remain unverified."""
     meta = frontmatter(raw)
@@ -70,14 +101,22 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
             raise ValueError(field + " must be a nonempty list")
         if any(not isinstance(item, str) or not item.strip() for item in value):
             raise ValueError(field + " entries must be nonblank strings")
-    if not template and any("替换为真实来源定位" in item for item in meta["source_refs"]):
-        raise ValueError("source_refs contain an unfilled template placeholder")
+    if not template:
+        placeholders = (
+            "替换为真实来源定位", "真实可回溯来源",
+            "actual original file, URL, commit or conversation range",
+            "REPLACE_WITH_ACTUAL_SOURCE_REF",
+        )
+        if any(any(marker.casefold() in ref.casefold() for marker in placeholders)
+               for ref in meta["source_refs"]):
+            raise ValueError("source_refs contain an unfilled template placeholder")
     if "skill_candidate" in meta and not isinstance(meta["skill_candidate"], bool):
         raise ValueError("skill_candidate must be a YAML boolean")
+    prose = prose_without_fences(raw)
     sections = {
         match.group(1).strip(): match.group(2).strip()
         for match in re.finditer(
-            r"(?ms)^## ([^\n]+)\n(.*?)(?=^## [^\n]+\n|\Z)", raw
+            r"(?ms)^## ([^\n]+)\n(.*?)(?=^## [^\n]+\n|\Z)", prose
         )
     }
     for heading in NOTE_HEADINGS:
@@ -86,7 +125,7 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
     evidence = sections["证据与来源"]
     if not re.search(r"(?m)^[ \t]*[-*][ \t]+\[E1\][ \t]+[^ \t\r\n].*$", evidence):
         raise ValueError("Missing nonempty [E1] evidence entry")
-    if not re.search(r"(?m)^# [^\n]+\S\s*$", raw):
+    if not re.search(r"(?m)^# [^\r\n]*\S[ \t]*$", prose):
         raise ValueError("Missing H1 note title")
     return meta
 

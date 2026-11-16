@@ -123,6 +123,53 @@ class PortableSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "evidence"):
             validate_note(bare_evidence)
 
+    def test_fenced_markdown_does_not_count_as_heading_or_evidence(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        self.assertIn("## 核心结论\n", source)
+        no_heading = source.replace(
+            "## 核心结论\n",
+            "## 核心结论（无效标题）\n\n" +
+            "```md\n## 核心结论\n假的结论\n```\n\n", 1)
+        with self.assertRaisesRegex(ValueError, "核心结论"):
+            validate_note(no_heading)
+        evidence_section = source.split("## 证据与来源\n", 1)[1].split(
+            "## 适用边界与风险\n", 1)[0]
+        no_evidence = source.replace(
+            "## 证据与来源\n" + evidence_section,
+            "## 证据与来源\n\n~~~markdown\n- [E1] fake in code\n~~~\n\n", 1)
+        with self.assertRaisesRegex(ValueError, "证据与来源"):
+            validate_note(no_evidence)
+        valid_code_example = source.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n" +
+            "```markdown\n## 假章节\n- [E1] 假证据\n```\n\n", 1)
+        self.assertTrue(validate_note(valid_code_example))
+        unclosed = source.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n```md\n", 1)
+        with self.assertRaisesRegex(ValueError, "Unclosed"):
+            validate_note(unclosed)
+
+    def test_source_reference_placeholders_across_templates_are_rejected(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        actual = "2026-11-16 LLM Wiki 设计讨论：按内容价值与标准化输出组织，而非按 GitHub、聊天、Agent 来源分类"
+        self.assertIn(actual, source)
+        for placeholder in (
+            "真实可回溯来源",
+            "替换为真实来源定位，不得保留占位符",
+            "actual original file, URL, commit or conversation range",
+            "REPLACE_WITH_ACTUAL_SOURCE_REF",
+        ):
+            fake = source.replace(actual, placeholder, 1)
+            with self.subTest(placeholder=placeholder), self.assertRaisesRegex(ValueError, "placeholder"):
+                validate_note(fake)
+        for relative in ("adapters/chatgpt-web.md", "assets/knowledge-note.template.md",
+                         "references/output-contract.md"):
+            self.assertIn(
+                "替换为真实来源定位，不得保留占位符",
+                (ROOT / relative).read_text(encoding="utf-8")
+            )
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"

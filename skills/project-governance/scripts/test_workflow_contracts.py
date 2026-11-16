@@ -111,15 +111,61 @@ class WorkflowContractTests(unittest.TestCase):
 
     def test_plugin_preview_is_statically_guarded_against_standalone_skills(self):
         src = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text(encoding="utf-8")
-        expected = 'entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))'
-        self.assertIn(expected, src)
-        self.assertIn('assert all(path.parts[0] in {"skills", "references"} for path in entries)', src)
-        self.assertIn('assert preview_entries in governance_workflow', src)
+        self.assertIn("python3 .github/scripts/governance_preview.py --verify-only", src)
+        self.assertIn("python3 .github/scripts/governance_preview.py --output-dir dist", src)
         self.assertIn('"standalone-skills/**"', src.replace("'", '"'))
         self.assertEqual(router.select([
             {"status": "M", "path": "README.md"},
             {"status": "M", "path": "standalone-skills/wiki-knowledge-builder/SKILL.md"},
         ], base="a" * 40, head="b" * 40)["tier"], "V1")
+
+    def test_real_zip_contains_only_governance_files_and_rejects_symlinks(self):
+        import tempfile
+        import zipfile
+        script = ROOT / ".github/scripts/governance_preview.py"
+        spec = importlib.util.spec_from_file_location("governance_preview", script)
+        builder = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(builder)
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            for name in ("skills", "references", "standalone-skills"):
+                (home / name).mkdir()
+            (home / "skills" / "SKILL.md").write_text("governance only", encoding="utf-8")
+            (home / "references" / "LICENSE.md").write_text("license", encoding="utf-8")
+            secret = home / "standalone-skills" / "SKILL.md"
+            secret.write_text("STANDALONE_PRIVATE_CONTENT", encoding="utf-8")
+            manifest = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8"))
+            (home / "plugin.json").write_text(json.dumps(manifest), encoding="utf-8")
+            output = builder.build_preview(home, home / "dist", "a" * 40)
+            with zipfile.ZipFile(output) as archive:
+                names = archive.namelist()
+                self.assertIn("skills/SKILL.md", names)
+                self.assertIn("references/LICENSE.md", names)
+                self.assertNotIn("standalone-skills/SKILL.md", names)
+                self.assertTrue(all("STANDALONE_PRIVATE_CONTENT" not in
+                                    archive.read(name).decode("utf-8")
+                                    for name in names))
+            # F05: symlinked file within allowed dir must fail closed.
+            symlink = home / "skills" / "leaked.md"
+            symlink.symlink_to(secret)
+            with self.assertRaisesRegex(ValueError, "Symlink"):
+                builder.preview_entries(home)
+            with self.assertRaisesRegex(ValueError, "Symlink"):
+                builder.build_preview(home, home / "dist", "b" * 40)
+            symlink.unlink()
+            # Even an otherwise excluded symlink or a symlinked directory is unsafe.
+            link_dir = home / "skills" / "linked-dir"
+            link_dir.symlink_to(home / "standalone-skills", target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "Symlink"):
+                builder.preview_entries(home)
+            link_dir.unlink()
+            symlink = home / "skills" / "cache.pyc"
+            symlink.symlink_to(secret)
+            with self.assertRaisesRegex(ValueError, "Symlink"):
+                builder.preview_entries(home)
+            symlink.unlink()
+            # All links removed => the original safe content can be packaged again.
+            self.assertEqual(len(builder.preview_entries(home)), 2)
 
     def test_release_pin_matches_manifest(self):
         version = json.loads((ROOT / "plugin.json").read_text())["version"]

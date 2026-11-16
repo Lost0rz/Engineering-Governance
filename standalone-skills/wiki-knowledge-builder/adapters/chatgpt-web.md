@@ -26,7 +26,7 @@ source_access: partial
 source_kind: conversation
 reuse_scope: cross-project
 source_refs:
-  - "真实可回溯来源"
+  - "替换为真实来源定位，不得保留占位符"
 tags: [knowledge]
 # 可选字段，仅当重复验证还未完成且单次成功已核验时：
 # skill_candidate: true

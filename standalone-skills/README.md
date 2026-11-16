@@ -10,7 +10,7 @@ Each standalone package owns its instructions, references, examples and acceptan
 
 ## Multi-package source testing
 
-The standalone CI runner discovers every package directory under `standalone-skills/` that has a `SKILL.md`; any new package without an executable `tests/test_*.py` suite **fails closed** rather than reporting green. Per-package optional `tests/requirements.txt` installs test dependencies only during verification, not during Agent installation.
+The standalone CI runner discovers every package directory under `standalone-skills/` that has a `SKILL.md`; any new package without `tests/test_*.py` cases **fails closed** rather than reporting green. A discovered suite must execute at least one unskipped test; zero discovered or all-skipped cases are explicitly BLOCKED. Per-package optional `tests/requirements.txt` installs test dependencies only during verification, not during Agent installation.
 
 ## Source CI routing
 

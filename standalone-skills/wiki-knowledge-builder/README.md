@@ -46,3 +46,7 @@ python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 Within the original source repository, additionally run `standalone-skills/tests` for packaging/CI isolation. GitHub Actions discovers every standalone Skill package, including this one, and runs each package's tests under Python 3.11 and 3.12. These checks **do not** prove model behavior or LLM Wiki ingestion.
+
+## Format validator hardening
+
+The optional read-only `scripts/validate_note.py` rejects fenced-code-only headings and evidence, plus known source-reference placeholders in Markdown metadata. This checks formatting, not source authenticity or successful Wiki ingestion.

@@ -13,7 +13,7 @@ source_access: partial
 source_kind: mixed
 reuse_scope: cross-project
 source_refs:
-  - "actual original file, URL, commit or conversation range"
+  - "替换为真实来源定位，不得保留占位符"
 tags: [knowledge]
 ---
 ```
@@ -44,7 +44,7 @@ Content must remain understandable *without* the original conversation but trace
 
 ## Optional format-only preflight
 
-An independent, **read-only** `scripts/validate_note.py` can validate a saved KEEP note's YAML fields, ISO calendar date, required sections and nonempty `[E1]` evidence entry. Install optional PyYAML from `tests/requirements.txt` before using it; no package runtime or Wiki write is implied. This is **syntactic validation only**, never provenance verification or confirmation that LLM Wiki accepted the note.
+An independent, **read-only** `scripts/validate_note.py` can validate a saved KEEP note's YAML fields, ISO calendar date, required sections and nonempty `[E1]` evidence entry. Install optional PyYAML from `tests/requirements.txt` before using it; no package runtime or Wiki write is implied. This is **syntactic validation only**, never provenance verification or confirmation that LLM Wiki accepted the note. Headings and evidence that appear only inside fenced code blocks do not count; unfilled source-reference placeholders from all adapters are rejected.
 
 ## Release checks
 
