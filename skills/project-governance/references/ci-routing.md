@@ -21,6 +21,10 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 
 `plan --worktree` includes staged, unstaged and untracked changes without committing; `run` includes them automatically so its scope matches the code actually executed. Worktree comparison is rejected in GitHub-output mode. `plan` never starts tests. For local `run`, select the accepted default branch with `--trusted-ref refs/remotes/origin/<default-branch>`; the router verifies it against `origin/HEAD`. If a checkout has no `origin/HEAD`, supply `--default-branch <default-branch>` from the host's repository settings (for example, `--default-branch main`). Do not use a task branch as a trusted test-command source. The router also checks the supplied HEAD equals the current checkout. Test logs go to stderr and one JSON result goes to stdout. `file` mode is planning only; actual host execution permission is still required.
 
+## Read-only specialist import evidence
+
+For an independently maintained Browser or cross-repository workflow, `ci-router.py import-only --repo-root PROJECT --base BASE_SHA --head HEAD_SHA` prints a JSON object containing the trusted Git comparison's `changed_paths` (including rename origins) and `import_only_paths`. This does **not** load project test commands, execute project code, choose suites or validate product-specific semantics. A project must freeze the classifier from an immutable Governance revision and apply its own accepted-base scope policy; only narrowly nominated import relocation paths should be eligible to skip expensive specialist acceptance. The regular Core CI still uses its pinned published reusable workflow and accepted-base catalog. Never treat arbitrary user-authored lists as import-only evidence.
+
 ## Remote test cadence
 
 - **Draft:** defer remote heavy tests; no claim of successful test coverage.
