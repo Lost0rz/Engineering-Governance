@@ -67,6 +67,9 @@ class ImportOnlyRoutingTests(unittest.TestCase):
             b"from new.two import b\nfrom new.one import a\n"))
         self.assertFalse(ci._import_only_python(
             b"from .old import api\n", b"from ..new import api\n"))
+        self.assertFalse(ci._import_only_python(
+            b"from a import x\nfrom b import x\nprint(x)\n",
+            b"from b import x\nfrom a import x\nprint(x)\n"))
         self.assertTrue(ci._import_only_python(
             b"from .old import api\n", b"from .new import api\n"))
 
