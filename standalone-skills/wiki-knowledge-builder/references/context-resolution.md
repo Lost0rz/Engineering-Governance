@@ -1,6 +1,6 @@
 # Context resolution — v0.2.0
 
-**Explicitly invoking Wiki Knowledge Builder establishes knowledge-distillation intent, not unlimited source permissions.** Stop context search when the relevant task/material is unambiguously located.
+**Explicitly invoking Wiki Knowledge Builder establishes knowledge-distillation intent, not unlimited source permissions.** Stop context search when the relevant task/material is unambiguously located. Treat discovery of a task as distinct from obtaining primary records about what was actually completed.
 
 ## Resolution order
 
@@ -25,3 +25,7 @@ Each source used for important claims needs **identity, version/date if known, r
 ## Experience
 
 The user provides **what to remember**; the Skill decides knowledge triage, audit depth, output standard and evidence labels. Do not require the user to enter special classification or audit prompts. Writing files, connecting accounts and actual Wiki ingestion remain separate permissions.
+
+## Bounded history and scope record
+
+Scope starts from the specific user-provided object or referent. When locating past work, search the *relevant* project, conversation segment or approved archive; never scan all history merely to justify an exhaustive-knowledge claim. If only a history summary is available, cite it as `summary-level` evidence, not direct source-code or runtime validation. In the delivery preface distinguish `reviewed`, `partly reviewed`, `inaccessible` and `not reviewed`. A source that was not examined is neither a verified candidate nor an automatic SKIP.

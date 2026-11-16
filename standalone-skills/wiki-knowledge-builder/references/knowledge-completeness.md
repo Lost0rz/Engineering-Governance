@@ -25,7 +25,7 @@ If a critical check fails, deepen evidence retrieval when permitted; otherwise f
 
 ## Candidate discovery vs batch limit
 
-Find **all** valuable candidates before writing a default maximum of three notes. Label:
+Find valuable candidates **within explicitly declared and actually examined materials** before writing a default maximum of three notes. Label:
 
 - `KEEP / expanded` — an actual self-contained note this batch.
 - `QUEUED / 待展开` — valuable but not expanded because of batch limit/priority; retain its short description, evidence and why deferred.
@@ -41,3 +41,7 @@ QUEUED is not HOLD or SKIP. Do not force every source into a separate note; one 
 - `FORMAT_NOT_RUN` when code execution/assembled files are unavailable or no validation ran.
 - `AUDIT_PARTIAL` when important source coverage remains missing.
 - `WIKI_INGESTION_NOT_RUN` until real separately authorized Wiki ingestion/retrieval is verified.
+
+## Coverage acceptance: evidence seen vs work not examined
+
+`CONTENT_PASS` is a **human/model-reviewed judgment limited to the declared reviewed scope and documented claims**. Before reporting it, inspect each KEEP against the seven checks above; name decisive missing API paths, parameters, edge cases and adjacent mechanisms when material. Never infer `CONTENT_PASS` from a valid YAML parser, `EVIDENCE_STRUCTURE_PASS`, a short LLM checklist, or a GitHub CI run for unrelated code. If meaningful gaps remain, report `AUDIT_PARTIAL` or defer the affected conclusion to HOLD. Additional significant topics discovered in examined material are `QUEUED`; topics in **unexamined** modules are `NOT_REVIEWED` and must not be represented as discovered or skipped.

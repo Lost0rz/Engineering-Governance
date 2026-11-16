@@ -1,6 +1,6 @@
 # Evidence acquisition & audit depth — v0.2.0
 
-**Enough evidence for reusable engineering conclusions, not maximum browsing.** Scale to complexity, potential impact and uncertainty. A single README is not a repository implementation audit.
+**Enough evidence for reusable engineering conclusions, not maximum browsing.** Scale to complexity, potential impact and uncertainty. A single README is not a repository implementation audit. Audit tiers describe the **depth of examined material**, never breadth across the entire repository by default.
 
 | Tier | Applicability | Minimum evidence | Permitted claim |
 | --- | --- | --- | --- |
@@ -32,3 +32,9 @@ A note saying only “prefer rules over LLM” is insufficient if the source con
 - `AUDIT_PARTIAL`: material audit gaps; `NOT_RUN`: validation/test did not run.
 
 Preserve primary links in frontmatter `source_refs` when body E1/E2/... cites those sources. Distinguish verified code existence from extrapolated cross-project effects.
+
+## Scope manifest, coverage denominator and evidence ledger
+
+Before claiming `AUDIT_SCOPE_COMPLETE`, define the relevant **audit target**, covered modules and deliberately excluded modules. Record (a) exact reviewed paths/sections and version, (b) depth achieved **per KEEP topic**, (c) paths/areas known but not inspected, (d) inaccessible/failed fetches, and (e) potential effect of these gaps. Do not claim to have found **all repository-wide valuable knowledge** from selective samples. `NOT_REVIEWED` describes unexamined areas; `QUEUED` names valuable candidate topics **already supported by reviewed evidence**; `HOLD` names material claims lacking decisive evidence. Uninspected features are not automatically supported QUEUED candidates.
+
+Maintain an internal **claim → evidence** ledger for every material conclusion: source ID, exact locator, source-access grade, claimed fact/decision/inference/test, and contradiction or coverage gap. In the delivered note, ``证据与来源` links `[E1]` entries to frontmatter `source_refs` using index tags `[S1]`, `[S2]`, etc. When available, run `scripts/check_traceability.py` on each standalone note to check the E/S mapping and unsupported placeholder patterns. That preflight verifies only **declared structure** and is **never** evidence authenticity, comprehensive discovery, or test execution.

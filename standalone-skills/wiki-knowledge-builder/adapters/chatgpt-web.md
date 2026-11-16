@@ -9,8 +9,10 @@
 - 输出 **简短 KEEP / HOLD / SKIP / QUEUED 主题覆盖清单**、实际审计范围，然后针对 KEEP 生成独立的完整 Markdown。默认最多展开三篇，但不能丢失其余高价值主题。
 - 每篇笔记使用 `references/output-contract.md` 的 Canonical Knowledge Note v0.1 字段：`knowledge_status`、`source_access`、`source_kind`、`reuse_scope`、`source_refs` 等；保留 `## 适用问题与复用触发`、`## 核心结论`、`## 原理、取舍与经验`、`## 证据与来源`、`## 适用边界与风险`、`## 未验证事项 / 未来验证`、`## 关联与原始入口`。
 - 不要自动修改 Obsidian、Wiki、代码、Agent 配置，也不要自动创建可执行 Skill。可选的 `skill_candidate: true` 只在真实观察到一次成功且注明复验门槛时使用，不自动生成 Skill。HOLD 仅产出**待验证提纲**；不要自动写入 Wiki。
-- 运行过格式校验才写 `FORMAT_PASS`；没运行应写 `FORMAT_NOT_RUN`。已读资料不是实测程序，源码审计不等于全仓库审计，输出的 Markdown 不代表已通过 Wiki 摄入。
+- 运行过格式校验才写 `FORMAT_PASS`；没运行应写 `FORMAT_NOT_RUN`。证据编号与来源标记 `E1/S1` 的结构检查只有实际执行才写 `EVIDENCE_STRUCTURE_PASS`，否则写 `EVIDENCE_STRUCTURE_NOT_RUN`。内容完整性和事实真伪需独立判断。已读资料不是实测程序，源码审计不等于全仓库审计，输出的 Markdown 不代表已通过 Wiki 摄入。
 
 正式笔记的 `source_refs` 必须是真实位置，不得保留模板占位符 `替换为真实来源定位，不得保留占位符`。
 
 日常使用示例：**仅发送** `https://github.com/unclecode/crawl4ai`，或“沉淀刚才完成的工作”。不要让用户每次再输入长提示词。
+
+审计覆盖范围必须写清：只在**已检查的源码和文档范围内**寻找全部有价值的候选；未看的模块记 `NOT_REVIEWED`，不得算 `QUEUED`（已发现但未展开）或 `SKIP`（低价值）。对生成笔记的 `[E1]` 使用 `[S1]` 显式映射 `source_refs`，保证未来可定位，并诚实区分真实访问和来源声称。

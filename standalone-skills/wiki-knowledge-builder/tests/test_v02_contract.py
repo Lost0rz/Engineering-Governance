@@ -43,7 +43,7 @@ class V02ContractTests(unittest.TestCase):
         self.assertIn("Discover all valuable candidate topics", skill)
         self.assertIn("QUEUED", skill)
         self.assertIn("up to three", skill)
-        self.assertIn("Discovering candidates is never limited to three", skill)
+        self.assertIn("Discovering candidates within reviewed material is never limited to three", skill)
 
     def test_output_schema_stays_v01_and_artifacts_are_independent(self):
         contract = read("references/output-contract.md")

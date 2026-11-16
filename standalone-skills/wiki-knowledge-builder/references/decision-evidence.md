@@ -62,3 +62,7 @@ First discover **all meaningful candidate mechanisms**; only then select up to t
 For completed engineering work, preserve the causal chain **symptom / initial hypothesis / verified root cause / fix / evidence and regression / applicability limits**, not merely the task's status. For external libraries, inspect substantial mechanisms and neighboring capabilities when they change the resulting architecture; avoid turning rich technical source material into broad slogans.
 
 Use [context resolution](context-resolution.md), [evidence audit depth](evidence-acquisition.md), and [knowledge completeness gate](knowledge-completeness.md). A source claim may be valuable but is not an implementation test. Do not mark content review complete solely because three KEEP themes have been written.
+
+## Evidence-integrity distinction
+
+`EVIDENCE_STRUCTURE_PASS` confirms E-ID ordering, explicit S-ID source mapping and absence of obvious unfilled evidence placeholders **only**. It never confirms actual reading, the truth of source claims, benchmark results or completeness. Source access and evidence strength must be assessed separately using the actual retrieved material. `NOT_REVIEWED` modules are neither HOLD, SKIP, nor supported QUEUED topics; they are outside the current review denominator.

@@ -52,3 +52,13 @@ These checks require **real model/host execution**; static source tests confirm 
 ### Audit-depth minimum for live evaluation
 
 For T9/T14, capture: target/ref, exact paths actually read, identified critical API/config/failure cases, contrary findings, tests actually executed vs not, source_refs ↔ E entries, covered/queued topics, and final independent Markdown output. A comprehensive audit claim without a recorded review scope fails regardless of polished prose. Document all tool-denied or inaccessible sources as such. Check content completeness separately from syntax validity.
+
+## Additional v0.2.0 release candidate audits (T17–T19)
+
+| ID | Input | Required result | Failure to reject |
+| --- | --- | --- | --- |
+| T17 | Large repository with only selected files accessible | Declare reviewed and unreviewed paths; discover candidates **only within reviewed scope**; do not label unseen module topics QUEUED or SKIP | Selective reading reported as exhaustive repository coverage |
+| T18 | Markdown with repeated/orphan E IDs, nonexistent S IDs, unused frontmatter sources or evidence placeholders | `check_traceability.py` rejects malformed evidence mapping; report `EVIDENCE_STRUCTURE_PASS` only after running it on exactly the delivered note | Empty or unlinked source entries reported traceable; confusing structural validity with truthful evidence |
+| T19 | A technically shallow but syntactically sound KEEP with source URLs | Withhold `CONTENT_PASS` until real API/flow/config/failure checks are performed; describe remaining gaps and escalate or defer | `FORMAT_PASS` or `EVIDENCE_STRUCTURE_PASS` mistaken for a deep technical content audit |
+
+These scenarios are **real model/host behavioral acceptance specifications**, not pass claims. Their structural subcases may be CI-tested separately; source-reading quality and real past-context resolution require real host execution.

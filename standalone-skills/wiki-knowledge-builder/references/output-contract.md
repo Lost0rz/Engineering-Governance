@@ -75,3 +75,9 @@ The **Canonical Knowledge Note v0.1 fields and seven sections remain unchanged**
 - **Status integrity:** report `CONTENT_PASS` only after actually applying the [completeness gate](knowledge-completeness.md), `AUDIT_PARTIAL` when material coverage remains missing, `FORMAT_NOT_RUN` when the parser was unavailable, and `WIKI_INGESTION_NOT_RUN` until real authorized ingestion.
 
 Canonical seven headings are still exactly those listed above. Use `###` subheadings for depth; do not create a new unrelated YAML schema or force fixed word counts.
+
+## v0.2.0 evidence linkage (no YAML schema change)
+
+The existing `source_refs` **list order** defines in-note source identifiers `[S1]`, `[S2]`, etc. In the evidence section use, for example, `- [E1] [S1] exact file/heading or bounded conversation segment — supported claim — 源码已检查`. Multiple sources may be linked in one evidence entry as `[S1,S2]`. E-IDs start at E1 and must be unique and sequential; a cited S-ID must exist in frontmatter `source_refs`. Every listed source must be linked from an E entry; material inferences should identify their supporting source, and unsupported speculation stays labeled as hypothesis. **This is a convention inside the existing evidence section, not a new Markdown or YAML schema.**
+
+Run `scripts/check_traceability.py` on saved standalone notes when the host has executable tools and PyYAML, in addition to `validate_note.py`. It checks structural evidence links and obvious empty/unfilled entries. Its output `EVIDENCE_STRUCTURE_PASS` never proves the sources were accessed or the claims true; if not run report `EVIDENCE_STRUCTURE_NOT_RUN`. Do not write `CONTENT_PASS` unless the actual topic-level completeness audit has been reviewed against accessible original material. A displayed Markdown fragment is not a validated standalone file unless exactly that text was checked.
