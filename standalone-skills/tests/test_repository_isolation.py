@@ -1,6 +1,10 @@
 """Tests of repository-only installation and CI boundaries; excluded from copied Skill."""
 import json
 from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
 import unittest
 
 import yaml
@@ -12,6 +16,18 @@ INDEPENDENT = REPO / ".github/workflows/standalone-skills-ci.yml"
 
 
 class RepositoryIsolationTests(unittest.TestCase):
+    def test_real_copy_runs_tests_outside_repository(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            isolated = Path(tmp) / "arbitrary-host-skill-location"
+            shutil.copytree(SKILL, isolated,
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            result = subprocess.run(
+                [sys.executable, "-m", "unittest", "discover", "-s",
+                 str(isolated / "tests"), "-p", "test_*.py", "-v"],
+                cwd=tmp, capture_output=True, text=True, timeout=60,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_skill_not_part_of_plugin_manifest(self):
         self.assertTrue((SKILL / "SKILL.md").is_file())
         self.assertFalse((REPO / "skills/wiki-knowledge-builder").exists())

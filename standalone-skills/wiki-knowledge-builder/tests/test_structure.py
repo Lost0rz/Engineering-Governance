@@ -139,12 +139,5 @@ class PortableSkillTests(unittest.TestCase):
         self.assertIn("SHA256", raw)
         self.assertIn("not copied into this public repository", raw)
 
-    def test_tests_do_not_require_governance_repo_location(self):
-        src = Path(__file__).read_text(encoding="utf-8")
-        self.assertNotIn("REPO =", src)
-        self.assertNotIn('ROOT.parent.name', src)
-        self.assertNotIn('governance-contract-checks.yml', src)
-
-
 if __name__ == "__main__":
     unittest.main()
