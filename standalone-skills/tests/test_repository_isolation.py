@@ -37,11 +37,14 @@ class RepositoryIsolationTests(unittest.TestCase):
         self.assertEqual([p["name"] for p in marketplace["plugins"]], ["engineering-governance"])
 
     def test_plugin_preview_excludes_standalone_tree(self):
-        src = GOVERNANCE.read_text(encoding="utf-8")
-        self.assertIn('Path("skills").rglob("*")', src)
-        self.assertIn('Path("references").rglob("*")', src)
-        self.assertNotIn('Path("standalone-skills").rglob("*")', src)
-        self.assertIn('"skills": "./skills"', src)
+        workflow = GOVERNANCE.read_text(encoding="utf-8")
+        script = (REPO / ".github/scripts/governance_preview.py").read_text(encoding="utf-8")
+        self.assertIn("python3 .github/scripts/governance_preview.py --verify-only", workflow)
+        self.assertIn("python3 .github/scripts/governance_preview.py --output-dir dist", workflow)
+        self.assertIn('ROOTS = ("skills", "references")', script)
+        self.assertIn("if path.is_symlink():", script)
+        self.assertIn("Standalone Skill leaked into Governance ZIP", script)
+        self.assertNotIn('ROOTS = ("skills", "references", "standalone-skills")', script)
 
     def test_ci_events_route_standalone_and_mixed_changes(self):
         gov = yaml.load(GOVERNANCE.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)

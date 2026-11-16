@@ -23,7 +23,7 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 1
     if total == 0 or executed == 0:
-        print(f"PACKAGE_TESTS_STOP no executed tests total={total} skipped={skipped}",
+        print(f"PACKAGE_TESTS_STOP no executed tests total={total} executed={executed} skipped={skipped}",
               file=sys.stderr)
         return 2
     print(f"PACKAGE_TESTS_COUNT total={total} executed={executed} skipped={skipped}",
