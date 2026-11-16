@@ -5,6 +5,10 @@ name: Governance Contract Checks
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/governance-contract-checks.yml
   workflow_dispatch:
     inputs:
       validation_scope:
@@ -245,3 +249,108 @@ jobs:
           path: dist/engineering-governance-web-preview-*.zip
           if-no-files-found: error
           retention-days: 7
+
+  publish_v0102_once:
+    # One-off release job. The push-path guard prevents task/code PRs from
+    # triggering publish work. Remove this job after release confirmation.
+    name: Publish immutable Governance v0.10.2
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      github.repository == 'Lost0rz/Engineering-Governance'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact accepted release commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Guard exact one-off release source and version
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("plugin.json").read_text())
+          assert manifest["name"] == "engineering-governance"
+          assert manifest["version"] == "0.10.2"
+          workflow = Path(".github/workflows/ci-router-reusable.yml").read_text()
+          assert "ref: v0.10.2" in workflow
+          PY
+          python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -q
+
+      - name: Build versioned Web overlay package
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import zipfile
+
+          repo = Path(".")
+          original = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
+          assert original["name"] == "engineering-governance"
+          version = original["version"]  # single canonical version owner
+          assert version and isinstance(version, str)
+
+          codex_manifest = {
+              "interface": {
+                  "displayName": "Engineering Governance",
+                  "shortDescription": original["extensions"]["com.openai"]["interface"]["shortDescription"],
+                  "longDescription": original["description"],
+                  "developerName": "Engineering Governance",
+                  "category": "Other",
+                  "capabilities": [],
+                  "defaultPrompt": None,
+              },
+              "name": original["name"],
+              "version": version,
+              "description": original["description"],
+              "author": {"name": "Workspace upload"},
+              "keywords": [],
+              "skills": "./skills",
+          }
+          head = os.popen("git rev-parse HEAD").read().strip()
+          assert len(head) == 40 and all(c in "0123456789abcdef" for c in head)
+          out = Path("dist") / f"engineering-governance-web-v{version}-{head[:12]}.zip"
+          out.parent.mkdir(exist_ok=True)
+          entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))
+          entries = [path for path in entries if path.is_file()
+                     and "__pycache__" not in path.parts and path.suffix != ".pyc"
+                     and not path.name.endswith("_ACCEPTANCE.md")]
+          with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
+              archive.writestr("plugin.json", json.dumps(original, indent=2, ensure_ascii=False) + "\n")
+              archive.writestr(".codex-plugin/plugin.json", json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n")
+              for path in entries:
+                  archive.write(path, path.as_posix())
+              archive.writestr("PREVIEW_SOURCE_SHA.txt", head + "\n")
+          print(f"WEB_PREVIEW_PACKAGE={out}")
+          print(f"WEB_PREVIEW_SOURCE_SHA={head}")
+          print(f"WEB_PREVIEW_FILE_COUNT={len(entries) + 3}")
+          PY
+
+      - name: Publish GitHub tag, Release, and matching Web package
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --tags origin 'refs/tags/v0.10.2' >/dev/null 2>&1; then
+            echo "::error::v0.10.2 tag already exists; refusing to move it."
+            exit 2
+          fi
+          gh release create v0.10.2 dist/engineering-governance-web-v0.10.2-*.zip \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" --title "Engineering Governance v0.10.2" \
+            --notes "CI router import-only alternatives, preserved Python import order and bindings, and read-only Git import evidence for specialist verification. Release source: $GITHUB_SHA."
+          git fetch --depth=1 origin refs/tags/v0.10.2
+          test "$(git rev-parse FETCH_HEAD^{commit})" = "$GITHUB_SHA"
+          gh release view v0.10.2 --repo "$GITHUB_REPOSITORY" --json tagName,url
+          echo "PUBLISHED_RELEASE_SHA=$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
