@@ -110,7 +110,7 @@ class PortableSkillTests(unittest.TestCase):
         self.assertTrue(validate_note(source))
         for bad_date in ("NOT_A_REAL_DATE", "2026-02-30", "2026-13-09"):
             bad = source.replace("created: 2026-11-16", "created: " + bad_date, 1)
-            with self.subTest(date=bad_date), self.assertRaises((ValueError, Exception)):
+            with self.subTest(date=bad_date), self.assertRaises(ValueError):
                 validate_note(bad)
         no_evidence = source.replace(
             "## 证据与来源\n\n- [E1]",

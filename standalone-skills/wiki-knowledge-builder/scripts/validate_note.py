@@ -84,7 +84,7 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
         if heading not in sections or not sections[heading].strip():
             raise ValueError("Missing or empty heading: " + heading)
     evidence = sections["证据与来源"]
-    if not re.search(r"(?m)^\s*[-*]\s+\[E1\]\s+\S.+", evidence):
+    if not re.search(r"(?m)^[ \t]*[-*][ \t]+\[E1\][ \t]+[^ \t\r\n].*$", evidence):
         raise ValueError("Missing nonempty [E1] evidence entry")
     if not re.search(r"(?m)^# [^\n]+\S\s*$", raw):
         raise ValueError("Missing H1 note title")
