@@ -81,6 +81,34 @@ class V02ContractTests(unittest.TestCase):
                     continue
                 self.assertTrue((item.parent / target.split("#", 1)[0]).is_file(), (str(rel), target))
 
+    def test_version_source_and_evidence_contract_stay_in_sync(self):
+        intro = read("README.md")
+        skill = read("SKILL.md")
+        self.assertTrue(intro.startswith("# Wiki Knowledge Builder — independent Skill v0.2.0"))
+        self.assertIn("# Wiki Knowledge Builder v0.2.0", skill)
+        self.assertNotIn("commit `731ec2c639", intro)
+        self.assertIn("T1–T19", intro)
+        self.assertIn("check_traceability.py", read("references/output-contract.md"))
+        self.assertTrue((ROOT / "scripts/check_traceability.py").is_file())
+        self.assertTrue((ROOT / "tests/test_evidence_trace.py").is_file())
+        self.assertIn("[E1] [S1]", read("assets/knowledge-note.template.md"))
+        self.assertIn("[E1] [S1]", read("examples/value-over-source.example.md"))
+        for test_id in ("T17", "T18", "T19"):
+            self.assertIn(test_id, read("references/acceptance-matrix.md"))
+
+    def test_scoped_discovery_is_not_a_false_repository_wide_claim(self):
+        skill = read("SKILL.md")
+        audit = read("references/evidence-acquisition.md")
+        completeness = read("references/knowledge-completeness.md")
+        self.assertIn("declared, actually reviewed scope", skill)
+        self.assertIn("Scope manifest", audit)
+        for part in (audit, completeness):
+            self.assertIn("NOT_REVIEWED", part)
+            self.assertIn("QUEUED", part)
+        self.assertIn("EVIDENCE_STRUCTURE_PASS", completeness)
+        self.assertIn("EVIDENCE_STRUCTURE_NOT_RUN", read("adapters/chatgpt-web.md"))
+        self.assertIn("never automatically ingest Wiki", skill)
+
     def test_single_skill_not_governance(self):
         skill = read("SKILL.md")
         self.assertTrue(skill.startswith("---\nname: wiki-knowledge-builder\n"))
