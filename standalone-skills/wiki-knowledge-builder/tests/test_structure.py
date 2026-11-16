@@ -197,7 +197,7 @@ class PortableSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "H1 title"):
             validate_note(mismatched_h1)
 
-
+    def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"
         before = sha256(example.read_bytes()).digest()

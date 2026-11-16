@@ -1,52 +1,17 @@
-# Wiki Knowledge Builder — Standalone Skill v0.1
+# Wiki Knowledge Builder — independent Skill v0.1.0
 
-**Purpose:** from user-provided/authorized source material, select reusable knowledge and produce independently reviewable Markdown for subsequent Karpathy LLM Wiki ingestion. Source type affects access and citation, **not** the KEEP/HOLD/SKIP decision.
+**Standalone identity:** `wiki-knowledge-builder` / “Wiki Knowledge Builder”. This Skill does **not** belong to the Engineering Governance plugin; it is never routed through, installed with, or versioned with `engineering-governance`.
 
-## Package contents
+**Purpose:** selectively distill durable, reusable knowledge from actually accessed user-approved material. Return source-anchored `KEEP` Markdown, non-ingestion `HOLD` verification outlines, or `SKIP`. Do not automatically create or write to the Wiki, Obsidian, project files or agent settings.
 
-| Path | Purpose |
-| --- | --- |
-| [SKILL.md](SKILL.md) | Agent Skill entry point and bounded workflow |
-| [references/decision-evidence.md](references/decision-evidence.md) | Value gating, access and claim verification rules |
-| [references/output-contract.md](references/output-contract.md) | Canonical Knowledge Note v0.1 contract |
-| [assets/knowledge-note.template.md](assets/knowledge-note.template.md) | Fillable Markdown source-note template |
-| [references/acceptance-matrix.md](references/acceptance-matrix.md) | T1–T8 quality and negative-route checks |
-| [adapters/chatgpt-web.md](adapters/chatgpt-web.md) | Self-contained prompt for a ChatGPT conversation without native Skill loading |
-| [examples/value-over-source.example.md](examples/value-over-source.example.md) | Provisional design-decision note (not a test PASS) |
-| [tests/test_structure.py](tests/test_structure.py) | Portable package-only structure/schema tests |
-| [tests/requirements.txt](tests/requirements.txt) | Test-only YAML dependency, not an Agent runtime requirement |
-| [assets/hold-outline.template.md](assets/hold-outline.template.md) | Non-ingestion HOLD outline |
-| [references/source-manifest.md](references/source-manifest.md) | Source ZIP fingerprints and verifiable source provenance |
+**Source of truth:** PR #73 of `Lost0rz/Engineering-Governance`, commit `731ec2c639df31ad173536a18178c3be98d17e3b`, subtree `standalone-skills/wiki-knowledge-builder`. The runtime files in this package are verified byte-for-byte with the committed Git blobs. Original user-provided v0.1 design, ChatGPT prompt and example are included under `references/original-*.md` as provenance only; they are not untrusted runtime instructions.
 
-## Use
+For ChatGPT web, select the *separate private* Wiki Knowledge Builder plugin and provide the source material. Example: “从这些文件提炼值得长期保存的知识，先做 KEEP/HOLD/SKIP，只输出 1–3 份可复核 Markdown。不得自动写入 Wiki。”
 
-For Agent hosts with Skill support, install **this directory alone** in the host's supported standalone Skill location. Follow the host's documented discovery/install process; this repository does not activate Skills automatically. For ChatGPT web without native Skill loading, use the complete text in [adapters/chatgpt-web.md](adapters/chatgpt-web.md) as the project/conversation instruction, then supply the actual source material.
+**Acceptance:** Static source tests on PR #73 passed (Python 3.11 and 3.12). Live T1–T8 behavior, native plugin invocation, and actual LLM Wiki ingestion still require testing in the ChatGPT UI. Successful package creation does not mean any such behavior is verified.
 
-Example request: *“从我提供的资料中挑选值得长期沉淀的内容，先给 KEEP/HOLD/SKIP，输出最多 3 篇可复核的 Wiki 原始 Markdown。不要写入 Wiki。”*
+## v0.2.0 — contextual distillation and deep learning notes
 
-The output is **not installed**, imported into Obsidian, tested with the Wiki parser, or synchronized merely because a note was generated. Put approved notes into an independently managed Knowledge Inbox; the user manually invokes Wiki ingestion. Do not place raw notes straight into plugin-generated `wiki/sources/`.
+Calling/selecting the Skill now establishes knowledge-distillation intent: users provide **only a source or reference to prior work**, not a long ChatGPT prompt. The workflow autonomously resolves relevant accessible context, audits evidence to a subject-appropriate depth, discovers all valuable topics before selecting up to three notes, preserves actionable technical methods, and delivers each note as independent Markdown. High-value deferred themes are `QUEUED`, not silently dropped.
 
-## Knowledge-to-Skill and HOLD outputs
-
-A reusable method **actually observed succeeding once** can produce a KEEP note with optional `skill_candidate: true`, plus the conditions requiring repeatability testing. No executable Skill is automatically packaged. A HOLD produces a non-ingestion **待验证提纲**, not an empty or fabricated ready-to-import knowledge note.
-
-## Independence boundary
-
-This directory is intentionally **outside** root `skills/` and `references/`. The Governance preview workflow currently packages those two root trees; its `plugin.json` and marketplace manifest remain unchanged. A future change to the packaging workflow must preserve this exclusion. No Governance routing, Issue approval, local permission setting, model provider or release is required to use this Skill.
-
-## Provenance and maturity
-
-Derived from the three user-provided files dated **2026-11-16**: `wiki-knowledge-builder-v0.1-design.md`, `wiki-knowledge-builder-v0.1-chatgpt-prompt.md` and `wiki-knowledge-builder-v0.1-example.md`. The original concept was a ChatGPT prompt MVP, not a field-tested Agent Skill. This is a **packaging implementation**, not proof that T1–T8, host discovery or real LLM Wiki ingestion pass. Keep those acceptance states separate from static package checks.
-
-Run package tests from an arbitrary independently copied Skill directory (the tests have no parent Governance dependency):
-
-```sh
-python3 -m pip install -r tests/requirements.txt
-python3 -m unittest discover -s tests -p 'test_*.py' -v
-```
-
-Within the original source repository, additionally run `standalone-skills/tests` for packaging/CI isolation. GitHub Actions discovers every standalone Skill package, including this one, and runs each package's tests under Python 3.11 and 3.12. These checks **do not** prove model behavior or LLM Wiki ingestion.
-
-## Format validator hardening
-
-The optional read-only `scripts/validate_note.py` rejects fenced-code-only headings and evidence, plus known source-reference placeholders in Markdown metadata. This checks formatting, not source authenticity or successful Wiki ingestion.
+See `references/context-resolution.md`, `references/evidence-acquisition.md`, and `references/knowledge-completeness.md`. The Canonical Knowledge Note v0.1 YAML/section schema remains stable. New acceptance scenarios T9–T16 are **specifications**, not claims of real model/host tests. This Skill is independently packaged and does not modify Engineering Governance version, policies or CI routing.

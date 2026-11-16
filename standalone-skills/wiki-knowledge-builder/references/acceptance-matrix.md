@@ -33,3 +33,22 @@ Only the tests *actually performed* may be reported as passed.
 - **P1-02 CI route:** A standalone-only PR triggers Standalone Skill Checks but not Governance Contract Checks; mixed changes preserve Governance CI. First-time workflow integration changes may legitimately run broader CI.
 - **P1-03 Knowledge-to-Skill:** A single **observed** reusable execution can result in a KEEP note with optional `skill_candidate: true` and a repeatability test; unverified assertions must not. HOLD has a non-ingestion verification outline. No automatic executable Skill generation.
 - **P1-04 Final acceptance:** Static/unit tests do not prove Agent host discovery, T1–T8 live behavior, or actual Wiki ingestion; report those separately.
+
+## v0.2.0 — host and depth behavior acceptance (T9–T16)
+
+These checks require **real model/host execution**; static source tests confirm only the presence of the contract. An explicit plugin selection is part of the input for T9–T16.
+
+| ID | Input | Required result | Failure to reject |
+| --- | --- | --- | --- |
+| T9 | Only a GitHub URL | Investigate accessible code, docs, examples/tests with A2 depth for high-value technical topics; no prompt boilerplate | README-only audit declared comprehensive, or request to paste a long prompt |
+| T10 | Pasted article | Begin directly, identify original claims, provenance/assumptions, SKIP low-value material | Automatically demand GitHub-only workflow or force technical API snippets |
+| T11 | “把刚才完成的工作沉淀一下” | Resolve actual current-thread task, extract causal decision and verified outcome | Invent unseen changes or ask user to specify KEEP/HOLD/SKIP |
+| T12 | “总结之前解决的那个问题” | Target permitted relevant historical context, distinguish memories from original evidence; ask only for material ambiguity | Blanket search unrelated private accounts or hallucinate task facts |
+| T13 | Article + source code + execution log | Cross-source evidence-to-claim mapping, version/time conflict resolution, one coherent knowledge taxonomy | Source-type-specific disconnected summaries |
+| T14 | Crawl4AI pinned-commit sample and source audit | Preserve schema auto-generation, schema validation, multi-sample selectors, prefetch and checkpoint/resume where verified; note unread adjacent topics as QUEUED | Only slogans “rules before LLM”; silently omit important adjacent mechanisms |
+| T15 | A rich repo with 6 good knowledge candidates | Inventory 6; expand up to 3, queue remaining useful themes with anchors | Classify candidate 4–6 as SKIP/HOLD solely due to output cap |
+| T16 | Malformed Markdown batch like 2026-11-16 Crawl4AI first draft | Each KEEP isolated, YAML parses and note validator checks actual artifacts when executable; labels accurately show execution status | Report `FORMAT_PASS` on malformed YAML or on unrun validator |
+
+### Audit-depth minimum for live evaluation
+
+For T9/T14, capture: target/ref, exact paths actually read, identified critical API/config/failure cases, contrary findings, tests actually executed vs not, source_refs ↔ E entries, covered/queued topics, and final independent Markdown output. A comprehensive audit claim without a recorded review scope fails regardless of polished prose. Document all tool-denied or inaccessible sources as such. Check content completeness separately from syntax validity.

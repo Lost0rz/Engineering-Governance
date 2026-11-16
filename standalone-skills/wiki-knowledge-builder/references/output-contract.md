@@ -61,3 +61,17 @@ Do not force `skill_candidate: false` into ordinary notes. The upstream Wiki par
 ## HOLD-only output (not Wiki input)
 
 For missing or conflicting consequential evidence, produce a **待验证提纲** containing topic, value, actually accessible sources, missing/contradictory evidence, next check and `HOLD — 不建议立即摄入`. Follow [the non-ingestion HOLD template](../assets/hold-outline.template.md). Never format a HOLD as an ingestion-ready Canonical Knowledge Note.
+
+## v0.2.0 — standalone delivery and depth acceptance
+
+The **Canonical Knowledge Note v0.1 fields and seven sections remain unchanged** for Wiki compatibility. Delivery is upgraded, not the downstream schema:
+
+- **Each KEEP is independent:** beginning with YAML `---` on line 1 and ending with the final section; include a human-readable title, source_refs and E1/E2/... citations. A larger summary report enclosing several unseparated YAML-like fragments is **not** three valid Markdown files.
+- In a chat, give each KEEP its own labeled Markdown code block, using a fence longer than any embedded code fence. Do not put the entire analysis report inside the note. If asked for files, create separate `.md` artifacts only with available host write permission. Do not promise files that were not created.
+- Format check: when tools can run `scripts/validate_note.py`, validate the **actual saved notes**, inspect errors and repair. The check must not be replaced by visually counting sections. When no runner is available, state `FORMAT_NOT_RUN`; do not claim `FORMAT_PASS` or Wiki parser acceptance.
+- **Source mapping:** all consequential E1/E2/... citations must have real source locators and appear in frontmatter `source_refs` (allowing common canonical source entries). A Markdown hyperlink is not evidence of reading that link. Use no invented SHA, line numbers, performance results or runnable examples.
+- **Adaptive technical detail:** for repositories and engineering notes, preserve the relevant APIs/classes, configuration, parameters, execution path, example, validation method and failure modes as actually supported by sources; for architecture decisions preserve alternatives and causal rationale; for research preserve method, data and uncertainty. Do not delete useful learning material merely to produce a short abstract.
+- **Evidence and coverage:** the brief decision preface must name audit tier (`A0`–`A3`), reviewed vs missing sources, KEEP/HOLD/SKIP and any `QUEUED` high-value candidates. `QUEUED` is not a Wiki note and not HOLD. Do not use the default three-note batch size as a hard discovery limit.
+- **Status integrity:** report `CONTENT_PASS` only after actually applying the [completeness gate](knowledge-completeness.md), `AUDIT_PARTIAL` when material coverage remains missing, `FORMAT_NOT_RUN` when the parser was unavailable, and `WIKI_INGESTION_NOT_RUN` until real authorized ingestion.
+
+Canonical seven headings are still exactly those listed above. Use `###` subheadings for depth; do not create a new unrelated YAML schema or force fixed word counts.
