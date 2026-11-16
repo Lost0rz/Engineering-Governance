@@ -170,6 +170,46 @@ class ImportOnlyRoutingTests(unittest.TestCase):
             self.assertEqual(ci.python_import_only_paths(root, final, renamed), [])
 
 
+    def test_read_only_import_evidence_cli_is_git_derived(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.name", "ci"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.email", "ci@example.invalid"],
+                           cwd=root, check=True)
+            code = root / "backend/shared/dependency.py"
+            code.parent.mkdir(parents=True)
+            code.write_text("from old.gateway import api\nvalue = api.load()\n",
+                            encoding="utf-8")
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-qm", "base"], cwd=root, check=True)
+            base = subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                           cwd=root, text=True).strip()
+            code.write_text("from new.gateway import api\nvalue = api.load()\n",
+                            encoding="utf-8")
+            subprocess.run(["git", "commit", "-qam", "import"], cwd=root, check=True)
+            head = subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                           cwd=root, text=True).strip()
+            script = ROOT / "skills/project-governance/scripts/ci-router.py"
+            result = subprocess.run(
+                [sys.executable, str(script), "import-only", "--repo-root", str(root),
+                 "--base", base, "--head", head],
+                capture_output=True, text=True, check=True,
+            )
+            evidence = json.loads(result.stdout)
+            self.assertEqual(evidence["import_only_paths"],
+                             ["backend/shared/dependency.py"])
+            self.assertEqual(evidence["changed_paths"],
+                             ["backend/shared/dependency.py"])
+            rejected = subprocess.run(
+                [sys.executable, str(script), "import-only", "--repo-root", str(root),
+                 "--base", base, "--head", head, "--worktree"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(rejected.returncode, 2)
+            self.assertIn("IMPORT_ONLY_EVIDENCE_READ_ONLY", rejected.stderr)
+
+
 class GeneralRouterTests(unittest.TestCase):
     def plan(self, paths, stage="ready", cfg=None, focused=""):
         return ci.select(cfg or catalog(), paths, stage,
