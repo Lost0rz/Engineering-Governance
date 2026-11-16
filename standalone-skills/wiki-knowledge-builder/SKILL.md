@@ -24,12 +24,12 @@ Output is a **draft for review by default**. Write an actual file only when the 
 5. **Author notes.** First show a short decision summary (including HOLD/SKIP reasons). Then, only for KEEP, produce complete, separately saveable **Canonical Knowledge Note v0.1** Markdown as defined in [output contract](references/output-contract.md) and [template](assets/knowledge-note.template.md). Preserve the problem, conclusion, **why**, evidence, reuse trigger, non-applicability and original entry points.
 6. **Review before delivery.** Redact passwords, tokens, private identifiers and unnecessary confidential content. Check evidence-to-claim mapping, source access, uncertainty, contradictions, duplication and complete Markdown structure. End with KEEP note count, unresolved HOLD topics and unavailable sources.
 
-For detailed ratings, conflict handling and status choice, read [decision and evidence](references/decision-evidence.md). For adversarial and positive route checks, read [acceptance matrix](references/acceptance-matrix.md).
+For detailed ratings, conflict handling and status choice, read [decision and evidence](references/decision-evidence.md). For source provenance, read [original source manifest](references/source-manifest.md). For adversarial and positive route checks, read [acceptance matrix](references/acceptance-matrix.md).
 
 ## Return contract
 
-- `KEEP`: one self-contained Markdown note per useful theme, not a fabricated success report.
-- `HOLD`: missing/conflicting sources and verification actions only; **not** an ingestion-ready note.
+- `KEEP`: one self-contained Markdown note per useful theme, not a fabricated success report. When a reusable method was **observed succeeding only once**, its note may suggest `skill_candidate: true` with a clear repeatability check; never imply a mature, installed or executable Skill. Repeatedly verified methods need a separately authorized Skill-packaging task.
+- `HOLD`: provide a short **待验证提纲** with topic, value, source access, missing/conflicting evidence and next verification action, **not** an ingestion-ready note. Use [HOLD template](assets/hold-outline.template.md).
 - `SKIP`: concise reason, no filler report.
 - Source provenance includes **what was read versus what was only claimed**. A reviewed source does not imply executed tests; one working run does not establish a mature general-purpose Skill.
 

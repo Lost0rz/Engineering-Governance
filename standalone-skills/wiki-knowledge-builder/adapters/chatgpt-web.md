@@ -12,7 +12,8 @@ Copy the **instruction below** into a new ChatGPT conversation or project instru
 2. 找出可能在未来任务中复用的方法、设计原则、重大取舍、已核实故障根因、有价值的外部架构、可验证研究假设。跳过寒暄、普通状态日志、无创新重复摘要、暂时性琐事。合并重复结论，展示冲突和证据时间线。
 3. 对每个主题给出 `KEEP`（有复用价值且证据可诚实标注）、`HOLD`（关键依据缺失/冲突，给出待验证问题）、`SKIP`（低价值或无法形成可信知识）。默认生成最多 **1–3 篇 KEEP**；全 HOLD/SKIP 可以不生成稿件。
 4. 先输出简洁的 **候选判定**：主题、KEEP/HOLD/SKIP、理由。只为 KEEP 输出完整独立 Markdown，使用下方契约。每一重要结论标出实际来源定位和证据级别（来源声称/讨论决策、源码已核实、真实测试已验证、推断、假设、已证据证明废弃）。无法定位不可编造链接、SHA、行号。
-5. 对敏感信息脱敏。不要自动修改项目代码、Obsidian、`wiki/sources/`、`wiki/concepts/`、`wiki/entities/`、`wiki/index.md`、Agent 配置，也不自动生成/安装 Skill 或摄入 Wiki。只有用户另行明确要求且工具允许时才保存独立 Markdown 文件。
+5. 对已形成可复用流程、但**仅成功一次**且可核验的 KEEP 知识，允许可选字段 `skill_candidate: true`，必须写明复验前提；这只提出后续独立 Skill 封装建议，不自动生成、安装或启用 Skill。对 HOLD 只生成**待验证提纲**，包含主题、价值、实际来源、缺口/冲突及下一步核验，不输出可摄入的知识笔记。
+6. 对敏感信息脱敏。不要自动修改项目代码、Obsidian、`wiki/sources/`、`wiki/concepts/`、`wiki/entities/`、`wiki/index.md`、Agent 配置，也不自动生成/安装 Skill 或摄入 Wiki。只有用户另行明确要求且工具允许时才保存独立 Markdown 文件。
 
 每篇 KEEP Markdown 格式：
 
@@ -27,6 +28,8 @@ reuse_scope: cross-project
 source_refs:
   - "真实可回溯来源"
 tags: [knowledge]
+# 可选字段，仅当重复验证还未完成且单次成功已核验时：
+# skill_candidate: true
 ---
 
 # 具体且可搜索的知识标题
@@ -56,6 +59,8 @@ tags: [knowledge]
 ```
 
 枚举：`knowledge_status` = verified / provisional / hypothesis / deprecated；`source_access` = full / partial / unavailable；`source_kind` = conversation / repository / document / execution / mixed / other；`reuse_scope` = cross-project / project-specific / research。`verified` 是已核实材料中的结论，不自动等于真实运行测试通过。模板占位符必须替换为真正核实过的值，取不到时诚实说明来源缺失。
+
+`skill_candidate: true` 是知识到执行型 Skill 的候选标记，不能把一次成功当成熟流程；也不能自动生成 Skill。HOLD 是非入库提纲，不应伪装为 KEEP。
 
 最后说明 KEEP 数量、HOLD 主题以及不可访问的来源；不要声称已保存、安装、执行或导入，除非确实完成。
 

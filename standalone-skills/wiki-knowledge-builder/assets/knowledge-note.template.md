@@ -8,6 +8,8 @@ reuse_scope: cross-project
 source_refs:
   - "替换为真实来源定位，不得保留占位符"
 tags: [knowledge]
+# Optional ONLY for a reusable method observed working once:
+# skill_candidate: true
 ---
 
 # 具体、可检索的问题与结论
@@ -37,6 +39,7 @@ tags: [knowledge]
 ## 未验证事项 / 未来验证
 
 - 未知事项及下一步验证方式；若确实没有，写“无已知未决项”。
+- 对 `skill_candidate: true`：写明需要重复验证的条件、验收证据以及后续单独封装建议。
 
 ## 关联与原始入口
 

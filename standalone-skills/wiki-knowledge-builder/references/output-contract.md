@@ -47,3 +47,13 @@ Content must remain understandable *without* the original conversation but trace
 Before labeling `KEEP`, verify: (a) each important factual statement has a real anchor or explicit inference/hypothesis label; (b) assumptions and non-applicability are visible; (c) private data is redacted; (d) missing access is disclosed; (e) historical decisions are not presented as current code; (f) template sections are complete; (g) output is Markdown **for** Wiki intake, not a claim of successful intake.
 
 The upstream Wiki parser/schema has not been established by these files. Treat parser compatibility as **unverified until tested**, and do not modify the Wiki plugin schema or its generated directories as a workaround.
+
+## Knowledge-to-Skill candidate routing
+
+The original v0.1 design allows an **optional** YAML boolean `skill_candidate: true` only for a reusable method that was actually observed working once but still requires repetition and conditions testing. When applicable, include that field and specify its repeatability gate in the note body. Never generate, install, route or deploy an executable Skill as a side effect. Repeatedly proven methods still need a separately authorized packaging task; repeated claims or duplicated reports are not repeatability evidence.
+
+Do not force `skill_candidate: false` into ordinary notes. The upstream Wiki parser may not accept this optional field until tested; do not change its schema preemptively.
+
+## HOLD-only output (not Wiki input)
+
+For missing or conflicting consequential evidence, produce a **待验证提纲** containing topic, value, actually accessible sources, missing/contradictory evidence, next check and `HOLD — 不建议立即摄入`. Follow [the non-ingestion HOLD template](../assets/hold-outline.template.md). Never format a HOLD as an ingestion-ready Canonical Knowledge Note.
