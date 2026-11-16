@@ -5,10 +5,6 @@ name: Governance Contract Checks
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/governance-contract-checks.yml
   workflow_dispatch:
     inputs:
       validation_scope:
@@ -247,94 +243,5 @@ jobs:
         with:
           name: engineering-governance-web-preview
           path: dist/engineering-governance-web-preview-*.zip
-          if-no-files-found: error
-          retention-days: 7
-
-  export_web_v0102_once:
-    # One-time artifact handoff to the existing private ChatGPT Web plugin.
-    # The actual release tag is immutable and verified separately.
-    name: Export v0.10.2 Web plugin archive
-    if: >-
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
-      github.repository == 'Lost0rz/Engineering-Governance'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    timeout-minutes: 8
-    steps:
-      - name: Checkout exact published v0.10.2 source
-        uses: actions/checkout@v4
-        with:
-          ref: v0.10.2
-          fetch-depth: 1
-          persist-credentials: false
-      - name: Verify release provenance
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "00abee3a30274fb15deb2691b472c1d772bed84b"
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          assert json.loads(Path("plugin.json").read_text())["version"] == "0.10.2"
-          PY
-      - name: Build versioned Web overlay package
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-          import zipfile
-
-          repo = Path(".")
-          original = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
-          assert original["name"] == "engineering-governance"
-          version = original["version"]  # single canonical version owner
-          assert version and isinstance(version, str)
-
-          codex_manifest = {
-              "interface": {
-                  "displayName": "Engineering Governance",
-                  "shortDescription": original["extensions"]["com.openai"]["interface"]["shortDescription"],
-                  "longDescription": original["description"],
-                  "developerName": "Engineering Governance",
-                  "category": "Other",
-                  "capabilities": [],
-                  "defaultPrompt": None,
-              },
-              "name": original["name"],
-              "version": version,
-              "description": original["description"],
-              "author": {"name": "Workspace upload"},
-              "keywords": [],
-              "skills": "./skills",
-          }
-          head = os.popen("git rev-parse HEAD").read().strip()
-          assert len(head) == 40 and all(c in "0123456789abcdef" for c in head)
-          out = Path("dist") / f"engineering-governance-web-v{version}-{head[:12]}.zip"
-          out.parent.mkdir(exist_ok=True)
-          entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))
-          entries = [path for path in entries if path.is_file()
-                     and "__pycache__" not in path.parts and path.suffix != ".pyc"
-                     and not path.name.endswith("_ACCEPTANCE.md")]
-          with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
-              archive.writestr("plugin.json", json.dumps(original, indent=2, ensure_ascii=False) + "\n")
-              archive.writestr(".codex-plugin/plugin.json", json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n")
-              for path in entries:
-                  archive.write(path, path.as_posix())
-              archive.writestr("PREVIEW_SOURCE_SHA.txt", head + "\n")
-          print(f"WEB_PREVIEW_PACKAGE={out}")
-          print(f"WEB_PREVIEW_SOURCE_SHA={head}")
-          print(f"WEB_PREVIEW_FILE_COUNT={len(entries) + 3}")
-          PY
-
-
-      - name: Export Web archive for plugin upgrade
-        uses: actions/upload-artifact@v4
-        with:
-          name: engineering-governance-web-v0.10.2
-          path: dist/engineering-governance-web-v0.10.2-*.zip
           if-no-files-found: error
           retention-days: 7
