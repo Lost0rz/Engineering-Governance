@@ -1,7 +1,10 @@
 """Portable independent Skill tests. Run from any copied Skill root (PyYAML test-only)."""
 from pathlib import Path
 import re
+import subprocess
+import sys
 import unittest
+import importlib.util
 
 import yaml
 
@@ -22,40 +25,12 @@ ALLOWED = {
 }
 
 
-def frontmatter(raw: str) -> dict:
-    if not raw.startswith("---\n"):
-        raise ValueError("Missing YAML frontmatter")
-    parts = raw.split("\n---\n", 1)
-    if len(parts) != 2:
-        raise ValueError("Unterminated YAML frontmatter")
-    meta = yaml.safe_load(parts[0][4:])
-    if not isinstance(meta, dict):
-        raise ValueError("Frontmatter must be a mapping")
-    return meta
-
-
-def validate_note(raw: str) -> dict:
-    meta = frontmatter(raw)
-    for key in NOTE_FIELDS:
-        if key not in meta:
-            raise ValueError("Missing required field: " + key)
-    for field, allowed in ALLOWED.items():
-        if meta[field] not in allowed:
-            raise ValueError("Invalid enum: " + field)
-    for field in ("title",):
-        if not isinstance(meta[field], str) or not meta[field].strip():
-            raise ValueError("Invalid title")
-    for field in ("source_refs", "tags"):
-        if not isinstance(meta[field], list) or not meta[field]:
-            raise ValueError(field + " must be a nonempty list")
-        if any(not isinstance(v, str) or not v.strip() for v in meta[field]):
-            raise ValueError(field + " must contain nonblank strings")
-    if "skill_candidate" in meta and not isinstance(meta["skill_candidate"], bool):
-        raise ValueError("skill_candidate must be a YAML boolean")
-    for heading in NOTE_HEADINGS:
-        if f"## {heading}" not in raw:
-            raise ValueError("Missing heading " + heading)
-    return meta
+VALIDATOR_PATH = ROOT / "scripts/validate_note.py"
+spec = importlib.util.spec_from_file_location("wiki_note_validator", VALIDATOR_PATH)
+validator = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(validator)
+frontmatter = validator.frontmatter
+validate_note = validator.validate_note
 
 
 class PortableSkillTests(unittest.TestCase):
@@ -89,7 +64,7 @@ class PortableSkillTests(unittest.TestCase):
 
     def test_note_template_yaml_parses_and_has_required_sections(self):
         raw = (ROOT / "assets/knowledge-note.template.md").read_text(encoding="utf-8")
-        meta = validate_note(raw)
+        meta = validate_note(raw, template=True)
         self.assertEqual(meta["knowledge_status"], "provisional")
         self.assertNotIn("skill_candidate", meta, "optional field must not be default")
         contract = (ROOT / "references/output-contract.md").read_text(encoding="utf-8")
@@ -129,6 +104,34 @@ class PortableSkillTests(unittest.TestCase):
         for heading in NOTE_HEADINGS:
             self.assertIn(heading, raw)
         self.assertIn("不要自动修改", raw)
+
+    def test_format_validator_rejects_non_date_and_empty_evidence(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        self.assertTrue(validate_note(source))
+        for bad_date in ("NOT_A_REAL_DATE", "2026-02-30", "2026-13-09"):
+            bad = source.replace("created: 2026-11-16", "created: " + bad_date, 1)
+            with self.subTest(date=bad_date), self.assertRaises((ValueError, Exception)):
+                validate_note(bad)
+        no_evidence = source.replace(
+            "## 证据与来源\n\n- [E1]",
+            "## 证据与来源\n\n内容暂缺\n\n## 占位段落\n\n- [E1]", 1,
+        )
+        with self.assertRaisesRegex(ValueError, "evidence"):
+            validate_note(no_evidence)
+        bare_evidence = re.sub(r"(?m)^- \[E[12]\].*$", "- [E1] ", source)
+        # An empty evidence section must fail regardless of other headings.
+        with self.assertRaisesRegex(ValueError, "evidence"):
+            validate_note(bare_evidence)
+
+    def test_manual_validator_is_read_only_and_reports_errors(self):
+        from hashlib import sha256
+        example = ROOT / "examples/value-over-source.example.md"
+        before = sha256(example.read_bytes()).digest()
+        result = subprocess.run([sys.executable, str(VALIDATOR_PATH), str(example)],
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("NOTE_FORMAT_PASS", result.stdout)
+        self.assertEqual(sha256(example.read_bytes()).digest(), before)
 
     def test_manifest_identifies_original_sources_without_claiming_storage(self):
         raw = (ROOT / "references/source-manifest.md").read_text(encoding="utf-8")

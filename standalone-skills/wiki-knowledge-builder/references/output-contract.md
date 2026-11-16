@@ -42,6 +42,10 @@ Use a true creation date, meaningful tags and actual source references; never fa
 
 Content must remain understandable *without* the original conversation but traceable *back* to source. Preserve meaningful implementation/test detail when it supports an important conclusion; avoid meaningless walls of raw logs.
 
+## Optional format-only preflight
+
+An independent, **read-only** `scripts/validate_note.py` can validate a saved KEEP note's YAML fields, ISO calendar date, required sections and nonempty `[E1]` evidence entry. Install optional PyYAML from `tests/requirements.txt` before using it; no package runtime or Wiki write is implied. This is **syntactic validation only**, never provenance verification or confirmation that LLM Wiki accepted the note.
+
 ## Release checks
 
 Before labeling `KEEP`, verify: (a) each important factual statement has a real anchor or explicit inference/hypothesis label; (b) assumptions and non-applicability are visible; (c) private data is redacted; (d) missing access is disclosed; (e) historical decisions are not presented as current code; (f) template sections are complete; (g) output is Markdown **for** Wiki intake, not a claim of successful intake.

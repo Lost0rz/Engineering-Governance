@@ -69,6 +69,21 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(select(change("documents/archive/old.md"),
                                 change("plugin.json"))["tier"], "V3")
 
+    def test_independent_skill_files_not_governance_v3(self):
+        standalone = change("standalone-skills/wiki-knowledge-builder/SKILL.md")
+        standalone_code = change("standalone-skills/wiki-knowledge-builder/scripts/validator.py")
+        self.assertEqual(select(standalone)["tier"], "V0")
+        self.assertEqual(select(standalone_code)["tier"], "V0")
+        self.assertEqual(select(standalone, change("README.md"))["tier"], "V1")
+        self.assertEqual(select(standalone, change("skills/design/SKILL.md"))["tier"], "V2")
+        self.assertEqual(select(standalone, change("plugin.json"))["tier"], "V3")
+        self.assertEqual(select(standalone, change(".github/workflows/standalone-skills-ci.yml"))["tier"], "V3")
+        self.assertEqual(select(change("standalone-skills/wiki-knowledge-builder/SKILL.md", "R100",
+                                       "skills/design/SKILL.md"))["tier"], "V2")
+        self.assertEqual(select(change("standalone-skills/wiki-knowledge-builder/SKILL.md"),
+                                symlinks=frozenset({"standalone-skills/wiki-knowledge-builder/SKILL.md"}))["tier"], "V3")
+        self.assertEqual(select(change("unknown.dat"))["tier"], "V3")
+
     def test_malformed_identity_and_diff_denied(self):
         with self.assertRaises(router.SelectionError):
             router.select([], base=BASE, head=HEAD)

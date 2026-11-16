@@ -52,9 +52,36 @@ class RepositoryIsolationTests(unittest.TestCase):
         self.assertIn("workflow_dispatch", gov["on"])
         self.assertIn("workflow_dispatch", own["on"])
         src = INDEPENDENT.read_text(encoding="utf-8")
-        self.assertIn("unittest discover -s standalone-skills/wiki-knowledge-builder/tests", src)
+        self.assertIn("standalone-skills/tests/run_package_tests.py", src)
+        self.assertNotIn("unittest discover -s standalone-skills/wiki-knowledge-builder/tests", src)
         self.assertIn("unittest discover -s standalone-skills/tests", src)
         self.assertNotIn("secrets.", src)
+
+    def test_package_runner_discovers_two_skills_and_rejects_untested_skill(self):
+        runner = REPO / "standalone-skills/tests/run_package_tests.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            root.mkdir()
+            for name in ("alpha", "beta"):
+                pkg = root / name
+                (pkg / "tests").mkdir(parents=True)
+                (pkg / "SKILL.md").write_text("---\nname: " + name +
+                                               "\ndescription: fixture\n---\n")
+                (pkg / "tests/test_simple.py").write_text(
+                    "import unittest\nclass TestSimple(unittest.TestCase):\n"
+                    "    def test_pass(self): self.assertTrue(True)\n")
+            result = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root), "--no-install"],
+                capture_output=True, text=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("PACKAGE_TESTS_PASS alpha", result.stdout)
+            self.assertIn("PACKAGE_TESTS_PASS beta", result.stdout)
+            (root / "beta" / "tests/test_simple.py").unlink()
+            blocked = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root), "--no-install"],
+                capture_output=True, text=True, timeout=60)
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn("PACKAGE_TESTS_STOP", blocked.stderr)
 
     def test_governance_workflow_manifest_recognizes_new_ci(self):
         manifest = sorted(x.name for x in (REPO / ".github/workflows").glob("*.yml"))

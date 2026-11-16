@@ -109,6 +109,18 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertIn("          - test_ci_router.py", own_ci)
         self.assertIn("test_verification_plan.py|test_ci_router.py) ;;", own_ci)
 
+    def test_plugin_preview_is_statically_guarded_against_standalone_skills(self):
+        src = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text(encoding="utf-8")
+        expected = 'entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))'
+        self.assertIn(expected, src)
+        self.assertIn('assert all(path.parts[0] in {"skills", "references"} for path in entries)', src)
+        self.assertIn('assert preview_entries in governance_workflow', src)
+        self.assertIn('"standalone-skills/**"', src.replace("'", '"'))
+        self.assertEqual(router.select([
+            {"status": "M", "path": "README.md"},
+            {"status": "M", "path": "standalone-skills/wiki-knowledge-builder/SKILL.md"},
+        ], base="a" * 40, head="b" * 40)["tier"], "V1")
+
     def test_release_pin_matches_manifest(self):
         version = json.loads((ROOT / "plugin.json").read_text())["version"]
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()

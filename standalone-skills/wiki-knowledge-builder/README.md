@@ -45,4 +45,4 @@ python3 -m pip install -r tests/requirements.txt
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-Within the original source repository, additionally run `standalone-skills/tests` for packaging/CI isolation. GitHub Actions runs both Python 3.11 and 3.12. These checks **do not** prove model behavior or LLM Wiki ingestion.
+Within the original source repository, additionally run `standalone-skills/tests` for packaging/CI isolation. GitHub Actions discovers every standalone Skill package, including this one, and runs each package's tests under Python 3.11 and 3.12. These checks **do not** prove model behavior or LLM Wiki ingestion.

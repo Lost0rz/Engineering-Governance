@@ -15,6 +15,8 @@ A file path is a routing hint, **not** a risk verdict. For a normative Markdown 
 
 `VERIFICATION_PLAN_V1` is implemented by `scripts/verification-plan.py`. CI obtains the complete base/head diff, including rename origins, and runs the selector from the trusted **base**, not PR-supplied policy. The plan lists the source identities, selected/skipped suites, reasons and `TESTS_PENDING`. Untrusted or unverifiable selection receives conservative testing; skipped work is reported as skipped, never PASS.
 
+For this repository, `standalone-skills/**` is V0 **only for the Governance selector**, because it is outside the Governance release package and has its own required standalone CI. Mixing it with a Governance-owned V1/V2/V3 file preserves the other file's tier. Symlinks, conflicts and moves across ownership boundaries retain the existing escalations. This scope classification applies to PRs only after it is trusted in their BASE revision; a PR introducing the rule still receives conservative V3 scope.
+
 For this repository, descriptive history can use V0; README/notes use V1; active Skill/contract Markdown uses affected V2 suites; trusted executable policy, CI/selector and unknown executable owners use V3. The chosen tier does **not** authorize writes, packaging or merge.
 
 **Build preview** is an independently requested `workflow_dispatch.package_preview` action; publishing/installing/releasing requires its own observable evidence.

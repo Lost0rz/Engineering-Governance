@@ -115,6 +115,12 @@ jobs:
           root = Path(".")
           workflows = sorted(p.name for p in (root / ".github/workflows").glob("*.yml"))
           assert workflows == ["ci-router-reusable.yml", "governance-contract-checks.yml", "standalone-skills-ci.yml"], workflows
+          # This gate is part of Governance CI and runs for its own packaging
+          # changes, even when standalone-only PRs are filtered away.
+          governance_workflow = (root / ".github/workflows/governance-contract-checks.yml").read_text()
+          preview_entries = 'entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))'
+          assert preview_entries in governance_workflow
+          assert 'assert all(path.parts[0] in {"skills", "references"} for path in entries)' in governance_workflow
           pkg = json.loads((root / "plugin.json").read_text())
           assert pkg["name"] == "engineering-governance"
           json.loads((root / ".agents/plugins/marketplace.json").read_text())
@@ -229,6 +235,8 @@ jobs:
           entries = [path for path in entries if path.is_file()
                      and "__pycache__" not in path.parts and path.suffix != ".pyc"
                      and not path.name.endswith("_ACCEPTANCE.md")]
+          # Fail closed if any new source path slips into the plugin preview.
+          assert all(path.parts[0] in {"skills", "references"} for path in entries)
           with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
               archive.writestr("plugin.json", json.dumps(original, indent=2, ensure_ascii=False) + "\n")
               archive.writestr(".codex-plugin/plugin.json", json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n")

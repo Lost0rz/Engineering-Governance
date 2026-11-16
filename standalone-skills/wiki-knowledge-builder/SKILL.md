@@ -24,6 +24,8 @@ Output is a **draft for review by default**. Write an actual file only when the 
 5. **Author notes.** First show a short decision summary (including HOLD/SKIP reasons). Then, only for KEEP, produce complete, separately saveable **Canonical Knowledge Note v0.1** Markdown as defined in [output contract](references/output-contract.md) and [template](assets/knowledge-note.template.md). Preserve the problem, conclusion, **why**, evidence, reuse trigger, non-applicability and original entry points.
 6. **Review before delivery.** Redact passwords, tokens, private identifiers and unnecessary confidential content. Check evidence-to-claim mapping, source access, uncertainty, contradictions, duplication and complete Markdown structure. End with KEEP note count, unresolved HOLD topics and unavailable sources.
 
+For optional **format-only**, read-only checks of a saved KEEP note, use [Markdown validator](scripts/validate_note.py) after installing the optional PyYAML test dependency. It checks schema and nonempty evidence, **not** whether sources are true, model behavior or real Wiki ingestion.
+
 For detailed ratings, conflict handling and status choice, read [decision and evidence](references/decision-evidence.md). For source provenance, read [original source manifest](references/source-manifest.md). For adversarial and positive route checks, read [acceptance matrix](references/acceptance-matrix.md).
 
 ## Return contract

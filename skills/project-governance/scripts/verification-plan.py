@@ -24,6 +24,10 @@ SCRIPT = "skills/project-governance/scripts/verification-plan.py"
 # Markdown contracts get affected suites; executable trust/unknown owners are
 # V3. Target projects own their actual test commands.
 SCOPE = (
+    # Independent Skills are deliberately excluded from Governance plugin tests.
+    # Their own CI validates package code, assets and metadata. A rename across
+    # this boundary still considers BOTH paths; symlinks/conflicts escalate V3.
+    ("standalone-skills/", "V0", "independent Skill source; validated by standalone CI"),
     ("documents/archive/", "V0", "historical descriptive document"),
     ("documents/historical/", "V0", "historical descriptive document"),
     ("README.md", "V1", "README is consumed by governance policy tests"),
