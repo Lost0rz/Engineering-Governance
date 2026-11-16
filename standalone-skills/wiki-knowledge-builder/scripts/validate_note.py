@@ -32,6 +32,18 @@ def frontmatter(raw: str) -> dict:
     if len(items) != 2:
         raise ValueError("Unterminated YAML frontmatter")
     try:
+        # PyYAML's default safe_load silently keeps only the LAST duplicate key.
+        # The resulting note can hide contradictory source_refs or status values.
+        node = yaml.compose(items[0][4:], Loader=yaml.SafeLoader)
+        if not isinstance(node, yaml.MappingNode):
+            raise ValueError("YAML frontmatter must be a mapping")
+        seen = set()
+        for key, _ in node.value:
+            if not isinstance(key, yaml.ScalarNode):
+                raise ValueError("YAML frontmatter field names must be strings")
+            if key.value in seen:
+                raise ValueError("Duplicate YAML frontmatter field: " + key.value)
+            seen.add(key.value)
         meta = yaml.safe_load(items[0][4:])
     except yaml.YAMLError as exc:
         raise ValueError("Invalid YAML frontmatter") from exc
@@ -113,20 +125,28 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
     if "skill_candidate" in meta and not isinstance(meta["skill_candidate"], bool):
         raise ValueError("skill_candidate must be a YAML boolean")
     prose = prose_without_fences(raw)
-    sections = {
-        match.group(1).strip(): match.group(2).strip()
-        for match in re.finditer(
-            r"(?ms)^## ([^\n]+)\n(.*?)(?=^## [^\n]+\n|\Z)", prose
-        )
-    }
+    sections = {}
+    encountered = []
+    for match in re.finditer(
+        r"(?ms)^## ([^\n]+)\n(.*?)(?=^## [^\n]+\n|\Z)", prose
+    ):
+        heading = match.group(1).strip()
+        if heading in NOTE_HEADINGS:
+            if heading in sections:
+                raise ValueError("Duplicate required heading: " + heading)
+            encountered.append(heading)
+        sections[heading] = match.group(2).strip()
     for heading in NOTE_HEADINGS:
-        if heading not in sections or not sections[heading].strip():
+        if heading not in sections or not sections[heading]:
             raise ValueError("Missing or empty heading: " + heading)
+    if tuple(encountered) != NOTE_HEADINGS:
+        raise ValueError("Required headings out of canonical order")
     evidence = sections["证据与来源"]
     if not re.search(r"(?m)^[ \t]*[-*][ \t]+\[E1\][ \t]+[^ \t\r\n].*$", evidence):
         raise ValueError("Missing nonempty [E1] evidence entry")
-    if not re.search(r"(?m)^# [^\r\n]*\S[ \t]*$", prose):
-        raise ValueError("Missing H1 note title")
+    titles = re.findall(r"(?m)^# ([^\r\n]+)$", prose)
+    if len(titles) != 1 or titles[0].strip() != meta["title"].strip():
+        raise ValueError("Missing, duplicated or mismatched H1 title")
     return meta
 
 

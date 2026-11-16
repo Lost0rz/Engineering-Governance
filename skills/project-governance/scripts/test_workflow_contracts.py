@@ -167,7 +167,31 @@ class WorkflowContractTests(unittest.TestCase):
             # All links removed => the original safe content can be packaged again.
             self.assertEqual(len(builder.preview_entries(home)), 2)
 
-    def test_release_pin_matches_manifest(self):
+    def test_current_repository_builds_real_isolated_preview_zip(self):
+        """Package actual checked-out sources; never publish the test ZIP."""
+        import tempfile
+        import subprocess
+        import zipfile
+        script = ROOT / ".github/scripts/governance_preview.py"
+        spec = importlib.util.spec_from_file_location("governance_preview", script)
+        builder = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(builder)
+        sha = subprocess.check_output(
+            ["git", "-C", str(ROOT), "rev-parse", "HEAD"],
+            text=True, timeout=30).strip()
+        self.assertEqual(len(sha), 40)
+        with tempfile.TemporaryDirectory() as tmp:
+            actual = builder.build_preview(ROOT, Path(tmp), sha)
+            with zipfile.ZipFile(actual) as archive:
+                names = set(archive.namelist())
+                self.assertEqual(names, {
+                    "plugin.json", ".codex-plugin/plugin.json", "PREVIEW_SOURCE_SHA.txt",
+                    *(p.as_posix() for p in builder.preview_entries(ROOT)),
+                })
+                self.assertEqual(archive.read("PREVIEW_SOURCE_SHA.txt").decode(), sha + "\n")
+                self.assertFalse(any(p.startswith("standalone-skills/") for p in names))
+
+
         version = json.loads((ROOT / "plugin.json").read_text())["version"]
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn(f"ref: v{version}", workflow)

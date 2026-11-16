@@ -170,7 +170,34 @@ class PortableSkillTests(unittest.TestCase):
                 (ROOT / relative).read_text(encoding="utf-8")
             )
 
-    def test_manual_validator_is_read_only_and_reports_errors(self):
+    def test_duplicate_yaml_required_sections_and_title_mismatch_fail(self):
+        example = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        # PyYAML alone accepts duplicate keys; the validator must not.
+        duplicate_title = example.replace("knowledge_status: provisional",
+            "title: another title\nknowledge_status: provisional", 1)
+        with self.assertRaisesRegex(ValueError, "Duplicate YAML"):
+            validate_note(duplicate_title)
+        duplicate_ref = example.replace("tags: [",
+            "source_refs: [override source]\ntags: [", 1)
+        with self.assertRaisesRegex(ValueError, "Duplicate YAML"):
+            validate_note(duplicate_ref)
+        duplicate_heading = example.replace("## 核心结论\n",
+            "## 核心结论\nfirst summary\n\n## 核心结论\n", 1)
+        with self.assertRaisesRegex(ValueError, "Duplicate required heading"):
+            validate_note(duplicate_heading)
+        reversed_headings = (example
+            .replace("## 核心结论\n", "## TEMP_HEADING\n", 1)
+            .replace("## 适用问题与复用触发\n", "## 核心结论\n", 1)
+            .replace("## TEMP_HEADING\n", "## 适用问题与复用触发\n", 1))
+        with self.assertRaisesRegex(ValueError, "canonical order"):
+            validate_note(reversed_headings)
+        mismatched_h1 = example.replace(
+            "# 跨来源知识沉淀应以复用价值而不是输入平台驱动\n",
+            "# 一个完全不一致的标题\n", 1)
+        with self.assertRaisesRegex(ValueError, "H1 title"):
+            validate_note(mismatched_h1)
+
+
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"
         before = sha256(example.read_bytes()).digest()

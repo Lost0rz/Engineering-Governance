@@ -27,7 +27,7 @@ Allowed values:
 | `source_kind` | `conversation`, `repository`, `document`, `execution`, `mixed`, `other` |
 | `reuse_scope` | `cross-project`, `project-specific`, `research` |
 
-Use a true creation date, meaningful tags and actual source references; never fabricate a timestamp, SHA, URL, page or line. `source_kind` records provenance and must **not** choose a source-specific writing style.
+Use a true creation date, meaningful tags and actual source references; never fabricate a timestamp, SHA, URL, page or line. Duplicate YAML frontmatter keys and duplicate or reordered required sections are invalid; the H1 note title must match the frontmatter title. `source_kind` records provenance and must **not** choose a source-specific writing style.
 
 ## Required Markdown sections
 
