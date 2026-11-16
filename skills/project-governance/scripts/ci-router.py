@@ -601,7 +601,7 @@ def execute_local(result, config, repo):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("mode", choices=("plan", "discover", "run"))
+    p.add_argument("mode", choices=("plan", "discover", "run", "import-only"))
     p.add_argument("--repo-root", type=Path, required=True)
     p.add_argument("--base", default="")
     p.add_argument("--head", default="")
@@ -621,6 +621,18 @@ def main():
     try:
         if args.mode == "discover":
             result = discover(args.repo_root)
+        elif args.mode == "import-only":
+            # Read-only Git evidence for trusted specialist selectors. Do not
+            # load project-owned commands or execute candidate repository code.
+            if args.worktree or args.github_output or args.output:
+                raise RouteError("IMPORT_ONLY_EVIDENCE_READ_ONLY")
+            paths = changes(args.repo_root, args.base, args.head)
+            result = {
+                "base": args.base, "head": args.head,
+                "changed_paths": paths,
+                "import_only_paths": python_import_only_paths(
+                    args.repo_root, args.base, args.head),
+            }
         else:
             include_worktree = args.worktree or args.mode == "run"
             if include_worktree and args.github_output:
