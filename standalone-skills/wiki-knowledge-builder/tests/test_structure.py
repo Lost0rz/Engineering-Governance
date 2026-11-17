@@ -240,6 +240,19 @@ class PortableSkillTests(unittest.TestCase):
             with self.subTest(marker=marker), self.assertRaisesRegex(ValueError, "placeholder"):
                 validate_note(source.replace(loc, marker, 1))
 
+    def test_h1_must_precede_every_canonical_h2(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        h1 = "# 跨来源知识沉淀应以复用价值而不是输入平台驱动\n"
+        note = source.replace(h1, "", 1) + "\n" + h1
+        with self.assertRaisesRegex(ValueError, "H1 title must precede"):
+            validate_note(note)
+
+    def test_legitimate_todo_path_is_not_a_source_placeholder(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        loc = "2026-11-16 LLM Wiki 设计讨论：按内容价值与标准化输出组织，而非按 GitHub、聊天、Agent 来源分类"
+        note = source.replace(loc, "https://github.com/org/todo-tools/blob/main/TODO.md", 1)
+        self.assertEqual(validate_note(note)["source_access"], "partial")
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"

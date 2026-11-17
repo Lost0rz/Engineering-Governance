@@ -113,6 +113,18 @@ class EvidenceLinkTests(unittest.TestCase):
         self.assertEqual(checker.check_traceability(
             self.example.replace("\n", "\r\n"))["evidence_count"], 2)
 
+    def test_literal_todo_filename_in_real_source_locator_is_not_a_placeholder(self):
+        note = self.example.replace(
+            "2026-11-16 LLM Wiki 设计讨论：按内容价值与标准化输出组织，而非按 GitHub、聊天、Agent 来源分类",
+            "https://github.com/org/todo-tools/blob/main/TODO.md",
+            1,
+        ).replace(
+            "[E1] [S1] 2026-11-16 用户提供的设计材料",
+            "[E1] [S1] src/TODO.md",
+            1,
+        )
+        self.assertEqual(checker.check_traceability(note)["source_count"], 1)
+
     def test_code_fenced_fake_sources_do_not_satisfy_required_mappings(self):
         bad = self.example.replace(
             "## 原理、取舍与经验\n",

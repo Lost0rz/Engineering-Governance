@@ -10,13 +10,13 @@ from pathlib import Path
 import re
 import sys
 
-from validate_note import validate_note, semantic_document
+from validate_note import validate_note, semantic_document, unfilled_source_ref
 
 _EVIDENCE = re.compile(r"^[ \t]*[-*][ \t]+\[E([1-9][0-9]*)\][ \t]+(.+)$")
 _SOURCES = re.compile(r"^\[S([1-9][0-9]*(?:[ \t]*,[ \t]*S[1-9][0-9]*)*)\][ \t]+(.+)$")
 _PLACEHOLDER = re.compile(
     r"待补充|待核查|来源待定|真实来源定位|替换为|REPLACE_WITH|"
-    r"(?i:placeholder|TODO|TBD|fake[ -]source)"
+    r"(?i:(?<![A-Za-z0-9_/])(?:PLACEHOLDER|TODO|TBD)(?![A-Za-z0-9_/])|fake[ -]source)"
 )
 _GRADES = (
     "来源声称", "来源陈述", "文件声明", "文档已阅读", "已读取技术文档",
@@ -65,7 +65,7 @@ def check_traceability(raw: str) -> dict:
     if not found:
         raise ValueError("No valid evidence items")
     for idx, ref in enumerate(meta["source_refs"], 1):
-        if _PLACEHOLDER.search(ref):
+        if unfilled_source_ref(ref):
             raise ValueError("Unfilled source_refs placeholder at S%d" % idx)
     unused = set(range(1, len(meta["source_refs"]) + 1)) - linked_sources
     if unused:

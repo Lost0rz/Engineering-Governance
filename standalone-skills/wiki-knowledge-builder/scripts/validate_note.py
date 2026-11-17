@@ -94,6 +94,8 @@ def semantic_document(raw: str) -> dict:
     h2 = [(i, name) for i, tag, name in headings if tag == "h2"]
     if len(h1) != 1:
         raise ValueError("Missing or duplicated rendered H1 title")
+    if h2 and next(i for i, tag, _ in headings if tag == "h1") >= h2[0][0]:
+        raise ValueError("H1 title must precede all canonical H2 sections")
     names = [name for _, name in h2]
     if len(set(names)) != len(names):
         raise ValueError("Duplicate required heading among rendered H2 sections")
@@ -146,6 +148,18 @@ def semantic_document(raw: str) -> dict:
             "evidence_entries": evidence_entries, "visible_references": references}
 
 
+def unfilled_source_ref(ref: str) -> bool:
+    """Recognize real unfilled source placeholders, not words inside URLs/paths."""
+    fragments = (
+        "替换为真实来源定位", "真实可回溯来源",
+        "actual original file, URL, commit or conversation range",
+        "REPLACE_WITH_ACTUAL_SOURCE_REF", "待补充", "待核查", "来源待定",
+    )
+    if any(marker.casefold() in ref.casefold() for marker in fragments):
+        return True
+    return bool(re.fullmatch(r"\s*(?i:TODO|TBD|PLACEHOLDER)(?:\s*[:：]\s*.*)?\s*", ref))
+
+
 def validate_note(raw: str, *, template: bool = False) -> dict:
     """Validate format; evidence authenticity and Wiki parser support remain unverified."""
     meta = frontmatter(raw)
@@ -178,16 +192,8 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
             raise ValueError(field + " must be a nonempty list")
         if any(not isinstance(item, str) or not item.strip() for item in value):
             raise ValueError(field + " entries must be nonblank strings")
-    if not template:
-        placeholders = (
-            "替换为真实来源定位", "真实可回溯来源",
-            "actual original file, URL, commit or conversation range",
-            "REPLACE_WITH_ACTUAL_SOURCE_REF",
-            "待补充", "待核查", "来源待定", "TODO", "TBD", "PLACEHOLDER",
-        )
-        if any(any(marker.casefold() in ref.casefold() for marker in placeholders)
-               for ref in meta["source_refs"]):
-            raise ValueError("source_refs contain an unfilled template placeholder")
+    if not template and any(unfilled_source_ref(ref) for ref in meta["source_refs"]):
+        raise ValueError("source_refs contain an unfilled template placeholder")
     if "skill_candidate" in meta and not isinstance(meta["skill_candidate"], bool):
         raise ValueError("skill_candidate must be a YAML boolean")
     doc = semantic_document(raw)
