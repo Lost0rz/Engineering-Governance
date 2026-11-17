@@ -26,10 +26,6 @@ Work can start from an authenticated current user instruction or use an existing
 
 Write permission comes from the real execution host. G3-like privilege/security/destructive changes require a separate responsible decision. Routine scope-preserving code adjustments do not.
 
-## Independent Skills (not part of this plugin)
-
-[Standalone Skill catalog](standalone-skills/README.md) contains separately maintained packages, including [Wiki Knowledge Builder](standalone-skills/wiki-knowledge-builder/README.md). They are **not installed, routed or released** by the Engineering Governance plugin; their own source, testing and host installation are independent. The Governance Web preview intentionally packages only root `skills/` and `references/`.
-
 ## Testing and installation
 
 [Verification tiers](skills/project-governance/references/verification-tiers.md) select test scope. Draft development does not auto-run broad GitHub CI; targeted checks are available and readiness/integration runs broader affected or full checks when justified. Plugin preview/build is separate.
