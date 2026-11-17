@@ -12,10 +12,16 @@ Each standalone package owns its instructions, references, examples and acceptan
 
 The standalone CI runner discovers every package directory under `standalone-skills/` that has a `SKILL.md`; any new package without `tests/test_*.py` cases **fails closed** rather than reporting green. A discovered suite must execute at least one unskipped test; zero discovered or all-skipped cases are explicitly BLOCKED. Per-package optional `tests/requirements.txt` installs test dependencies only during verification, not during Agent installation.
 
-## Source CI routing
+## Independent verification boundary
 
-`standalone-skills/**` PR changes run the independent `standalone-skills-ci.yml` workflow. The Governance workflow ignores **standalone-only** changes but still runs for mixed changes. Repository-only isolation tests do not travel with independently installed packages. This does not add the new Skill to Governance's Web preview or installed plugin.
+This directory is temporary source staging only. The previous standalone GitHub
+Actions workflow was removed when all Engineering Governance files were restored
+to their original baseline. **No active CI workflow validates the latest PR HEAD.**
 
+The repo-only tests no longer reference the Governance plugin, its preview
+builder, or a host-specific CI workflow. Use `standalone-skills/tests/` as the
+independent test harness until it moves into a dedicated Wiki Knowledge Builder
+repository with its own CI. Do not merge this staging PR into Governance.
 
 ## Deterministic standalone package preflight (no release)
 
@@ -27,6 +33,8 @@ under an **explicit output directory**, only from files whose actual bytes match
   `plugin.json`, `.codex-plugin/plugin.json` and `skills/wiki-knowledge-builder/SKILL.md`.
 
 The preflight verifies ZIP CRCs, exact paths and bytes, version and Git source SHA.
-GitHub CI invokes this through an isolated, temporary-directory regression test;
+An independent CI runner can invoke this through isolated temporary-directory tests;
 it never uploads, publishes, installs, or updates the private ChatGPT plugin.
 Neither archive contains Engineering Governance's root `skills/` tree.
+
+The package builder supports a repository-root `SKILL.md`, a `wiki-knowledge-builder/` source subdirectory, and this temporary `standalone-skills/wiki-knowledge-builder/` layout. It does not read or require Engineering Governance manifests, code, test policies, or workflows. Its ZIP payload is allowlisted and verified against pinned Git blob hashes.

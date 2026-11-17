@@ -18,8 +18,18 @@ def main(argv: list[str] | None = None) -> int:
     if not root.is_dir():
         print("PACKAGE_TESTS_STOP missing packages root", file=sys.stderr)
         return 2
-    packages = sorted(p for p in root.iterdir()
-                      if p.is_dir() and p.name != "tests" and not p.name.startswith("."))
+    # A dedicated repository can put SKILL.md at root or inside a named
+    # wiki-knowledge-builder/ folder. Retain strict multi-package discovery
+    # for the historical standalone-skills/ staging tree.
+    if (root / "SKILL.md").is_file():
+        packages = [root]
+    elif root.name != "standalone-skills" and (
+            root / "wiki-knowledge-builder" / "SKILL.md").is_file():
+        packages = [root / "wiki-knowledge-builder"]
+    else:
+        packages = sorted(p for p in root.iterdir()
+                          if p.is_dir() and p.name != "tests"
+                          and not p.name.startswith("."))
     if not packages:
         print("PACKAGE_TESTS_STOP no standalone packages", file=sys.stderr)
         return 2

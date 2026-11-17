@@ -276,6 +276,22 @@ class PortableSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unclosed Markdown code fence"):
             validate_note(broken)
 
+    def test_quoted_fence_is_valid_commonmark(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        note = source.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n"
+            "> ```python\n"
+            "> print('quoted example')\n"
+            "> ```\n\n", 1)
+        self.assertEqual(validate_note(note)["source_kind"], "conversation")
+
+    def test_bare_root_fence_with_quoted_pseudoclose_is_rejected(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        note = source + "\n```python\nprint('open')\n> ```\n"
+        with self.assertRaisesRegex(ValueError, "Unclosed Markdown code fence"):
+            validate_note(note)
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"

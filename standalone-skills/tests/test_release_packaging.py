@@ -11,11 +11,11 @@ import tempfile
 import unittest
 import zipfile
 
-REPO = Path(__file__).resolve().parents[2]
-SCRIPT = REPO / "standalone-skills/tests/build_wiki_packages.py"
+SCRIPT = Path(__file__).resolve().with_name("build_wiki_packages.py")
 spec = importlib.util.spec_from_file_location("wiki_package_preview", SCRIPT)
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+REPO = builder.default_repo_root()
 
 
 class IndependentArchiveTests(unittest.TestCase):
@@ -57,6 +57,49 @@ class IndependentArchiveTests(unittest.TestCase):
             builder.pinned_checkout_files(REPO, head, changed)
         with self.assertRaisesRegex(ValueError, "Actual Skill file list"):
             builder.pinned_checkout_files(REPO, head, {k: v for k, v in sources.items() if k != "README.md"})
+
+    def test_builds_from_true_independent_repo_and_named_source_directory(self):
+        for layout in (Path("."), Path("wiki-knowledge-builder")):
+            with self.subTest(layout=str(layout)), tempfile.TemporaryDirectory() as td:
+                repo = Path(td)
+                src = repo / layout
+                (src / "scripts").mkdir(parents=True)
+                (src / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.0\n")
+                (src / "scripts/validate_note.py").write_text("pass\n")
+                (repo / "README.md").write_text("Unrelated host description\n")
+                (repo / ".github/workflows").mkdir(parents=True)
+                (repo / ".github/workflows/ci.yml").write_text("name: build\n")
+                for cmd in (
+                    ["git", "init", "-q"],
+                    ["git", "add", "."],
+                    ["git", "-c", "user.name=CI", "-c",
+                     "user.email=ci@example.invalid", "commit", "-qm", "fixture"],
+                ):
+                    subprocess.run(cmd, cwd=repo, check=True, timeout=15)
+                agent, plugin, head = builder.build(repo, repo / "out")
+                builder.verify_archive(
+                    agent,
+                    {"wiki-knowledge-builder/" + p: data
+                     for p, data in builder.source_files(repo).items()},
+                    head,
+                )
+                with zipfile.ZipFile(plugin) as archive:
+                    self.assertNotIn(".github/workflows/ci.yml", archive.namelist())
+                    self.assertEqual(json.loads(archive.read("plugin.json"))["name"],
+                                     "wiki-knowledge-builder")
+                self.assertFalse((repo / "plugin.json").exists())
+
+    def test_independent_root_does_not_package_unrelated_files(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+            (repo / "scripts").mkdir()
+            (repo / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.0\n")
+            (repo / "scripts/validate_note.py").write_text("pass\n")
+            (repo / "internal_secret.txt").write_text("exclude\n")
+            (repo / ".github").mkdir()
+            (repo / ".github/ci.yml").write_text("exclude\n")
+            files = builder.source_files(repo)
+            self.assertEqual(set(files), {"SKILL.md", "scripts/validate_note.py"})
 
     def test_unsafe_symlink_not_packaged(self):
         with tempfile.TemporaryDirectory() as td:

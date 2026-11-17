@@ -13,12 +13,45 @@ import stat
 import subprocess
 import zipfile
 
-REPO = Path(__file__).resolve().parents[2]
-REL = Path("standalone-skills/wiki-knowledge-builder")
 SKILL_NAME = "wiki-knowledge-builder"
 VERSION = "0.2.0"
 DESCRIPTION = ("Independent context-aware knowledge distillation Skill with deep source audits, "
                "actionable technical detail, and canonical Wiki Markdown. No automatic Wiki writes.")
+ROOT_FILES = frozenset({"SKILL.md", "README.md"})
+ROOT_FOLDERS = frozenset({"adapters", "assets", "examples", "references", "scripts", "tests"})
+REPOSITORY_ONLY_FILES = frozenset({
+    "tests/build_wiki_packages.py",
+    "tests/test_release_packaging.py",
+    "tests/test_repository_isolation.py",
+    "tests/execute_suite.py",
+    "tests/run_package_tests.py",
+})
+
+
+def default_repo_root() -> Path:
+    for candidate in Path(__file__).resolve().parents:
+        if (candidate / ".git").exists():
+            return candidate
+    return Path.cwd()
+
+
+def source_dir(repo: Path) -> Path:
+    """Recognize the staging layout, a named Skill directory, or a standalone root."""
+    candidates = (repo / "standalone-skills" / SKILL_NAME, repo / SKILL_NAME, repo)
+    roots = [p for p in candidates if (p / "SKILL.md").is_file()]
+    if len(roots) != 1 or roots[0].is_symlink():
+        raise ValueError("Expected exactly one independent Skill source root")
+    return roots[0]
+
+
+def payload_path(relative: str) -> bool:
+    parts = Path(relative).parts
+    if not parts or relative.startswith("/") or ".." in parts:
+        return False
+    if "__pycache__" in parts or relative.endswith(".pyc") or relative in REPOSITORY_ONLY_FILES:
+        return False
+    return (len(parts) == 1 and parts[0] in ROOT_FILES or
+            len(parts) >= 2 and parts[0] in ROOT_FOLDERS)
 
 
 def git(repo: Path, *args: str) -> bytes:
@@ -27,25 +60,28 @@ def git(repo: Path, *args: str) -> bytes:
 
 
 def source_files(repo: Path) -> dict[str, bytes]:
-    """Require real regular source files. Never follow symlinks or package caches."""
-    root = repo / REL
-    if root.is_symlink() or not root.is_dir():
-        raise ValueError("Invalid independent Skill source directory")
-    found = {}
-    for path in sorted(root.rglob("*")):
+    """Return only allowlisted Skill payload files, rejecting linked payloads."""
+    root = source_dir(repo)
+    found: dict[str, bytes] = {}
+    entries = [root / name for name in ROOT_FILES if (root / name).exists()]
+    for folder in sorted(ROOT_FOLDERS):
+        parent = root / folder
+        if parent.exists() or parent.is_symlink():
+            entries.extend([parent, *parent.rglob("*")])
+    for path in sorted(entries):
+        relative = path.relative_to(root).as_posix()
         if path.is_symlink():
-            raise ValueError("Unexpected symlink in Skill package: " + str(path))
+            raise ValueError("Unexpected symlink in Skill package: " + relative)
         mode = path.lstat().st_mode
         if stat.S_ISDIR(mode):
             continue
         if not stat.S_ISREG(mode):
-            raise ValueError("Non-regular Skill source: " + str(path))
-        rel = path.relative_to(root).as_posix()
-        if "__pycache__" in path.relative_to(root).parts or path.suffix == ".pyc":
+            raise ValueError("Non-regular Skill source: " + relative)
+        if not payload_path(relative):
             continue
-        if rel.startswith("/") or ".." in Path(rel).parts or rel in found:
-            raise ValueError("Unsafe or duplicate Skill path: " + rel)
-        found[rel] = path.read_bytes()
+        if relative in found:
+            raise ValueError("Duplicate Skill file: " + relative)
+        found[relative] = path.read_bytes()
     if "SKILL.md" not in found or "scripts/validate_note.py" not in found:
         raise ValueError("Required independent Skill files absent")
     if f"# Wiki Knowledge Builder v{VERSION}" not in found["SKILL.md"].decode("utf-8"):
@@ -54,19 +90,28 @@ def source_files(repo: Path) -> dict[str, bytes]:
 
 
 def pinned_checkout_files(repo: Path, head: str, found: dict[str, bytes]) -> None:
-    """Each packaged file must exist at HEAD with the identical Git blob SHA."""
+    """Every payload file must match a real blob at the pinned checkout HEAD."""
     if not re.fullmatch(r"[0-9a-f]{40}", head):
         raise ValueError("Invalid pinned source SHA")
-    tree = git(repo, "ls-tree", "-r", "-z", head, "--", REL.as_posix())
-    expected = {}
+    prefix = source_dir(repo).relative_to(repo).as_posix()
+    if prefix == ".":
+        prefix = ""
+    tree = git(repo, "ls-tree", "-r", "-z", head, "--", prefix or ".")
+    expected: dict[str, str] = {}
     for item in tree.split(b"\0"):
         if not item:
             continue
         meta, path = item.split(b"\t", 1)
-        mode, typ, sha = meta.decode("ascii").split(" ")
-        if typ != "blob" or mode not in ("100644", "100755"):
-            raise ValueError("Unsafe Git mode in Skill source: " + path.decode("utf-8"))
-        rel = Path(path.decode("utf-8")).relative_to(REL).as_posix()
+        mode, kind, sha = meta.decode("ascii").split(" ")
+        rel = path.decode("utf-8")
+        if prefix:
+            if not rel.startswith(prefix + "/"):
+                continue
+            rel = rel[len(prefix) + 1:]
+        if not payload_path(rel):
+            continue
+        if kind != "blob" or mode not in ("100644", "100755"):
+            raise ValueError("Unsafe Git mode in Skill source: " + rel)
         expected[rel] = sha
     if set(expected) != set(found):
         raise ValueError("Actual Skill file list differs from pinned Git tree: "
@@ -135,9 +180,6 @@ def verify_archive(path: Path, entries: dict[str, bytes], head: str) -> None:
 def build(repo: Path, output_dir: Path) -> tuple[Path, Path, str]:
     repo = repo.resolve(strict=True)
     head = git(repo, "rev-parse", "HEAD").decode("ascii").strip()
-    gov = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
-    if gov.get("name") != "engineering-governance":
-        raise ValueError("Unexpected parent repository manifest")
     source = source_files(repo)
     pinned_checkout_files(repo, head, source)
     plugin_manifest, codex_manifest = manifests()
@@ -159,7 +201,7 @@ def build(repo: Path, output_dir: Path) -> tuple[Path, Path, str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build ZIPs only; no release/install")
-    parser.add_argument("--repo-root", type=Path, default=REPO)
+    parser.add_argument("--repo-root", type=Path, default=default_repo_root())
     parser.add_argument("--output-dir", required=True, type=Path)
     args = parser.parse_args()
     agent, plugin, sha = build(args.repo_root, args.output_dir)

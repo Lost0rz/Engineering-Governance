@@ -87,3 +87,5 @@ Metadata sanity check: `knowledge_status: verified` combined with `source_access
 **Rendered Markdown syntax preflight:** the read-only validators use CommonMark parsing (`markdown-it-py`, see `tests/requirements.txt`) rather than trusting literal heading text. Indented/fenced code, HTML comments and inline code cannot masquerade as headings or evidence; a note must contain exactly the seven canonical visible H2 sections. Normalize LF/CRLF before validation. Evidence source_refs placeholders such as TODO/TBD are rejected. A syntax or evidence-structure PASS remains distinct from factual verification and actual Wiki ingestion.
 
 CommonMark details: accept correctly nested indented fenced code, reject quoted `[E1]` lists as primary evidence, and distinguish actual missing-field placeholders from legitimate `TODO.md` file paths or explanatory prose containing `TODO`.
+
+CommonMark closure: code fences inside a blockquote or nested list are legal and must validate; a root-level fence followed by a quoted or indented pseudo-closure is still unclosed. Use parsed token extent and content lines rather than matching a raw closing line.

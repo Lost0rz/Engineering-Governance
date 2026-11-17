@@ -69,19 +69,15 @@ def semantic_document(raw: str) -> dict:
     if not mark:
         raise ValueError("Missing Markdown body after YAML frontmatter")
     tokens = MarkdownIt("commonmark").parse(body)
-    lines = body.splitlines()
     for tok in tokens:
         if tok.type == "fence":
-            marker = tok.markup
-            last = lines[tok.map[1] - 1] if tok.map else ""
-            ending = r"^[ \t]*" + re.escape(marker[0]) + "{" + str(len(marker)) + r",}[ \t]*$"
-            # CommonMark allows additional indentation inside lists, but a
-            # root-level four-space-indented "closing" fence is plain code.
-            # For a genuinely closed fence the map includes open + close,
-            # whereas an unclosed fence's content includes the final line.
+            # markdown-it resolves closing fences inside blockquotes and lists.
+            # A closed fence spans opening, content lines, and closing.
+            # An unclosed fence spans opening and content only. Counting the
+            # parser's normalized content avoids raw-line false negatives
+            # from blockquote markers and nested list indentation.
             span = tok.map[1] - tok.map[0] if tok.map else 0
-            if (not re.fullmatch(ending, last) or span < 2
-                    or len(tok.content.splitlines()) != span - 2):
+            if span < 2 or len(tok.content.splitlines()) != span - 2:
                 raise ValueError("Unclosed Markdown code fence")
     headings = []
     nested = 0
