@@ -28,8 +28,8 @@ repository with its own CI. Do not merge this staging PR into Governance.
 `standalone-skills/tests/build_wiki_packages.py` creates two **distinct** ZIP formats
 under an **explicit output directory**, only from files whose actual bytes match Git HEAD:
 
-- `wiki-knowledge-builder-agent-skill-v0.2.0-<sha>.zip` with `wiki-knowledge-builder/SKILL.md`.
-- `wiki-knowledge-builder-chatgpt-private-v0.2.0-<sha>.zip` with independent
+- `wiki-knowledge-builder-agent-skill-v0.2.1-<sha>.zip` with `wiki-knowledge-builder/SKILL.md`.
+- `wiki-knowledge-builder-chatgpt-private-v0.2.1-<sha>.zip` with independent
   `plugin.json`, `.codex-plugin/plugin.json` and `skills/wiki-knowledge-builder/SKILL.md`.
 
 The preflight verifies ZIP CRCs, exact paths and bytes, version and Git source SHA.
@@ -38,3 +38,5 @@ it never uploads, publishes, installs, or updates the private ChatGPT plugin.
 Neither archive contains Engineering Governance's root `skills/` tree.
 
 The package builder supports a repository-root `SKILL.md`, a `wiki-knowledge-builder/` source subdirectory, and this temporary `standalone-skills/wiki-knowledge-builder/` layout. It does not read or require Engineering Governance manifests, code, test policies, or workflows. Its ZIP payload is allowlisted and verified against pinned Git blob hashes.
+
+The independent CI acceptance contract is defined in `wiki-knowledge-builder/references/acceptance-matrix.md`; it must run in the dedicated Skill repository, not through Engineering Governance workflow routing. The package file type allowlist excludes hidden files, logs, credentials and unrelated developer artifacts by default.

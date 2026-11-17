@@ -14,11 +14,22 @@ import subprocess
 import zipfile
 
 SKILL_NAME = "wiki-knowledge-builder"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 DESCRIPTION = ("Independent context-aware knowledge distillation Skill with deep source audits, "
                "actionable technical detail, and canonical Wiki Markdown. No automatic Wiki writes.")
 ROOT_FILES = frozenset({"SKILL.md", "README.md"})
 ROOT_FOLDERS = frozenset({"adapters", "assets", "examples", "references", "scripts", "tests"})
+# Explicit runtime payload types prevent accidentally packaging a committed
+# .env, private fixture, debug log, or unrelated repository asset.
+PAYLOAD_EXTENSIONS = {
+    "adapters": frozenset({".md"}),
+    "assets": frozenset({".md"}),
+    "examples": frozenset({".md"}),
+    "references": frozenset({".md"}),
+    "scripts": frozenset({".py"}),
+    "tests": frozenset({".py"}),
+}
+
 REPOSITORY_ONLY_FILES = frozenset({
     "tests/build_wiki_packages.py",
     "tests/test_release_packaging.py",
@@ -50,8 +61,15 @@ def payload_path(relative: str) -> bool:
         return False
     if "__pycache__" in parts or relative.endswith(".pyc") or relative in REPOSITORY_ONLY_FILES:
         return False
-    return (len(parts) == 1 and parts[0] in ROOT_FILES or
-            len(parts) >= 2 and parts[0] in ROOT_FOLDERS)
+    if any(part.startswith(".") for part in parts):
+        return False
+    if len(parts) == 1:
+        return parts[0] in ROOT_FILES
+    if len(parts) < 2 or parts[0] not in ROOT_FOLDERS:
+        return False
+    if relative == "tests/requirements.txt":
+        return True
+    return Path(relative).suffix.lower() in PAYLOAD_EXTENSIONS[parts[0]]
 
 
 def git(repo: Path, *args: str) -> bytes:

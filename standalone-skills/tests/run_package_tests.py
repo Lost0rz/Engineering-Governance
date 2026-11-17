@@ -22,9 +22,22 @@ def main(argv: list[str] | None = None) -> int:
     # wiki-knowledge-builder/ folder. Retain strict multi-package discovery
     # for the historical standalone-skills/ staging tree.
     if (root / "SKILL.md").is_file():
+        adjacent = sorted(p.name for p in root.iterdir()
+                          if p.is_dir() and (p / "SKILL.md").is_file())
+        if adjacent:
+            print("PACKAGE_TESTS_STOP ambiguous root and nested Skills: "
+                  + ", ".join(adjacent), file=sys.stderr)
+            return 2
         packages = [root]
     elif root.name != "standalone-skills" and (
             root / "wiki-knowledge-builder" / "SKILL.md").is_file():
+        adjacent = sorted(p.name for p in root.iterdir()
+                          if p.is_dir() and p.name != "wiki-knowledge-builder"
+                          and (p / "SKILL.md").is_file())
+        if adjacent:
+            print("PACKAGE_TESTS_STOP multiple Skills in dedicated repository: "
+                  + ", ".join(adjacent), file=sys.stderr)
+            return 2
         packages = [root / "wiki-knowledge-builder"]
     else:
         packages = sorted(p for p in root.iterdir()

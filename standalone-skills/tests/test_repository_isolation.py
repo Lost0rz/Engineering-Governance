@@ -101,6 +101,37 @@ class RepositoryIsolationTests(unittest.TestCase):
                                  result.stdout + result.stderr)
                 self.assertIn("STANDALONE_PACKAGE_COUNT=1", result.stdout)
 
+    def test_named_skill_cannot_silently_skip_another_skill(self):
+        runner = HERE / "run_package_tests.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in ("wiki-knowledge-builder", "another-skill"):
+                skill = root / name
+                (skill / "tests").mkdir(parents=True)
+                (skill / "SKILL.md").write_text("---\nname: " + name + "\n---\n")
+                (skill / "tests/test_ok.py").write_text(
+                    "import unittest\nclass T(unittest.TestCase):\n"
+                    " def test_it(self): self.assertTrue(True)\n")
+            result = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root),
+                 "--no-install"], capture_output=True, text=True, timeout=60)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("PACKAGE_TESTS_STOP multiple Skills", result.stderr)
+
+    def test_root_skill_cannot_silently_skip_nested_skill(self):
+        runner = HERE / "run_package_tests.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "SKILL.md").write_text("---\nname: wiki-knowledge-builder\n---\n")
+            nested = root / "another-skill"
+            nested.mkdir()
+            (nested / "SKILL.md").write_text("---\nname: another-skill\n---\n")
+            result = subprocess.run(
+                [sys.executable, str(runner), "--packages-root", str(root),
+                 "--no-install"], capture_output=True, text=True, timeout=60)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("PACKAGE_TESTS_STOP ambiguous root", result.stderr)
+
     def test_package_runner_rejects_skip_only_and_zero_case_suites(self):
         runner = HERE / "run_package_tests.py"
         with tempfile.TemporaryDirectory() as tmp:

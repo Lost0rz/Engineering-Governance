@@ -27,8 +27,8 @@ class IndependentArchiveTests(unittest.TestCase):
             self.assertEqual(head, actual)
             self.assertIn(head[:12], agent.name)
             self.assertIn(head[:12], plugin.name)
-            self.assertIn("v0.2.0", agent.name)
-            self.assertIn("v0.2.0", plugin.name)
+            self.assertIn("v0.2.1", agent.name)
+            self.assertIn("v0.2.1", plugin.name)
             source = builder.source_files(REPO)
             with zipfile.ZipFile(agent) as a, zipfile.ZipFile(plugin) as b:
                 expect_agent = {f"wiki-knowledge-builder/{x}" for x in source}
@@ -39,7 +39,7 @@ class IndependentArchiveTests(unittest.TestCase):
                 self.assertEqual(a.testzip(), None)
                 self.assertEqual(b.testzip(), None)
                 self.assertEqual(json.loads(b.read("plugin.json"))["name"], "wiki-knowledge-builder")
-                self.assertEqual(json.loads(b.read("plugin.json"))["version"], "0.2.0")
+                self.assertEqual(json.loads(b.read("plugin.json"))["version"], "0.2.1")
                 self.assertEqual(json.loads(b.read(".codex-plugin/plugin.json"))["skills"], "./skills")
                 self.assertTrue(all(not x.startswith("skills/project-governance/")
                                     for x in a.namelist() + b.namelist()))
@@ -64,7 +64,7 @@ class IndependentArchiveTests(unittest.TestCase):
                 repo = Path(td)
                 src = repo / layout
                 (src / "scripts").mkdir(parents=True)
-                (src / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.0\n")
+                (src / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
                 (src / "scripts/validate_note.py").write_text("pass\n")
                 (repo / "README.md").write_text("Unrelated host description\n")
                 (repo / ".github/workflows").mkdir(parents=True)
@@ -93,7 +93,7 @@ class IndependentArchiveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             repo = Path(td)
             (repo / "scripts").mkdir()
-            (repo / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.0\n")
+            (repo / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
             (repo / "scripts/validate_note.py").write_text("pass\n")
             (repo / "internal_secret.txt").write_text("exclude\n")
             (repo / ".github").mkdir()
@@ -105,7 +105,7 @@ class IndependentArchiveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td) / "standalone-skills/wiki-knowledge-builder"
             (root / "scripts").mkdir(parents=True)
-            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.0\n")
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
             (root / "scripts/validate_note.py").write_text("ok\n")
             outside = Path(td) / "sensitive.txt"
             outside.write_text("outside\n")
@@ -135,6 +135,35 @@ class IndependentArchiveTests(unittest.TestCase):
                 builder.verify_archive(output, {"wiki-knowledge-builder/SKILL.md": b"unsafe"}, source_sha)
             with self.assertRaisesRegex(ValueError, "member list"):
                 builder.verify_archive(output, {"wiki-knowledge-builder/OTHER.md": b"safe"}, source_sha)
+
+    def test_payload_path_refuses_hidden_and_private_project_files(self):
+        for filename in ("references/.env", "references/debug.log",
+                         "tests/fixtures/private.log", "scripts/secret.json",
+                         "assets/config.yaml", "references/private.txt",
+                         "scripts/.token.py", ".github/workflows/ci.yml"):
+            with self.subTest(filename=filename):
+                self.assertFalse(builder.payload_path(filename))
+        for filename in ("SKILL.md", "README.md", "references/output-contract.md",
+                         "scripts/validate_note.py", "tests/test_structure.py",
+                         "tests/requirements.txt", "examples/value-over-source.example.md"):
+            with self.subTest(filename=filename):
+                self.assertTrue(builder.payload_path(filename))
+
+    def test_committed_sensitive_fixture_is_excluded_not_leaked(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "references").mkdir()
+            (root / "tests").mkdir()
+            (root / "scripts").mkdir()
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
+            (root / "scripts/validate_note.py").write_text("pass\n")
+            (root / "references/a.md").write_text("public\n")
+            (root / "references/.env").write_text("SECRET=example\n")
+            (root / "tests/fixtures").mkdir()
+            (root / "tests/fixtures/private.log").write_text("secret\n")
+            listed = builder.source_files(root)
+            self.assertIn("references/a.md", listed)
+            self.assertFalse(any("private.log" in p or ".env" in p for p in listed))
 
     def test_source_archive_workflow_does_not_upload_or_release(self):
         code = SCRIPT.read_text(encoding="utf-8")

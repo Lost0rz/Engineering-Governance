@@ -55,7 +55,7 @@ One observed successful execution with identifiable preconditions can justify a 
 
 For HOLD, report a non-ingestion outline with topic, reusable value, actually accessible sources, missing/conflicting evidence and the minimum next check. Do not label unproven notes verified.
 
-## v0.2.0 — discovery and depth are separate gates
+## v0.2.1 — discovery and depth are separate gates
 
 First discover **all meaningful candidate mechanisms**; only then select up to three to expand in the current batch. Do not convert an undisplayed high-value theme to SKIP. Distinguish `QUEUED` (valuable but deferred due to batch output limit) from `HOLD` (material evidence lacking or contradictory).
 

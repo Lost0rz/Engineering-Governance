@@ -30,11 +30,11 @@ Only the tests *actually performed* may be reported as passed.
 ## Audit regressions
 
 - **P1-01 Portable tests:** Copy only `wiki-knowledge-builder/` to an arbitrary directory and run its package tests; they must not require Governance paths. Run separate source-repo isolation tests only inside the repository.
-- **P1-02 CI route:** A standalone-only PR triggers Standalone Skill Checks but not Governance Contract Checks; mixed changes preserve Governance CI. First-time workflow integration changes may legitimately run broader CI.
+- **P1-02 Independent CI boundary:** After moving to a dedicated Wiki Knowledge Builder repository, its own CI must run the portable Skill suite, isolated Git/ZIP integration tests and artifact checks on the exact candidate SHA. It must never require or modify Engineering Governance CI routing. Until an actual independent CI run exists, report `CI_NOT_RUN`.
 - **P1-03 Knowledge-to-Skill:** A single **observed** reusable execution can result in a KEEP note with optional `skill_candidate: true` and a repeatability test; unverified assertions must not. HOLD has a non-ingestion verification outline. No automatic executable Skill generation.
 - **P1-04 Final acceptance:** Static/unit tests do not prove Agent host discovery, T1–T8 live behavior, or actual Wiki ingestion; report those separately.
 
-## v0.2.0 — host and depth behavior acceptance (T9–T16)
+## v0.2.1 — host and depth behavior acceptance (T9–T16)
 
 These checks require **real model/host execution**; static source tests confirm only the presence of the contract. An explicit plugin selection is part of the input for T9–T16.
 
@@ -53,7 +53,7 @@ These checks require **real model/host execution**; static source tests confirm 
 
 For T9/T14, capture: target/ref, exact paths actually read, identified critical API/config/failure cases, contrary findings, tests actually executed vs not, source_refs ↔ E entries, covered/queued topics, and final independent Markdown output. A comprehensive audit claim without a recorded review scope fails regardless of polished prose. Document all tool-denied or inaccessible sources as such. Check content completeness separately from syntax validity.
 
-## Additional v0.2.0 release candidate audits (T17–T19)
+## Additional v0.2.1 release candidate audits (T17–T19)
 
 | ID | Input | Required result | Failure to reject |
 | --- | --- | --- | --- |

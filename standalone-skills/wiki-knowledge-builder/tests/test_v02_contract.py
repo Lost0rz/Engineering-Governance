@@ -1,4 +1,4 @@
-"""Source-level regression of v0.2.0 behavioral specification; not model execution."""
+"""Source-level regression of v0.2.1 behavioral specification; not model execution."""
 from pathlib import Path
 import re
 import unittest
@@ -84,8 +84,8 @@ class V02ContractTests(unittest.TestCase):
     def test_version_source_and_evidence_contract_stay_in_sync(self):
         intro = read("README.md")
         skill = read("SKILL.md")
-        self.assertTrue(intro.startswith("# Wiki Knowledge Builder — independent Skill v0.2.0"))
-        self.assertIn("# Wiki Knowledge Builder v0.2.0", skill)
+        self.assertTrue(intro.startswith("# Wiki Knowledge Builder — independent Skill v0.2.1"))
+        self.assertIn("# Wiki Knowledge Builder v0.2.1", skill)
         self.assertNotIn("commit `731ec2c639", intro)
         self.assertIn("T1–T19", intro)
         self.assertIn("check_traceability.py", read("references/output-contract.md"))

@@ -3,7 +3,7 @@ name: wiki-knowledge-builder
 description: Use when Wiki Knowledge Builder is explicitly invoked/selected, even when the user provides only a URL, article, file, code, prior conversation or completed task. Resolve relevant authorized context, audit evidence to sufficient depth, preserve actionable details, and produce standalone Wiki Markdown without a long prompt. Do not use for unrelated work absent an explicit knowledge-extraction request.
 ---
 
-# Wiki Knowledge Builder v0.2.0
+# Wiki Knowledge Builder v0.2.1
 
 **Goal:** turn actually accessible past materials into durable, source-traceable, actionable knowledge for later LLM Wiki intake. Select by knowledge value, never by platform (GitHub, ChatGPT, Codex, Claude Code, Pi, documents, logs). This is a knowledge-production Skill, not a generic summary, an executable engineering Skill, or a Wiki ingestion tool.
 

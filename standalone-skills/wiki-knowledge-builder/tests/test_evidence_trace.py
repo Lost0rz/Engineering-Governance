@@ -138,6 +138,28 @@ class EvidenceLinkTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             checker.check_traceability(note)
 
+    def test_blockquote_and_escaped_evidence_examples_are_not_orphans(self):
+        for snippet in ("> 原文中使用 [E99] 编号，仅作为引文示例。",
+                        r"字面量 \[E99] 只是技术文档示例。"):
+            with self.subTest(snippet=snippet):
+                note = self.example.replace(
+                    "## 原理、取舍与经验\n",
+                    "## 原理、取舍与经验\n\n" + snippet + "\n\n", 1)
+                self.assertEqual(checker.check_traceability(note)["evidence_count"], 2)
+
+    def test_negated_or_ambiguous_grade_is_rejected(self):
+        for bogus in ("未测试已执行，仅为设想", "并非源码已检查",
+                      "未验证的推断", "尚未测试已执行"):
+            with self.subTest(bogus=bogus):
+                note = self.example.replace(
+                    " — 讨论决策；不等于已经实际部署验证。",
+                    " — " + bogus, 1)
+                with self.assertRaisesRegex(ValueError, "grade"):
+                    checker.check_traceability(note)
+
+    def test_exact_grade_with_explanation_remains_valid(self):
+        self.assertEqual(checker.check_traceability(self.example)["evidence_count"], 2)
+
     def test_code_fenced_fake_sources_do_not_satisfy_required_mappings(self):
         bad = self.example.replace(
             "## 原理、取舍与经验\n",

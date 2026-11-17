@@ -1,4 +1,4 @@
-# Knowledge completeness & reusable learning — v0.2.0
+# Knowledge completeness & reusable learning — v0.2.1
 
 **Gate:** could a future reader/Agent unfamiliar with the original discussion understand *why* the method works, how to apply/evaluate it, and where it fails? A generic abstract is not a complete engineering knowledge note. No fixed word limit is a substitute for completeness.
 

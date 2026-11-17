@@ -62,7 +62,7 @@ Do not force `skill_candidate: false` into ordinary notes. The upstream Wiki par
 
 For missing or conflicting consequential evidence, produce a **待验证提纲** containing topic, value, actually accessible sources, missing/contradictory evidence, next check and `HOLD — 不建议立即摄入`. Follow [the non-ingestion HOLD template](../assets/hold-outline.template.md). Never format a HOLD as an ingestion-ready Canonical Knowledge Note.
 
-## v0.2.0 — standalone delivery and depth acceptance
+## v0.2.1 — standalone delivery and depth acceptance
 
 The **Canonical Knowledge Note v0.1 fields and seven sections remain unchanged** for Wiki compatibility. Delivery is upgraded, not the downstream schema:
 
@@ -76,7 +76,7 @@ The **Canonical Knowledge Note v0.1 fields and seven sections remain unchanged**
 
 Canonical seven headings are still exactly those listed above. Use `###` subheadings for depth; do not create a new unrelated YAML schema or force fixed word counts.
 
-## v0.2.0 evidence linkage (no YAML schema change)
+## v0.2.1 evidence linkage (no YAML schema change)
 
 The existing `source_refs` **list order** defines in-note source identifiers `[S1]`, `[S2]`, etc. In the evidence section use, for example, `- [E1] [S1] exact file/heading or bounded conversation segment — supported claim — 源码已检查`. Multiple sources may be linked in one evidence entry as `[S1,S2]`. E-IDs start at E1 and must be unique and sequential; a cited S-ID must exist in frontmatter `source_refs`. Every listed source must be linked from an E entry; material inferences should identify their supporting source, and unsupported speculation stays labeled as hypothesis. **This is a convention inside the existing evidence section, not a new Markdown or YAML schema.**
 
@@ -89,3 +89,5 @@ Metadata sanity check: `knowledge_status: verified` combined with `source_access
 CommonMark details: accept correctly nested indented fenced code, reject quoted `[E1]` lists as primary evidence, and distinguish actual missing-field placeholders from legitimate `TODO.md` file paths or explanatory prose containing `TODO`.
 
 CommonMark closure: code fences inside a blockquote or nested list are legal and must validate; a root-level fence followed by a quoted or indented pseudo-closure is still unclosed. Use parsed token extent and content lines rather than matching a raw closing line.
+
+Evidence audit precision: blockquoted material and escaped citation examples like `\\[E99]` are not actual note references. For evidence grades use an exact canonical grade label from the controlled vocabulary, optionally followed by a `；` explanation. A negated or embedded phrase containing `源码已检查` or `测试已执行` does not meet the grade requirement.

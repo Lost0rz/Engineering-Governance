@@ -1,4 +1,4 @@
-# Context resolution — v0.2.0
+# Context resolution — v0.2.1
 
 **Explicitly invoking Wiki Knowledge Builder establishes knowledge-distillation intent, not unlimited source permissions.** Stop context search when the relevant task/material is unambiguously located. Treat discovery of a task as distinct from obtaining primary records about what was actually completed.
 

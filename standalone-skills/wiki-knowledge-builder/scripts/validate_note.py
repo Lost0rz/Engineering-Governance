@@ -144,13 +144,24 @@ def semantic_document(raw: str) -> dict:
                     raise ValueError("Evidence list marker must be visible plain text")
                 evidence_entries.append(content)
     references = set()
+    quoted_depth = 0
     for tok in tokens:
-        if tok.type != "inline":
+        if tok.type == "blockquote_open":
+            quoted_depth += 1
+        elif tok.type == "blockquote_close":
+            quoted_depth -= 1
+        if tok.type != "inline" or quoted_depth:
             continue
+        # tok.content still contains Markdown backslash escapes, whereas
+        # child text is unescaped by the parser. Compare both so a literal
+        # escaped \[E99] example cannot be counted as a real citation.
+        raw_visible_ids = {int(n) for n in re.findall(
+            r"(?<!\\)\[E([1-9][0-9]*)\]", tok.content)}
         for child in tok.children or []:
             if child.type == "text":
                 references.update(int(n) for n in re.findall(
-                    r"\[E([1-9][0-9]*)\]", child.content))
+                    r"\[E([1-9][0-9]*)\]", child.content)
+                    if int(n) in raw_visible_ids)
     return {"title": h1[0], "sections": sections,
             "evidence_entries": evidence_entries, "visible_references": references}
 

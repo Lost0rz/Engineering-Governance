@@ -1,4 +1,4 @@
-# Wiki Knowledge Builder v0.2.0 — ChatGPT plugin adapter
+# Wiki Knowledge Builder v0.2.1 — ChatGPT plugin adapter
 
 **这是插件内的说明，不是要求用户复制粘贴的 Prompt。** 安装并明确选择 `Wiki Knowledge Builder` 后，用户只需要提交材料（网址、文章、文件、代码、任务记录），或说“把刚才/以前完成的工作沉淀一下”。模型直接执行 `SKILL.md`；不再要求用户重复分类、审计标准或格式。
 

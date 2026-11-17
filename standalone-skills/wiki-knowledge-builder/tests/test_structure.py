@@ -292,6 +292,20 @@ class PortableSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unclosed Markdown code fence"):
             validate_note(note)
 
+    def test_blockquote_evidence_reference_is_not_an_orphan(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        note = source.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n> 来源引用示例：[E99] 不是本文的证据编号。\n\n", 1)
+        self.assertEqual(validate_note(note)["source_kind"], "conversation")
+
+    def test_backslash_escaped_evidence_reference_is_not_an_orphan(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        note = source.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n演示语法：\\[E99] 不是实际引文。\n\n", 1)
+        self.assertEqual(validate_note(note)["source_kind"], "conversation")
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"
