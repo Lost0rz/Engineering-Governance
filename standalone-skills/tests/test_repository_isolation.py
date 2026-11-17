@@ -46,7 +46,11 @@ class RepositoryIsolationTests(unittest.TestCase):
 
     def test_packager_has_no_parent_governance_or_ci_contract(self):
         code = (HERE / "build_wiki_packages.py").read_text(encoding="utf-8")
-        self.assertNotIn("engineering-governance", code)
+        # A defensive archive-name filter may mention the parent plugin
+        # name; only actual parent configuration dependencies are forbidden.
+        self.assertNotIn('repo / "plugin.json"', code)
+        self.assertNotIn('gov.get("name")', code)
+        self.assertIn('Governance package contamination', code)
         self.assertNotIn(".github/workflows", code)
         self.assertNotIn("governance_preview.py", code)
         self.assertIn("source_dir(repo)", code)
