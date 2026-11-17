@@ -131,7 +131,7 @@ def semantic_document(raw: str) -> dict:
                 first = next((c for c in (tok.children or [])
                               if c.type not in ("softbreak", "hardbreak")), None)
                 if first is None or first.type != "text" or not re.match(
-                        r"^\[E[1-9][0-9]*\]\s+\[S", first.content):
+                        r"^\[E[1-9][0-9]*\]", first.content):
                     raise ValueError("Evidence list marker must be visible plain text")
                 evidence_entries.append(content)
     references = set()
