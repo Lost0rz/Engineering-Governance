@@ -1,4 +1,4 @@
-# Evidence acquisition & audit depth — v0.2.1
+# Evidence acquisition & audit depth — v0.2.2
 
 **Enough evidence for reusable engineering conclusions, not maximum browsing.** Scale to complexity, potential impact and uncertainty. A single README is not a repository implementation audit. Audit tiers describe the **depth of examined material**, never breadth across the entire repository by default.
 

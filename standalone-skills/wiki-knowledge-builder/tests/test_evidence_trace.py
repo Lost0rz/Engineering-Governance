@@ -160,6 +160,48 @@ class EvidenceLinkTests(unittest.TestCase):
     def test_exact_grade_with_explanation_remains_valid(self):
         self.assertEqual(checker.check_traceability(self.example)["evidence_count"], 2)
 
+    def test_realistic_chinese_full_stop_evidence_grades(self):
+        # Prior Crawl4AI report generated evidence lines ending in 。
+        # Retain canonical exact grade matching while allowing final punctuation.
+        for label in ("源码已检查。", "讨论决策。", "来源声称。",
+                      "测试已执行。", "文件声明。", "源码已检查.",
+                      "来源声称；仅来自官方文档。"):
+            with self.subTest(label=label):
+                note = self.example.replace(
+                    " — 讨论决策；不等于已经实际部署验证。",
+                    " — " + label, 1)
+                self.assertEqual(checker.check_traceability(note)["evidence_count"], 2)
+
+    def test_chinese_full_stop_does_not_legalize_misleading_grade(self):
+        for invalid in ("未测试已执行。", "并非源码已检查。", "尚未验证的推断。",
+                        "源码已检查但未核对。", "来源声称，不等于证实。",
+                        "源码已检查。。"):
+            with self.subTest(label=invalid):
+                note = self.example.replace(
+                    " — 讨论决策；不等于已经实际部署验证。",
+                    " — " + invalid, 1)
+                with self.assertRaisesRegex(ValueError, "grade"):
+                    checker.check_traceability(note)
+
+    def test_multiple_realistic_crawl4ai_style_evidence_lists(self):
+        # Public, source-free regression of the previously failing output style:
+        # 4, 5, 6 entries with a trailing Chinese full stop in every grade.
+        base = self.example
+        baseline_e1 = "- [E1] [S1] 2026-11-16 用户提供的设计材料 — 记录按内容价值而非来源平台组织 Skill 的设计选择 — 讨论决策；不等于已经实际部署验证。"
+        baseline_e2 = "- [E2] [S1] v0.1 设计材料和网页提示词 — 约定 KEEP/HOLD/SKIP 与 Canonical Markdown 结构 — 文件声明；不代表真实测试或 Wiki 摄入通过。"
+        assert baseline_e1 in base and baseline_e2 in base
+        for count in (4, 5, 6):
+            with self.subTest(count=count):
+                new_lines = [
+                    f"- [E{i}] [S1] crawl4ai/example.py:{i} — 已检查参数与返回路径 — "
+                    + ("源码已检查。" if i < count else "来源声称。")
+                    for i in range(1, count + 1)
+                ]
+                note = base.replace(baseline_e1 + "\n" + baseline_e2,
+                                    "\n".join(new_lines), 1)
+                self.assertEqual(checker.check_traceability(note),
+                                 {"evidence_count": count, "source_count": 1})
+
     def test_code_fenced_fake_sources_do_not_satisfy_required_mappings(self):
         bad = self.example.replace(
             "## 原理、取舍与经验\n",

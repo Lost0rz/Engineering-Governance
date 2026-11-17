@@ -1,4 +1,4 @@
-# Knowledge completeness & reusable learning — v0.2.1
+# Knowledge completeness & reusable learning — v0.2.2
 
 **Gate:** could a future reader/Agent unfamiliar with the original discussion understand *why* the method works, how to apply/evaluate it, and where it fails? A generic abstract is not a complete engineering knowledge note. No fixed word limit is a substitute for completeness.
 
@@ -15,13 +15,13 @@
 
 1. **Value:** recognizable future retrieval/use trigger.
 2. **Causality:** why and when the insight holds, including counterexamples or failure triggers.
-3. **Technical learning:** adequate mechanism, entry API, meaningful parameters/example, validation and tradeoffs **when applicable**.
+3. **Technical learning:** adequate mechanism, entry API, meaningful parameters/example, validation and tradeoffs **when applicable**. When the topic is inspected engineering code, include a concise source-backed call/configuration snippet showing the key API and parameters, or clearly state the missing evidence preventing one. Label snippets `UNTESTED_EXAMPLE` or `PSEUDOCODE` where appropriate; never present an inferred sample as executed code.
 4. **Evidence:** consequential claims map to E1/E2 and frontmatter source_refs; inference/test/discussion distinctions remain explicit.
 5. **Limits:** version/time scope, observed vs untested effects, implementation risks.
 6. **Coverage:** important nearby mechanisms are included, explained as out-of-scope, or listed `QUEUED`, not silently lost.
 7. **Reusability:** independent reader can start from the note and trace sources without re-reading a complete old conversation.
 
-If a critical check fails, deepen evidence retrieval when permitted; otherwise flag gaps (`AUDIT_PARTIAL`) and avoid `CONTENT_PASS`. A useful provisional KEEP is allowed with explicit scope and omissions; false certainty is not.
+When validating a large multi-topic research report, assess each KEEP independently. A long note with API names but no adaptable invocation, configuration snippet, or explanation why examples are unsafe to provide is not automatically `CONTENT_PASS` for a code-heavy topic. If a critical check fails, deepen evidence retrieval when permitted; otherwise flag gaps (`AUDIT_PARTIAL`) and avoid `CONTENT_PASS`. A useful provisional KEEP is allowed with explicit scope and omissions; false certainty is not.
 
 ## Candidate discovery vs batch limit
 

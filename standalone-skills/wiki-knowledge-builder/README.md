@@ -1,4 +1,4 @@
-# Wiki Knowledge Builder — independent Skill v0.2.1
+# Wiki Knowledge Builder — independent Skill v0.2.2
 
 **Standalone identity:** `wiki-knowledge-builder` / “Wiki Knowledge Builder”. This Skill does **not** belong to the Engineering Governance plugin; it is never routed through, installed with, or versioned with `engineering-governance`.
 
@@ -10,13 +10,13 @@ For ChatGPT web, select the *separate private* Wiki Knowledge Builder plugin and
 
 **Acceptance boundary:** CI and source checks establish package structure and validator behavior, **not** model reasoning. T1–T19 live behavior, native ChatGPT/Agent invocation, and actual LLM Wiki ingestion/retrieval remain independent acceptance steps; do not mark them PASS from static CI. The plugin and standalone Agent packaging use the same core Skill with separate installation manifests.
 
-## v0.2.1 — contextual distillation and deep learning notes
+## v0.2.2 — contextual distillation and deep learning notes
 
 Calling/selecting the Skill now establishes knowledge-distillation intent: users provide **only a source or reference to prior work**, not a long ChatGPT prompt. The workflow autonomously resolves relevant accessible context, audits evidence to a subject-appropriate depth, discovers all valuable topics before selecting up to three notes, preserves actionable technical methods, and delivers each note as independent Markdown. High-value deferred themes are `QUEUED`, not silently dropped.
 
 See `references/context-resolution.md`, `references/evidence-acquisition.md`, and `references/knowledge-completeness.md`. The Canonical Knowledge Note v0.1 YAML/section schema remains stable. New acceptance scenarios T9–T19 are **specifications**, not claims of real model/host tests. This Skill is independently packaged and does not modify Engineering Governance version, policies or CI routing.
 
-## v0.2.1 acceptance state and traceability
+## v0.2.2 acceptance state and traceability
 
 This source package is **not** the Engineering Governance plugin. The downstream Markdown frontmatter and seven canonical sections remain v0.1. For new notes, the optional independent `scripts/check_traceability.py` preflight checks E-numbered evidence and `[S1]`/`[S2]` references to ordered frontmatter `source_refs`. It is structural only: `EVIDENCE_STRUCTURE_PASS` is **not** `CONTENT_PASS`, independent source verification, execution proof, or successful Wiki ingestion. Scope-limited audits must disclose unreviewed areas and may queue only candidates grounded in inspected sources.
 

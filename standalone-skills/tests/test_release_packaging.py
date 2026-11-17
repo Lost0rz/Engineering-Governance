@@ -27,8 +27,8 @@ class IndependentArchiveTests(unittest.TestCase):
             self.assertEqual(head, actual)
             self.assertIn(head[:12], agent.name)
             self.assertIn(head[:12], plugin.name)
-            self.assertIn("v0.2.1", agent.name)
-            self.assertIn("v0.2.1", plugin.name)
+            self.assertIn("v0.2.2", agent.name)
+            self.assertIn("v0.2.2", plugin.name)
             source = builder.source_files(REPO)
             with zipfile.ZipFile(agent) as a, zipfile.ZipFile(plugin) as b:
                 expect_agent = {f"wiki-knowledge-builder/{x}" for x in source}
@@ -39,7 +39,7 @@ class IndependentArchiveTests(unittest.TestCase):
                 self.assertEqual(a.testzip(), None)
                 self.assertEqual(b.testzip(), None)
                 self.assertEqual(json.loads(b.read("plugin.json"))["name"], "wiki-knowledge-builder")
-                self.assertEqual(json.loads(b.read("plugin.json"))["version"], "0.2.1")
+                self.assertEqual(json.loads(b.read("plugin.json"))["version"], "0.2.2")
                 self.assertEqual(json.loads(b.read(".codex-plugin/plugin.json"))["skills"], "./skills")
                 self.assertTrue(all(not x.startswith("skills/project-governance/")
                                     for x in a.namelist() + b.namelist()))
@@ -64,7 +64,7 @@ class IndependentArchiveTests(unittest.TestCase):
                 repo = Path(td)
                 src = repo / layout
                 (src / "scripts").mkdir(parents=True)
-                (src / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
+                (src / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
                 (src / "scripts/validate_note.py").write_text("pass\n")
                 (repo / "README.md").write_text("Unrelated host description\n")
                 (repo / ".github/workflows").mkdir(parents=True)
@@ -93,7 +93,7 @@ class IndependentArchiveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             repo = Path(td)
             (repo / "scripts").mkdir()
-            (repo / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
+            (repo / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
             (repo / "scripts/validate_note.py").write_text("pass\n")
             (repo / "internal_secret.txt").write_text("exclude\n")
             (repo / ".github").mkdir()
@@ -105,7 +105,7 @@ class IndependentArchiveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td) / "standalone-skills/wiki-knowledge-builder"
             (root / "scripts").mkdir(parents=True)
-            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
             (root / "scripts/validate_note.py").write_text("ok\n")
             outside = Path(td) / "sensitive.txt"
             outside.write_text("outside\n")
@@ -155,7 +155,7 @@ class IndependentArchiveTests(unittest.TestCase):
             (root / "references").mkdir()
             (root / "tests").mkdir()
             (root / "scripts").mkdir()
-            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.1\n")
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
             (root / "scripts/validate_note.py").write_text("pass\n")
             (root / "references/a.md").write_text("public\n")
             (root / "references/.env").write_text("SECRET=example\n")

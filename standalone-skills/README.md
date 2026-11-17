@@ -28,8 +28,8 @@ repository with its own CI. Do not merge this staging PR into Governance.
 `standalone-skills/tests/build_wiki_packages.py` creates two **distinct** ZIP formats
 under an **explicit output directory**, only from files whose actual bytes match Git HEAD:
 
-- `wiki-knowledge-builder-agent-skill-v0.2.1-<sha>.zip` with `wiki-knowledge-builder/SKILL.md`.
-- `wiki-knowledge-builder-chatgpt-private-v0.2.1-<sha>.zip` with independent
+- `wiki-knowledge-builder-agent-skill-v0.2.2-<sha>.zip` with `wiki-knowledge-builder/SKILL.md`.
+- `wiki-knowledge-builder-chatgpt-private-v0.2.2-<sha>.zip` with independent
   `plugin.json`, `.codex-plugin/plugin.json` and `skills/wiki-knowledge-builder/SKILL.md`.
 
 The preflight verifies ZIP CRCs, exact paths and bytes, version and Git source SHA.

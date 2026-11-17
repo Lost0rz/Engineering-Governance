@@ -14,7 +14,7 @@ import subprocess
 import zipfile
 
 SKILL_NAME = "wiki-knowledge-builder"
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 DESCRIPTION = ("Independent context-aware knowledge distillation Skill with deep source audits, "
                "actionable technical detail, and canonical Wiki Markdown. No automatic Wiki writes.")
 ROOT_FILES = frozenset({"SKILL.md", "README.md"})

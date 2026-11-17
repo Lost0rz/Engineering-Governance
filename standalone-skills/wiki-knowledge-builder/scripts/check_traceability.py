@@ -61,6 +61,10 @@ def check_traceability(raw: str) -> dict:
         # Parse a declared grade, never search for a grade substring inside
         # negations such as "并非源码已检查" or "未测试已执行".
         grade_label = re.split(r"[；;]", chunks[-1], maxsplit=1)[0].strip()
+        # A normal final full stop is punctuation, not part of the grade.
+        # Strip only terminal Chinese/ASCII stops; do not turn embedded or
+        # negated grades (e.g. "并非源码已检查。") into a valid exact match.
+        grade_label = re.sub(r"[。．.]$", "", grade_label).strip()
         if grade_label.casefold() not in {g.casefold() for g in _GRADES}:
             raise ValueError("Evidence E%d needs an explicit evidence grade" % number)
         found.append(number)
