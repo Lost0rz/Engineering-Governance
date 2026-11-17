@@ -85,3 +85,5 @@ Run `scripts/check_traceability.py` on saved standalone notes when the host has 
 Metadata sanity check: `knowledge_status: verified` combined with `source_access: unavailable` is invalid. This only rejects a contradictory declared state; other combinations still require actual provenance review. Do not infer factual validation from parser success.
 
 **Rendered Markdown syntax preflight:** the read-only validators use CommonMark parsing (`markdown-it-py`, see `tests/requirements.txt`) rather than trusting literal heading text. Indented/fenced code, HTML comments and inline code cannot masquerade as headings or evidence; a note must contain exactly the seven canonical visible H2 sections. Normalize LF/CRLF before validation. Evidence source_refs placeholders such as TODO/TBD are rejected. A syntax or evidence-structure PASS remains distinct from factual verification and actual Wiki ingestion.
+
+CommonMark details: accept correctly nested indented fenced code, reject quoted `[E1]` lists as primary evidence, and distinguish actual missing-field placeholders from legitimate `TODO.md` file paths or explanatory prose containing `TODO`.

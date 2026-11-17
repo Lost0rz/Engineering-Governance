@@ -1,4 +1,4 @@
-# Acceptance matrix — T1–T8
+# Acceptance matrix — T1–T19
 
 These are **test scenarios**, not claims that live model or LLM Wiki tests have passed. For each, inspect the decision, claim labels, source anchors, note structure and negative behavior.
 

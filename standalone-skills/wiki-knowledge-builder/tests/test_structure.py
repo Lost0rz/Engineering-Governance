@@ -253,6 +253,23 @@ class PortableSkillTests(unittest.TestCase):
         note = source.replace(loc, "https://github.com/org/todo-tools/blob/main/TODO.md", 1)
         self.assertEqual(validate_note(note)["source_access"], "partial")
 
+    def test_nested_list_fenced_code_is_valid(self):
+        example = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        nested = example.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n"
+            "1. 技术步骤：\n\n"
+            "    ~~~python\n"
+            "    print('hello')\n"
+            "    ~~~\n\n", 1)
+        self.assertEqual(validate_note(nested)["source_kind"], "conversation")
+
+    def test_quoted_evidence_does_not_count_as_primary_list(self):
+        example = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        quoted = example.replace("- [E1] [S1]", "> - [E1] [S1]", 1)
+        with self.assertRaisesRegex(ValueError, "Missing visible"):
+            validate_note(quoted)
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"

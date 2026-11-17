@@ -74,7 +74,7 @@ def semantic_document(raw: str) -> dict:
         if tok.type == "fence":
             marker = tok.markup
             last = lines[tok.map[1] - 1] if tok.map else ""
-            ending = r"^ {0,3}" + re.escape(marker[0]) + "{" + str(len(marker)) + r",}[ \t]*$"
+            ending = r"^[ \t]*" + re.escape(marker[0]) + "{" + str(len(marker)) + r",}[ \t]*$"
             if not re.fullmatch(ending, last):
                 raise ValueError("Unclosed Markdown code fence")
     headings = []
@@ -121,12 +121,17 @@ def semantic_document(raw: str) -> dict:
 
     evidence_entries = []
     depth = 0
+    quoted = 0
     for tok in sections["证据与来源"]:
-        if tok.type == "list_item_open":
+        if tok.type == "blockquote_open":
+            quoted += 1
+        elif tok.type == "blockquote_close":
+            quoted -= 1
+        elif tok.type == "list_item_open":
             depth += 1
         elif tok.type == "list_item_close":
             depth -= 1
-        elif tok.type == "inline" and depth == 1:
+        elif tok.type == "inline" and depth == 1 and quoted == 0:
             content = tok.content
             if re.match(r"^\[E", content):
                 # Evidence identifiers and S links must be real visible text.

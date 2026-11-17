@@ -14,7 +14,7 @@ For ChatGPT web, select the *separate private* Wiki Knowledge Builder plugin and
 
 Calling/selecting the Skill now establishes knowledge-distillation intent: users provide **only a source or reference to prior work**, not a long ChatGPT prompt. The workflow autonomously resolves relevant accessible context, audits evidence to a subject-appropriate depth, discovers all valuable topics before selecting up to three notes, preserves actionable technical methods, and delivers each note as independent Markdown. High-value deferred themes are `QUEUED`, not silently dropped.
 
-See `references/context-resolution.md`, `references/evidence-acquisition.md`, and `references/knowledge-completeness.md`. The Canonical Knowledge Note v0.1 YAML/section schema remains stable. New acceptance scenarios T9–T16 are **specifications**, not claims of real model/host tests. This Skill is independently packaged and does not modify Engineering Governance version, policies or CI routing.
+See `references/context-resolution.md`, `references/evidence-acquisition.md`, and `references/knowledge-completeness.md`. The Canonical Knowledge Note v0.1 YAML/section schema remains stable. New acceptance scenarios T9–T19 are **specifications**, not claims of real model/host tests. This Skill is independently packaged and does not modify Engineering Governance version, policies or CI routing.
 
 ## v0.2.0 acceptance state and traceability
 

@@ -125,6 +125,19 @@ class EvidenceLinkTests(unittest.TestCase):
         )
         self.assertEqual(checker.check_traceability(note)["source_count"], 1)
 
+    def test_filename_todo_and_todo_topic_are_not_missing_placeholders(self):
+        note = self.example.replace(
+            "[E1] [S1] 2026-11-16 用户提供的设计材料",
+            "[E1] [S1] TODO.md", 1).replace(
+            "记录按内容价值而非来源平台组织 Skill 的设计选择",
+            "记录 TODO 事项与实际工具行为", 1)
+        self.assertEqual(checker.check_traceability(note)["evidence_count"], 2)
+
+    def test_quoted_source_e1_does_not_satisfy_required_evidence(self):
+        note = self.example.replace("- [E1] [S1]", "> - [E1] [S1]", 1)
+        with self.assertRaises(ValueError):
+            checker.check_traceability(note)
+
     def test_code_fenced_fake_sources_do_not_satisfy_required_mappings(self):
         bad = self.example.replace(
             "## 原理、取舍与经验\n",

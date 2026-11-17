@@ -54,7 +54,9 @@ def check_traceability(raw: str) -> dict:
         chunks = [x.strip() for x in body.split("—")]
         if len(chunks) < 3 or any(not x for x in chunks[:3]):
             raise ValueError("Evidence E%d needs locator, supported claim and grade" % number)
-        if _PLACEHOLDER.search(body):
+        # A filename TODO.md, or discussion of a TODO workflow, is not
+        # an unfilled field. Only reject actual placeholder fields.
+        if any(unfilled_source_ref(part) for part in chunks[:3]):
             raise ValueError("Evidence E%d includes an unfilled placeholder" % number)
         if not any(grade.casefold() in chunks[-1].casefold() for grade in _GRADES):
             raise ValueError("Evidence E%d needs an explicit evidence grade" % number)
