@@ -75,7 +75,13 @@ def semantic_document(raw: str) -> dict:
             marker = tok.markup
             last = lines[tok.map[1] - 1] if tok.map else ""
             ending = r"^[ \t]*" + re.escape(marker[0]) + "{" + str(len(marker)) + r",}[ \t]*$"
-            if not re.fullmatch(ending, last):
+            # CommonMark allows additional indentation inside lists, but a
+            # root-level four-space-indented "closing" fence is plain code.
+            # For a genuinely closed fence the map includes open + close,
+            # whereas an unclosed fence's content includes the final line.
+            span = tok.map[1] - tok.map[0] if tok.map else 0
+            if (not re.fullmatch(ending, last) or span < 2
+                    or len(tok.content.splitlines()) != span - 2):
                 raise ValueError("Unclosed Markdown code fence")
     headings = []
     nested = 0

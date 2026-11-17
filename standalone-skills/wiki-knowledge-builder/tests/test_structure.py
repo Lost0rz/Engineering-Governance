@@ -270,6 +270,12 @@ class PortableSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing visible"):
             validate_note(quoted)
 
+    def test_indented_pseudo_closing_fence_at_root_is_rejected(self):
+        example = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        broken = example + "\n```python\nprint('still open')\n    ```\n"
+        with self.assertRaisesRegex(ValueError, "Unclosed Markdown code fence"):
+            validate_note(broken)
+
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256
         example = ROOT / "examples/value-over-source.example.md"
