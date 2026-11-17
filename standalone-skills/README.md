@@ -15,3 +15,18 @@ The standalone CI runner discovers every package directory under `standalone-ski
 ## Source CI routing
 
 `standalone-skills/**` PR changes run the independent `standalone-skills-ci.yml` workflow. The Governance workflow ignores **standalone-only** changes but still runs for mixed changes. Repository-only isolation tests do not travel with independently installed packages. This does not add the new Skill to Governance's Web preview or installed plugin.
+
+
+## Deterministic standalone package preflight (no release)
+
+`standalone-skills/scripts/build_wiki_packages.py` creates two **distinct** ZIP formats
+under an **explicit output directory**, only from files whose actual bytes match Git HEAD:
+
+- `wiki-knowledge-builder-agent-skill-v0.2.0-<sha>.zip` with `wiki-knowledge-builder/SKILL.md`.
+- `wiki-knowledge-builder-chatgpt-private-v0.2.0-<sha>.zip` with independent
+  `plugin.json`, `.codex-plugin/plugin.json` and `skills/wiki-knowledge-builder/SKILL.md`.
+
+The preflight verifies ZIP CRCs, exact paths and bytes, version and Git source SHA.
+GitHub CI invokes this through an isolated, temporary-directory regression test;
+it never uploads, publishes, installs, or updates the private ChatGPT plugin.
+Neither archive contains Engineering Governance's root `skills/` tree.

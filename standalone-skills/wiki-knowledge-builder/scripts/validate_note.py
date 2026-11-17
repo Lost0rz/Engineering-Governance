@@ -8,6 +8,7 @@ import re
 import sys
 
 import yaml
+from markdown_it import MarkdownIt
 
 NOTE_HEADINGS = (
     "适用问题与复用触发", "核心结论", "原理、取舍与经验", "证据与来源",
@@ -25,7 +26,12 @@ ALLOWED = {
 }
 
 
+def normalize_newlines(raw: str) -> str:
+    return raw.replace("\r\n", "\n").replace("\r", "\n")
+
+
 def frontmatter(raw: str) -> dict:
+    raw = normalize_newlines(raw)
     if not raw.startswith("---\n"):
         raise ValueError("Missing YAML frontmatter")
     items = raw.split("\n---\n", 1)
@@ -52,35 +58,92 @@ def frontmatter(raw: str) -> dict:
     return meta
 
 
-def prose_without_fences(raw: str) -> str:
-    """Ignore code fences during structural Markdown validation (read-only)."""
-    body = raw.split("\n---\n", 1)[1]
-    out = []
-    fence = None
-    for line in body.splitlines():
-        line = line.rstrip("\r")
-        if fence is None:
-            match = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
-            if match:
-                marker = match.group(1)
-                if marker[0] == "`" and "`" in match.group(2):
-                    out.append(line)
-                    continue
-                fence = (marker[0], len(marker))
-                out.append("")
-                continue
-            out.append(line)
+def semantic_document(raw: str) -> dict:
+    """Parse visible CommonMark structure; ignore comments, fenced/indented code.
+
+    Canonical headings must not be inside block quotes or list items.
+    This checks syntax, not factual truth or Wiki compatibility.
+    """
+    raw = normalize_newlines(raw)
+    _, mark, body = raw.partition("\n---\n")
+    if not mark:
+        raise ValueError("Missing Markdown body after YAML frontmatter")
+    tokens = MarkdownIt("commonmark").parse(body)
+    lines = body.splitlines()
+    for tok in tokens:
+        if tok.type == "fence":
+            marker = tok.markup
+            last = lines[tok.map[1] - 1] if tok.map else ""
+            ending = r"^ {0,3}" + re.escape(marker[0]) + "{" + str(len(marker)) + r",}[ \t]*$"
+            if not re.fullmatch(ending, last):
+                raise ValueError("Unclosed Markdown code fence")
+    headings = []
+    nested = 0
+    for i, tok in enumerate(tokens):
+        if tok.type in ("blockquote_open", "list_item_open"):
+            nested += 1
+        if tok.type == "heading_open" and nested == 0:
+            if i + 2 >= len(tokens) or tokens[i + 1].type != "inline":
+                raise ValueError("Malformed rendered Markdown heading")
+            headings.append((i, tok.tag, tokens[i + 1].content.strip()))
+        if tok.type in ("blockquote_close", "list_item_close"):
+            nested -= 1
+        if nested < 0:
+            raise ValueError("Malformed rendered Markdown nesting")
+    h1 = [name for _, tag, name in headings if tag == "h1"]
+    h2 = [(i, name) for i, tag, name in headings if tag == "h2"]
+    if len(h1) != 1:
+        raise ValueError("Missing or duplicated rendered H1 title")
+    names = [name for _, name in h2]
+    if len(set(names)) != len(names):
+        raise ValueError("Duplicate required heading among rendered H2 sections")
+    if set(names) != set(NOTE_HEADINGS):
+        raise ValueError("Missing or extra H2 sections; expected canonical headings: "
+                         + ", ".join(NOTE_HEADINGS))
+    if tuple(names) != NOTE_HEADINGS:
+        raise ValueError("Required headings out of canonical order")
+    sections = {}
+    for j, (start, name) in enumerate(h2):
+        stop = h2[j + 1][0] if j + 1 < len(h2) else len(tokens)
+        section = tokens[start + 3:stop]
+        def meaningful(tok):
+            if tok.type in ("fence", "code_block"):
+                return bool(tok.content.strip())
+            if tok.type == "inline":
+                return any(c.type in ("text", "code_inline", "image") and c.content.strip()
+                           for c in (tok.children or []))
+            return False
+        if not any(meaningful(tok) for tok in section):
+            raise ValueError("Missing visible content in section: " + name)
+        sections[name] = section
+
+    evidence_entries = []
+    depth = 0
+    for tok in sections["证据与来源"]:
+        if tok.type == "list_item_open":
+            depth += 1
+        elif tok.type == "list_item_close":
+            depth -= 1
+        elif tok.type == "inline" and depth == 1:
+            content = tok.content
+            if re.match(r"^\[E", content):
+                # Evidence identifiers and S links must be real visible text.
+                first = next((c for c in (tok.children or [])
+                              if c.type not in ("softbreak", "hardbreak")), None)
+                if first is None or first.type != "text" or not re.match(
+                        r"^\[E[1-9][0-9]*\]\s+\[S", first.content):
+                    raise ValueError("Evidence list marker must be visible plain text")
+                evidence_entries.append(content)
+    references = set()
+    for tok in tokens:
+        if tok.type != "inline":
             continue
-        end = re.fullmatch(
-            r" {0,3}" + re.escape(fence[0]) + "{" + str(fence[1]) + r",}[ \t]*",
-            line,
-        )
-        if end:
-            fence = None
-        out.append("")
-    if fence is not None:
-        raise ValueError("Unclosed Markdown code fence")
-    return "\n".join(out) + "\n"
+        for child in tok.children or []:
+            if child.type == "text":
+                references.update(int(n) for n in re.findall(
+                    r"\[E([1-9][0-9]*)\]", child.content))
+    return {"title": h1[0], "sections": sections,
+            "evidence_entries": evidence_entries, "visible_references": references}
 
 
 def validate_note(raw: str, *, template: bool = False) -> dict:
@@ -120,35 +183,18 @@ def validate_note(raw: str, *, template: bool = False) -> dict:
             "替换为真实来源定位", "真实可回溯来源",
             "actual original file, URL, commit or conversation range",
             "REPLACE_WITH_ACTUAL_SOURCE_REF",
+            "待补充", "待核查", "来源待定", "TODO", "TBD", "PLACEHOLDER",
         )
         if any(any(marker.casefold() in ref.casefold() for marker in placeholders)
                for ref in meta["source_refs"]):
             raise ValueError("source_refs contain an unfilled template placeholder")
     if "skill_candidate" in meta and not isinstance(meta["skill_candidate"], bool):
         raise ValueError("skill_candidate must be a YAML boolean")
-    prose = prose_without_fences(raw)
-    sections = {}
-    encountered = []
-    for match in re.finditer(
-        r"(?ms)^## ([^\n]+)\n(.*?)(?=^## [^\n]+\n|\Z)", prose
-    ):
-        heading = match.group(1).strip()
-        if heading in NOTE_HEADINGS:
-            if heading in sections:
-                raise ValueError("Duplicate required heading: " + heading)
-            encountered.append(heading)
-        sections[heading] = match.group(2).strip()
-    for heading in NOTE_HEADINGS:
-        if heading not in sections or not sections[heading]:
-            raise ValueError("Missing or empty heading: " + heading)
-    if tuple(encountered) != NOTE_HEADINGS:
-        raise ValueError("Required headings out of canonical order")
-    evidence = sections["证据与来源"]
-    if not re.search(r"(?m)^[ \t]*[-*][ \t]+\[E1\][ \t]+[^ \t\r\n].*$", evidence):
-        raise ValueError("Missing nonempty [E1] evidence entry")
-    titles = re.findall(r"(?m)^# ([^\r\n]+)$", prose)
-    if len(titles) != 1 or titles[0].strip() != meta["title"].strip():
-        raise ValueError("Missing, duplicated or mismatched H1 title")
+    doc = semantic_document(raw)
+    if doc["title"] != meta["title"].strip():
+        raise ValueError("Rendered H1 title does not match frontmatter title")
+    if not any(re.match(r"^\[E1\]\s+", x) for x in doc["evidence_entries"]):
+        raise ValueError("Missing visible [E1] evidence list entry in 证据与来源")
     return meta
 
 

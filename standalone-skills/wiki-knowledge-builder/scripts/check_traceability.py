@@ -10,7 +10,7 @@ from pathlib import Path
 import re
 import sys
 
-from validate_note import validate_note, prose_without_fences
+from validate_note import validate_note, semantic_document
 
 _EVIDENCE = re.compile(r"^[ \t]*[-*][ \t]+\[E([1-9][0-9]*)\][ \t]+(.+)$")
 _SOURCES = re.compile(r"^\[S([1-9][0-9]*(?:[ \t]*,[ \t]*S[1-9][0-9]*)*)\][ \t]+(.+)$")
@@ -33,21 +33,14 @@ def check_traceability(raw: str) -> dict:
     A passing note can still contain invented references or false statements.
     """
     meta = validate_note(raw)
-    prose = prose_without_fences(raw)
-    match = re.search(
-        r"(?ms)^## 证据与来源\n(.*?)(?=^## [^\n]+\n|\Z)", prose
-    )
-    if not match:
-        raise ValueError("Missing evidence section")
-    evidence = match.group(1)
+    doc = semantic_document(raw)
     found: list[int] = []
     linked_sources: set[int] = set()
-    for line in evidence.splitlines():
+    for content in doc["evidence_entries"]:
+        line = "- " + content
         parsed = _EVIDENCE.match(line)
         if not parsed:
-            if re.match(r"^[ \t]*[-*][ \t]+\[E", line):
-                raise ValueError("Malformed numbered evidence entry: " + line[:100])
-            continue
+            raise ValueError("Malformed visible numbered evidence entry: " + line[:100])
         number = int(parsed.group(1))
         match_source = _SOURCES.fullmatch(parsed.group(2))
         if match_source is None:
@@ -71,10 +64,13 @@ def check_traceability(raw: str) -> dict:
         raise ValueError("Evidence IDs must be E1..En in order without duplicates")
     if not found:
         raise ValueError("No valid evidence items")
+    for idx, ref in enumerate(meta["source_refs"], 1):
+        if _PLACEHOLDER.search(ref):
+            raise ValueError("Unfilled source_refs placeholder at S%d" % idx)
     unused = set(range(1, len(meta["source_refs"]) + 1)) - linked_sources
     if unused:
         raise ValueError("Unlinked source_refs indices: " + str(sorted(unused)))
-    all_ids = {int(x) for x in re.findall(r"\[E([1-9][0-9]*)\]", prose)}
+    all_ids = doc["visible_references"]
     if all_ids - set(found):
         raise ValueError("Orphan evidence IDs: " + str(sorted(all_ids - set(found))))
     return {"evidence_count": len(found), "source_count": len(meta["source_refs"])}

@@ -83,6 +83,36 @@ class EvidenceLinkTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 checker.check_traceability(bad)
 
+    def test_visible_inline_code_example_is_not_an_evidence_reference(self):
+        note = self.example.replace(
+            "## 原理、取舍与经验\n",
+            "## 原理、取舍与经验\n\n编号 `[E99]` 只是语法示例，不是引用。\n\n", 1)
+        self.assertEqual(checker.check_traceability(note)["evidence_count"], 2)
+
+    def test_indented_fake_evidence_and_html_comment_are_rejected(self):
+        indented = self.example.replace("- [E1] [S1]", "    - [E1] [S1]", 1)
+        with self.assertRaises(ValueError):
+            checker.check_traceability(indented)
+        before, body = self.example.split("\n---\n", 1)
+        hidden = before + "\n---\n\n<!--\n" + body + "\n-->\n"
+        with self.assertRaises(ValueError):
+            checker.check_traceability(hidden)
+
+    def test_source_placeholder_and_extra_heading_fail(self):
+        loc = "2026-11-16 LLM Wiki 设计讨论：按内容价值与标准化输出组织，而非按 GitHub、聊天、Agent 来源分类"
+        for bad in ("TODO", "TBD", "待补充"):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                checker.check_traceability(self.example.replace(loc, bad, 1))
+        extra = self.example.replace(
+            "## 关联与原始入口\n",
+            "## 非规范 H2\n\n这是额外章节。\n\n## 关联与原始入口\n", 1)
+        with self.assertRaises(ValueError):
+            checker.check_traceability(extra)
+
+    def test_windows_style_newlines_pass(self):
+        self.assertEqual(checker.check_traceability(
+            self.example.replace("\n", "\r\n"))["evidence_count"], 2)
+
     def test_code_fenced_fake_sources_do_not_satisfy_required_mappings(self):
         bad = self.example.replace(
             "## 原理、取舍与经验\n",

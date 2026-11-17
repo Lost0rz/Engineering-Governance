@@ -116,7 +116,7 @@ class PortableSkillTests(unittest.TestCase):
             "## 证据与来源\n\n- [E1]",
             "## 证据与来源\n\n内容暂缺\n\n## 占位段落\n\n- [E1]", 1,
         )
-        with self.assertRaisesRegex(ValueError, "evidence"):
+        with self.assertRaisesRegex(ValueError, "evidence|H2"):
             validate_note(no_evidence)
         bare_evidence = re.sub(r"(?m)^- \[E[12]\].*$", "- [E1] ", source)
         # An empty evidence section must fail regardless of other headings.
@@ -208,6 +208,37 @@ class PortableSkillTests(unittest.TestCase):
         # or hypothesis outline; this preflight never verifies the facts.
         provisional = raw.replace("source_access: partial", "source_access: unavailable", 1)
         self.assertEqual(validate_note(provisional)["source_access"], "unavailable")
+
+    def test_indented_evidence_code_cannot_masquerade_as_a_list(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        bad = re.sub(r"(?m)^(- \[E[12]\].*)$", r"    \1", source)
+        with self.assertRaisesRegex(ValueError, "evidence"):
+            validate_note(bad)
+
+    def test_html_comment_cannot_hide_a_complete_note(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        yaml, body = source.split("\n---\n", 1)
+        bad = yaml + "\n---\n\n<!--\n" + body + "\n-->\n"
+        with self.assertRaisesRegex(ValueError, "H1"):
+            validate_note(bad)
+
+    def test_extra_rendered_h2_section_is_invalid(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        bad = source.replace("## 关联与原始入口\n",
+                             "## 其他内容\n\n不应出现的额外二级章节。\n\n## 关联与原始入口\n", 1)
+        with self.assertRaisesRegex(ValueError, "H2"):
+            validate_note(bad)
+
+    def test_windows_newlines_are_valid(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        self.assertEqual(validate_note(source.replace("\n", "\r\n"))["source_kind"], "conversation")
+
+    def test_frontmatter_source_placeholder_expansions(self):
+        source = (ROOT / "examples/value-over-source.example.md").read_text(encoding="utf-8")
+        loc = "2026-11-16 LLM Wiki 设计讨论：按内容价值与标准化输出组织，而非按 GitHub、聊天、Agent 来源分类"
+        for marker in ("TODO", "TBD", "PLACEHOLDER", "待补充", "待核查"):
+            with self.subTest(marker=marker), self.assertRaisesRegex(ValueError, "placeholder"):
+                validate_note(source.replace(loc, marker, 1))
 
     def test_manual_validator_is_read_only_and_reports_errors(self):
         from hashlib import sha256

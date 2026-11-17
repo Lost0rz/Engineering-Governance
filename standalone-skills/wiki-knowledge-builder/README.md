@@ -19,3 +19,5 @@ See `references/context-resolution.md`, `references/evidence-acquisition.md`, an
 ## v0.2.0 acceptance state and traceability
 
 This source package is **not** the Engineering Governance plugin. The downstream Markdown frontmatter and seven canonical sections remain v0.1. For new notes, the optional independent `scripts/check_traceability.py` preflight checks E-numbered evidence and `[S1]`/`[S2]` references to ordered frontmatter `source_refs`. It is structural only: `EVIDENCE_STRUCTURE_PASS` is **not** `CONTENT_PASS`, independent source verification, execution proof, or successful Wiki ingestion. Scope-limited audits must disclose unreviewed areas and may queue only candidates grounded in inspected sources.
+
+**Read-only validation dependencies:** when running the optional standalone format/evidence checkers, install `PyYAML` and `markdown-it-py` as listed in `tests/requirements.txt`. Neither library is required for ordinary Skill reasoning; without a usable host runner, report `FORMAT_NOT_RUN`/`EVIDENCE_STRUCTURE_NOT_RUN` rather than pretending execution.
