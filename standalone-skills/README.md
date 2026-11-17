@@ -19,7 +19,7 @@ The standalone CI runner discovers every package directory under `standalone-ski
 
 ## Deterministic standalone package preflight (no release)
 
-`standalone-skills/scripts/build_wiki_packages.py` creates two **distinct** ZIP formats
+`standalone-skills/tests/build_wiki_packages.py` creates two **distinct** ZIP formats
 under an **explicit output directory**, only from files whose actual bytes match Git HEAD:
 
 - `wiki-knowledge-builder-agent-skill-v0.2.0-<sha>.zip` with `wiki-knowledge-builder/SKILL.md`.

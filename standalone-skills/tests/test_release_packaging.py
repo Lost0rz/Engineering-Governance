@@ -12,7 +12,7 @@ import unittest
 import zipfile
 
 REPO = Path(__file__).resolve().parents[2]
-SCRIPT = REPO / "standalone-skills/scripts/build_wiki_packages.py"
+SCRIPT = REPO / "standalone-skills/tests/build_wiki_packages.py"
 spec = importlib.util.spec_from_file_location("wiki_package_preview", SCRIPT)
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
