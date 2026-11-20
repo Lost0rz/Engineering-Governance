@@ -66,10 +66,10 @@ Example trusted caller input:
 
 ~~~yaml
 with:
-  control_runner: '${{ github.event_name == "pull_request" && github.event.pull_request.head.repo.full_name != github.repository && '["ubuntu-latest"]' || '["self-hosted","merloom-ci","macOS","ARM64","mac-mini-ci"]' }}'
+  control_runner: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && '["ubuntu-latest"]' || '["self-hosted","merloom-ci","macOS","ARM64","mac-mini-ci"]' }}
 ~~~
 
-The above nested quotes are illustrative of the selection policy; use valid YAML in the [canonical caller example](../assets/examples/ci-caller.example.yml). In a dedicated same-repository-only environment, a literal JSON label array is sufficient.
+The expression uses the GitHub Actions caller context; the [canonical caller example](../assets/examples/ci-caller.example.yml) includes the same syntax. In a dedicated same-repository-only environment, a literal JSON label array is sufficient.
 
 ## CI trust and host boundaries
 
