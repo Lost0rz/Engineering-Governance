@@ -139,6 +139,8 @@ class WorkflowContractTests(unittest.TestCase):
         route = workflow.split("  route:\n", 1)[1].split("\n  execute:\n", 1)[0]
         execute = workflow.split("\n  execute:\n", 1)[1].split("\n  result:\n", 1)[0]
         self.assertIn("fetch-depth: 0", route)
+        self.assertIn("filter: blob:none", route)
+        self.assertIn("persist-credentials: false", route)
         self.assertIn("fetch-depth: 2", execute)
         self.assertIn("persist-credentials: false", execute)
         self.assertNotIn("fetch-depth: 0", execute)
