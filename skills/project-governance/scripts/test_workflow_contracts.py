@@ -118,11 +118,11 @@ class WorkflowContractTests(unittest.TestCase):
 
     def test_control_runner_is_trusted_caller_input_and_keeps_matrix_runners(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
-        self.assertIn("      control_runner:\\n", workflow)
+        self.assertIn("      control_runner:\n", workflow)
         self.assertIn("default: '[\"ubuntu-latest\"]'", workflow)
-        route = workflow.split("  route:\\n", 1)[1].split("\\n  execute:\\n", 1)[0]
-        execute = workflow.split("\\n  execute:\\n", 1)[1].split("\\n  result:\\n", 1)[0]
-        result = workflow.split("\\n  result:\\n", 1)[1]
+        route = workflow.split("  route:\n", 1)[1].split("\n  execute:\n", 1)[0]
+        execute = workflow.split("\n  execute:\n", 1)[1].split("\n  result:\n", 1)[0]
+        result = workflow.split("\n  result:\n", 1)[1]
         selected = "runs-on: ${{ fromJSON(inputs.control_runner) }}"
         self.assertIn(selected, route)
         self.assertIn(selected, result)
