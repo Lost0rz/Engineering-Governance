@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: v0.10.2
+          ref: v0.10.3
           persist-credentials: false
           path: governance
 
