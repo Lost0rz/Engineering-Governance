@@ -19,6 +19,11 @@ on:
         type: string
         required: false
         default: ""
+      control_runner:
+        description: JSON array of trusted runner labels for route and result jobs; caller-owned, never from PR content
+        type: string
+        required: false
+        default: '["ubuntu-latest"]'
 
 permissions:
   contents: read
@@ -26,7 +31,8 @@ permissions:
 jobs:
   route:
     name: Select tests from accepted project capabilities
-    runs-on: ubuntu-latest
+    # The caller pins this input in its trusted workflow, not in PR test data.
+    runs-on: ${{ fromJSON(inputs.control_runner) }}
     outputs:
       matrix: ${{ steps.select.outputs.matrix }}
       run_tests: ${{ steps.select.outputs.run_tests }}
@@ -50,7 +56,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: v0.10.2
+          ref: v0.10.3
           persist-credentials: false
           path: governance
 
@@ -174,7 +180,8 @@ jobs:
     name: ${{ github.event_name == 'pull_request' && 'EG Ready verification' || 'EG Manual scoped verification' }}
     needs: [route, execute]
     if: always()
-    runs-on: ubuntu-latest
+    # Independent of the selected test matrix; same trusted control host as route.
+    runs-on: ${{ fromJSON(inputs.control_runner) }}
     steps:
       - name: Report actual result
         shell: bash

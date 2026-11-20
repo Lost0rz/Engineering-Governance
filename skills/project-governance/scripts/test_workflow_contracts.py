@@ -116,6 +116,24 @@ class WorkflowContractTests(unittest.TestCase):
         doc = (ROOT / "skills/project-governance/references/ci-routing.md").read_text()
         self.assertIn(f"`v{version}`", doc)
 
+    def test_control_runner_is_trusted_caller_input_and_keeps_matrix_runners(self):
+        workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
+        self.assertIn("      control_runner:\n", workflow)
+        self.assertIn("default: '[\"ubuntu-latest\"]'", workflow)
+        route = workflow.split("  route:\n", 1)[1].split("\n  execute:\n", 1)[0]
+        execute = workflow.split("\n  execute:\n", 1)[1].split("\n  result:\n", 1)[0]
+        result = workflow.split("\n  result:\n", 1)[1]
+        selected = "runs-on: ${{ fromJSON(inputs.control_runner) }}"
+        self.assertIn(selected, route)
+        self.assertIn(selected, result)
+        self.assertNotIn("runs-on: ubuntu-latest", route)
+        self.assertNotIn("runs-on: ubuntu-latest", result)
+        self.assertIn("runs-on: ${{ matrix.runner }}", execute)
+        caller = (ROOT / "skills/project-governance/assets/examples/ci-caller.example.yml").read_text()
+        self.assertIn("control_runner:", caller)
+        self.assertIn("head.repo.full_name != github.repository", caller)
+        self.assertIn("self-hosted", caller)
+
     def test_executor_checkout_has_pr_base_parent_without_credentials(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         route = workflow.split("  route:\n", 1)[1].split("\n  execute:\n", 1)[0]
