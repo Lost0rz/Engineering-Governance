@@ -32,4 +32,6 @@ Write permission comes from the real execution host. G3-like privilege/security/
 
 Portable cross-repository CI uses the [shared router](skills/project-governance/references/ci-routing.md): a single released policy in this repository plus a small trusted test-capabilities file and caller workflow per consumer repository. The installed Web/Desktop/local Skill can plan or help adopt the route; an authorized GitHub Actions event actually starts the Runner.
 
+In v0.10.3 the reusable CI workflow supports an optional trusted `control_runner` JSON label array for its Route and Result jobs (default `ubuntu-latest`). Individual test capabilities still choose their own Runner, and project-owned Browser/Cross-repo workflows remain separate. See [CI routing](skills/project-governance/references/ci-routing.md).
+
 The current source [policy](skills/project-governance/assets/control-policy.json) is not an execution token. The installed Web/Desktop/local version and actual host permissions must be verified independently.
