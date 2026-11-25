@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-governance",
-  "version": "0.10.3",
+  "version": "0.11.0",
   "description": "7-domain modular AI engineering Skills with 3-tier lightweight routing (engineering-workflow, ci-governance, ui-design, architecture, incident-doctor, evidence-audit, codebase-context), G0-G3 risk gates, and portable V0-V3 CI test routing.",
   "repository": "https://github.com/Lost0rz/Engineering-Governance",
   "license": "MIT",

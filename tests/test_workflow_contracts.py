@@ -302,6 +302,9 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertIn(f"@v{version}", caller)
         doc = (ROOT / "skills/ci-governance/references/ci-routing.md").read_text(encoding="utf-8")
         self.assertIn(f"`v{version}`", doc)
+        install_doc = (ROOT / "references/AGENT_INSTALLATION.md").read_text(encoding="utf-8")
+        self.assertIn(f"v{version}", install_doc)
+        self.assertIn("references/AGENT_INSTALLATION.md", (ROOT / "README.md").read_text(encoding="utf-8"))
         marketplace = json.loads(
             (ROOT / ".agents/plugins/marketplace.json").read_text(encoding="utf-8")
         )

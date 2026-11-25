@@ -145,7 +145,7 @@
   },
   {
     "id": "audit-release-provenance",
-    "prompt": "Audit the built v0.10.3 release artifact against tag SHA, reproducible zip hash, and required license provenance.",
+    "prompt": "Audit the built v0.11.0 release artifact against tag SHA, reproducible zip hash, and required license provenance.",
     "expected_primary_skill": "evidence-audit",
     "forbidden_first_hop": ["engineering-workflow", "ci-governance"],
     "expected_submode": "DEEP_PROVENANCE_OR_CI_AUDIT",

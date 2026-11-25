@@ -27,6 +27,7 @@ Modular AI engineering **Skills, methods, and proportional verification**—stru
 
 Build a deterministic, symlink-safe runtime archive or standalone directory with `python3 scripts/package-plugin.py` (packages `plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `rules/AGENTS.md`, and `skills/**` without repo tests or `archive/**`):
 
+- **Standardized setup & new Agent onboarding:** follow [`references/AGENT_INSTALLATION.md`](references/AGENT_INSTALLATION.md) for host-specific configurations, the 3-mode decision tree for onboarding any new Agent without re-running full benchmarks, project `AGENTS.md` threat-profile initialization, and the 30-second smoke check.
 - **Antigravity:** place under `plugins/engineering-governance/` or declare in `plugins.json`; toggle via Settings UI or `agy plugin enable|disable engineering-governance`. Individual skills can also be mounted selectively via `skills.json` (`include_only`).
 - **Codex / Claude Code:** install via `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, or `.claude-plugin/plugin.json`.
 

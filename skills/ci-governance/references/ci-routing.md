@@ -8,7 +8,7 @@ The `ci-governance` Skill guides test selection and onboarding. The bundled [ci-
    - `python3 <SKILL_DIR>/scripts/ci-router.py discover --repo-root PROJECT`
    - `python3 <SKILL_DIR>/scripts/ci-router.py scaffold --repo-root PROJECT > .github/ci-capabilities.json` (review and customize every generated command and Runner label before committing). In a monorepo with both a root manifest and subpackages, tighten any starter root `"**"` lane to explicit root files/shared packages (`package.json`, `packages/shared/**`, `scripts/**`) so future unmapped services trigger `UNMAPPED_TRACKED_PATHS` instead of being masked by `"**"`.
 2. **Phase A (Catalog on default branch):** commit reviewed `.github/ci-capabilities.json` (see [example](../assets/examples/ci-capabilities.example.json)) and validate it with `ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping` so zero dead globs, unmapped/`release`-only-blind source files, or doc-masquerading symlinks exist. To dry-run an unmerged catalog edit locally via `plan`, pass `--config-source file` (or `--config-source head`).
-3. **Phase B (Caller workflow):** adopt [ci-caller.example.yml](../assets/examples/ci-caller.example.yml), which pins the released workflow tag (`@v0.10.3`) and enables PR `concurrency` cancellation so redundant pushes never queue stale self-hosted runs. Retire overlapping heavy CI triggers in the same change.
+3. **Phase B (Caller workflow):** adopt [ci-caller.example.yml](../assets/examples/ci-caller.example.yml), which pins the released workflow tag (`@v0.11.0`) and enables PR `concurrency` cancellation so redundant pushes never queue stale self-hosted runs. Retire overlapping heavy CI triggers in the same change.
 4. **Trust rule:** PRs may edit `.github/ci-capabilities.json` and have the new JSON validated as data, but CI executes **only commands from the accepted baseline**. Note that edits to `tests/**` or `.github/**` inside a PR still run on the PR code tree, so enforce human / `CODEOWNERS` review on test and workflow edits.
 
 ## Local agent and developer invocation
@@ -41,7 +41,7 @@ Each entry in `tests` supports:
 
 ## Reusable GitHub Actions trust boundaries
 
-- The reusable workflow in `v0.10.3` (`.github/workflows/ci-router-reusable.yml`) inspects `${{ github.workflow_ref }}` to resolve its own pinned immutable tag (`vX.Y.Z`) or 40-char commit SHA—never checking out a mutable branch or hardcoding a mismatched version tag.
+- The reusable workflow in `v0.11.0` (`.github/workflows/ci-router-reusable.yml`) inspects `${{ github.workflow_ref }}` to resolve its own pinned immutable tag (`vX.Y.Z`) or 40-char commit SHA—never checking out a mutable branch or hardcoding a mismatched version tag.
 - On `pull_request`, the router verifies `HEAD^2 == github.event.pull_request.head.sha`, binds `BASE_SHA` and `CONFIG_REF` to the tested merge commit's parent 1 (`HEAD^1`), and runs selected tests on the merged revision (`${{ github.sha }}`) with `persist-credentials: false`.
 - Optional `control_runner` JSON labels move `route` and `result` control jobs onto a self-hosted runner for internal PRs while forcing `ubuntu-latest` for fork PRs. Fork PRs may execute only `fork_safe: true` lanes on GitHub-hosted runner labels and fail closed if any non-fork-safe lane is needed.
 - Protect required check entrypoints (such as `EG Ready verification`) via GitHub branch protection rules, because a PR can propose edits to its own caller workflow.

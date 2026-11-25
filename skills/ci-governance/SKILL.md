@@ -26,7 +26,7 @@ Route only tests warranted by actual Git diffs while keeping command execution b
 
 - `python3 <SKILL_DIR>/scripts/ci-router.py discover --repo-root PROJECT` — detect languages, manifests, workflows.
 - `python3 <SKILL_DIR>/scripts/ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping` — reject dead `paths`/`exclude_paths`/`documentation_paths`, symlinks masquerading as docs, and unmapped/release-only-blind files.
-- `python3 <SKILL_DIR>/scripts/ci-router.py plan --repo-root PROJECT --worktree --config-source file --stage milestone` — dry-run test selection (auto-resolves `merge-base(origin/HEAD, HEAD)` + dirty worktree).
+- `python3 <SKILL_DIR>/scripts/ci-router.py plan --repo-root PROJECT --worktree --config-source file|head --stage milestone` — dry-run test selection (auto-resolves `merge-base(origin/HEAD, HEAD)` + dirty worktree).
 - `python3 <SKILL_DIR>/scripts/ci-router.py run --repo-root PROJECT --trusted-ref auto --stage milestone --keep-going` — run accepted-base commands topologically (`V1` -> `V2` -> `V3`; add `--jobs 2` for parallel waves).
 
 | Stage | Behavior | Default tiers run |
