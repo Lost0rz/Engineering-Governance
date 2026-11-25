@@ -1,5 +1,9 @@
-"""Packaging tests for multi-host standard plugin archives and staged directories."""
+"""Packaging tests for deterministic, symlink-safe multi-host plugin archives."""
+from __future__ import annotations
+
+import hashlib
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -11,15 +15,13 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGER = ROOT / "scripts/package-plugin.py"
 
 EXPECTED_SKILLS = (
-    "project-governance",
-    "design",
-    "solution-design",
-    "domain-navigation",
+    "engineering-workflow",
+    "ci-governance",
+    "ui-design",
+    "architecture",
     "incident-doctor",
-    "execution-orchestrator",
-    "agent-handoff",
     "evidence-audit",
-    "project-profile",
+    "codebase-context",
 )
 
 DESIGN_MODULES = (
@@ -31,22 +33,24 @@ DESIGN_MODULES = (
 
 
 class PluginPackagingTests(unittest.TestCase):
-    def test_package_plugin_archive_and_stage_dir(self):
+    def test_package_plugin_archive_determinism_permissions_and_stage_dir(self):
         pkg_meta = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8"))
         version = pkg_meta["version"]
         fake_sha = "a" * 40
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
-            out_dir = tmp_path / "out"
+            out1 = tmp_path / "out1"
+            out2 = tmp_path / "out2"
             stage_dir = tmp_path / "staged" / "engineering-governance"
-            proc = subprocess.run(
+
+            proc1 = subprocess.run(
                 [
                     sys.executable,
                     str(PACKAGER),
                     "--repo-root",
                     str(ROOT),
                     "--output-dir",
-                    str(out_dir),
+                    str(out1),
                     "--stage-dir",
                     str(stage_dir),
                     "--source-sha",
@@ -55,34 +59,76 @@ class PluginPackagingTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            self.assertEqual(proc.returncode, 0, proc.stderr)
-            self.assertIn("WEB_PREVIEW_PACKAGE=", proc.stdout)
-            self.assertIn(f"WEB_PREVIEW_SOURCE_SHA={fake_sha}", proc.stdout)
+            self.assertEqual(proc1.returncode, 0, proc1.stderr)
+            self.assertIn("WEB_PREVIEW_PACKAGE=", proc1.stdout)
+            self.assertIn(f"WEB_PREVIEW_SOURCE_SHA={fake_sha}", proc1.stdout)
 
-            expected_zip = out_dir / f"engineering-governance-web-preview-{version}-{fake_sha[:12]}.zip"
-            self.assertTrue(expected_zip.is_file())
+            proc2 = subprocess.run(
+                [
+                    sys.executable,
+                    str(PACKAGER),
+                    "--repo-root",
+                    str(ROOT),
+                    "--output-dir",
+                    str(out2),
+                    "--source-sha",
+                    fake_sha,
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(proc2.returncode, 0, proc2.stderr)
 
-            with zipfile.ZipFile(expected_zip, "r") as zf:
+            zip1 = out1 / f"engineering-governance-web-preview-{version}-{fake_sha[:12]}.zip"
+            zip2 = out2 / f"engineering-governance-web-preview-{version}-{fake_sha[:12]}.zip"
+            self.assertTrue(zip1.is_file())
+            self.assertEqual(
+                hashlib.sha256(zip1.read_bytes()).hexdigest(),
+                hashlib.sha256(zip2.read_bytes()).hexdigest(),
+                "Zip archive must be deterministic for the same source SHA",
+            )
+
+            with zipfile.ZipFile(zip1, "r") as zf:
                 names = set(zf.namelist())
                 self.assertIn("plugin.json", names)
                 self.assertIn(".codex-plugin/plugin.json", names)
                 self.assertIn(".claude-plugin/plugin.json", names)
                 self.assertIn("rules/AGENTS.md", names)
                 self.assertIn("PREVIEW_SOURCE_SHA.txt", names)
-                self.assertIn("skills/project-governance/scripts/ci-router.py", names)
+                self.assertIn("skills/ci-governance/scripts/ci-router.py", names)
+
+                for name in (
+                    "plugin.json",
+                    ".codex-plugin/plugin.json",
+                    ".claude-plugin/plugin.json",
+                    "rules/AGENTS.md",
+                    "PREVIEW_SOURCE_SHA.txt",
+                ):
+                    mode = (zf.getinfo(name).external_attr >> 16) & 0o777
+                    self.assertEqual(mode, 0o644, f"{name} expected mode 0644, got {oct(mode)}")
+
+                router_mode = (
+                    zf.getinfo("skills/ci-governance/scripts/ci-router.py").external_attr >> 16
+                ) & 0o777
+                self.assertEqual(router_mode, 0o755)
 
                 for skill in EXPECTED_SKILLS:
                     self.assertIn(f"skills/{skill}/SKILL.md", names)
                 for mod in DESIGN_MODULES:
-                    self.assertIn(f"skills/design/references/{mod}/LICENSE.txt", names)
-                    self.assertIn(f"skills/design/references/{mod}/PROVENANCE.md", names)
+                    self.assertIn(f"skills/ui-design/references/{mod}/LICENSE.txt", names)
+                    self.assertIn(f"skills/ui-design/references/{mod}/PROVENANCE.md", names)
 
                 for forbidden_prefix in ("archive/", "tests/", "references/"):
                     self.assertFalse(
                         any(n.startswith(forbidden_prefix) for n in names),
                         f"Unexpected non-runtime prefix {forbidden_prefix} in {names}",
                     )
-                for forbidden_name in ("verification-plan.py", "test_ci_router.py", "test_workflow_contracts.py"):
+                for forbidden_name in (
+                    "verification-plan.py",
+                    "test_ci_router.py",
+                    "test_workflow_contracts.py",
+                    "test_plugin_packaging.py",
+                ):
                     self.assertFalse(
                         any(forbidden_name in n for n in names),
                         f"Unexpected test/legacy script {forbidden_name} in zip",
@@ -97,14 +143,41 @@ class PluginPackagingTests(unittest.TestCase):
                 self.assertEqual(claude["version"], version)
                 self.assertEqual(zf.read("PREVIEW_SOURCE_SHA.txt").decode("utf-8").strip(), fake_sha)
 
-            # Verify standalone staged directory (Antigravity / Codex / Claude compatible).
             self.assertTrue((stage_dir / "plugin.json").is_file())
             self.assertTrue((stage_dir / "rules/AGENTS.md").is_file())
             self.assertTrue((stage_dir / ".codex-plugin/plugin.json").is_file())
             self.assertTrue((stage_dir / ".claude-plugin/plugin.json").is_file())
-            self.assertTrue((stage_dir / "skills/project-governance/scripts/ci-router.py").is_file())
+            self.assertTrue((stage_dir / "skills/ci-governance/scripts/ci-router.py").is_file())
             self.assertFalse((stage_dir / "tests").exists())
             self.assertFalse((stage_dir / "archive").exists())
+
+    def test_package_plugin_rejects_symlinks_inside_skills(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            repo.mkdir()
+            shutil.copy2(ROOT / "plugin.json", repo / "plugin.json")
+            shutil.copytree(ROOT / "rules", repo / "rules")
+            shutil.copytree(ROOT / "skills", repo / "skills")
+            outside = Path(tmp) / "secret.txt"
+            outside.write_text("SECRET", encoding="utf-8")
+            (repo / "skills/ci-governance/leak.txt").symlink_to(outside)
+
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(PACKAGER),
+                    "--repo-root",
+                    str(repo),
+                    "--output-dir",
+                    str(Path(tmp) / "out"),
+                    "--source-sha",
+                    "b" * 40,
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(proc.returncode, 0)
+            self.assertIn("Symlink forbidden", proc.stderr)
 
 
 if __name__ == "__main__":

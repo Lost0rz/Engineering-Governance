@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "skills/project-governance/scripts/ci-router.py"
+SCRIPT = ROOT / "skills/ci-governance/scripts/ci-router.py"
 spec = importlib.util.spec_from_file_location("eg_ci_router", SCRIPT)
 ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
@@ -191,7 +191,7 @@ class ImportOnlyRoutingTests(unittest.TestCase):
             subprocess.run(["git", "commit", "-qam", "import"], cwd=root, check=True)
             head = subprocess.check_output(["git", "rev-parse", "HEAD"],
                                            cwd=root, text=True).strip()
-            script = ROOT / "skills/project-governance/scripts/ci-router.py"
+            script = ROOT / "skills/ci-governance/scripts/ci-router.py"
             result = subprocess.run(
                 [sys.executable, str(script), "import-only", "--repo-root", str(root),
                  "--base", base, "--head", head],
@@ -852,14 +852,17 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertIn('TRUSTED_DEFAULT="refs/remotes/origin/$DEFAULT_BRANCH"', workflow)
         self.assertNotIn('git -C project fetch --no-tags', workflow)
         self.assertIn('EG_CI_NO_TESTS_EXECUTED', workflow)
-        caller = (ROOT / "skills/project-governance/assets/examples/ci-caller.example.yml").read_text()
+        caller = (ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml").read_text()
         self.assertIn("default: none", caller)
 
     def test_reusable_workflow_is_pinned_and_delegates_execution(self):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("workflow_call:", flow)
         published_version = json.loads((ROOT / "plugin.json").read_text())["version"]
-        self.assertIn(f"ref: v{published_version}", flow)
+        self.assertIn("${{ github.workflow_ref }}", flow)
+        self.assertIn("ref: ${{ steps.router_ref.outputs.ref }}", flow)
+        caller = (ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml").read_text()
+        self.assertIn(f"@v{published_version}", caller)
         self.assertIn("--config-source base", flow)
         self.assertIn("fromJSON(needs.route.outputs.matrix)", flow)
         self.assertIn("matrix.runner", flow)
@@ -1113,6 +1116,252 @@ class RouterOptimizationTests(unittest.TestCase):
             self.assertEqual(info["detected"], ["Go", "Rust"])
             self.assertEqual(info["manifests"], ["Cargo.toml", "go.mod"])
             self.assertEqual(info["workflows"], [".github/workflows/ci.yml"])
+
+    def test_fork_pr_cannot_bypass_fork_unsafe_lane_via_import_only_alternatives(self):
+        cfg = {
+            "contract": "EG_CI_CAPABILITIES_V1",
+            "tests": [
+                {
+                    "id": "fast-import-smoke",
+                    "tier": "V1",
+                    "paths": ["backend/smoke/**"],
+                    "runner": ["ubuntu-latest"],
+                    "fork_safe": True,
+                    "command": ["python3", "-m", "compileall", "backend"],
+                },
+                {
+                    "id": "privileged-hw-integration",
+                    "tier": "V3",
+                    "paths": ["backend/shared/**"],
+                    "runner": ["self-hosted", "macOS"],
+                    "fork_safe": False,
+                    "import_only_alternatives": ["fast-import-smoke"],
+                    "command": ["pytest", "backend/shared"],
+                },
+            ],
+        }
+        internal = ci.select(
+            cfg,
+            ["backend/shared/conn.py"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+            source_trust="internal",
+            import_only_paths=["backend/shared/conn.py"],
+        )
+        self.assertEqual(internal["selected_test_ids"], ["fast-import-smoke"])
+        self.assertFalse(internal["review_required"])
+
+        fork = ci.select(
+            cfg,
+            ["backend/shared/conn.py"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+            source_trust="fork",
+            import_only_paths=["backend/shared/conn.py"],
+        )
+        self.assertEqual(fork["selected_test_ids"], [])
+        self.assertEqual(fork["fork_blocked_tests"], ["privileged-hw-integration"])
+        self.assertEqual(fork["coverage"], "FORK_PARTIAL")
+        self.assertTrue(fork["review_required"])
+
+    def test_check_catalog_catches_symlink_disguised_as_doc_and_dead_doc_patterns(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            (repo / "src").mkdir()
+            (repo / "docs").mkdir()
+            (repo / "src/a.py").write_text("x = 1\n")
+            (repo / "docs/real.md").write_text("# ok\n")
+            (repo / "docs/evil.md").symlink_to("../outside_secret")
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "documentation_paths": ["docs/**"],
+                "tests": [
+                    {
+                        "id": "unit",
+                        "tier": "V1",
+                        "paths": ["src/**"],
+                        "runner": ["ubuntu-latest"],
+                        "command": [sys.executable, "-c", "pass"],
+                    }
+                ],
+            }
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "init")
+
+            symlink_fail = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "check-catalog",
+                    "--repo-root",
+                    d,
+                    "--require-complete-mapping",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(symlink_fail.returncode, 2)
+            self.assertIn("UNMAPPED_TRACKED_PATHS", symlink_fail.stderr)
+            self.assertIn("docs/evil.md", symlink_fail.stderr)
+
+            # Remove symlink, add a dead documentation_paths entry -> DEAD_DOCUMENTATION_PATTERN.
+            git("rm", "-qf", "docs/evil.md")
+            cfg["documentation_paths"].append("missing_docs/**")
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("commit", "-qam", "dead doc glob")
+            dead_doc = subprocess.run(
+                [sys.executable, str(SCRIPT), "check-catalog", "--repo-root", d],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(dead_doc.returncode, 2)
+            self.assertIn("DEAD_DOCUMENTATION_PATTERN", dead_doc.stderr)
+
+    def test_stage_aware_tiering_and_release_only_lanes(self):
+        cfg = {
+            "contract": "EG_CI_CAPABILITIES_V1",
+            "tests": [
+                {
+                    "id": "unit-v1",
+                    "tier": "V1",
+                    "paths": ["src/**"],
+                    "runner": ["ubuntu-latest"],
+                    "command": [sys.executable, "-c", "pass"],
+                },
+                {
+                    "id": "heavy-v3",
+                    "tier": "V3",
+                    "paths": ["src/**"],
+                    "runner": ["ubuntu-latest"],
+                    "command": [sys.executable, "-c", "pass"],
+                },
+                {
+                    "id": "release-only-e2e",
+                    "tier": "V3",
+                    "stages": ["release"],
+                    "paths": ["e2e/**"],
+                    "runner": ["ubuntu-latest"],
+                    "command": [sys.executable, "-c", "pass"],
+                },
+            ],
+        }
+        milestone = ci.select(cfg, ["src/a.py"], "milestone", "a" * 40, "b" * 40, "digest")
+        self.assertEqual(milestone["selected_test_ids"], ["unit-v1"])
+        self.assertEqual(milestone["unmapped_paths"], [])
+
+        ready_src = ci.select(cfg, ["src/a.py"], "ready", "a" * 40, "b" * 40, "digest")
+        self.assertEqual(ready_src["selected_test_ids"], ["unit-v1", "heavy-v3"])
+
+        # A path covered solely by a release-only lane is known on milestone
+        # yet flags unmapped on ready if no ready lane covers it.
+        ready_e2e = ci.select(cfg, ["e2e/smoke.spec.ts"], "ready", "a" * 40, "b" * 40, "digest")
+        self.assertEqual(ready_e2e["unmapped_paths"], ["e2e/smoke.spec.ts"])
+        self.assertTrue(ready_e2e["review_required"])
+
+        release = ci.select(cfg, ["src/a.py"], "release", "a" * 40, "b" * 40, "digest")
+        self.assertEqual(
+            release["selected_test_ids"],
+            ["unit-v1", "heavy-v3", "release-only-e2e"],
+        )
+
+        bad_stages = json.loads(json.dumps(cfg))
+        bad_stages["tests"][0]["stages"] = ["invalid_stage"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(bad_stages)
+
+    def test_supersedes_deduplicates_internal_but_preserves_fork_safe_subsets(self):
+        cfg = {
+            "contract": "EG_CI_CAPABILITIES_V1",
+            "tests": [
+                {
+                    "id": "unit",
+                    "tier": "V1",
+                    "paths": ["src/**"],
+                    "runner": ["ubuntu-latest"],
+                    "fork_safe": True,
+                    "command": [sys.executable, "-c", "pass"],
+                },
+                {
+                    "id": "full-suite",
+                    "tier": "V3",
+                    "paths": ["core/**"],
+                    "supersedes": ["unit"],
+                    "runner": ["self-hosted", "macOS"],
+                    "fork_safe": False,
+                    "command": [sys.executable, "-c", "pass"],
+                },
+            ],
+        }
+        internal = ci.select(
+            cfg, ["src/a.py", "core/b.py"], "ready", "a" * 40, "b" * 40, "digest"
+        )
+        self.assertEqual(internal["selected_test_ids"], ["full-suite"])
+        self.assertEqual(internal["superseded_test_ids"], ["unit"])
+
+        # When full-suite is blocked on fork PR, fork_safe subset lane unit must still run!
+        fork = ci.select(
+            cfg,
+            ["src/a.py", "core/b.py"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+            source_trust="fork",
+        )
+        self.assertEqual(fork["selected_test_ids"], ["unit"])
+        self.assertEqual(fork["fork_blocked_tests"], ["full-suite"])
+        self.assertEqual(fork["superseded_test_ids"], [])
+        self.assertTrue(fork["review_required"])
+
+        # Reject invalid supersedes (lower tier superseding higher tier).
+        bad = json.loads(json.dumps(cfg))
+        bad["tests"][0]["supersedes"] = ["full-suite"]
+        with self.assertRaises(ci.RouteError):
+            ci.validate(bad)
+
+    def test_scaffold_cli_generates_valid_capabilities_from_manifests(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            (repo / "README.md").write_text("# Demo\n")
+            (repo / "backend").mkdir()
+            (repo / "backend/pyproject.toml").write_text("[project]\nname='demo'\n")
+            (repo / "Cargo.toml").write_text("[package]\nname='rust-core'\n")
+            git("add", "-A")
+
+            proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "scaffold", "--repo-root", d],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            generated = json.loads(proc.stdout)
+            ci.validate(generated)
+            self.assertEqual(generated["documentation_paths"], ["README.md"])
+            ids = {t["id"] for t in generated["tests"]}
+            self.assertIn("backend-python", ids)
+            self.assertIn("rust", ids)
 
 
 if __name__ == "__main__":

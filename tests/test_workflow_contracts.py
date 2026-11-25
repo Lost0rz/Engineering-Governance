@@ -1,4 +1,4 @@
-"""Workflow, routing, link integrity, catalog, and manifest contract tests."""
+"""Workflow, routing, domain budget, link integrity, catalog, and manifest contract tests."""
 from __future__ import annotations
 
 import importlib.util
@@ -10,22 +10,32 @@ import unittest
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
-ROUTER_SCRIPT = ROOT / "skills/project-governance/scripts/ci-router.py"
+ROUTER_SCRIPT = ROOT / "skills/ci-governance/scripts/ci-router.py"
 spec = importlib.util.spec_from_file_location("eg_ci_router_contract", ROUTER_SCRIPT)
 ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 
 REQUIRED_SKILLS = (
-    "project-governance",
-    "design",
-    "solution-design",
-    "domain-navigation",
+    "engineering-workflow",
+    "ci-governance",
+    "ui-design",
+    "architecture",
     "incident-doctor",
+    "evidence-audit",
+    "codebase-context",
+)
+
+OBSOLETE_SKILL_DIRS = (
+    "project-governance",
     "execution-orchestrator",
     "agent-handoff",
-    "evidence-audit",
+    "solution-design",
+    "domain-navigation",
     "project-profile",
+    "design",
 )
+
+ANTHROPIC_UPSTREAM_BLOB = "a5333457c414d20d625f307df945842c0952ecc3"
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -57,25 +67,49 @@ def parse_frontmatter(text: str) -> dict[str, str]:
 
 
 class WorkflowContractTests(unittest.TestCase):
-    def test_core_specialists_exist_and_have_positive_and_negative_frontmatter(self):
-        route = (ROOT / "skills/project-governance/references/global-routing.md").read_text(encoding="utf-8")
+    def test_seven_orthogonal_domains_and_lightweight_entry_budget(self):
+        actual_dirs = sorted(p.name for p in (ROOT / "skills").iterdir() if p.is_dir())
+        self.assertEqual(actual_dirs, sorted(REQUIRED_SKILLS))
+        for legacy in OBSOLETE_SKILL_DIRS:
+            self.assertFalse((ROOT / "skills" / legacy).exists())
+
+        skill_md_files = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / "skills").rglob("SKILL.md"))
+        self.assertEqual(
+            skill_md_files,
+            sorted(f"skills/{name}/SKILL.md" for name in REQUIRED_SKILLS),
+        )
+
         for name in REQUIRED_SKILLS:
             with self.subTest(name=name):
                 skill = ROOT / "skills" / name / "SKILL.md"
-                self.assertTrue(skill.is_file())
                 text = skill.read_text(encoding="utf-8")
+                lines = text.splitlines()
+                self.assertLessEqual(len(lines), 50, f"{name}/SKILL.md exceeds lightweight 50-line budget")
+                self.assertGreaterEqual(len(lines), 25, f"{name}/SKILL.md unexpectedly empty")
+                self.assertIn("## Fast route", text)
                 fm = parse_frontmatter(text)
                 self.assertEqual(fm.get("name"), name)
                 desc = fm.get("description", "")
                 self.assertGreater(len(desc), 40)
                 self.assertIn("Do not", desc, f"{name} frontmatter missing negative boundary")
-                self.assertIn(f"`{name}`", route)
-        pg_desc = parse_frontmatter(
-            (ROOT / "skills/project-governance/SKILL.md").read_text(encoding="utf-8")
-        )["description"]
-        self.assertIn("ci-router.py", pg_desc)
-        design_text = (ROOT / "skills/design/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("MICRO_POLISH", design_text)
+
+    def test_zero_micro_fragmented_reference_files_and_verbatim_anthropic_blob(self):
+        for ref_path in sorted((ROOT / "skills").glob("*/references/*.md")):
+            rel = ref_path.relative_to(ROOT).as_posix()
+            lines = ref_path.read_text(encoding="utf-8").splitlines()
+            with self.subTest(ref=rel):
+                self.assertGreaterEqual(
+                    len(lines),
+                    28,
+                    f"Micro-fragmented reference {rel} has only {len(lines)} lines",
+                )
+
+        if (ROOT / ".git").exists():
+            blob = subprocess.check_output(
+                ["git", "-C", str(ROOT), "hash-object", "skills/ui-design/references/anthropic/frontend-design.md"],
+                text=True,
+            ).strip()
+            self.assertEqual(blob, ANTHROPIC_UPSTREAM_BLOB)
 
     def test_issue_is_optional_context_and_old_gate_is_not_shipped(self):
         config = (ROOT / ".github/ISSUE_TEMPLATE/config.yml").read_text(encoding="utf-8")
@@ -92,12 +126,12 @@ class WorkflowContractTests(unittest.TestCase):
         ):
             with self.subTest(path=path):
                 self.assertFalse((ROOT / path).exists())
-        scripts = sorted(p.name for p in (ROOT / "skills/project-governance/scripts").iterdir())
+        scripts = sorted(p.name for p in (ROOT / "skills/ci-governance/scripts").iterdir())
         self.assertEqual(scripts, ["ci-router.py"])
 
     def test_no_self_granted_writer_permission(self):
         p = json.loads(
-            (ROOT / "skills/project-governance/assets/control-policy.json").read_text(encoding="utf-8")
+            (ROOT / "skills/engineering-workflow/assets/control-policy.json").read_text(encoding="utf-8")
         )
         self.assertEqual(p["contract"], "CONTROL_POLICY_V2")
         self.assertTrue(p["require_host_authority_for_writes"])
@@ -105,38 +139,56 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertEqual(p["issue_role"], "OPTIONAL_PLANNING_AND_CROSS_CONTEXT_EVIDENCE")
         self.assertEqual(p["project_agents_control_selectors"], "IGNORED")
 
-    def test_repo_catalog_completeness_and_proportional_routing(self):
+    def test_repo_catalog_completeness_tiering_and_supersedes_routing(self):
         cfg, digest = ci.load(ROOT, "", ".github/ci-capabilities.json", "file")
-        tracked = ci.tracked_files(ROOT)
-        coverage = ci.inspect_catalog_coverage(cfg, tracked, ".github/ci-capabilities.json")
+        tracked, nonregular = ci.tracked_entries(ROOT)
+        coverage = ci.inspect_catalog_coverage(
+            cfg, tracked, ".github/ci-capabilities.json", nonregular_paths=nonregular
+        )
         self.assertEqual(coverage["dead_patterns"], [])
         self.assertEqual(coverage["dead_exclude_patterns"], [])
+        self.assertEqual(coverage["dead_doc_patterns"], [])
         self.assertEqual(coverage["unmapped_tracked_paths"], [])
 
-        cases = (
-            (["archive/README.md"], [], "NO_TESTS_REQUIRED", False),
-            (["README.md"], ["workflow-contracts"], "SELECTED_PENDING", False),
-            (["skills/design/SKILL.md"], ["workflow-contracts", "packaging-contracts"], "SELECTED_PENDING", False),
-            (
-                ["skills/project-governance/references/ci-routing.md"],
-                ["workflow-contracts", "packaging-contracts", "router-contracts"],
-                "SELECTED_PENDING",
-                False,
-            ),
-            (["skills/project-governance/scripts/ci-router.py"], ["full-governance-suite"], "SELECTED_PENDING", False),
+        doc_only = ci.select(cfg, ["archive/README.md"], "ready", "a" * 40, "b" * 40, digest)
+        self.assertEqual(doc_only["selected_test_ids"], [])
+        self.assertEqual(doc_only["coverage"], "NO_TESTS_REQUIRED")
+        self.assertFalse(doc_only["review_required"])
+
+        readme = ci.select(cfg, ["README.md"], "ready", "a" * 40, "b" * 40, digest)
+        self.assertEqual(readme["selected_test_ids"], ["workflow-contracts"])
+
+        milestone = ci.select(
+            cfg,
+            ["README.md", "skills/ci-governance/scripts/ci-router.py"],
+            "milestone",
+            "a" * 40,
+            "b" * 40,
+            digest,
         )
-        for changed, expected_ids, expected_cov, review_req in cases:
-            with self.subTest(changed=changed):
-                plan = ci.select(cfg, changed, "ready", "a" * 40, "b" * 40, digest)
-                self.assertEqual(plan["selected_test_ids"], expected_ids)
-                self.assertEqual(plan["coverage"], expected_cov)
-                self.assertEqual(plan["review_required"], review_req)
+        self.assertEqual(milestone["selected_test_ids"], ["workflow-contracts", "router-contracts"])
+        self.assertEqual(milestone["unmapped_paths"], [])
+
+        ready_superseded = ci.select(
+            cfg,
+            ["README.md", "skills/ci-governance/scripts/ci-router.py"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            digest,
+        )
+        self.assertEqual(ready_superseded["selected_test_ids"], ["full-governance-suite"])
+        self.assertEqual(
+            ready_superseded["superseded_test_ids"],
+            ["workflow-contracts", "router-contracts"],
+        )
+        self.assertFalse(ready_superseded["review_required"])
 
     def test_portable_router_contract_is_discoverable(self):
-        skill = (ROOT / "skills/project-governance/SKILL.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/ci-governance/SKILL.md").read_text(encoding="utf-8")
         self.assertIn("ci-routing.md", skill)
         self.assertTrue(ROUTER_SCRIPT.is_file())
-        example = ROOT / "skills/project-governance/assets/examples/ci-capabilities.example.json"
+        example = ROOT / "skills/ci-governance/assets/examples/ci-capabilities.example.json"
         capabilities = json.loads(example.read_text(encoding="utf-8"))
         self.assertEqual(capabilities["contract"], "EG_CI_CAPABILITIES_V1")
         self.assertGreaterEqual(len(capabilities["tests"]), 3)
@@ -190,17 +242,24 @@ class WorkflowContractTests(unittest.TestCase):
                         f"Broken relative link in {rel}: {target} -> {resolved}",
                     )
 
-    def test_golden_routing_cases_reference_valid_skills(self):
+    def test_golden_routing_cases_bind_to_valid_skills_and_submodes(self):
         golden_path = ROOT / "tests/routing_golden_cases.json"
         cases = json.loads(golden_path.read_text(encoding="utf-8"))
-        self.assertGreaterEqual(len(cases), 18)
+        self.assertGreaterEqual(len(cases), 20)
         seen_ids = set()
+        skill_texts = {
+            name: (ROOT / "skills" / name / "SKILL.md").read_text(encoding="utf-8")
+            for name in REQUIRED_SKILLS
+        }
         for case in cases:
             self.assertNotIn(case["id"], seen_ids)
             seen_ids.add(case["id"])
-            self.assertIn(case["expected_primary_skill"], REQUIRED_SKILLS)
+            primary = case["expected_primary_skill"]
+            self.assertIn(primary, REQUIRED_SKILLS)
+            self.assertIn(case["expected_submode"], skill_texts[primary])
+            self.assertIn(case["max_extra_reads"], (0, 1))
             self.assertIsInstance(case["forbidden_first_hop"], list)
-            self.assertNotIn(case["expected_primary_skill"], case["forbidden_first_hop"])
+            self.assertNotIn(primary, case["forbidden_first_hop"])
             for forbidden in case["forbidden_first_hop"]:
                 self.assertIn(forbidden, REQUIRED_SKILLS)
             self.assertTrue(case["prompt"].strip())
@@ -212,7 +271,7 @@ class WorkflowContractTests(unittest.TestCase):
         paths = (
             ROOT / ".github/workflows/ci-router-reusable.yml",
             ROOT / ".github/workflows/governance-contract-checks.yml",
-            ROOT / "skills/project-governance/assets/examples/ci-caller.example.yml",
+            ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml",
         )
         for path in paths:
             with self.subTest(path=path.name):
@@ -227,6 +286,7 @@ class WorkflowContractTests(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
         self.assertIn('[[ "$BASE_SHA" == "$HEAD_SHA" ]]', workflow)
         self.assertIn("Affected verification requires comparison_base different", workflow)
+        self.assertIn("MERGE_P2", workflow)
         own_ci = (ROOT / ".github/workflows/governance-contract-checks.yml").read_text(encoding="utf-8")
         self.assertIn("          - test_ci_router.py", own_ci)
         self.assertIn("          - test_plugin_packaging.py", own_ci)
@@ -235,9 +295,12 @@ class WorkflowContractTests(unittest.TestCase):
 
     def test_release_pin_and_marketplace_commit_match_manifest(self):
         version = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8"))["version"]
-        workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
-        self.assertIn(f"ref: v{version}", workflow)
-        doc = (ROOT / "skills/project-governance/references/ci-routing.md").read_text(encoding="utf-8")
+        reusable = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
+        self.assertIn("${{ github.workflow_ref }}", reusable)
+        self.assertIn("${{ steps.router_ref.outputs.ref }}", reusable)
+        caller = (ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml").read_text(encoding="utf-8")
+        self.assertIn(f"@v{version}", caller)
+        doc = (ROOT / "skills/ci-governance/references/ci-routing.md").read_text(encoding="utf-8")
         self.assertIn(f"`v{version}`", doc)
         marketplace = json.loads(
             (ROOT / ".agents/plugins/marketplace.json").read_text(encoding="utf-8")
@@ -266,7 +329,7 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertNotIn("runs-on: ubuntu-latest", result)
         self.assertIn("runs-on: ${{ matrix.runner }}", execute)
         caller = (
-            ROOT / "skills/project-governance/assets/examples/ci-caller.example.yml"
+            ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml"
         ).read_text(encoding="utf-8")
         self.assertIn("control_runner:", caller)
         self.assertIn("head.repo.full_name != github.repository", caller)

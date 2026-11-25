@@ -1,37 +1,33 @@
 ---
 name: incident-doctor
 description: >-
-  Evidence-gated root-cause diagnosis and minimal probes when a real failure,
-  unexplained behavior, or unsafe ambiguity blocks safe next action. Do not use
-  for ordinary bugs whose error output, diff, or test failure already supports a
-  direct fix.
+  Evidence-gated root-cause diagnosis and minimal discriminating probes when a
+  real failure, hang, or unsafe ambiguity blocks safe next action. Do not use
+  for ordinary bugs whose stack trace, diff, or test failure already supports a
+  direct fix (engineering-workflow).
 ---
 
 # Incident Doctor
 
-Use this Skill only when all three conditions hold: a real failure/unexplained unsafe ambiguity exists; it blocks safe progress; and current evidence is insufficient for the next safe decision. A known defect with sufficient evidence remains normal authorized implementation work.
+Enter only when a real failure blocks progress **and** existing evidence cannot identify a safe next decision.
 
-## Read only the needed contract
+## Fast route
 
-Start with [Evidence gate](references/evidence-gate.md) for a genuine blocked decision; inspect existing evidence before adding probes. Other references are conditional, **not** a required reading sequence:
+| Need | Mode | Next reading |
+| --- | --- | --- |
+| Assess if evidence already supports a safe fix or blocks on 1 missing fact | `EVIDENCE_GATE` | **NONE (this file)** |
+| Design a minimal probe, attributable capture, or systematic isolation | `PROBE_AND_TECHNIQUES` | [probes-and-techniques.md](references/probes-and-techniques.md) |
+| Write a durable postmortem / incident record when requested | `INCIDENT_RECORD` | [INCIDENT.md](assets/templates/INCIDENT.md) |
 
-- [Probe design](references/probe-design.md) — when a new probe could change the decision.
-- [Fresh incident capture](references/fresh-incident.md) — when observation identity/freshness is uncertain.
-- [Probe lifecycle](references/probe-lifecycle.md) — when diagnostic probes need retention or retirement.
-- [Systematic techniques](references/systematic-techniques.md) — when a bounded first pass is insufficient.
-- [Incident template](assets/templates/INCIDENT.md) — only when a durable incident record is required.
+## Inline hard evidence gate
 
-## Workflow
+1. **Blocked decision:** name the exact next engineering choice that cannot be made safely.
+2. **Evidence check:** separate `USER_REPORTED_SYMPTOM` from `DIRECT_OBSERVATION` (source, logs, revision, runtime). Locate unclear code directly or via `codebase-context`.
+3. **Exit or isolate one missing fact:**
+   - If evidence already supports a minimum fix or falsifies the concern -> exit immediately to `engineering-workflow` (`NO NEW PROBE`).
+   - If insufficient -> declare `MISSING_FACT` + `BLOCKED_DECISION`, then read [probes-and-techniques.md](references/probes-and-techniques.md).
 
-1. Apply the hard evidence gate and review existing evidence first.
-2. Name the one missing fact and blocked decision. If current evidence is already sufficient, leave Doctor and return to normal implementation.
-3. Use systematic techniques only as needed: recent-change comparison, working-vs-broken comparison, backward data-flow tracing, single-hypothesis minimum tests, and condition-based waiting.
-4. Add only the minimum probe whose possible results can change the blocked decision. Keep reports, observations, interpretations, hypotheses, findings, and root-cause claims distinct.
-5. If source/authority/test location is unclear, locate it directly (or consult `domain-navigation` if available) and then return here.
-6. Define a minimum evidence-supported fault/fix boundary. Diagnosis is evidence, not execution authorization.
-7. If the required fix exceeds the current authorized task scope or introduces privilege, security, or irreversible data risk (`G3`), pause and confirm with the user before mutating.
-8. After an authorized fix, scale regression verification (`V1` focused -> `V3` broad) to actual impact and retire/promote diagnostic probes explicitly.
+## Boundaries
 
-Keep authority risk (`G0`–`G3`) distinct from verification depth (`V0`–`V3`); do not infer one from the other. A probe or incident record does not grant execution permissions; the active trusted user task and host tools remain the authority.
-
-Incident Doctor does not create a diagnostic platform, permanent observability expansion, broad redesign authority, automatic remediation, or a universal rule that every bug must undergo root-cause ceremony.
+- Diagnosis never grants write or `G3` permission; pause for user confirmation if the fix exceeds task scope or adds privilege/security/irreversible risk.
+- Scale post-fix verification (`V1`–`V3`) to impact and explicitly remove temporary probes.

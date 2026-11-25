@@ -1,162 +1,170 @@
 [
   {
-    "id": "design-micro-polish",
-    "prompt": "Tighten the spacing, alignment, and focus ring state on the existing filter bar buttons.",
-    "expected_primary_skill": "design",
-    "forbidden_first_hop": ["project-governance", "solution-design"],
-    "expected_mode_or_feature": "MICRO_POLISH",
-    "notes": "Direct-entry localized visual tweak without heavy spec pipeline."
-  },
-  {
-    "id": "design-audit-only",
-    "prompt": "Audit the settings screen UI hierarchy and accessibility without changing any code.",
-    "expected_primary_skill": "design",
-    "forbidden_first_hop": ["project-governance", "evidence-audit"],
-    "expected_mode_or_feature": "AUDIT_ONLY",
-    "notes": "UI inspection belongs to design AUDIT_ONLY."
-  },
-  {
-    "id": "design-spec",
-    "prompt": "Create an implementation-ready UI redesign specification for the billing page without writing code yet.",
-    "expected_primary_skill": "design",
-    "forbidden_first_hop": ["project-governance", "solution-design"],
-    "expected_mode_or_feature": "DESIGN_SPEC",
-    "notes": "Interaction workflow and visual system spec belong to design."
-  },
-  {
-    "id": "design-implement",
-    "prompt": "Redesign and implement the onboarding wizard interface, then verify rendered screenshots.",
-    "expected_primary_skill": "design",
-    "forbidden_first_hop": ["solution-design"],
-    "expected_mode_or_feature": "DESIGN_IMPLEMENT",
-    "notes": "Full UI design-to-render loop."
-  },
-  {
-    "id": "design-final-review",
-    "prompt": "Perform a final visual critique and polish on the newly implemented modal screenshots.",
-    "expected_primary_skill": "design",
-    "forbidden_first_hop": ["evidence-audit"],
-    "expected_mode_or_feature": "FINAL_REVIEW",
-    "notes": "Internal design review is not formal evidence-audit."
-  },
-  {
-    "id": "solution-design-state-ownership",
-    "prompt": "Should draft invoice state live in local client store or backend PostgreSQL with optimistic concurrency?",
-    "expected_primary_skill": "solution-design",
-    "forbidden_first_hop": ["design", "project-governance"],
-    "expected_mode_or_feature": "BUSINESS_STATE_WORKFLOW",
-    "notes": "State ownership and persistence boundary."
-  },
-  {
-    "id": "solution-design-api-contract",
-    "prompt": "Compare webhook vs polling event architecture and design the canonical API contract before coding.",
-    "expected_primary_skill": "solution-design",
-    "forbidden_first_hop": ["design"],
-    "expected_mode_or_feature": "ARCHITECTURE_OPTIONS",
-    "notes": "Material API and architectural ambiguity."
-  },
-  {
-    "id": "gov-clear-bugfix",
+    "id": "workflow-direct-bugfix",
     "prompt": "Fix the off-by-one pagination offset bug in backend/orders.py and run the orders unit test.",
-    "expected_primary_skill": "project-governance",
-    "forbidden_first_hop": ["solution-design", "incident-doctor"],
-    "expected_mode_or_feature": "G1_LOCAL_FIX",
-    "notes": "Clear defect with known source needs no design or incident ceremony."
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["architecture", "incident-doctor", "ci-governance"],
+    "expected_submode": "DIRECT_BUILD",
+    "max_extra_reads": 0
   },
   {
-    "id": "gov-non-visual-frontend-fix",
+    "id": "workflow-non-visual-frontend-fix",
     "prompt": "Fix the timezone bug in frontend/src/utils/formatDate.ts that formats UTC dates off by one day.",
-    "expected_primary_skill": "project-governance",
-    "forbidden_first_hop": ["design"],
-    "expected_mode_or_feature": "NON_VISUAL_BUG",
-    "notes": "Touching a frontend file without visual/UX ambiguity stays in project-governance."
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["ui-design"],
+    "expected_submode": "DIRECT_BUILD",
+    "max_extra_reads": 0
   },
   {
-    "id": "gov-ci-routing-adoption",
-    "prompt": "Set up portable CI test routing for this repo with .github/ci-capabilities.json and GitHub Actions runner rules.",
-    "expected_primary_skill": "project-governance",
-    "forbidden_first_hop": ["evidence-audit", "execution-orchestrator"],
-    "expected_mode_or_feature": "CI_ROUTING_ADOPTION",
-    "notes": "CI router discovery, catalog generation, and workflow adoption."
+    "id": "workflow-delegate-parallel",
+    "prompt": "Split this 3-service refactor across disjoint parallel workers and coordinate verification without write conflicts.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["ci-governance", "architecture"],
+    "expected_submode": "DELEGATE_OR_HANDOFF",
+    "max_extra_reads": 1
   },
   {
-    "id": "incident-doctor-blocking-unknown",
+    "id": "workflow-cross-context-card",
+    "prompt": "Package a structured handoff card with exact target, delta, and return contract for an external desktop session.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["evidence-audit"],
+    "expected_submode": "DELEGATE_OR_HANDOFF",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "workflow-delivery-pr-status",
+    "prompt": "Push the current authorized feature branch to origin, verify remote ref readback, and inspect PR status.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["evidence-audit", "ci-governance"],
+    "expected_submode": "DELIVERY_OR_WORKSPACE",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ci-select-and-run-local",
+    "prompt": "Run ci-router.py locally for my uncommitted changes at milestone stage to execute fast affected tests.",
+    "expected_primary_skill": "ci-governance",
+    "forbidden_first_hop": ["engineering-workflow", "evidence-audit"],
+    "expected_submode": "SELECT_AND_RUN",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ci-validate-catalog",
+    "prompt": "Check .github/ci-capabilities.json for dead path globs, symlink escapes, or unmapped source files.",
+    "expected_primary_skill": "ci-governance",
+    "forbidden_first_hop": ["evidence-audit", "codebase-context"],
+    "expected_submode": "VALIDATE_CATALOG",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ci-onboard-repo",
+    "prompt": "Scaffold .github/ci-capabilities.json and adopt the GitHub Actions reusable CI router workflow for this repository.",
+    "expected_primary_skill": "ci-governance",
+    "forbidden_first_hop": ["engineering-workflow", "architecture"],
+    "expected_submode": "ONBOARD_OR_CONFIGURE",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ui-micro-polish",
+    "prompt": "Tighten the spacing, alignment, and focus ring state on the existing filter bar buttons.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["engineering-workflow", "architecture"],
+    "expected_submode": "MICRO_POLISH",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ui-audit-only",
+    "prompt": "Audit the settings screen UI hierarchy and accessibility without changing any code.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["engineering-workflow", "evidence-audit"],
+    "expected_submode": "AUDIT_ONLY",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ui-flow-with-tokens",
+    "prompt": "Add a new filter drawer and table bulk-action toolbar inside our existing admin design system tokens.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["architecture", "engineering-workflow"],
+    "expected_submode": "FLOW_WITH_TOKENS",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ui-full-design-system",
+    "prompt": "Create a brand-new visual aesthetic direction and full design specification for the redesigned landing experience.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["architecture"],
+    "expected_submode": "FULL_DESIGN_SYSTEM",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ui-final-review",
+    "prompt": "Perform a final visual critique and polish on the newly implemented modal screenshots.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["evidence-audit"],
+    "expected_submode": "FINAL_REVIEW",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "arch-boundary-ssot",
+    "prompt": "Should draft invoice state live in local client store or backend PostgreSQL as canonical source of truth?",
+    "expected_primary_skill": "architecture",
+    "forbidden_first_hop": ["ui-design", "engineering-workflow"],
+    "expected_submode": "BOUNDARY_DECISION",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "arch-contract-migration",
+    "prompt": "Design a backward-compatible database schema migration and webhook idempotency contract for zero-downtime rollout.",
+    "expected_primary_skill": "architecture",
+    "forbidden_first_hop": ["ui-design", "engineering-workflow"],
+    "expected_submode": "CONTRACT_OR_MIGRATION",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "incident-blocking-unknown",
     "prompt": "Production workers silently hang after 10 minutes with no stack trace and conflicting logs; isolate the missing fact.",
     "expected_primary_skill": "incident-doctor",
-    "forbidden_first_hop": ["evidence-audit", "solution-design"],
-    "expected_mode_or_feature": "EVIDENCE_GATE",
-    "notes": "Blocking failure with insufficient evidence triggers Incident Doctor."
+    "forbidden_first_hop": ["evidence-audit", "architecture"],
+    "expected_submode": "EVIDENCE_GATE",
+    "max_extra_reads": 0
   },
   {
-    "id": "incident-doctor-negative-known-test-fail",
+    "id": "incident-negative-known-test-fail",
     "prompt": "Test test_price_rounding failed with AssertionError: expected 10.00 got 10.01 in pricing.py:42; please fix it.",
-    "expected_primary_skill": "project-governance",
+    "expected_primary_skill": "engineering-workflow",
     "forbidden_first_hop": ["incident-doctor"],
-    "expected_mode_or_feature": "KNOWN_DEFECT",
-    "notes": "Clear stack trace and assertion failure do not trigger Incident Doctor."
+    "expected_submode": "DIRECT_BUILD",
+    "max_extra_reads": 0
   },
   {
-    "id": "evidence-audit-pr-merge",
+    "id": "audit-pr-merge",
     "prompt": "Give a formal read-only PR merge readiness verdict for PR #74 checking CI gates, diff coverage, and blockers.",
     "expected_primary_skill": "evidence-audit",
-    "forbidden_first_hop": ["design", "agent-handoff"],
-    "expected_mode_or_feature": "PR_MERGE",
-    "notes": "Formal merge readiness verdict."
+    "forbidden_first_hop": ["ui-design", "ci-governance"],
+    "expected_submode": "DIFF_OR_PR_AUDIT",
+    "max_extra_reads": 0
   },
   {
-    "id": "evidence-audit-release-provenance",
-    "prompt": "Audit the built v0.10.3 release artifact against tag SHA and required license provenance.",
+    "id": "audit-release-provenance",
+    "prompt": "Audit the built v0.10.3 release artifact against tag SHA, reproducible zip hash, and required license provenance.",
     "expected_primary_skill": "evidence-audit",
-    "forbidden_first_hop": ["project-governance"],
-    "expected_mode_or_feature": "RELEASE_PROVENANCE",
-    "notes": "Formal release provenance audit."
+    "forbidden_first_hop": ["engineering-workflow", "ci-governance"],
+    "expected_submode": "DEEP_PROVENANCE_OR_CI_AUDIT",
+    "max_extra_reads": 1
   },
   {
-    "id": "evidence-audit-negative-status-check",
-    "prompt": "Check whether the latest test run on my current branch finished and tell me what failed.",
-    "expected_primary_skill": "project-governance",
-    "forbidden_first_hop": ["evidence-audit"],
-    "expected_mode_or_feature": "ADVISORY_STATUS",
-    "notes": "Simple status inspection should not invoke formal Evidence Audit."
-  },
-  {
-    "id": "domain-navigation-unknown-owner",
+    "id": "context-locate-route",
     "prompt": "In this unfamiliar monorepo, locate where token refresh authority lives and which tests verify it.",
-    "expected_primary_skill": "domain-navigation",
-    "forbidden_first_hop": ["project-profile", "incident-doctor"],
-    "expected_mode_or_feature": "SOURCE_AND_TEST_ROUTE",
-    "notes": "Unclear source/test owner triggers Domain Navigation."
+    "expected_primary_skill": "codebase-context",
+    "forbidden_first_hop": ["incident-doctor", "architecture"],
+    "expected_submode": "LOCATE_ROUTE",
+    "max_extra_reads": 0
   },
   {
-    "id": "project-profile-create",
+    "id": "context-project-profile",
     "prompt": "Create a compact durable PROJECT_PROFILE.md indexing this repository's domains and authorities.",
-    "expected_primary_skill": "project-profile",
-    "forbidden_first_hop": ["domain-navigation"],
-    "expected_mode_or_feature": "CREATE_PROFILE",
-    "notes": "Creating/auditing a derived profile triggers project-profile."
-  },
-  {
-    "id": "project-profile-negative-consume",
-    "prompt": "Read PROJECT_PROFILE.md to orient yourself, then implement the new CSV export endpoint.",
-    "expected_primary_skill": "project-governance",
-    "forbidden_first_hop": ["project-profile"],
-    "expected_mode_or_feature": "CONSUME_EXISTING_PROFILE",
-    "notes": "Consuming an existing profile does not invoke project-profile."
-  },
-  {
-    "id": "execution-orchestrator-parallel-split",
-    "prompt": "Split this 3-service refactor across disjoint parallel workers and coordinate verification without write conflicts.",
-    "expected_primary_skill": "execution-orchestrator",
-    "forbidden_first_hop": ["agent-handoff"],
-    "expected_mode_or_feature": "PARALLEL_DISJOINT_WRITERS",
-    "notes": "Multi-worker decomposition and integration."
-  },
-  {
-    "id": "agent-handoff-cross-context",
-    "prompt": "Package a structured handoff card with exact target, delta, and return contract for an external desktop agent.",
-    "expected_primary_skill": "agent-handoff",
-    "forbidden_first_hop": ["execution-orchestrator"],
-    "expected_mode_or_feature": "CROSS_CONTEXT_CARD",
-    "notes": "Cross-context structured transfer uses agent-handoff."
+    "expected_primary_skill": "codebase-context",
+    "forbidden_first_hop": ["engineering-workflow"],
+    "expected_submode": "PROJECT_PROFILE",
+    "max_extra_reads": 1
   }
 ]

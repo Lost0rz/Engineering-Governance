@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Build a clean, toggleable standard plugin archive or staged plugin directory."""
+"""Build a deterministic, symlink-safe, toggleable standard plugin archive or staged directory."""
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
+import time
 import zipfile
 from pathlib import Path
 
@@ -16,6 +18,7 @@ REQUIRED_DESIGN_PROVENANCE = (
     "awesome-design-md",
     "microsoft",
 )
+FALLBACK_ZIP_DATE = (2026, 1, 1, 0, 0, 0)
 
 
 def resolve_source_sha(repo_root: Path, explicit_sha: str = "") -> str:
@@ -31,22 +34,53 @@ def resolve_source_sha(repo_root: Path, explicit_sha: str = "") -> str:
     return sha
 
 
+def resolve_deterministic_datetime(repo_root: Path, source_sha: str) -> tuple[int, int, int, int, int, int]:
+    proc = subprocess.run(
+        ["git", "-C", str(repo_root), "show", "-s", "--format=%ct", source_sha],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode == 0:
+        raw_ts = proc.stdout.strip()
+        if raw_ts.isdigit():
+            ts = max(int(raw_ts), 315532800)  # zip format requires year >= 1980
+            gm = time.gmtime(ts)
+            return (gm.tm_year, gm.tm_mon, gm.tm_mday, gm.tm_hour, gm.tm_min, gm.tm_sec)
+    return FALLBACK_ZIP_DATE
+
+
+def _reject_symlink(path: Path) -> None:
+    if path.is_symlink():
+        raise ValueError(f"Symlink forbidden in plugin package: {path}")
+
+
 def collect_runtime_files(repo_root: Path) -> list[Path]:
+    _reject_symlink(repo_root / "plugin.json")
     skills_root = repo_root / "skills"
+    _reject_symlink(skills_root)
     entries = []
-    for path in sorted(skills_root.rglob("*")):
-        if not path.is_file():
-            continue
-        rel = path.relative_to(repo_root)
-        if "__pycache__" in rel.parts or path.suffix in (".pyc", ".pyo") or path.name == ".DS_Store":
-            continue
-        if rel.parent.as_posix() == "skills/project-governance/scripts" and (
-            path.name.startswith("test_") or path.name == "verification-plan.py"
-        ):
-            continue
-        entries.append(rel)
+    for root_dir, dirnames, filenames in os.walk(skills_root, followlinks=False):
+        root_path = Path(root_dir)
+        for dirname in dirnames:
+            _reject_symlink(root_path / dirname)
+        dirnames[:] = sorted(d for d in dirnames if d != "__pycache__")
+        for filename in sorted(filenames):
+            path = root_path / filename
+            _reject_symlink(path)
+            if not path.is_file():
+                continue
+            rel = path.relative_to(repo_root)
+            if path.suffix in (".pyc", ".pyo") or path.name == ".DS_Store":
+                continue
+            if "scripts" in rel.parts and (
+                path.name.startswith("test_") or path.name == "verification-plan.py"
+            ):
+                continue
+            entries.append(rel)
 
     rules_file = repo_root / "rules" / "AGENTS.md"
+    _reject_symlink(repo_root / "rules")
+    _reject_symlink(rules_file)
     if not rules_file.is_file():
         raise FileNotFoundError("Missing plugin routing rule: rules/AGENTS.md")
     entries.append(Path("rules/AGENTS.md"))
@@ -54,7 +88,7 @@ def collect_runtime_files(repo_root: Path) -> list[Path]:
     rel_set = {p.as_posix() for p in entries}
     for module in REQUIRED_DESIGN_PROVENANCE:
         for required_name in ("LICENSE.txt", "PROVENANCE.md"):
-            expected = f"skills/design/references/{module}/{required_name}"
+            expected = f"skills/ui-design/references/{module}/{required_name}"
             if expected not in rel_set:
                 raise ValueError(f"Missing required provenance/license file: {expected}")
     for rel_str in rel_set:
@@ -93,6 +127,24 @@ def build_manifests(original: dict) -> tuple[dict, dict]:
     return codex_manifest, claude_manifest
 
 
+def _is_executable(rel: Path) -> bool:
+    return "scripts" in rel.parts and rel.suffix in (".py", ".sh")
+
+
+def _write_zip_bytes(
+    archive: zipfile.ZipFile,
+    arcname: str,
+    data: bytes,
+    date_time: tuple[int, int, int, int, int, int],
+    executable: bool = False,
+) -> None:
+    zi = zipfile.ZipInfo(filename=arcname, date_time=date_time)
+    zi.compress_type = zipfile.ZIP_DEFLATED
+    zi.create_system = 3  # Unix permissions preserved across extractors
+    zi.external_attr = (0o100755 if executable else 0o100644) << 16
+    archive.writestr(zi, data)
+
+
 def package_plugin(
     repo_root: Path,
     output_dir: Path | None = None,
@@ -107,13 +159,14 @@ def package_plugin(
         raise ValueError("Missing version in plugin.json")
 
     head = resolve_source_sha(repo_root, source_sha)
+    date_time = resolve_deterministic_datetime(repo_root, head)
     entries = collect_runtime_files(repo_root)
     codex_manifest, claude_manifest = build_manifests(original)
 
-    plugin_json_text = json.dumps(original, indent=2, ensure_ascii=False) + "\n"
-    codex_json_text = json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n"
-    claude_json_text = json.dumps(claude_manifest, indent=2, ensure_ascii=False) + "\n"
-    sha_text = head + "\n"
+    plugin_json_bytes = (json.dumps(original, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    codex_json_bytes = (json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    claude_json_bytes = (json.dumps(claude_manifest, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    sha_bytes = (head + "\n").encode("utf-8")
 
     result = {
         "source_sha": head,
@@ -124,28 +177,39 @@ def package_plugin(
         output_dir.mkdir(parents=True, exist_ok=True)
         out = output_dir / f"engineering-governance-web-preview-{version}-{head[:12]}.zip"
         with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
-            archive.writestr("plugin.json", plugin_json_text)
-            archive.writestr(".codex-plugin/plugin.json", codex_json_text)
-            archive.writestr(".claude-plugin/plugin.json", claude_json_text)
+            _write_zip_bytes(archive, "plugin.json", plugin_json_bytes, date_time)
+            _write_zip_bytes(archive, ".codex-plugin/plugin.json", codex_json_bytes, date_time)
+            _write_zip_bytes(archive, ".claude-plugin/plugin.json", claude_json_bytes, date_time)
             for rel in entries:
-                archive.write(repo_root / rel, rel.as_posix())
-            archive.writestr("PREVIEW_SOURCE_SHA.txt", sha_text)
+                _write_zip_bytes(
+                    archive,
+                    rel.as_posix(),
+                    (repo_root / rel).read_bytes(),
+                    date_time,
+                    executable=_is_executable(rel),
+                )
+            _write_zip_bytes(archive, "PREVIEW_SOURCE_SHA.txt", sha_bytes, date_time)
         result["archive_path"] = str(out)
 
     if stage_dir is not None:
         if stage_dir.exists():
             shutil.rmtree(stage_dir)
         stage_dir.mkdir(parents=True, exist_ok=True)
-        (stage_dir / "plugin.json").write_text(plugin_json_text, encoding="utf-8")
-        (stage_dir / ".codex-plugin").mkdir(parents=True, exist_ok=True)
-        (stage_dir / ".codex-plugin" / "plugin.json").write_text(codex_json_text, encoding="utf-8")
-        (stage_dir / ".claude-plugin").mkdir(parents=True, exist_ok=True)
-        (stage_dir / ".claude-plugin" / "plugin.json").write_text(claude_json_text, encoding="utf-8")
+        static_files = (
+            (stage_dir / "plugin.json", plugin_json_bytes),
+            (stage_dir / ".codex-plugin" / "plugin.json", codex_json_bytes),
+            (stage_dir / ".claude-plugin" / "plugin.json", claude_json_bytes),
+            (stage_dir / "PREVIEW_SOURCE_SHA.txt", sha_bytes),
+        )
+        for dest, data in static_files:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(data)
+            os.chmod(dest, 0o644)
         for rel in entries:
             dest = stage_dir / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(repo_root / rel, dest)
-        (stage_dir / "PREVIEW_SOURCE_SHA.txt").write_text(sha_text, encoding="utf-8")
+            shutil.copyfile(repo_root / rel, dest)
+            os.chmod(dest, 0o755 if _is_executable(rel) else 0o644)
         result["stage_dir"] = str(stage_dir)
 
     return result

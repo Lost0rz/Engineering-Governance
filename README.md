@@ -1,43 +1,33 @@
 # Engineering Governance
 
-Modular AI engineering **Skills, methods, and proportional verification**—packaged as a standard, toggleable plugin rather than a mandatory approval chain. Project-specific source, runtime, and business constraints stay with each project.
+Modular AI engineering **Skills, methods, and proportional verification**—structured as a **3-tier lightweight routing pyramid** packaged as a standard, toggleable plugin. Project-specific source, runtime, and business constraints stay with each project.
 
-## Direct-entry Skill routing
+## 3-Tier Lightweight Routing (7 Orthogonal Domains)
 
-Start from the requested outcome and enter the matching specialist Skill directly when the domain is clear; use `project-governance` for general engineering tasks, portable CI routing, and delivery coordination. Do not load unused Skills as a checklist.
+1. **L0 (Frontmatter trigger):** the host sees only Skill names and descriptions (`Do` + `Do not` boundaries) and enters **one** matching domain directly—no intermediate two-hop router.
+2. **L1 (`SKILL.md` Fast Route, <=50 lines):** every `SKILL.md` routes straight to an inline fast path (**0 extra file reads** for routine tasks) or names a deep sub-mode.
+3. **L2 (Single deep reference):** read at most one consolidated `references/*.md` file only when the deep sub-mode explicitly calls for it.
 
-| Capability bundle / focus | Skill | Primary use |
-| --- | --- | --- |
-| **Core engineering & CI** | `project-governance` | General implementation, proportional verification, PR delivery, portable CI routing (`ci-router.py`) |
-| **Specialist methods** | `design` | UI/UX, `MICRO_POLISH` tweaks, interface audits, specs, implementation, visual review |
-| | `solution-design` | Ambiguous architecture, API contracts, data flow, and state ownership |
-| | `incident-doctor` | Evidence-gated diagnosis and minimal probes for blocking failures |
-| | `evidence-audit` | Formal read-only code, PR, CI, or release readiness verdicts |
-| **Context & orchestration** | `domain-navigation` | Unclear source, symbol, dependency, runtime entry, or test owner |
-| | `project-profile` | Create, shrink, rebuild, or audit a compact derived project index |
-| | `execution-orchestrator` | Intra-session plan-to-execute handoffs, batching, and Sub Agent decomposition |
-| | `agent-handoff` | Structured cross-context transfer when an Issue/PR link is insufficient |
+| Domain Skill | Primary ownership | Inline fast-path modes | Deep reference modes |
+| --- | --- | --- | --- |
+| [`engineering-workflow`](skills/engineering-workflow/SKILL.md) | G1/G2 coding, batching, handoffs, workspaces, PR delivery | `DIRECT_BUILD` | `DELEGATE_OR_HANDOFF`, `DELIVERY_OR_WORKSPACE` |
+| [`ci-governance`](skills/ci-governance/SKILL.md) | Portable CI routing (`ci-router.py`), catalog hygiene, Actions | `SELECT_AND_RUN`, `VALIDATE_CATALOG` | `ONBOARD_OR_CONFIGURE` |
+| [`ui-design`](skills/ui-design/SKILL.md) | UI/UX polish, audits, token flows, visual specs, review | `MICRO_POLISH`, `AUDIT_ONLY`, `FLOW_WITH_TOKENS` | `FULL_DESIGN_SYSTEM`, `FINAL_REVIEW` |
+| [`architecture`](skills/architecture/SKILL.md) | SSOT state ownership, API contracts, concurrency, migrations | `BOUNDARY_DECISION` | `CONTRACT_OR_MIGRATION` |
+| [`incident-doctor`](skills/incident-doctor/SKILL.md) | Evidence-gated diagnosis and minimal probes for blocking faults | `EVIDENCE_GATE` | `PROBE_AND_TECHNIQUES`, `INCIDENT_RECORD` |
+| [`evidence-audit`](skills/evidence-audit/SKILL.md) | Formal read-only diff/PR/CI/release acceptance verdicts | `DIFF_OR_PR_AUDIT` | `DEEP_PROVENANCE_OR_CI_AUDIT` |
+| [`codebase-context`](skills/codebase-context/SKILL.md) | Source/test route discovery (`LOCATE_ROUTE`), profiles, domain maps | `LOCATE_ROUTE` | `PROJECT_PROFILE`, `DOMAIN_MAP` |
 
-Routing details: [global routing](skills/project-governance/references/global-routing.md).
+## Risk & Verification Layering
 
-## Task coordination and permissions
+- **Action risk (`G0`–`G3`):** `G0` read-only; `G1` localized recoverable fix; `G2` cross-module/contract edit (verify caller compatibility + `V2` integration); `G3` privilege, secrets, security trust, destructive data, or irreversible prod effects (pause for explicit owner confirmation).
+- **Test cadence (`V0`–`V3`):** `ci-router.py` separates `draft` (deferred), `focused` (single lane), `milestone` (`V1`/`V2` fast feedback), `ready` (`V1`–`V3` with `supersedes` deduplication), and `release` (complete catalog).
 
-Work can start from an authenticated current user instruction or an optional Issue/PR plan. Issues, PR descriptions, and handoff cards provide **context**, not write credentials; the real execution host authenticates user intent and enforces tool/GitHub permissions.
+## Standard Toggleable Plugin Installation
 
-- **G0–G2**: read-only inspection, localized fixes, and bounded multi-module changes proceed directly inside the task scope.
-- **G3**: materially new privileges, credentials, security boundaries, destructive data changes, or irreversible production effects require an explicit owner decision.
+Build a deterministic, symlink-safe runtime archive or standalone directory with `python3 scripts/package-plugin.py` (packages `plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `rules/AGENTS.md`, and `skills/**` without repo tests or `archive/**`):
 
-## Verification and portable CI routing
+- **Antigravity:** place under `plugins/engineering-governance/` or declare in `plugins.json`; toggle via Settings UI or `agy plugin enable|disable engineering-governance`. Individual skills can also be mounted selectively via `skills.json` (`include_only`).
+- **Codex / Claude Code:** install via `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, or `.claude-plugin/plugin.json`.
 
-[Verification tiers](skills/project-governance/references/verification-tiers.md) scale test depth (`V0`–`V3`) with impact. Draft iterations avoid heavy CI; targeted checks run during implementation, and broader checks run at integration or release boundaries.
-
-Cross-repository CI uses the [shared router](skills/project-governance/references/ci-routing.md): `skills/project-governance/scripts/ci-router.py` paired with a reviewed `.github/ci-capabilities.json` and thin caller workflow per consumer repository. This repository itself uses `.github/ci-capabilities.json` and `.github/workflows/governance-contract-checks.yml` via `ci-router.py`.
-
-## Standard plugin installation and toggling
-
-Build a clean runtime plugin directory or Web preview archive with `python3 scripts/package-plugin.py` (packages `plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `rules/AGENTS.md`, and `skills/**` without repository tests or historical `archive/**`).
-
-- **Antigravity**: install or symlink into a standard `plugins/engineering-governance/` customization root (or declare in `plugins.json`); toggle anytime via the Settings UI or `agy plugin enable|disable engineering-governance`. You can also consume individual specialist folders under `skills/` à la carte via `skills.json` (`include_only`).
-- **Codex / Claude Code**: install via `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, or `.claude-plugin/plugin.json` and enable/disable through the host plugin controls.
-
-See [adoption](skills/project-governance/references/adoption.md). Source commit, CI status, packaged artifact, and installed host behavior remain separate observable claims.
+Source commit, CI state, packaged artifact, and installed runtime remain distinct observable claims.

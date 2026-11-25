@@ -1,94 +1,35 @@
-# Audit contract
+# Audit contract — formal readiness, CI & release provenance
+
+Load when `evidence-audit` performs `DEEP_PROVENANCE_OR_CI_AUDIT` (`CI`, `RELEASE_PROVENANCE`, `POST_CHANGE`, or multi-claim verification). Routine `CODE_DIFF` / `PR_MERGE` audits can run directly from [SKILL.md](../SKILL.md).
 
 ## 1. Advisory inspection vs formal verdict
 
-Keep two read-only purposes distinct:
+- **Advisory status inspection** summarizes current state without claiming acceptance and needs no `evidence-audit` ceremony.
+- **Formal acceptance verdict** evaluates an explicit target boundary (`CODE_DIFF`, `PR_MERGE`, `CI`, `RELEASE_PROVENANCE`, or `POST_CHANGE`) and remains strictly read-only.
 
-- **ADVISORY_READ_ONLY_INSPECTION** — report current evidence/status without a formal acceptance/readiness claim.
-- **FORMAL_ACCEPTANCE_OR_READINESS** — return an Evidence Audit verdict for an explicit boundary. Reuse the active task scope when applicable, or establish a separate read-only audit boundary from the user request.
+## 2. Identity binding & audit independence
 
-Neither purpose grants corrective mutation.
+Bind every verdict to the exact target being claimed (`repo`, `base`/`head` or merge commit SHA, PR number, workflow run/job ID, or artifact SHA256) and state `AUDIT_INDEPENDENCE` (`SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN`). Never transfer `PASS` from an older commit unless semantic equivalence is explicitly established, and never count an implementation self-check as independent or human acceptance.
 
-## 2. Audit purpose and independence
+Keep action risk (`G0`–`G3`) separate from verification depth (`V0`–`V3`).
 
-Implementation self-check remains useful verification but is not automatically independent acceptance. When independence is material, declare:
+## 3. Audit profile checklists
 
-```text
-AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
-```
+- **`CODE_DIFF`:** verify target behavior, diff bounds, canonical owner preservation, and executed tests (explicitly flag weakened assertions in `tests/**` or unreviewed `.github/**` edits).
+- **`PR_MERGE`:** evaluate both semantic diff evidence and **current live repository-host gates** (branch protection, required checks, reviews, mergeability) for the literal PR head/base.
+- **`CI`:** verify workflow trigger/event, parent-commit alignment on merge trees, actual job matrix coverage, `fork_safe` boundaries, and skipped checks (`no status reported` is never `PASS`).
+- **`RELEASE_PROVENANCE`:** verify source commit/tag, builder workflow, deterministic artifact hash, bundle contents (including required upstream licenses/provenance, excluding dev tests/archives), and manifest version match.
+- **`POST_CHANGE`:** bind observed merge/deploy commit and actual installed runtime state; source tests alone never prove deployed or installed host behavior.
 
-The required level follows user/task/risk requirements; do not force expensive independence for every local check.
+## 4. Semantic evidence vs live host gates
 
-## 3. Evidence before verdict
+Semantic test/review evidence may remain valid across non-semantic doc-only edits with proven behavior equivalence, whereas live repository-host gates (required checks, approvals, merge state) must be reread fresh for the literal head identity.
 
-Every material finding names supporting evidence: requirement/authority, path/symbol/diff, test result, CI run/job, PR/host gate, release/provenance record, artifact hash or runtime observation.
+## 5. Finding severity & verdict disposition
 
-Report governance risk (`G0` read-only, `G1` localized, `G2` multi-module, `G3` privilege/security/destructive) separately from verification depth (`V0` doc/format, `V1` focused, `V2` integration, `V3` broad/security/release) and audit independence. A local test pass or plan snapshot cannot establish live host authority; missing required host evidence remains `UNKNOWN`.
+- `BLOCKING` -> `STOP` (security/correctness defect, identity mismatch, missing required check, or failing host gate).
+- `IMPORTANT` -> `STOP` unless the responsible owner explicitly accepts deferral.
+- `MINOR` -> allows `PASS_WITH_FOLLOWUPS`.
+- Required claim lacking evidence (`UNKNOWN`) -> `STOP`.
 
-Do not substitute confidence, prior summaries or matching names for underlying evidence when available.
-
-## 4. Common identity and coverage envelope
-
-Before a formal verdict establish as applicable:
-
-```text
-TASK_ID
-AUDIT_PROFILE
-AUDIT_INDEPENDENCE
-TARGET
-EXPECTED_AUTHORITY_OR_REQUIREMENT
-BASE_HEAD_RANGE_OR_ARTIFACT_ID
-DELIVERY_SEMANTIC_IDENTITY
-LITERAL_HOST_IDENTITY
-EVIDENCE_FRESHNESS
-KNOWN_EQUIVALENCE_OR_PROVENANCE
-REQUIRED_CLAIMS
-OBSERVED_EVIDENCE
-UNVERIFIED_REQUIRED_CLAIMS
-```
-
-Evidence proves the identity/claim it actually observed. A required claim with insufficient evidence remains `UNKNOWN`.
-
-## 5. Audit profiles
-
-### CODE_DIFF
-Determine whether a bounded source change satisfies accepted requirements and preserves canonical authority/interfaces. Inspect diff, relevant surrounding authority, tests/checks and regression boundary. Do not inflate into repository-wide health review without need.
-
-### PR_MERGE
-Evaluate both semantic implementation evidence for the audited Delivery/Semantic identity and **current live repository-host gates** for the literal PR/base/head identity.
-
-### CI
-Verify expected repository/ref/head or merge ref, workflow/job identity, trigger/context, actual conclusion, relevant step coverage and artifact/result identity. `no status reported` is not `PASS`.
-
-### RELEASE_PROVENANCE
-Check source commit/tag, producer/workflow, artifact identity/hash, package contents/version and provenance chain as material.
-
-### POST_CHANGE
-Name the observed merge commit/tree, package/build/install/deploy/runtime identity and proposition being verified. Do not infer installed/runtime behavior solely from source success without provenance/equivalence.
-
-## 6. Semantic evidence vs host gates
-
-Semantic test/CI/review evidence may be reused only when non-semantic or documentation-only edits have proven tree/behavior equivalence for the tested scope. Live repository-host gates are separate and must be reread for the literal PR/commit/release identity being accepted.
-
-## 7. Findings and boundary disposition
-
-- `BLOCKING` -> `STOP`.
-- `IMPORTANT` -> `STOP` when correction is required before the boundary; otherwise follow-up only when responsible authority explicitly accepts/defers it.
-- `MINOR` -> may coexist with `PASS_WITH_FOLLOWUPS`.
-- required `UNKNOWN` -> `STOP`.
-
-## 8. Verdict
-
-- `PASS` — all required claims supported and no blocking/required-before-boundary issue remains.
-- `PASS_WITH_FOLLOWUPS` — required claims supported and only explicitly non-blocking/deferred items remain.
-- `STOP` — blocking defect, required-before-boundary issue, required unknown, identity mismatch or applicable host gate blocks acceptance.
-
-State the exact boundary. `CODE_DIFF PASS` does not imply `PR_MERGE PASS`; source audit does not imply installed-runtime acceptance.
-
-## 9. Reviewer finding validation
-
-A reviewer/agent suggestion is a claim. Verify it before corrective mutation. If valid but outside the active task boundary, pause and obtain authorization from the user/task owner before mutating unrelated code.
-
-## 10. Read-only rule
-
-Evidence Audit may report stale documentation or alignment drift, but must not mutate code or docs merely to make an audit clean.
+Audit findings never authorize unapproved writes or status-only commits; report stale projections or alignment drift without mutating files.

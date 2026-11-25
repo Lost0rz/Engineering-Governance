@@ -53,13 +53,26 @@ jobs:
           persist-credentials: false
           path: project
 
-      # Caller must pin the matching published workflow and router release.
-      # No commands are loaded from the PR version of capabilities.json.
+      - name: Resolve pinned Governance router ref
+        id: router_ref
+        shell: bash
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          set -euo pipefail
+          ref="${WORKFLOW_REF##*@}"
+          if [[ ! "$ref" =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|[0-9a-f]{40})$ ]]; then
+            echo "::error::Reusable workflow must be pinned to an immutable release tag or 40-char commit SHA (got: $ref)"
+            exit 2
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      # Check out the exact immutable tag or SHA invoked by the caller.
       - name: Checkout pinned Governance router
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: v0.10.3
+          ref: ${{ steps.router_ref.outputs.ref }}
           persist-credentials: false
           path: governance
 
@@ -98,7 +111,19 @@ jobs:
           fi
           # Trust commands from the accepted base, not the PR's new config.
           CONFIG_REF="$BASE_SHA"
-          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            test -n "$BASE_SHA" && test -n "$HEAD_SHA"
+            if git -C project rev-parse --verify -q "HEAD^2" >/dev/null; then
+              MERGE_P1="$(git -C project rev-parse HEAD^1)"
+              MERGE_P2="$(git -C project rev-parse HEAD^2)"
+              if [[ "$MERGE_P2" != "$HEAD_SHA" ]] || ! git -C project merge-base --is-ancestor "$BASE_SHA" "$MERGE_P1"; then
+                echo "::error::PR merge tree parents do not match pull_request base/head identity."
+                exit 2
+              fi
+              BASE_SHA="$MERGE_P1"
+              CONFIG_REF="$MERGE_P1"
+            fi
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             test -n "$DEFAULT_BRANCH"
             # fetch-depth=0 retrieves origin/*; no private repo credentials needed.
             TRUSTED_DEFAULT="refs/remotes/origin/$DEFAULT_BRANCH"
@@ -130,7 +155,11 @@ jobs:
             exit 2
           fi
           test -n "$BASE_SHA" && test -n "$CONFIG_REF"
-          python3 governance/skills/project-governance/scripts/ci-router.py plan \
+          ROUTER_BIN="governance/skills/ci-governance/scripts/ci-router.py"
+          if [[ ! -f "$ROUTER_BIN" ]]; then
+            ROUTER_BIN="governance/skills/project-governance/scripts/ci-router.py"
+          fi
+          python3 "$ROUTER_BIN" plan \
             --repo-root project --base "$BASE_SHA" --head "$HEAD_SHA" \
             --config-ref "$CONFIG_REF" --config-path "$CAPABILITIES_PATH" --config-source base \
             --source-trust "$source_trust" --stage "$stage" --focused "$FOCUSED_TEST" \
@@ -143,6 +172,8 @@ jobs:
           for key in ("base", "head", "stage", "coverage", "config_ref", "config_sha256"):
               print("- " + key + ": " + str(p[key]))
           print("- Selected: " + (", ".join(p["selected_test_ids"]) or "NONE"))
+          if p.get("superseded_test_ids"):
+              print("- Superseded: " + ", ".join(p["superseded_test_ids"]))
           if p["capabilities_changed"]:
               print("- Capabilities: PR format checked; accepted-base commands used.")
               print("- New commands must be evaluated after they enter the trusted baseline.")

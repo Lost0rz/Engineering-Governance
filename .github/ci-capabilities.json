@@ -2,9 +2,7 @@
   "contract": "EG_CI_CAPABILITIES_V1",
   "documentation_paths": [
     "archive/**",
-    "examples/**",
-    "docs/**",
-    "documents/**"
+    "examples/**"
   ],
   "fallback_tests": [
     "full-governance-suite"
@@ -23,8 +21,8 @@
         ".github/ISSUE_TEMPLATE/**"
       ],
       "exclude_paths": [
-        "skills/project-governance/scripts/**",
-        "skills/project-governance/assets/control-policy.json"
+        "skills/ci-governance/scripts/**",
+        "skills/engineering-workflow/assets/control-policy.json"
       ],
       "runner": [
         "ubuntu-latest"
@@ -51,10 +49,11 @@
         ".agents/**",
         "rules/**",
         "skills/**",
-        "references/**"
+        "references/**",
+        "scripts/**"
       ],
       "exclude_paths": [
-        "skills/project-governance/scripts/**"
+        "skills/ci-governance/scripts/**"
       ],
       "requires": [
         "workflow-contracts"
@@ -81,9 +80,7 @@
       "tier": "V2",
       "paths": [
         ".github/ci-capabilities.json",
-        "skills/project-governance/references/ci-routing.md",
-        "skills/project-governance/references/verification-tiers.md",
-        "skills/project-governance/assets/examples/**"
+        "skills/ci-governance/**"
       ],
       "requires": [
         "workflow-contracts"
@@ -110,11 +107,16 @@
       "tier": "V3",
       "paths": [
         ".gitignore",
-        "skills/project-governance/scripts/**",
-        "skills/project-governance/assets/control-policy.json",
+        "skills/ci-governance/scripts/**",
+        "skills/engineering-workflow/assets/control-policy.json",
         ".github/workflows/**",
         "scripts/**",
         "tests/**"
+      ],
+      "supersedes": [
+        "workflow-contracts",
+        "packaging-contracts",
+        "router-contracts"
       ],
       "runner": [
         "ubuntu-latest"
@@ -126,7 +128,7 @@
           "-m",
           "compileall",
           "-q",
-          "skills/project-governance/scripts",
+          "skills/ci-governance/scripts",
           "scripts",
           "tests"
         ]
