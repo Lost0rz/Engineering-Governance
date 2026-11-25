@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import concurrent.futures
 import hashlib
 import json
 import re
@@ -11,6 +12,7 @@ import shlex
 import stat
 import subprocess
 import sys
+import threading
 import time
 import unicodedata
 from pathlib import Path
@@ -589,7 +591,15 @@ def select(config, changed, stage, base, head, digest, focused="",
         selected = [t for t in selected if t["id"] in safe_ids]
     superseded_ids = []
     if stage in ("milestone", "ready", "release") and selected:
-        raw_superseded = {sub for t in selected for sub in t.get("supersedes", [])}
+        def _collect_superseded(tid, acc):
+            for sub in by_id[tid].get("supersedes", []):
+                if sub not in acc:
+                    acc.add(sub)
+                    _collect_superseded(sub, acc)
+
+        raw_superseded = set()
+        for t in selected:
+            _collect_superseded(t["id"], raw_superseded)
         kept_after_sup = [t for t in selected if t["id"] not in raw_superseded]
         needed = {t["id"] for t in kept_after_sup}
         changed_needed = True
@@ -631,7 +641,11 @@ def select(config, changed, stage, base, head, digest, focused="",
             "fork_blocked_tests": fork_blocked,
             "source_trust": source_trust,
             "capabilities_changed": config_changed,
-            "effective_tier": max((t["tier"] for t in selected), default="V0"),
+            "effective_tier": max(
+                (t["tier"] for t in selected),
+                key=lambda tier: TIER_ORDER[tier],
+                default="V0",
+            ),
             "run_tests": bool(matrix), "test_status": "NOT_RUN",
             "full_suite_claim": False, "matrix": {"include": matrix},
             "config_source": "ACCEPTED_BASE" if base != "LOCAL" else "LOCAL_FILE"}
@@ -702,26 +716,30 @@ def inspect_catalog_coverage(config, tracked, config_path=".github/ci-capabiliti
                 and descriptive_doc(path)
                 and any(match(pat, path) for pat in doc_patterns))
 
-    covered = set()
+    any_covered = set()
+    ready_covered = set()
     for path in tracked:
         doc_exempt = is_doc_exempt(path)
         for test in config["tests"]:
             if ((test.get("include_docs", False) or not doc_exempt)
                     and any(match(pat, path) for pat in test["paths"])
                     and not any(match(ex, path) for ex in test.get("exclude_paths", []))):
-                covered.add(path)
+                any_covered.add(path)
+                if "ready" in effective_stages(test):
+                    ready_covered.add(path)
     unmapped = [
         path for path in tracked
-        if path != config_path and path not in covered and not is_doc_exempt(path)
+        if path != config_path and path not in ready_covered and not is_doc_exempt(path)
     ]
     return {
         "contract": CONTRACT,
         "tracked_file_count": len(tracked),
-        "covered_file_count": len(covered),
+        "covered_file_count": len(ready_covered),
         "dead_patterns": dead_patterns,
         "dead_exclude_patterns": dead_exclude_patterns,
         "dead_doc_patterns": dead_doc_patterns,
         "nonregular_tracked_paths": sorted(nonregular),
+        "release_only_tracked_paths": sorted(any_covered - ready_covered),
         "unmapped_tracked_paths": unmapped,
     }
 
@@ -777,22 +795,34 @@ def scaffold(repo):
             doc_candidates.append(candidate)
 
     manifest_specs = (
-        ("Package.swift", "swift", "V2", ["macos-latest"], ["swift", "test"]),
-        ("package.json", "node", "V2", ["ubuntu-latest"], ["npm", "test"]),
-        ("pyproject.toml", "python", "V2", ["ubuntu-latest"], ["python3", "-m", "unittest"]),
-        ("pytest.ini", "pytest", "V2", ["ubuntu-latest"], ["python3", "-m", "pytest", "-q"]),
-        ("Cargo.toml", "rust", "V2", ["ubuntu-latest"], ["cargo", "test"]),
-        ("go.mod", "go", "V2", ["ubuntu-latest"], ["go", "test", "./..."]),
-        ("pom.xml", "maven", "V2", ["ubuntu-latest"], ["mvn", "test"]),
-        ("build.gradle", "gradle", "V2", ["ubuntu-latest"], ["./gradlew", "test"]),
-        ("Gemfile", "ruby", "V2", ["ubuntu-latest"], ["bundle", "exec", "rake", "test"]),
+        ("Package.swift", "swift", "swift", "V2", ["macos-latest"], ["swift", "test"]),
+        ("package.json", "node", "node", "V2", ["ubuntu-latest"], ["npm", "test"]),
+        ("pytest.ini", "python", "pytest", "V2", ["ubuntu-latest"], ["python3", "-m", "pytest", "-q"]),
+        ("pyproject.toml", "python", "python", "V2", ["ubuntu-latest"], ["python3", "-m", "unittest"]),
+        ("Cargo.toml", "rust", "rust", "V2", ["ubuntu-latest"], ["cargo", "test"]),
+        ("go.mod", "go", "go", "V2", ["ubuntu-latest"], ["go", "test", "./..."]),
+        ("build.gradle", "jvm", "gradle", "V2", ["ubuntu-latest"], ["./gradlew", "test"]),
+        ("build.gradle.kts", "jvm", "gradle", "V2", ["ubuntu-latest"], ["./gradlew", "test"]),
+        ("pom.xml", "jvm", "maven", "V2", ["ubuntu-latest"], ["mvn", "test"]),
+        ("Gemfile", "ruby", "ruby", "V2", ["ubuntu-latest"], ["bundle", "exec", "rake", "test"]),
     )
     tests = []
     used_ids = set()
-    for filename, base_id, tier, runner, cmd in manifest_specs:
+    seen_dir_ecosystems = set()
+    for filename, ecosystem, base_id, tier, runner, cmd in manifest_specs:
         matches = [p for p in tracked if p == filename or p.endswith("/" + filename)]
         for manifest_path in matches:
             parent = manifest_path.rsplit("/", 1)[0] if "/" in manifest_path else "."
+            if (parent, ecosystem) in seen_dir_ecosystems:
+                continue
+            seen_dir_ecosystems.add((parent, ecosystem))
+            lane_cmd = list(cmd)
+            if filename == "pyproject.toml" and (repo / manifest_path).is_file():
+                try:
+                    if "[tool.pytest" in (repo / manifest_path).read_text(encoding="utf-8", errors="ignore"):
+                        lane_cmd = ["python3", "-m", "pytest", "-q"]
+                except OSError:
+                    pass
             lane_id = base_id if parent == "." else re.sub(r"[^a-z0-9]+", "-", f"{parent}-{base_id}".lower()).strip("-")[:48]
             if not lane_id or not ID.fullmatch(lane_id) or lane_id in used_ids:
                 idx = 2
@@ -808,12 +838,18 @@ def scaffold(repo):
                 "paths": ["**"] if parent == "." else [f"{parent}/**"],
                 "runner": runner,
                 "fork_safe": True,
-                "command": cmd,
+                "command": lane_cmd,
                 "timeout_minutes": 20,
             }
             if parent != ".":
                 lane["cwd"] = parent
             tests.append(lane)
+
+    child_globs = sorted({f"{t['cwd']}/**" for t in tests if t.get("cwd", ".") != "."})
+    if child_globs:
+        for lane in tests:
+            if lane.get("cwd", ".") == "." and lane["paths"] == ["**"]:
+                lane["exclude_paths"] = child_globs
 
     if not tests:
         tests.append({
@@ -862,66 +898,175 @@ def topological_order(selected_tests, config):
     return ordered
 
 
-def execute_local(result, config, repo, keep_going=False):
+def _run_single_lane(idx, total, test, repo_resolved, capture_output, io_lock):
+    workdir = (repo_resolved / test.get("cwd", ".")).resolve()
+    if not workdir.is_relative_to(repo_resolved):
+        outcome = {
+            "id": test["id"],
+            "outcome": "CWD_OUTSIDE_WORKSPACE",
+            "exit_code": 2,
+            "duration_ms": 0,
+        }
+        with io_lock:
+            print(f"[eg-ci {idx}/{total}] CWD_OUTSIDE_WORKSPACE {test['id']} (0ms)", file=sys.stderr, flush=True)
+        return outcome
+
+    with io_lock:
+        print(f"[eg-ci {idx}/{total}] START {test['id']} ({test['tier']})", file=sys.stderr, flush=True)
+    code = 0
+    detail = "PASS"
+    chunks = []
+    started = time.monotonic()
+    for argv in test.get("setup", []) + [test["command"]]:
+        try:
+            if capture_output:
+                p = subprocess.run(
+                    argv,
+                    cwd=workdir,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    timeout=test.get("timeout_minutes", 20) * 60,
+                    check=False,
+                )
+                if p.stdout:
+                    chunks.append(p.stdout)
+            else:
+                p = subprocess.run(
+                    argv,
+                    cwd=workdir,
+                    stdout=sys.stderr,
+                    stderr=sys.stderr,
+                    timeout=test.get("timeout_minutes", 20) * 60,
+                    check=False,
+                )
+            code = p.returncode
+        except subprocess.TimeoutExpired as exc:
+            if capture_output and exc.stdout:
+                chunks.append(exc.stdout)
+            code, detail = 124, "TIMEOUT"
+        except OSError:
+            code, detail = 127, "COMMAND_UNAVAILABLE"
+        if code:
+            if detail == "PASS":
+                detail = "FAILED"
+            break
+    duration_ms = int((time.monotonic() - started) * 1000)
+    with io_lock:
+        if capture_output and chunks:
+            for blob in chunks:
+                text = blob.decode("utf-8", errors="replace") if isinstance(blob, bytes) else str(blob)
+                print(text, end="" if text.endswith("\n") else "\n", file=sys.stderr)
+        print(f"[eg-ci {idx}/{total}] {detail} {test['id']} ({duration_ms}ms)", file=sys.stderr, flush=True)
+    return {
+        "id": test["id"],
+        "outcome": detail,
+        "exit_code": code,
+        "duration_ms": duration_ms,
+    }
+
+
+def execute_local(result, config, repo, keep_going=False, jobs=1):
     """Explicit local execution only; plan mode never runs commands."""
     selected = set(result["selected_test_ids"])
     ordered = topological_order(
         [t for t in config["tests"] if t["id"] in selected],
         config,
     )
-    outcomes = []
+    repo_resolved = repo.resolve()
+    total = len(ordered)
+    io_lock = threading.Lock()
+    outcomes_by_id = {}
     failed_ids = set()
-    for test in ordered:
-        if keep_going and any(dep in failed_ids for dep in test.get("requires", [])):
-            outcomes.append({
-                "id": test["id"],
-                "outcome": "DEPENDENCY_FAILED",
-                "exit_code": 2,
-                "duration_ms": 0,
-            })
-            failed_ids.add(test["id"])
-            continue
-        workdir = (repo / test.get("cwd", ".")).resolve()
-        if not workdir.is_relative_to(repo.resolve()):
-            outcomes.append({
-                "id": test["id"],
-                "outcome": "CWD_OUTSIDE_WORKSPACE",
-                "exit_code": 2,
-                "duration_ms": 0,
-            })
-            failed_ids.add(test["id"])
-            if not keep_going:
-                break
-            continue
-        code = 0
-        detail = "PASS"
-        started = time.monotonic()
-        for argv in test.get("setup", []) + [test["command"]]:
-            try:
-                p = subprocess.run(argv, cwd=workdir, stdout=sys.stderr,
-                                   stderr=sys.stderr,
-                                   timeout=test.get("timeout_minutes", 20) * 60,
-                                   check=False)
-                code = p.returncode
-            except subprocess.TimeoutExpired:
-                code, detail = 124, "TIMEOUT"
-            except OSError:
-                code, detail = 127, "COMMAND_UNAVAILABLE"
-            if code:
-                if detail == "PASS":
-                    detail = "FAILED"
-                break
-        duration_ms = int((time.monotonic() - started) * 1000)
-        outcomes.append({
-            "id": test["id"],
-            "outcome": detail,
-            "exit_code": code,
-            "duration_ms": duration_ms,
-        })
-        if code:
-            failed_ids.add(test["id"])
-            if not keep_going:
-                break
+
+    if ordered and jobs <= 1:
+        for idx, test in enumerate(ordered, start=1):
+            if keep_going and any(dep in failed_ids for dep in test.get("requires", [])):
+                outcomes_by_id[test["id"]] = {
+                    "id": test["id"],
+                    "outcome": "DEPENDENCY_FAILED",
+                    "exit_code": 2,
+                    "duration_ms": 0,
+                }
+                failed_ids.add(test["id"])
+                print(f"[eg-ci {idx}/{total}] DEPENDENCY_FAILED {test['id']} (0ms)", file=sys.stderr, flush=True)
+                continue
+            outcome = _run_single_lane(idx, total, test, repo_resolved, capture_output=False, io_lock=io_lock)
+            outcomes_by_id[test["id"]] = outcome
+            if outcome["exit_code"]:
+                failed_ids.add(test["id"])
+                if not keep_going:
+                    break
+    elif ordered:
+        by_id = {t["id"]: t for t in ordered}
+        order_index = {t["id"]: idx for idx, t in enumerate(ordered, start=1)}
+        remaining_deps = {
+            t["id"]: {d for d in t.get("requires", []) if d in by_id}
+            for t in ordered
+        }
+        started_ids = set()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:
+            inflight = {}
+            while len(outcomes_by_id) < total:
+                if keep_going:
+                    progressed = True
+                    while progressed:
+                        progressed = False
+                        for test in ordered:
+                            tid = test["id"]
+                            if tid in started_ids or tid in outcomes_by_id:
+                                continue
+                            if any(dep in failed_ids for dep in test.get("requires", [])):
+                                started_ids.add(tid)
+                                outcomes_by_id[tid] = {
+                                    "id": tid,
+                                    "outcome": "DEPENDENCY_FAILED",
+                                    "exit_code": 2,
+                                    "duration_ms": 0,
+                                }
+                                failed_ids.add(tid)
+                                print(
+                                    f"[eg-ci {order_index[tid]}/{total}] DEPENDENCY_FAILED {tid} (0ms)",
+                                    file=sys.stderr,
+                                    flush=True,
+                                )
+                                progressed = True
+                if keep_going or not failed_ids:
+                    ready = [
+                        test for test in ordered
+                        if test["id"] not in started_ids
+                        and test["id"] not in outcomes_by_id
+                        and not remaining_deps[test["id"]]
+                    ]
+                    for test in ready:
+                        if len(inflight) >= jobs:
+                            break
+                        tid = test["id"]
+                        started_ids.add(tid)
+                        fut = pool.submit(
+                            _run_single_lane,
+                            order_index[tid],
+                            total,
+                            test,
+                            repo_resolved,
+                            True,
+                            io_lock,
+                        )
+                        inflight[fut] = tid
+                if not inflight:
+                    break
+                done, _ = concurrent.futures.wait(
+                    inflight.keys(), return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for fut in done:
+                    tid = inflight.pop(fut)
+                    outcome = fut.result()
+                    outcomes_by_id[tid] = outcome
+                    if outcome["exit_code"]:
+                        failed_ids.add(tid)
+                    for pending_deps in remaining_deps.values():
+                        pending_deps.discard(tid)
+
+    outcomes = [outcomes_by_id[t["id"]] for t in ordered if t["id"] in outcomes_by_id]
     result["executed_tests"] = outcomes
     if any(item["exit_code"] for item in outcomes):
         result["test_status"] = "FAILED"
@@ -933,20 +1078,50 @@ def execute_local(result, config, repo, keep_going=False):
     return 0
 
 
+def _resolve_commit_arg(repo, ref):
+    if not ref or ref.startswith("-"):
+        raise RouteError("INVALID_REF")
+    if SHA.fullmatch(ref):
+        return ref
+    try:
+        return git(repo, "rev-parse", "--verify", "--end-of-options", ref + "^{commit}").decode().strip()
+    except RouteError as exc:
+        raise RouteError("INVALID_REF") from exc
+
+
+def _resolve_default_remote_ref(repo, default_branch=""):
+    prefix = "refs/remotes/origin/"
+    try:
+        remote_default = git(repo, "symbolic-ref", "-q", "refs/remotes/origin/HEAD").decode().strip()
+    except RouteError:
+        remote_default = ""
+    if default_branch:
+        if not safe_path(default_branch):
+            raise RouteError("INVALID_DEFAULT_BRANCH")
+        declared_default = prefix + default_branch
+        if remote_default and declared_default != remote_default:
+            raise RouteError("DEFAULT_BRANCH_IDENTITY_MISMATCH")
+        return declared_default
+    if remote_default:
+        return remote_default
+    raise RouteError("DEFAULT_BRANCH_UNKNOWN_USE_DEFAULT_BRANCH")
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("mode", choices=("plan", "discover", "scaffold", "run", "import-only", "check-catalog"))
-    p.add_argument("--repo-root", type=Path, required=True)
+    p.add_argument("--repo-root", type=Path, default=Path("."))
     p.add_argument("--base", default="")
     p.add_argument("--head", default="")
     p.add_argument("--config-path", default=".github/ci-capabilities.json")
     p.add_argument("--config-source", choices=("base", "file"), default="base")
     p.add_argument("--config-ref", default="", help="Accepted config commit (independent of comparison base)")
-    p.add_argument("--trusted-ref", default="", help="Accepted origin default branch ref for local run")
+    p.add_argument("--trusted-ref", default="", help="Accepted origin default branch ref (or 'auto') for local run")
     p.add_argument("--default-branch", default="", help="Host-declared default branch when origin/HEAD is unavailable")
     p.add_argument("--stage", choices=STAGES, default="ready")
     p.add_argument("--worktree", action="store_true", help="Include staged, unstaged and untracked changes in local mode")
     p.add_argument("--keep-going", action="store_true", help="Continue running independent lanes after a local test failure")
+    p.add_argument("--jobs", type=int, default=1, help="Max parallel local lanes per dependency wave (1-16)")
     p.add_argument("--require-complete-mapping", action="store_true", help="Fail check-catalog if any tracked non-doc file is unmapped")
     p.add_argument("--source-trust", choices=("internal", "fork"), default="internal")
     p.add_argument("--focused", default="")
@@ -955,6 +1130,8 @@ def main():
     args = p.parse_args()
     exit_code = 0
     try:
+        if not 1 <= args.jobs <= 16:
+            raise RouteError("INVALID_JOBS")
         if args.mode == "discover":
             result = discover(args.repo_root)
         elif args.mode == "scaffold":
@@ -1005,69 +1182,95 @@ def main():
             include_worktree = args.worktree or args.mode == "run"
             if include_worktree and args.github_output:
                 raise RouteError("WORKTREE_NOT_ALLOWED_IN_GITHUB")
-            changed = changes(args.repo_root, args.base, args.head,
-                              include_worktree=include_worktree)
-            special = nonregular_changes(args.repo_root, args.base, args.head,
-                                         include_worktree=include_worktree)
             if args.mode == "run" and args.config_source != "base":
                 raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
-            config_ref = args.config_ref or args.base
+
+            trusted_sha = ""
             if args.mode == "run":
                 # Do not treat the task branch/--base as trusted command authority.
                 # The host chooses an already accepted remote-tracking branch.
                 prefix = "refs/remotes/origin/"
-                if not args.trusted_ref.startswith(prefix) or not safe_path(
-                        args.trusted_ref[len(prefix):]):
+                if not args.trusted_ref:
                     raise RouteError("LOCAL_RUN_REQUIRES_TRUSTED_REMOTE_REF")
-                # Prefer the actual default branch advertised by origin/HEAD.
-                # A host can declare it explicitly for clones without that ref.
-                try:
-                    remote_default = git(
-                        args.repo_root, "symbolic-ref", "-q",
-                        "refs/remotes/origin/HEAD").decode().strip()
-                except RouteError:
-                    remote_default = ""
-                if args.default_branch:
-                    if not safe_path(args.default_branch):
-                        raise RouteError("INVALID_DEFAULT_BRANCH")
-                    declared_default = prefix + args.default_branch
-                    if remote_default and declared_default != remote_default:
-                        raise RouteError("DEFAULT_BRANCH_IDENTITY_MISMATCH")
-                elif remote_default:
-                    declared_default = remote_default
+                declared_default = _resolve_default_remote_ref(args.repo_root, args.default_branch)
+                if args.trusted_ref == "auto":
+                    effective_trusted_ref = declared_default
                 else:
-                    raise RouteError("DEFAULT_BRANCH_UNKNOWN_USE_DEFAULT_BRANCH")
-                if args.trusted_ref != declared_default:
-                    raise RouteError("TRUSTED_REF_NOT_DEFAULT_BRANCH")
+                    if not args.trusted_ref.startswith(prefix) or not safe_path(
+                            args.trusted_ref[len(prefix):]):
+                        raise RouteError("LOCAL_RUN_REQUIRES_TRUSTED_REMOTE_REF")
+                    if args.trusted_ref != declared_default:
+                        raise RouteError("TRUSTED_REF_NOT_DEFAULT_BRANCH")
+                    effective_trusted_ref = args.trusted_ref
                 trusted_sha = git(args.repo_root, "rev-parse", "--verify",
-                                  "--end-of-options", args.trusted_ref + "^{commit}")
-                config_ref = trusted_sha.decode().strip()
-                if args.config_ref and args.config_ref != config_ref:
+                                  "--end-of-options", effective_trusted_ref + "^{commit}").decode().strip()
+                if args.config_ref and args.config_ref != trusted_sha:
                     raise RouteError("TRUSTED_CONFIG_REF_MISMATCH")
+
+            if args.github_output:
+                base_sha = args.base
+                head_sha = args.head
+            else:
+                head_sha = _resolve_commit_arg(
+                    args.repo_root, args.head if args.head else "HEAD"
+                )
+                if args.base:
+                    base_sha = _resolve_commit_arg(args.repo_root, args.base)
+                else:
+                    baseline_commit = trusted_sha
+                    if not baseline_commit:
+                        for candidate in (
+                            ["refs/remotes/origin/HEAD"]
+                            + ([prefix_ref for prefix_ref in (f"refs/remotes/origin/{args.default_branch}",) if args.default_branch])
+                        ):
+                            try:
+                                baseline_commit = git(
+                                    args.repo_root, "rev-parse", "--verify", "--end-of-options", candidate + "^{commit}"
+                                ).decode().strip()
+                                break
+                            except RouteError:
+                                continue
+                    if baseline_commit:
+                        base_sha = git(args.repo_root, "merge-base", baseline_commit, head_sha).decode().strip()
+                    else:
+                        base_sha = head_sha
+
+            changed = changes(args.repo_root, base_sha, head_sha,
+                              include_worktree=include_worktree)
+            special = nonregular_changes(args.repo_root, base_sha, head_sha,
+                                         include_worktree=include_worktree)
+            if args.mode == "run":
+                config_ref = trusted_sha
+            elif args.config_ref and not args.github_output:
+                config_ref = _resolve_commit_arg(args.repo_root, args.config_ref)
+            else:
+                config_ref = args.config_ref or base_sha
             cfg, digest = load(args.repo_root, config_ref, args.config_path, args.config_source)
             import_only = []
             if (args.stage in ("ready", "milestone") and any(
                     t.get("import_only_alternatives") for t in cfg["tests"])):
                 import_only = python_import_only_paths(
-                    args.repo_root, args.base, args.head, include_worktree)
+                    args.repo_root, base_sha, head_sha, include_worktree)
             result = select(cfg, changed, args.stage,
-                            args.base if args.config_source == "base" else "LOCAL",
-                            args.head, digest, args.focused, args.config_path,
+                            base_sha if args.config_source == "base" else "LOCAL",
+                            head_sha, digest, args.focused, args.config_path,
                             args.source_trust, special, import_only)
             result["config_ref"] = config_ref if args.config_source == "base" else "LOCAL_FILE"
             result["worktree_included"] = include_worktree
             if args.mode == "run":
-                result["tested_checkout_head"] = args.head
+                result["tested_checkout_head"] = head_sha
             if args.config_source == "base" and args.config_path in changed:
                 # Validate the candidate as data, never run its new commands.
                 # Local worktree changes may not yet be committed.
                 proposed, proposed_digest = load(
-                    args.repo_root, args.head if not include_worktree else "",
+                    args.repo_root, head_sha if not include_worktree else "",
                     args.config_path, "file" if include_worktree else "base")
                 result["proposed_catalog_status"] = "VALIDATED_NOT_EXECUTED"
                 result["proposed_config_sha256"] = proposed_digest
             if args.mode == "run":
-                exit_code = execute_local(result, cfg, args.repo_root, keep_going=args.keep_going)
+                exit_code = execute_local(
+                    result, cfg, args.repo_root, keep_going=args.keep_going, jobs=args.jobs
+                )
         if args.output:
             args.output.write_text(
                 json.dumps(result, sort_keys=True, indent=2) + "\n", encoding="utf-8"

@@ -1363,6 +1363,237 @@ class RouterOptimizationTests(unittest.TestCase):
             self.assertIn("backend-python", ids)
             self.assertIn("rust", ids)
 
+    def test_partial_clone_hydrated_blobs_support_offline_routing_and_import_only(self):
+        import shutil
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            origin = tmp / "origin.git"
+            work = tmp / "work"
+            subprocess.run(["git", "init", "-q", str(work)], check=True)
+            subprocess.run(["git", "-C", str(work), "config", "user.email", "t@example.invalid"], check=True)
+            subprocess.run(["git", "-C", str(work), "config", "user.name", "T"], check=True)
+            (work / ".github").mkdir()
+            (work / "backend").mkdir()
+            (work / "backend/mod.py").write_text("from old.a import fn\n\ndef run():\n    return fn()\n")
+            base_cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "tests": [
+                    {
+                        "id": "import-smoke",
+                        "tier": "V1",
+                        "paths": ["backend/**"],
+                        "runner": ["ubuntu-latest"],
+                        "fork_safe": True,
+                        "command": [sys.executable, "-c", "pass"],
+                    },
+                    {
+                        "id": "backend-full",
+                        "tier": "V3",
+                        "paths": ["backend/**"],
+                        "import_only_alternatives": ["import-smoke"],
+                        "runner": ["ubuntu-latest"],
+                        "fork_safe": True,
+                        "command": [sys.executable, "-c", "pass"],
+                    },
+                ],
+            }
+            (work / ".github/ci-capabilities.json").write_text(json.dumps(base_cfg))
+            subprocess.run(["git", "-C", str(work), "add", "-A"], check=True)
+            subprocess.run(["git", "-C", str(work), "commit", "-qm", "base"], check=True)
+            base_sha = subprocess.check_output(["git", "-C", str(work), "rev-parse", "HEAD"], text=True).strip()
+
+            pr_cfg = json.loads(json.dumps(base_cfg))
+            pr_cfg["tests"][1]["command"] = ["echo", "PR_OVERRIDE"]
+            (work / ".github/ci-capabilities.json").write_text(json.dumps(pr_cfg))
+            (work / "backend/mod.py").write_text("from new.b import fn\n\ndef run():\n    return fn()\n")
+            subprocess.run(["git", "-C", str(work), "add", "-A"], check=True)
+            subprocess.run(["git", "-C", str(work), "commit", "-qm", "pr"], check=True)
+            head_sha = subprocess.check_output(["git", "-C", str(work), "rev-parse", "HEAD"], text=True).strip()
+
+            subprocess.run(["git", "clone", "-q", "--bare", str(work), str(origin)], check=True)
+            subprocess.run(["git", "-C", str(origin), "config", "uploadpack.allowfilter", "true"], check=True)
+            clone = tmp / "project"
+            subprocess.run(["git", "clone", "-q", "--filter=blob:none", f"file://{origin}", str(clone)], check=True)
+
+            # Replicate the workflow hydration step before disabling remote access.
+            oids = [
+                subprocess.check_output(
+                    ["git", "-C", str(clone), "rev-parse", f"{ref}:.github/ci-capabilities.json"],
+                    text=True,
+                ).strip()
+                for ref in (base_sha, head_sha)
+            ]
+            diff_rows = subprocess.check_output(
+                ["git", "-C", str(clone), "diff-tree", "-r", "-M", "--no-commit-id", "--diff-filter=M",
+                 base_sha, head_sha, "--", "*.py"],
+                text=True,
+            ).splitlines()
+            for row in diff_rows:
+                parts = row.split()
+                oids.extend([parts[2], parts[3]])
+            subprocess.run(
+                ["git", "-C", str(clone), "cat-file", "--batch"],
+                input="\n".join(sorted(set(oids))) + "\n",
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+
+            shutil.rmtree(origin)
+            proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", str(clone),
+                 "--base", base_sha, "--head", head_sha, "--config-ref", base_sha,
+                 "--config-source", "base", "--stage", "ready"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            plan = json.loads(proc.stdout)
+            self.assertEqual(plan["proposed_catalog_status"], "VALIDATED_NOT_EXECUTED")
+            self.assertEqual(plan["import_only_paths"], ["backend/mod.py"])
+            self.assertEqual(plan["selected_test_ids"], ["import-smoke"])
+
+    def test_zero_sha_local_cli_post_commit_branch_and_parallel_jobs(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            (repo / "src").mkdir()
+            (repo / "api").mkdir()
+            (repo / "src/a.py").write_text("x = 1\n")
+            (repo / "api/b.py").write_text("y = 1\n")
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "tests": [
+                    {"id": "src-unit", "tier": "V1", "paths": ["src/**"],
+                     "runner": ["ubuntu-latest"],
+                     "command": [sys.executable, "-c", "print('SRC_OK')"]},
+                    {"id": "api-unit", "tier": "V1", "paths": ["api/**"],
+                     "runner": ["ubuntu-latest"],
+                     "command": [sys.executable, "-c", "print('API_OK')"]},
+                ],
+            }
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "main")
+            main_sha = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/main", main_sha)
+            git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+
+            # Clean feature branch commit (previously blinded --base HEAD --head HEAD).
+            (repo / "src/a.py").write_text("x = 2\n")
+            (repo / "api/b.py").write_text("y = 2\n")
+            git("add", "-A")
+            git("commit", "-qm", "feature change")
+
+            plan_proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--worktree", "--config-source", "file", "--stage", "milestone"],
+                cwd=repo, capture_output=True, text=True,
+            )
+            self.assertEqual(plan_proc.returncode, 0, plan_proc.stderr)
+            planned = json.loads(plan_proc.stdout)
+            self.assertEqual(planned["base"], "LOCAL")
+            self.assertEqual(planned["changed_paths"], ["api/b.py", "src/a.py"])
+            self.assertEqual(planned["selected_test_ids"], ["src-unit", "api-unit"])
+
+            run_proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "run", "--trusted-ref", "auto",
+                 "--base", "origin/main", "--head", "HEAD",
+                 "--stage", "milestone", "--jobs", "2", "--keep-going"],
+                cwd=repo, capture_output=True, text=True,
+            )
+            self.assertEqual(run_proc.returncode, 0, run_proc.stderr)
+            ran = json.loads(run_proc.stdout)
+            self.assertEqual(ran["base"], main_sha)
+            self.assertEqual(ran["test_status"], "PASS")
+            self.assertEqual([t["id"] for t in ran["executed_tests"]], ["src-unit", "api-unit"])
+            self.assertIn("[eg-ci 1/2] PASS src-unit", run_proc.stderr)
+            self.assertIn("[eg-ci 2/2] PASS api-unit", run_proc.stderr)
+
+            # Also verify zero-arg run auto-resolves base via merge-base(origin/main, HEAD).
+            auto_run = subprocess.run(
+                [sys.executable, str(SCRIPT), "run", "--trusted-ref", "auto",
+                 "--stage", "milestone", "--jobs", "2"],
+                cwd=repo, capture_output=True, text=True,
+            )
+            self.assertEqual(auto_run.returncode, 0, auto_run.stderr)
+            auto_ran = json.loads(auto_run.stdout)
+            self.assertEqual(auto_ran["base"], main_sha)
+            self.assertEqual(auto_ran["changed_paths"], ["api/b.py", "src/a.py"])
+            self.assertEqual(auto_ran["test_status"], "PASS")
+
+    def test_check_catalog_rejects_release_only_coverage_gaps(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            (repo / ".github").mkdir()
+            (repo / "deploy").mkdir()
+            (repo / "deploy/run.sh").write_text("#!/bin/sh\necho ok\n")
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "tests": [
+                    {"id": "release-soak", "tier": "V3", "stages": ["release"],
+                     "paths": ["deploy/**"], "runner": ["ubuntu-latest"],
+                     "command": ["true"]},
+                ],
+            }
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+            proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "check-catalog", "--repo-root", str(repo), "--require-complete-mapping"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(proc.returncode, 2)
+            self.assertIn("UNMAPPED_TRACKED_PATHS", proc.stderr)
+            self.assertIn("deploy/run.sh", proc.stderr)
+
+    def test_transitive_supersedes_drops_indirect_subset_lanes(self):
+        cfg = {
+            "contract": "EG_CI_CAPABILITIES_V1",
+            "tests": [
+                {"id": "unit-v1", "tier": "V1", "paths": ["src/**"],
+                 "runner": ["ubuntu-latest"], "command": ["true"]},
+                {"id": "domain-v2", "tier": "V2", "paths": ["domain/**"],
+                 "supersedes": ["unit-v1"], "runner": ["ubuntu-latest"], "command": ["true"]},
+                {"id": "suite-v3", "tier": "V3", "paths": ["core/**"],
+                 "supersedes": ["domain-v2"], "runner": ["ubuntu-latest"], "command": ["true"]},
+            ],
+        }
+        plan = ci.select(cfg, ["src/a.py", "core/b.py"], "ready", "a" * 40, "b" * 40, "digest")
+        self.assertEqual(plan["selected_test_ids"], ["suite-v3"])
+        self.assertEqual(plan["superseded_test_ids"], ["unit-v1"])
+        self.assertEqual(plan["effective_tier"], "V3")
+
+    def test_scaffold_deduplicates_monorepo_roots_and_dual_manifests(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            (repo / "package.json").write_text('{"name":"root"}\n')
+            (repo / "pyproject.toml").write_text("[tool.pytest.ini_options]\n")
+            (repo / "pytest.ini").write_text("[pytest]\n")
+            (repo / "apps/web").mkdir(parents=True)
+            (repo / "apps/web/package.json").write_text('{"name":"web"}\n')
+            subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+
+            cfg = ci.scaffold(repo)
+            by_id = {t["id"]: t for t in cfg["tests"]}
+            self.assertIn("node", by_id)
+            self.assertIn("apps-web-node", by_id)
+            self.assertIn("pytest", by_id)
+            self.assertNotIn("python", by_id)
+            self.assertEqual(by_id["node"].get("exclude_paths"), ["apps/web/**"])
+            self.assertEqual(by_id["pytest"].get("exclude_paths"), ["apps/web/**"])
+            coverage = ci.inspect_catalog_coverage(cfg, ci.tracked_files(repo))
+            self.assertEqual(coverage["dead_exclude_patterns"], [])
+            plan = ci.select(cfg, ["apps/web/index.ts"], "milestone", "a" * 40, "b" * 40, "digest")
+            self.assertEqual(plan["selected_test_ids"], ["apps-web-node"])
+
 
 if __name__ == "__main__":
     unittest.main()

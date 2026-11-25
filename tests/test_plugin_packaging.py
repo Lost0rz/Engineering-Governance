@@ -179,6 +179,40 @@ class PluginPackagingTests(unittest.TestCase):
             self.assertNotEqual(proc.returncode, 0)
             self.assertIn("Symlink forbidden", proc.stderr)
 
+    def test_package_plugin_stage_dir_rejects_unsafe_targets(self):
+        packager_mod = self._load_packager()
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            unrelated = tmp_path / "unrelated_plugins"
+            unrelated.mkdir()
+            (unrelated / "other-plugin.txt").write_text("keep me", encoding="utf-8")
+
+            git_repo = tmp_path / "other_git_repo"
+            git_repo.mkdir()
+            (git_repo / ".git").mkdir()
+
+            for unsafe in (ROOT, tmp_path, unrelated, git_repo):
+                with self.subTest(unsafe=unsafe):
+                    with self.assertRaises(ValueError):
+                        packager_mod.package_plugin(
+                            ROOT, stage_dir=unsafe, source_sha="c" * 40
+                        )
+            self.assertEqual((unrelated / "other-plugin.txt").read_text(encoding="utf-8"), "keep me")
+
+            # Existing empty or previously staged engineering-governance dir may be refreshed safely.
+            staged = tmp_path / "staged" / "engineering-governance"
+            packager_mod.package_plugin(ROOT, stage_dir=staged, source_sha="c" * 40)
+            packager_mod.package_plugin(ROOT, stage_dir=staged, source_sha="d" * 40)
+            self.assertEqual((staged / "PREVIEW_SOURCE_SHA.txt").read_text(encoding="utf-8").strip(), "d" * 40)
+
+    @staticmethod
+    def _load_packager():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("eg_packager", PACKAGER)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
 
 if __name__ == "__main__":
     unittest.main()

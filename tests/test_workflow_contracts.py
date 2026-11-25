@@ -358,6 +358,22 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertIn("pull_request", workflow)
         self.assertIn("contents: read", workflow)
 
+    def test_portable_skill_path_and_hydrated_reusable_workflow_contracts(self):
+        ci_skill = (ROOT / "skills/ci-governance/SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("<SKILL_DIR>/scripts/ci-router.py", ci_skill)
+        example = json.loads(
+            (ROOT / "skills/ci-governance/assets/examples/ci-capabilities.example.json").read_text(encoding="utf-8")
+        )
+        ci.validate(example)
+        serialized = json.dumps(example)
+        self.assertIn("exclude_paths", serialized)
+        self.assertIn("supersedes", serialized)
+
+        reusable = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
+        self.assertIn("cat-file --batch", reusable)
+        self.assertIn("Hydrate base catalog and Python diff blobs", reusable)
+        self.assertNotIn("persist-credentials: true", reusable)
+
 
 if __name__ == "__main__":
     unittest.main()

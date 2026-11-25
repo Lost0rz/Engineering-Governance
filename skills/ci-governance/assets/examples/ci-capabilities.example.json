@@ -37,6 +37,9 @@
         "apps/web/**",
         "packages/shared/**"
       ],
+      "exclude_paths": [
+        "apps/web/docs/**"
+      ],
       "runner": [
         "ubuntu-latest"
       ],
@@ -75,9 +78,20 @@
     {
       "id": "contract-smoke",
       "tier": "V3",
+      "stages": [
+        "ready",
+        "release"
+      ],
       "paths": [
         "scripts/ci/**",
         ".github/ci-capabilities.json"
+      ],
+      "supersedes": [
+        "web-focused",
+        "backend-focused"
+      ],
+      "requires": [
+        "swift-focused"
       ],
       "runner": [
         "ubuntu-latest"
@@ -90,6 +104,27 @@
         "backend"
       ],
       "timeout_minutes": 10
+    },
+    {
+      "id": "release-soak",
+      "tier": "V3",
+      "stages": [
+        "release"
+      ],
+      "paths": [
+        "deploy/**"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "command": [
+        "python3",
+        "-m",
+        "pytest",
+        "deploy/tests",
+        "-q"
+      ],
+      "timeout_minutes": 30
     }
   ],
   "fallback_satisfies_ready": false

@@ -5,24 +5,24 @@ The `ci-governance` Skill guides test selection and onboarding. The bundled [ci-
 ## First adoption without a bootstrap deadlock
 
 1. **Discover & scaffold:** inspect existing workflows and test commands, then run:
-   - `python3 skills/ci-governance/scripts/ci-router.py discover --repo-root PROJECT`
-   - `python3 skills/ci-governance/scripts/ci-router.py scaffold --repo-root PROJECT > .github/ci-capabilities.json` (review and customize every generated command and Runner label before committing).
-2. **Phase A (Catalog on default branch):** commit reviewed `.github/ci-capabilities.json` (see [example](../assets/examples/ci-capabilities.example.json)) and validate it with `ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping` so zero dead globs, unmapped source files, or doc-masquerading symlinks exist.
+   - `python3 <SKILL_DIR>/scripts/ci-router.py discover --repo-root PROJECT`
+   - `python3 <SKILL_DIR>/scripts/ci-router.py scaffold --repo-root PROJECT > .github/ci-capabilities.json` (review and customize every generated command and Runner label before committing).
+2. **Phase A (Catalog on default branch):** commit reviewed `.github/ci-capabilities.json` (see [example](../assets/examples/ci-capabilities.example.json)) and validate it with `ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping` so zero dead globs, unmapped/`release`-only-blind source files, or doc-masquerading symlinks exist.
 3. **Phase B (Caller workflow):** adopt [ci-caller.example.yml](../assets/examples/ci-caller.example.yml), which pins the released workflow tag (`@v0.10.3`) and enables PR `concurrency` cancellation so redundant pushes never queue stale self-hosted runs. Retire overlapping heavy CI triggers in the same change.
 4. **Trust rule:** PRs may edit `.github/ci-capabilities.json` and have the new JSON validated as data, but CI executes **only commands from the accepted baseline**. Note that edits to `tests/**` or `.github/**` inside a PR still run on the PR code tree, so enforce human / `CODEOWNERS` review on test and workflow edits.
 
 ## Local agent and developer invocation
 
-    python3 ci-router.py discover --repo-root PROJECT
-    python3 ci-router.py scaffold --repo-root PROJECT
-    python3 ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping
-    HEAD_SHA=$(git -C PROJECT rev-parse HEAD)
-    python3 ci-router.py plan --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --config-source file --stage milestone
-    python3 ci-router.py run --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --trusted-ref refs/remotes/origin/main --stage milestone --keep-going
+    python3 <SKILL_DIR>/scripts/ci-router.py discover --repo-root PROJECT
+    python3 <SKILL_DIR>/scripts/ci-router.py scaffold --repo-root PROJECT
+    python3 <SKILL_DIR>/scripts/ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping
+    python3 <SKILL_DIR>/scripts/ci-router.py plan --repo-root PROJECT --worktree --config-source file --stage milestone
+    python3 <SKILL_DIR>/scripts/ci-router.py run --repo-root PROJECT --trusted-ref auto --stage milestone --keep-going --jobs 2
 
+- **Zero-plumbing local defaults & post-commit accuracy:** `--repo-root` defaults to `.`; `--base` / `--head` accept symbolic Git refs (such as `origin/main` or `HEAD`). When omitted in local `plan` / `run`, `--head` defaults to `HEAD` and `--base` automatically resolves `merge-base(origin/HEAD, HEAD)`—covering both **committed feature-branch edits and dirty worktree/untracked changes** without zero-diff blind spots after `git commit`.
 - `--worktree` diffs working-tree changes directly against `merge-base(base, head)` plus untracked files, eliminating false positives when edits are reverted before running.
-- Local `run` executes lanes in topological order (`requires` prerequisites and lighter tiers `V1 -> V2 -> V3` first), records `duration_ms` per lane, and supports `--keep-going` to continue independent lanes while marking dependent lanes `DEPENDENCY_FAILED`.
-- For local `run`, `--trusted-ref refs/remotes/origin/<default-branch>` is verified against `origin/HEAD` (or `--default-branch` when `origin/HEAD` is unset); task branches are never trusted command sources.
+- Local `run` executes lanes in topological order (`requires` prerequisites and lighter tiers `V1 -> V2 -> V3` first), prints `[eg-ci k/n]` lane progress and `duration_ms` to `stderr`, supports `--jobs N` (`1`–`16`) for parallel execution within each dependency wave, and supports `--keep-going` to continue independent lanes while marking dependent lanes `DEPENDENCY_FAILED`.
+- For local `run`, `--trusted-ref auto` (or `refs/remotes/origin/<default-branch>`) is verified against `origin/HEAD` (or `--default-branch` when `origin/HEAD` is unset); task branches are never trusted command sources. Consumer repos can wrap this one-liner behind a `Makefile` or `package.json` `"test:affected"` target.
 
 ## Stage tiering, `supersedes`, and catalog schema
 

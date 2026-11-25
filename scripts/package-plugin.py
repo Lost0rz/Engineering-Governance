@@ -145,6 +145,43 @@ def _write_zip_bytes(
     archive.writestr(zi, data)
 
 
+def validate_safe_stage_dir(stage_dir: Path, repo_root: Path) -> Path:
+    """Prevent accidental deletion of repo roots, parent directories, git repos, or unrelated trees."""
+    _reject_symlink(stage_dir)
+    stage_resolved = stage_dir.resolve()
+    repo_resolved = repo_root.resolve()
+    home_resolved = Path.home().resolve()
+
+    if len(stage_resolved.parts) <= 2 or stage_resolved == home_resolved:
+        raise ValueError(f"Refusing unsafe stage-dir root/home target: {stage_resolved}")
+    if stage_resolved == repo_resolved or repo_resolved.is_relative_to(stage_resolved):
+        raise ValueError(f"Refusing stage-dir that covers or equals repo root: {stage_resolved}")
+    if stage_resolved.is_relative_to(repo_resolved) and not (
+        stage_resolved.is_relative_to(repo_resolved / "dist")
+        or stage_resolved.is_relative_to(repo_resolved / "build")
+    ):
+        raise ValueError(f"Refusing stage-dir inside repo tree outside dist/ or build/: {stage_resolved}")
+    if (stage_resolved / ".git").exists():
+        raise ValueError(f"Refusing to overwrite git repository at stage-dir: {stage_resolved}")
+
+    if stage_resolved.exists():
+        if not stage_resolved.is_dir():
+            raise ValueError(f"stage-dir exists and is not a directory: {stage_resolved}")
+        if any(stage_resolved.iterdir()):
+            has_sha = (stage_resolved / "PREVIEW_SOURCE_SHA.txt").is_file()
+            plugin_file = stage_resolved / "plugin.json"
+            is_eg_plugin = False
+            if plugin_file.is_file() and not (stage_resolved / "tests").exists():
+                try:
+                    meta = json.loads(plugin_file.read_text(encoding="utf-8"))
+                    is_eg_plugin = isinstance(meta, dict) and meta.get("name") == "engineering-governance"
+                except (OSError, UnicodeError, json.JSONDecodeError):
+                    is_eg_plugin = False
+            if not (has_sha or is_eg_plugin):
+                raise ValueError(f"Refusing to overwrite non-empty non-plugin directory: {stage_resolved}")
+    return stage_resolved
+
+
 def package_plugin(
     repo_root: Path,
     output_dir: Path | None = None,
@@ -192,21 +229,22 @@ def package_plugin(
         result["archive_path"] = str(out)
 
     if stage_dir is not None:
-        if stage_dir.exists():
-            shutil.rmtree(stage_dir)
-        stage_dir.mkdir(parents=True, exist_ok=True)
+        safe_stage = validate_safe_stage_dir(stage_dir, repo_root)
+        if safe_stage.exists():
+            shutil.rmtree(safe_stage)
+        safe_stage.mkdir(parents=True, exist_ok=True)
         static_files = (
-            (stage_dir / "plugin.json", plugin_json_bytes),
-            (stage_dir / ".codex-plugin" / "plugin.json", codex_json_bytes),
-            (stage_dir / ".claude-plugin" / "plugin.json", claude_json_bytes),
-            (stage_dir / "PREVIEW_SOURCE_SHA.txt", sha_bytes),
+            (safe_stage / "plugin.json", plugin_json_bytes),
+            (safe_stage / ".codex-plugin" / "plugin.json", codex_json_bytes),
+            (safe_stage / ".claude-plugin" / "plugin.json", claude_json_bytes),
+            (safe_stage / "PREVIEW_SOURCE_SHA.txt", sha_bytes),
         )
         for dest, data in static_files:
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
             os.chmod(dest, 0o644)
         for rel in entries:
-            dest = stage_dir / rel
+            dest = safe_stage / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(repo_root / rel, dest)
             os.chmod(dest, 0o755 if _is_executable(rel) else 0o644)
