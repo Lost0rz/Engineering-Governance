@@ -166,5 +166,21 @@
     "forbidden_first_hop": ["engineering-workflow"],
     "expected_submode": "PROJECT_PROFILE",
     "max_extra_reads": 1
+  },
+  {
+    "id": "audit-sandboxed-app-severity",
+    "prompt": "Review this macOS/iOS sandboxed app fix: check collateral side effects first and triage P0-P2 bug severities without hypothetical attacker modeling.",
+    "expected_primary_skill": "evidence-audit",
+    "forbidden_first_hop": ["engineering-workflow", "incident-doctor"],
+    "expected_submode": "DIFF_OR_PR_AUDIT",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "audit-collateral-code-review",
+    "prompt": "Do a formal read-only code review checking whether this state fix only patched one leaf symptom and broke sibling callers.",
+    "expected_primary_skill": "evidence-audit",
+    "forbidden_first_hop": ["engineering-workflow", "architecture"],
+    "expected_submode": "DIFF_OR_PR_AUDIT",
+    "max_extra_reads": 0
   }
 ]

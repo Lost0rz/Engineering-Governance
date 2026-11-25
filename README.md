@@ -15,7 +15,7 @@ Modular AI engineering **Skills, methods, and proportional verification**—stru
 | [`ui-design`](skills/ui-design/SKILL.md) | UI/UX polish, audits, token flows, visual specs, review | `MICRO_POLISH`, `AUDIT_ONLY`, `FLOW_WITH_TOKENS` | `FULL_DESIGN_SYSTEM`, `FINAL_REVIEW` |
 | [`architecture`](skills/architecture/SKILL.md) | SSOT state ownership, API contracts, concurrency, migrations | `BOUNDARY_DECISION` | `CONTRACT_OR_MIGRATION` |
 | [`incident-doctor`](skills/incident-doctor/SKILL.md) | Evidence-gated diagnosis and minimal probes for blocking faults | `EVIDENCE_GATE` | `PROBE_AND_TECHNIQUES`, `INCIDENT_RECORD` |
-| [`evidence-audit`](skills/evidence-audit/SKILL.md) | Formal read-only diff/PR/CI/release acceptance verdicts | `DIFF_OR_PR_AUDIT` | `DEEP_PROVENANCE_OR_CI_AUDIT` |
+| [`evidence-audit`](skills/evidence-audit/SKILL.md) | Collateral-first code review, `P0`–`P2` severity calibration (`SANDBOXED_APP`/`SERVICE`), PR/CI/release verdicts | `DIFF_OR_PR_AUDIT` | `DEEP_PROVENANCE_OR_CI_AUDIT` |
 | [`codebase-context`](skills/codebase-context/SKILL.md) | Source/test route discovery (`LOCATE_ROUTE`), profiles, domain maps | `LOCATE_ROUTE` | `PROJECT_PROFILE`, `DOMAIN_MAP` |
 
 ## Risk & Verification Layering

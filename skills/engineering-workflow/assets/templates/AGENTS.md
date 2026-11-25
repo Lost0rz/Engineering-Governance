@@ -8,6 +8,7 @@ Shared 3-tier Skill routing (`engineering-workflow`, `ci-governance`, `ui-design
 
 - Product/domain facts:
 - Canonical source/API/schema owners:
+- Audit threat profile: <SERVICE_OR_UNTRUSTED_INPUT | SANDBOXED_APP> (plus project-specific real environment events):
 - Runtime and data safety constraints:
 - Relevant verification commands (or `.github/ci-capabilities.json` pointer):
 - Human acceptance or deployment constraints specific to this product:

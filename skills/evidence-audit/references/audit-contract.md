@@ -25,11 +25,30 @@ Keep action risk (`G0`–`G3`) separate from verification depth (`V0`–`V3`).
 
 Semantic test/review evidence may remain valid across non-semantic doc-only edits with proven behavior equivalence, whereas live repository-host gates (required checks, approvals, merge state) must be reread fresh for the literal head identity.
 
-## 5. Finding severity & verdict disposition
+## 5. Environment threat profiles (`SERVICE_OR_UNTRUSTED_INPUT` vs `SANDBOXED_APP`)
 
-- `BLOCKING` -> `STOP` (security/correctness defect, identity mismatch, missing required check, or failing host gate).
-- `IMPORTANT` -> `STOP` unless the responsible owner explicitly accepts deferral.
-- `MINOR` -> allows `PASS_WITH_FOLLOWUPS`.
+Select the threat boundary from project `AGENTS.md` (defaulting to `SERVICE_OR_UNTRUSTED_INPUT` when unspecified):
+
+- **`SERVICE_OR_UNTRUSTED_INPUT` (default):** applies to backends, web APIs, multi-tenant services, CI routers, and package builders. Untrusted network inputs, auth/tenant boundaries, cross-fork PR payloads, symlink/path traversal, and replay/race hazards count as reachable trigger paths.
+- **`SANDBOXED_APP` (project `AGENTS.md` opt-in for iOS / macOS / sandboxed client apps):**
+  - Valid mutation sources are strictly **the App itself**, **real OS/environment lifecycle events** (network drop/switch/slowdown, app suspend/kill/force-quit, sleep/wake, app/page switch, rapid multi-tap, rotation/split-screen/external display, low battery/disk full, clock skew, push/deep-link arrival, version upgrade/migration, slow/errored/quota-exhausted upstream APIs, realistic max user data volume), and **prior App versions**.
+  - **Theoretical ("Godzilla") cap -> `MINOR` (`P2`):** local file bit-rot/manual truncation/permission tampering outside the App's own write/cleanup code, local root/jailbreak/malicious sibling processes, hypothetical callers with zero call sites, `>10x` unrealistic scale, or test-double-only states unreachable by real App code.
+  - **Preserved product gates (never cut):** consent & privacy scrubbing before data leaves the device, zero data/settings loss on update, confirmation on irreversible billing/deletion, and expiring rollback flags. Projects may append domain-specific real environment events in `AGENTS.md` (tightening examples only, never relaxing the midline).
+
+## 6. Collateral checklist, severity governance & convergence
+
+### Collateral & root-vs-leaf check (mandatory first step before single-point findings)
+1. Did other views, shared state, counters, or lists shift unexpectedly?
+2. How many codepaths manage this symptom—did the change patch only one leaf?
+3. Were existing flags, invariants, or prior fixes bypassed or negated?
+4. Did latency, background cadence, or upstream call volume regress?
+5. Does upgrading from older persisted versions/settings remain intact?
+6. Is this a canonical root fix, or a stacked patch/extra state machine likely to spawn the next bug?
+
+### Severity governance (`BLOCKING == P0`, `IMPORTANT == P1`, `MINOR == P2`, `BACKLOG_NOTE`)
+- `BLOCKING` (`P0`) -> `STOP`; `IMPORTANT` (`P1`) -> `STOP` unless the responsible owner explicitly accepts deferral. Every `P0`/`P1` must state **(a) reachable trigger path**, **(b) observable user/caller impact**, and **(c) trigger condition/frequency**; missing any one auto-downgrades to `MINOR` (`P2`) with a 1-line reason, while `>=3` independent low-probability conditions or sub-ms races without a user path log 1 line under `BACKLOG_NOTE` (`NO_FIX`).
 - Required claim lacking evidence (`UNKNOWN`) -> `STOP`.
+- Implementers cannot self-downgrade findings without orchestrator/owner sign-off; surface `OPEN_QUESTION` when user reachability is genuinely uncertain. Escalate any `MINOR` (`P2`) hit by real users or recurring across `>=3` audits back to `IMPORTANT` (`P1`).
+- **Anti-overtightening & 2-round convergence:** stop adding local checksums, locks, or extra retry state machines for pathless theoretical races; close review/rework loops (`PASS_WITH_FOLLOWUPS`) once two consecutive passes yield only `MINOR` (`P2`) or `BACKLOG_NOTE` items, listing every check, surface, and scenario audited.
 
 Audit findings never authorize unapproved writes or status-only commits; report stale projections or alignment drift without mutating files.

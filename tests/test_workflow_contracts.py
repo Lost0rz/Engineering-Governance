@@ -384,6 +384,22 @@ class WorkflowContractTests(unittest.TestCase):
         review_doc = (ROOT / "skills/ui-design/references/design-review.md").read_text(encoding="utf-8")
         self.assertIn("BLOCKED", review_doc)
 
+    def test_evidence_audit_integrates_collateral_real_path_gate_and_threat_profiles(self):
+        audit_skill = (ROOT / "skills/evidence-audit/SKILL.md").read_text(encoding="utf-8")
+        for token in ("THREAT_PROFILE", "Collateral", "BLOCKING", "P0", "MINOR", "P2", "BACKLOG_NOTE"):
+            self.assertIn(token, audit_skill)
+
+        audit_contract = (ROOT / "skills/evidence-audit/references/audit-contract.md").read_text(encoding="utf-8")
+        self.assertIn("SERVICE_OR_UNTRUSTED_INPUT", audit_contract)
+        self.assertIn("SANDBOXED_APP", audit_contract)
+
+        agents_template = (ROOT / "skills/engineering-workflow/assets/templates/AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("Audit threat profile:", agents_template)
+
+        # This repository owns portable CI scripts and packagers; keep default untrusted-input threat model.
+        root_agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertNotIn("SANDBOXED_APP", root_agents)
+
 
 if __name__ == "__main__":
     unittest.main()

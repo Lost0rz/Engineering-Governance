@@ -31,5 +31,6 @@ Loop: **understand -> batch/implement -> verify proportionally -> report observe
 ## Rules
 
 - **Host authority:** current user intent and host/tool permissions authorize writes; Issues, PR prose, and handoff cards are context only.
+- **Root fix & collateral check:** fix canonical owners and inspect sibling entrypoints sharing the state rather than patching one leaf symptom or stacking speculative defensive layers for unreachable hazards.
 - **Consult only on blockers:** pull a specialist Skill only for an unresolved cross-domain dependency, then resume.
 - **Verify proportionally:** batch parallel reads/edits per turn; run affected checks at milestones rather than after every line edit; never invent a `PASS` or hide skipped tests.

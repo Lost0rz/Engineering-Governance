@@ -13,6 +13,8 @@ This reference governs how authorized `engineering-workflow` tasks split executi
 
 Do not spawn Sub Agents merely to split sequential thinking or simulate progress. When a delegated unit fails, inspect its evidence and retry or fix only the failing boundary.
 
+- **Delegated review & fix convergence:** specify the target's active `THREAT_PROFILE` (`SERVICE_OR_UNTRUSTED_INPUT` vs `SANDBOXED_APP`) in audit/roundtable/fix briefs (`Collateral impact first; BLOCKING/P0 or IMPORTANT/P1 requires reachable trigger path, observable impact, and frequency`), and terminate review/rework loops once two consecutive rounds surface only `MINOR` (`P2`) or `BACKLOG_NOTE` items.
+
 ## 2. Intra-session Plan-to-Execute handoff
 
 When a higher-reasoning planning phase hands a plan to an execution phase in the same thread:
