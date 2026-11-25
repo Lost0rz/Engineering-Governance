@@ -1,0 +1,179 @@
+"""Actual ZIP build/verification against pinned HEAD; no publishing or installs."""
+from __future__ import annotations
+
+import importlib.util
+import json
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+import zipfile
+
+SCRIPT = Path(__file__).resolve().with_name("build_wiki_packages.py")
+spec = importlib.util.spec_from_file_location("wiki_package_preview", SCRIPT)
+builder = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(builder)
+REPO = builder.default_repo_root()
+
+
+class IndependentArchiveTests(unittest.TestCase):
+    def test_actual_checked_out_repository_builds_both_isolated_archives(self):
+        with tempfile.TemporaryDirectory() as td:
+            agent, plugin, head = builder.build(REPO, Path(td))
+            actual = subprocess.check_output(
+                ["git", "-C", str(REPO), "rev-parse", "HEAD"], text=True).strip()
+            self.assertEqual(head, actual)
+            self.assertIn(head[:12], agent.name)
+            self.assertIn(head[:12], plugin.name)
+            self.assertIn("v0.2.2", agent.name)
+            self.assertIn("v0.2.2", plugin.name)
+            source = builder.source_files(REPO)
+            with zipfile.ZipFile(agent) as a, zipfile.ZipFile(plugin) as b:
+                expect_agent = {f"wiki-knowledge-builder/{x}" for x in source}
+                expect_plugin = {f"skills/wiki-knowledge-builder/{x}" for x in source}
+                expect_plugin |= {"plugin.json", ".codex-plugin/plugin.json"}
+                self.assertEqual(set(a.namelist()), expect_agent)
+                self.assertEqual(set(b.namelist()), expect_plugin)
+                self.assertEqual(a.testzip(), None)
+                self.assertEqual(b.testzip(), None)
+                self.assertEqual(json.loads(b.read("plugin.json"))["name"], "wiki-knowledge-builder")
+                self.assertEqual(json.loads(b.read("plugin.json"))["version"], "0.2.2")
+                self.assertEqual(json.loads(b.read(".codex-plugin/plugin.json"))["skills"], "./skills")
+                self.assertTrue(all(not x.startswith("skills/project-governance/")
+                                    for x in a.namelist() + b.namelist()))
+                for rel, content in source.items():
+                    self.assertEqual(a.read("wiki-knowledge-builder/" + rel), content)
+                    self.assertEqual(b.read("skills/wiki-knowledge-builder/" + rel), content)
+
+    def test_build_rejects_wrong_git_identity_or_changed_sources(self):
+        sources = builder.source_files(REPO)
+        head = builder.git(REPO, "rev-parse", "HEAD").decode().strip()
+        builder.pinned_checkout_files(REPO, head, sources)
+        changed = dict(sources)
+        changed["SKILL.md"] = changed["SKILL.md"] + b"\nUNCOMMITTED CHANGE\n"
+        with self.assertRaisesRegex(ValueError, "differ from pinned Git HEAD"):
+            builder.pinned_checkout_files(REPO, head, changed)
+        with self.assertRaisesRegex(ValueError, "Actual Skill file list"):
+            builder.pinned_checkout_files(REPO, head, {k: v for k, v in sources.items() if k != "README.md"})
+
+    def test_builds_from_true_independent_repo_and_named_source_directory(self):
+        for layout in (Path("."), Path("wiki-knowledge-builder")):
+            with self.subTest(layout=str(layout)), tempfile.TemporaryDirectory() as td:
+                repo = Path(td)
+                src = repo / layout
+                (src / "scripts").mkdir(parents=True)
+                (src / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
+                (src / "scripts/validate_note.py").write_text("pass\n")
+                (repo / "README.md").write_text("Unrelated host description\n")
+                (repo / ".github/workflows").mkdir(parents=True)
+                (repo / ".github/workflows/ci.yml").write_text("name: build\n")
+                for cmd in (
+                    ["git", "init", "-q"],
+                    ["git", "add", "."],
+                    ["git", "-c", "user.name=CI", "-c",
+                     "user.email=ci@example.invalid", "commit", "-qm", "fixture"],
+                ):
+                    subprocess.run(cmd, cwd=repo, check=True, timeout=15)
+                agent, plugin, head = builder.build(repo, repo / "out")
+                builder.verify_archive(
+                    agent,
+                    {"wiki-knowledge-builder/" + p: data
+                     for p, data in builder.source_files(repo).items()},
+                    head,
+                )
+                with zipfile.ZipFile(plugin) as archive:
+                    self.assertNotIn(".github/workflows/ci.yml", archive.namelist())
+                    self.assertEqual(json.loads(archive.read("plugin.json"))["name"],
+                                     "wiki-knowledge-builder")
+                self.assertFalse((repo / "plugin.json").exists())
+
+    def test_independent_root_does_not_package_unrelated_files(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+            (repo / "scripts").mkdir()
+            (repo / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
+            (repo / "scripts/validate_note.py").write_text("pass\n")
+            (repo / "internal_secret.txt").write_text("exclude\n")
+            (repo / ".github").mkdir()
+            (repo / ".github/ci.yml").write_text("exclude\n")
+            files = builder.source_files(repo)
+            self.assertEqual(set(files), {"SKILL.md", "scripts/validate_note.py"})
+
+    def test_unsafe_symlink_not_packaged(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "standalone-skills/wiki-knowledge-builder"
+            (root / "scripts").mkdir(parents=True)
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
+            (root / "scripts/validate_note.py").write_text("ok\n")
+            outside = Path(td) / "sensitive.txt"
+            outside.write_text("outside\n")
+            (root / "references").symlink_to(outside)
+            with self.assertRaisesRegex(ValueError, "symlink"):
+                builder.source_files(Path(td))
+
+    def test_wrong_version_is_not_packaged(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "standalone-skills/wiki-knowledge-builder"
+            (root / "scripts").mkdir(parents=True)
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.1.0\n")
+            (root / "scripts/validate_note.py").write_text("ok\n")
+            with self.assertRaisesRegex(ValueError, "version"):
+                builder.source_files(Path(td))
+
+    def test_tampered_zip_or_manifest_is_rejected(self):
+        with tempfile.TemporaryDirectory() as td:
+            output = Path(td) / "build.zip"
+            source_sha = "a" * 40
+            expected = {"wiki-knowledge-builder/SKILL.md": b"safe"}
+            builder.write_archive(output, expected, source_sha)
+            builder.verify_archive(output, expected, source_sha)
+            with self.assertRaisesRegex(ValueError, "source SHA"):
+                builder.verify_archive(output, expected, "b" * 40)
+            with self.assertRaisesRegex(ValueError, "content differs"):
+                builder.verify_archive(output, {"wiki-knowledge-builder/SKILL.md": b"unsafe"}, source_sha)
+            with self.assertRaisesRegex(ValueError, "member list"):
+                builder.verify_archive(output, {"wiki-knowledge-builder/OTHER.md": b"safe"}, source_sha)
+
+    def test_payload_path_refuses_hidden_and_private_project_files(self):
+        for filename in ("references/.env", "references/debug.log",
+                         "tests/fixtures/private.log", "scripts/secret.json",
+                         "assets/config.yaml", "references/private.txt",
+                         "scripts/.token.py", ".github/workflows/ci.yml"):
+            with self.subTest(filename=filename):
+                self.assertFalse(builder.payload_path(filename))
+        for filename in ("SKILL.md", "README.md", "references/output-contract.md",
+                         "scripts/validate_note.py", "tests/test_structure.py",
+                         "tests/requirements.txt", "examples/value-over-source.example.md"):
+            with self.subTest(filename=filename):
+                self.assertTrue(builder.payload_path(filename))
+
+    def test_committed_sensitive_fixture_is_excluded_not_leaked(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "references").mkdir()
+            (root / "tests").mkdir()
+            (root / "scripts").mkdir()
+            (root / "SKILL.md").write_text("# Wiki Knowledge Builder v0.2.2\n")
+            (root / "scripts/validate_note.py").write_text("pass\n")
+            (root / "references/a.md").write_text("public\n")
+            (root / "references/.env").write_text("SECRET=example\n")
+            (root / "tests/fixtures").mkdir()
+            (root / "tests/fixtures/private.log").write_text("secret\n")
+            listed = builder.source_files(root)
+            self.assertIn("references/a.md", listed)
+            self.assertFalse(any("private.log" in p or ".env" in p for p in listed))
+
+    def test_source_archive_workflow_does_not_upload_or_release(self):
+        code = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("WKB_RELEASE_EXECUTED=NO", code)
+        self.assertNotIn("create_release", code)
+        self.assertNotIn("update_plugin", code)
+        self.assertNotIn("upload-artifact", code)
+        self.assertIn("source_sha=", code)
+        self.assertIn("source_files(repo)", code)
+
+
+if __name__ == "__main__":
+    unittest.main()

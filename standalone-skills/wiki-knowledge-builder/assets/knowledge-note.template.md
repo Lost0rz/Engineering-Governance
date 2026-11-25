@@ -1,0 +1,46 @@
+---
+title: "具体、可检索的问题与结论"
+created: YYYY-MM-DD
+knowledge_status: provisional
+source_access: partial
+source_kind: other
+reuse_scope: cross-project
+source_refs:
+  - "替换为真实来源定位，不得保留占位符"
+tags: [knowledge]
+# Optional ONLY for a reusable method observed working once:
+# skill_candidate: true
+---
+
+# 具体、可检索的问题与结论
+
+> 一句话结论：解决什么问题、为什么值得保存。
+
+## 适用问题与复用触发
+
+- 未来什么任务应检索此文？
+
+## 核心结论
+
+- 结论及必要前提。
+
+## 原理、取舍与经验
+
+- 因果逻辑、替代方案、取舍、失败条件或关键步骤。
+
+## 证据与来源
+
+- [E1] [S1] 实际来源位置 — 支撑什么结论 — 来源声称。
+
+## 适用边界与风险
+
+- 不适用情况、版本/时间、已知风险。
+
+## 未验证事项 / 未来验证
+
+- 未知事项及下一步验证方式；若确实没有，写“无已知未决项”。
+- 对 `skill_candidate: true`：写明需要重复验证的条件、验收证据以及后续单独封装建议。
+
+## 关联与原始入口
+
+- 相关项目、完整原文入口、可回溯的链接或路径。
