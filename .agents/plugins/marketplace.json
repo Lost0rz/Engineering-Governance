@@ -9,7 +9,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Lost0rz/Engineering-Governance.git",
-        "ref": "5cc1204f0c01d1048f7e17cefdf3a12658fde8d4"
+        "ref": "a9cacc3a2558b61a8360786de4b76b4df7115c3a"
       },
       "policy": {
         "installation": "AVAILABLE",
