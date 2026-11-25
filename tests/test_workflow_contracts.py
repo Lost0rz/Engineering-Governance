@@ -314,6 +314,12 @@ class WorkflowContractTests(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(proc.returncode, 0, f"Unreachable marketplace ref: {pinned_ref}")
+            anc = subprocess.run(
+                ["git", "-C", str(ROOT), "merge-base", "--is-ancestor", pinned_ref, "HEAD"],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(anc.returncode, 0, f"Marketplace ref {pinned_ref} is not an ancestor of HEAD")
 
     def test_control_runner_and_concurrency_in_caller_example(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
@@ -372,7 +378,11 @@ class WorkflowContractTests(unittest.TestCase):
         reusable = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
         self.assertIn("cat-file --batch", reusable)
         self.assertIn("Hydrate base catalog and Python diff blobs", reusable)
+        self.assertIn("Changed paths (", reusable)
         self.assertNotIn("persist-credentials: true", reusable)
+
+        review_doc = (ROOT / "skills/ui-design/references/design-review.md").read_text(encoding="utf-8")
+        self.assertIn("BLOCKED", review_doc)
 
 
 if __name__ == "__main__":

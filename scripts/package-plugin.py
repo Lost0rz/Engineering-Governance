@@ -253,20 +253,53 @@ def package_plugin(
     return result
 
 
+def sync_marketplace_ref(repo_root: Path, source_sha: str = "") -> str:
+    """Update .agents/plugins/marketplace.json source.ref to HEAD (or explicit source_sha)."""
+    _reject_symlink(repo_root / ".agents")
+    _reject_symlink(repo_root / ".agents" / "plugins")
+    mp_path = repo_root / ".agents" / "plugins" / "marketplace.json"
+    _reject_symlink(mp_path)
+    if not mp_path.is_file():
+        raise FileNotFoundError(f"Missing marketplace manifest: {mp_path}")
+    head = resolve_source_sha(repo_root, source_sha)
+    data = json.loads(mp_path.read_text(encoding="utf-8"))
+    plugins = data.get("plugins")
+    if not isinstance(plugins, list) or not plugins or not isinstance(plugins[0], dict):
+        raise ValueError("Invalid plugins structure in marketplace.json")
+    source = plugins[0].get("source")
+    if not isinstance(source, dict):
+        raise ValueError("Invalid plugins[0].source structure in marketplace.json")
+    source["ref"] = head
+    mp_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return head
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Package Engineering Governance runtime plugin.")
     parser.add_argument("--repo-root", type=Path, default=Path("."))
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--stage-dir", type=Path, default=None)
     parser.add_argument("--source-sha", default="")
+    parser.add_argument(
+        "--sync-marketplace",
+        action="store_true",
+        help="Update .agents/plugins/marketplace.json source.ref to HEAD (or --source-sha).",
+    )
     args = parser.parse_args()
+
+    repo_resolved = args.repo_root.resolve()
+    if args.sync_marketplace:
+        synced = sync_marketplace_ref(repo_resolved, args.source_sha)
+        print(f"MARKETPLACE_SYNCED_REF={synced}")
+        if args.output_dir is None and args.stage_dir is None:
+            return 0
 
     output_dir = args.output_dir
     if output_dir is None and args.stage_dir is None:
         output_dir = args.repo_root / "dist"
 
     summary = package_plugin(
-        args.repo_root.resolve(),
+        repo_resolved,
         output_dir=output_dir,
         stage_dir=args.stage_dir,
         source_sha=args.source_sha,

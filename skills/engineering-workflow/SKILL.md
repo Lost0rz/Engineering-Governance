@@ -24,8 +24,8 @@ Loop: **understand -> batch/implement -> verify proportionally -> report observe
 ## Risk-tiered action gates (`G0`–`G3`)
 
 - **G0 (Read-only):** inspect and report without mutating files, branches, or worktrees.
-- **G1 (Localized recoverable edit):** implement directly; batch independent reads/edits in parallel and verify with focused `V1` checks at completion.
-- **G2 (Cross-module / shared contract / lockfile / schema edit):** inspect upstream/downstream callers and compatibility before editing, update callers atomically, and run `V2` integration checks at milestone/closeout.
+- **G1 (Localized recoverable edit):** implement directly; batch independent reads/edits in parallel and verify with focused `V1` unit/module checks at completion.
+- **G2 (Cross-module / shared contract / lockfile / schema edit):** inspect upstream/downstream callers and compatibility before editing, update callers atomically, and run `V2` cross-module integration checks at milestone/closeout (reserve `V3` full/release suites for `ready`/`release`).
 - **G3 (Privilege, secrets, security trust, destructive data/schema drop, force-push, prod release, or untrusted CI change):** **pause and obtain explicit user decision** before mutating.
 
 ## Rules

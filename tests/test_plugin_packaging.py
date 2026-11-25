@@ -205,6 +205,23 @@ class PluginPackagingTests(unittest.TestCase):
             packager_mod.package_plugin(ROOT, stage_dir=staged, source_sha="d" * 40)
             self.assertEqual((staged / "PREVIEW_SOURCE_SHA.txt").read_text(encoding="utf-8").strip(), "d" * 40)
 
+    def test_sync_marketplace_updates_ref_without_writing_dist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            (repo / ".agents" / "plugins").mkdir(parents=True)
+            shutil.copy2(ROOT / ".agents" / "plugins" / "marketplace.json", repo / ".agents" / "plugins" / "marketplace.json")
+            target_sha = "e" * 40
+            proc = subprocess.run(
+                [sys.executable, str(PACKAGER), "--repo-root", str(repo),
+                 "--sync-marketplace", "--source-sha", target_sha],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertIn(f"MARKETPLACE_SYNCED_REF={target_sha}", proc.stdout)
+            self.assertFalse((repo / "dist").exists())
+            updated = json.loads((repo / ".agents" / "plugins" / "marketplace.json").read_text(encoding="utf-8"))
+            self.assertEqual(updated["plugins"][0]["source"]["ref"], target_sha)
+
     @staticmethod
     def _load_packager():
         import importlib.util

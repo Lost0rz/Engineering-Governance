@@ -4,7 +4,8 @@ description: >-
   Formal read-only evidence, code-diff, PR-merge, CI, or release provenance
   verdicts bound to exact commits, host gates, and audit independence. Do not
   use for quick advisory status checks, active code fixes
-  (engineering-workflow), or as a substitute for human UI acceptance.
+  (engineering-workflow), UI screenshot/render walkthroughs (ui-design), or as a
+  substitute for human UI acceptance.
 ---
 
 # Evidence Audit
@@ -15,8 +16,8 @@ Issue formal `PASS`, `PASS_WITH_FOLLOWUPS`, or `STOP` verdicts strictly from dir
 
 | Audit scope | Mode | Next reading |
 | --- | --- | --- |
-| Bounded `CODE_DIFF` or `PR_MERGE` readiness verdict | `DIFF_OR_PR_AUDIT` | **NONE (this file)** |
-| `CI`, `RELEASE_PROVENANCE`, `POST_CHANGE`, or multi-claim audit | `DEEP_PROVENANCE_OR_CI_AUDIT` | [audit-contract.md](references/audit-contract.md) |
+| Bounded `CODE_DIFF` or `PR_MERGE` readiness verdict (with live PR gate state) | `DIFF_OR_PR_AUDIT` | **NONE (this file)** |
+| Standalone `CI` workflow, `RELEASE_PROVENANCE`, `POST_CHANGE`, or multi-artifact audit | `DEEP_PROVENANCE_OR_CI_AUDIT` | [audit-contract.md](references/audit-contract.md) |
 
 ## Inline diff & PR audit workflow
 

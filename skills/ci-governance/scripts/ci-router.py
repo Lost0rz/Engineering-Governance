@@ -62,8 +62,7 @@ def git(repo, *args):
         raise RouteError("GIT_SOURCE_UNAVAILABLE") from exc
 
 
-def changes(repo, base, head, include_worktree=False):
-    """Include actual local edits only when explicitly requested by the host."""
+def _diff_name_status_entries(repo, base, head, include_worktree=False):
     if not SHA.fullmatch(base) or not SHA.fullmatch(head):
         raise RouteError("INVALID_REF")
     for rev in (base, head):
@@ -79,7 +78,7 @@ def changes(repo, base, head, include_worktree=False):
     elif base != head:
         records.append(git(repo, "diff", "--name-status", "-z", "-M", base + "..." + head))
 
-    paths = []
+    entries = []
     for data in records:
         if data and not data.endswith(b"\0"):
             raise RouteError("TRUNCATED_DIFF")
@@ -96,12 +95,22 @@ def changes(repo, base, head, include_worktree=False):
             count = 2 if status[0] in "RC" else 1
             if i + count > len(fields):
                 raise RouteError("TRUNCATED_DIFF")
-            for name in fields[i:i + count]:
+            names = fields[i:i + count]
+            for name in names:
                 if not safe_path(name):
                     raise RouteError("UNSAFE_PATH")
-                paths.append(name)
+            entries.append((status, names))
             i += count
+    return entries
 
+
+def changes(repo, base, head, include_worktree=False):
+    """Include actual local edits only when explicitly requested by the host."""
+    paths = [
+        name
+        for _, names in _diff_name_status_entries(repo, base, head, include_worktree=include_worktree)
+        for name in names
+    ]
     if include_worktree:
         data = git(repo, "ls-files", "--others", "--exclude-standard", "-z")
         try:
@@ -112,6 +121,25 @@ def changes(repo, base, head, include_worktree=False):
             raise RouteError("UNSAFE_UNTRACKED_PATH")
         paths.extend(unseen)
     return sorted(set(paths))
+
+
+def removed_paths(repo, base, head, include_worktree=False):
+    """Return paths deleted (or moved away via rename) that no longer exist at target."""
+    candidates = []
+    for status, names in _diff_name_status_entries(repo, base, head, include_worktree=include_worktree):
+        if status == "D" or status.startswith("R"):
+            candidates.append(names[0])
+    if not candidates:
+        return []
+    if include_worktree:
+        confirmed = [
+            p for p in candidates
+            if not (repo / p).exists() and not (repo / p).is_symlink()
+        ]
+    else:
+        head_tracked = set(tracked_files(repo, head))
+        confirmed = [p for p in candidates if p not in head_tracked]
+    return sorted(set(confirmed))
 
 
 def nonregular_changes(repo, base, head, include_worktree=False):
@@ -476,7 +504,19 @@ def validate(config):
 def load(repo, base, path, source):
     if not safe_path(path):
         raise RouteError("INVALID_CONFIG_PATH")
-    raw = git(repo, "show", base + ":" + path) if source == "base" else (repo / path).read_bytes()
+    if source in ("base", "head"):
+        try:
+            raw = git(repo, "show", base + ":" + path)
+        except RouteError as exc:
+            raise RouteError(
+                f"CONFIG_NOT_FOUND_AT_REF: {base}:{path} "
+                "(use --config-source file to preview an unmerged local catalog)"
+            ) from exc
+    else:
+        cfg_file = repo / path
+        if not cfg_file.is_file():
+            raise RouteError(f"CONFIG_FILE_NOT_FOUND: {path}")
+        raw = cfg_file.read_bytes()
     if len(raw) > 256000:
         raise RouteError("CONFIG_TOO_LARGE")
     try:
@@ -498,7 +538,7 @@ def shell(t):
 
 def select(config, changed, stage, base, head, digest, focused="",
            config_path=".github/ci-capabilities.json", source_trust="internal",
-           nonregular_paths=None, import_only_paths=None):
+           nonregular_paths=None, import_only_paths=None, removed_paths=None):
     validate(config)
     if stage not in STAGES:
         raise RouteError("INVALID_STAGE")
@@ -508,15 +548,21 @@ def select(config, changed, stage, base, head, digest, focused="",
     if stage == "focused" and focused not in by_id:
         raise RouteError("UNKNOWN_FOCUSED_TEST")
     unknown = []
+    retired_docs = []
     substitutions = {}
     import_only = set(import_only_paths or []) & set(changed)
     nonregular = set(nonregular_paths or [])
+    removed = set(removed_paths or [])
     doc_patterns = config.get("documentation_paths", [])
 
     def is_doc_exempt(path):
         return (path != config_path and path not in nonregular
                 and descriptive_doc(path)
                 and any(match(pat, path) for pat in doc_patterns))
+
+    def is_retired_doc(path):
+        return (path != config_path and path in removed
+                and path not in nonregular and descriptive_doc(path))
 
     if stage in ("draft", "none"):
         selected = []
@@ -554,9 +600,15 @@ def select(config, changed, stage, base, head, digest, focused="",
             else:
                 hits.add(test["id"])
         covered_basis = stage_covered if stage == "ready" else any_catalog_covered
+        retired_docs = [
+            path for path in changed
+            if path != config_path and path not in covered_basis
+            and not is_doc_exempt(path) and is_retired_doc(path)
+        ]
         unknown = [
             path for path in changed
-            if path != config_path and path not in covered_basis and not is_doc_exempt(path)
+            if path != config_path and path not in covered_basis
+            and not is_doc_exempt(path) and not is_retired_doc(path)
         ]
         if unknown:
             hits.update(
@@ -631,7 +683,8 @@ def select(config, changed, stage, base, head, digest, focused="",
             "import_only_paths": sorted(import_only), "import_only_substitutions": substitutions,
             "selected_test_ids": [t["id"] for t in selected],
             "superseded_test_ids": superseded_ids,
-            "unmapped_paths": unknown, "nonregular_paths": nonregular_paths or [],
+            "unmapped_paths": unknown, "retired_doc_paths": retired_docs,
+            "nonregular_paths": nonregular_paths or [],
             "coverage": coverage,
             # A fallback can prove readiness only if the accepted catalog
             # explicitly declares it sufficient for unknown paths.
@@ -810,7 +863,10 @@ def scaffold(repo):
     used_ids = set()
     seen_dir_ecosystems = set()
     for filename, ecosystem, base_id, tier, runner, cmd in manifest_specs:
-        matches = [p for p in tracked if p == filename or p.endswith("/" + filename)]
+        matches = sorted(
+            (p for p in tracked if p == filename or p.endswith("/" + filename)),
+            key=lambda p: (0 if "/" not in p else 1, p),
+        )
         for manifest_path in matches:
             parent = manifest_path.rsplit("/", 1)[0] if "/" in manifest_path else "."
             if (parent, ecosystem) in seen_dir_ecosystems:
@@ -862,10 +918,11 @@ def scaffold(repo):
             "timeout_minutes": 10,
         })
 
+    root_ids = [t["id"] for t in tests if t.get("cwd", ".") == "."]
     cfg = {
         "contract": CONTRACT,
         "documentation_paths": doc_candidates,
-        "fallback_tests": [tests[0]["id"]],
+        "fallback_tests": [root_ids[0] if root_ids else tests[0]["id"]],
         "fallback_satisfies_ready": False,
         "tests": tests,
     }
@@ -1114,7 +1171,7 @@ def main():
     p.add_argument("--base", default="")
     p.add_argument("--head", default="")
     p.add_argument("--config-path", default=".github/ci-capabilities.json")
-    p.add_argument("--config-source", choices=("base", "file"), default="base")
+    p.add_argument("--config-source", choices=("base", "head", "file"), default="base")
     p.add_argument("--config-ref", default="", help="Accepted config commit (independent of comparison base)")
     p.add_argument("--trusted-ref", default="", help="Accepted origin default branch ref (or 'auto') for local run")
     p.add_argument("--default-branch", default="", help="Host-declared default branch when origin/HEAD is unavailable")
@@ -1182,6 +1239,8 @@ def main():
             include_worktree = args.worktree or args.mode == "run"
             if include_worktree and args.github_output:
                 raise RouteError("WORKTREE_NOT_ALLOWED_IN_GITHUB")
+            if args.github_output and args.config_source != "base":
+                raise RouteError("GITHUB_OUTPUT_REQUIRES_ACCEPTED_BASE")
             if args.mode == "run" and args.config_source != "base":
                 raise RouteError("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE")
 
@@ -1239,8 +1298,12 @@ def main():
                               include_worktree=include_worktree)
             special = nonregular_changes(args.repo_root, base_sha, head_sha,
                                          include_worktree=include_worktree)
+            removed = removed_paths(args.repo_root, base_sha, head_sha,
+                                    include_worktree=include_worktree)
             if args.mode == "run":
                 config_ref = trusted_sha
+            elif args.config_source == "head":
+                config_ref = head_sha
             elif args.config_ref and not args.github_output:
                 config_ref = _resolve_commit_arg(args.repo_root, args.config_ref)
             else:
@@ -1252,10 +1315,14 @@ def main():
                 import_only = python_import_only_paths(
                     args.repo_root, base_sha, head_sha, include_worktree)
             result = select(cfg, changed, args.stage,
-                            base_sha if args.config_source == "base" else "LOCAL",
+                            base_sha if args.config_source in ("base", "head") else "LOCAL",
                             head_sha, digest, args.focused, args.config_path,
-                            args.source_trust, special, import_only)
-            result["config_ref"] = config_ref if args.config_source == "base" else "LOCAL_FILE"
+                            args.source_trust, special, import_only, removed_paths=removed)
+            if args.config_source == "head":
+                result["config_source"] = "HEAD_COMMIT"
+                result["config_ref"] = head_sha
+            else:
+                result["config_ref"] = config_ref if args.config_source == "base" else "LOCAL_FILE"
             result["worktree_included"] = include_worktree
             if args.mode == "run":
                 result["tested_checkout_head"] = head_sha

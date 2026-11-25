@@ -219,9 +219,19 @@ jobs:
           print("### Engineering Governance selected tests")
           for key in ("base", "head", "stage", "coverage", "config_ref", "config_sha256"):
               print("- " + key + ": " + str(p[key]))
+          changed = p.get("changed_paths", [])
+          preview = ", ".join(changed[:20]) + (f" ... (+{len(changed) - 20} more)" if len(changed) > 20 else "")
+          print(f"- Changed paths ({len(changed)}): " + (preview or "NONE"))
           print("- Selected: " + (", ".join(p["selected_test_ids"]) or "NONE"))
           if p.get("superseded_test_ids"):
               print("- Superseded: " + ", ".join(p["superseded_test_ids"]))
+          if p.get("import_only_substitutions"):
+              subs = [f"{k} -> {'+'.join(v.get('alternatives', []))}" for k, v in p["import_only_substitutions"].items()]
+              print("- Import-only substitutions: " + ", ".join(subs))
+          if p.get("retired_doc_paths"):
+              retired = p["retired_doc_paths"]
+              rprev = ", ".join(retired[:10]) + (f" ... (+{len(retired) - 10} more)" if len(retired) > 10 else "")
+              print(f"- Retired doc paths ({len(retired)}): " + rprev)
           if p["capabilities_changed"]:
               print("- Capabilities: PR format checked; accepted-base commands used.")
               print("- New commands must be evaluated after they enter the trusted baseline.")

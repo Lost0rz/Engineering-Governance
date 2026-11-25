@@ -1577,6 +1577,8 @@ class RouterOptimizationTests(unittest.TestCase):
             (repo / "package.json").write_text('{"name":"root"}\n')
             (repo / "pyproject.toml").write_text("[tool.pytest.ini_options]\n")
             (repo / "pytest.ini").write_text("[pytest]\n")
+            (repo / "apps/admin").mkdir(parents=True)
+            (repo / "apps/admin/package.json").write_text('{"name":"admin"}\n')
             (repo / "apps/web").mkdir(parents=True)
             (repo / "apps/web/package.json").write_text('{"name":"web"}\n')
             subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
@@ -1584,15 +1586,178 @@ class RouterOptimizationTests(unittest.TestCase):
             cfg = ci.scaffold(repo)
             by_id = {t["id"]: t for t in cfg["tests"]}
             self.assertIn("node", by_id)
+            self.assertIn("apps-admin-node", by_id)
             self.assertIn("apps-web-node", by_id)
             self.assertIn("pytest", by_id)
             self.assertNotIn("python", by_id)
-            self.assertEqual(by_id["node"].get("exclude_paths"), ["apps/web/**"])
-            self.assertEqual(by_id["pytest"].get("exclude_paths"), ["apps/web/**"])
+            self.assertEqual(cfg["fallback_tests"], ["node"])
+            self.assertLess(
+                [t["id"] for t in cfg["tests"]].index("node"),
+                [t["id"] for t in cfg["tests"]].index("apps-admin-node"),
+            )
+            self.assertEqual(by_id["node"].get("exclude_paths"), ["apps/admin/**", "apps/web/**"])
+            self.assertEqual(by_id["pytest"].get("exclude_paths"), ["apps/admin/**", "apps/web/**"])
             coverage = ci.inspect_catalog_coverage(cfg, ci.tracked_files(repo))
             self.assertEqual(coverage["dead_exclude_patterns"], [])
             plan = ci.select(cfg, ["apps/web/index.ts"], "milestone", "a" * 40, "b" * 40, "digest")
             self.assertEqual(plan["selected_test_ids"], ["apps-web-node"])
+
+    def test_retired_or_relocated_docs_do_not_false_block_ready_while_preserving_code_and_rogue_doc_gates(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            (repo / "src").mkdir()
+            (repo / "docs/old").mkdir(parents=True)
+            (repo / "src/app.py").write_text("x = 1\n")
+            (repo / "docs/old/spec.md").write_text("# legacy doc\n")
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "documentation_paths": ["docs/**"],
+                "tests": [
+                    {"id": "unit", "tier": "V1", "paths": ["src/**"],
+                     "runner": ["ubuntu-latest"], "command": ["true"]},
+                ],
+            }
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+
+            # Retire docs/** into archive/** and remove legacy docs/** from documentation_paths.
+            (repo / "archive").mkdir()
+            git("mv", "docs/old/spec.md", "archive/spec.md")
+            cfg["documentation_paths"] = ["archive/**"]
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "archive docs")
+            head = git("rev-parse", "HEAD")
+
+            check = subprocess.run(
+                [sys.executable, str(SCRIPT), "check-catalog", "--repo-root", d, "--require-complete-mapping"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(check.returncode, 0, check.stderr)
+            self.assertEqual(json.loads(check.stdout)["status"], "VALID")
+
+            plan_proc = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", base, "--head", head, "--config-source", "head", "--stage", "ready"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(plan_proc.returncode, 0, plan_proc.stderr)
+            plan = json.loads(plan_proc.stdout)
+            self.assertEqual(plan["unmapped_paths"], [])
+            self.assertEqual(plan["retired_doc_paths"], ["docs/old/spec.md"])
+            self.assertFalse(plan["review_required"])
+
+            # Moving a doc to an unmapped live directory must still flag unmapped_paths.
+            (repo / "rogue_dir").mkdir()
+            git("mv", "archive/spec.md", "rogue_dir/spec.md")
+            git("commit", "-qam", "rogue move")
+            rogue_head = git("rev-parse", "HEAD")
+            rogue = json.loads(subprocess.check_output(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", head, "--head", rogue_head, "--config-source", "head", "--stage", "ready"],
+                text=True,
+            ))
+            self.assertEqual(rogue["unmapped_paths"], ["rogue_dir/spec.md"])
+            self.assertTrue(rogue["review_required"])
+
+            # Deleting an unmapped code file must still fail closed as unmapped_paths.
+            (repo / "legacy").mkdir()
+            (repo / "legacy/orphan.py").write_text("z = 1\n")
+            git("add", "legacy/orphan.py")
+            git("commit", "-qm", "add orphan code")
+            pre_del = git("rev-parse", "HEAD")
+            git("rm", "-q", "legacy/orphan.py")
+            git("commit", "-qm", "delete orphan code")
+            post_del = git("rev-parse", "HEAD")
+            deleted_code = json.loads(subprocess.check_output(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", pre_del, "--head", post_del, "--config-source", "head", "--stage", "ready"],
+                text=True,
+            ))
+            self.assertEqual(deleted_code["unmapped_paths"], ["legacy/orphan.py"])
+            self.assertTrue(deleted_code["review_required"])
+
+    def test_config_not_found_diagnostic_and_head_config_source(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "README.md").write_text("init\n")
+            git("add", "-A")
+            git("commit", "-qm", "no catalog yet")
+            base = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/main", base)
+            git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+
+            (repo / ".github").mkdir()
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "documentation_paths": ["README.md"],
+                "tests": [
+                    {"id": "unit", "tier": "V1", "paths": ["src/**"],
+                     "runner": ["ubuntu-latest"], "command": ["true"]},
+                ],
+            }
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            (repo / "src").mkdir()
+            (repo / "src/a.py").write_text("a = 1\n")
+            git("add", "-A")
+            git("commit", "-qm", "add catalog")
+            head = git("rev-parse", "HEAD")
+
+            missing = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d, "--base", base, "--head", head],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(missing.returncode, 2)
+            self.assertIn("CONFIG_NOT_FOUND_AT_REF", missing.stderr)
+            self.assertIn("--config-source file", missing.stderr)
+
+            head_plan = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", base, "--head", head, "--config-source", "head", "--stage", "milestone"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(head_plan.returncode, 0, head_plan.stderr)
+            parsed = json.loads(head_plan.stdout)
+            self.assertEqual(parsed["config_source"], "HEAD_COMMIT")
+            self.assertEqual(parsed["config_ref"], head)
+            self.assertEqual(parsed["selected_test_ids"], ["unit"])
+
+            rejected_run = subprocess.run(
+                [sys.executable, str(SCRIPT), "run", "--repo-root", d,
+                 "--config-source", "head", "--trusted-ref", "auto"],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(rejected_run.returncode, 2)
+            self.assertIn("LOCAL_EXECUTION_REQUIRES_ACCEPTED_BASE", rejected_run.stderr)
+
+            gh_out = repo / "gh_out.txt"
+            rejected_gh = subprocess.run(
+                [sys.executable, str(SCRIPT), "plan", "--repo-root", d,
+                 "--base", base, "--head", head, "--config-source", "head",
+                 "--github-output", str(gh_out)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(rejected_gh.returncode, 2)
+            self.assertIn("GITHUB_OUTPUT_REQUIRES_ACCEPTED_BASE", rejected_gh.stderr)
 
 
 if __name__ == "__main__":

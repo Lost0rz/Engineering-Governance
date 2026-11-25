@@ -9,7 +9,7 @@ Browser/Computer Use inspection, screenshots, automated E2E suites, and Microsof
 ```text
 AUTOMATED_BROWSER_VERIFICATION: PASS | FAIL | NOT_RUN | NOT_APPLICABLE
 AI_RENDERED_INSPECTION: PASS | FINDINGS | LIMITED | NOT_RUN | NOT_APPLICABLE
-INTERNAL_VISUAL_REVIEW: PASS | LIMITED_BY_EVIDENCE | NOT_APPLICABLE
+INTERNAL_VISUAL_REVIEW: PASS | BLOCKED | LIMITED_BY_EVIDENCE | NOT_APPLICABLE
 HUMAN_UI_ACCEPTANCE: PENDING | PASS | FAIL | NOT_REQUIRED
 ```
 
@@ -49,6 +49,6 @@ After fixing open `Blocking`/`Major` findings, re-render affected surfaces and r
 
 ## Internal visual review close & handoff
 
-1. Confirm final implementation identity and post-fix re-renders match the design specification and user task with no open `Blocking`/`Major` findings or visual/a11y regressions.
-2. Close internal visual review (`INTERNAL_VISUAL_REVIEW: PASS | LIMITED_BY_EVIDENCE`), keeping `HUMAN_UI_ACCEPTANCE: PENDING` whenever human sign-off is required (any later material UI edit invalidates a prior human `PASS`).
+1. If any `Blocking` or `Major` finding remains open, set `INTERNAL_VISUAL_REVIEW: BLOCKED` and do not close until fixed and re-rendered. Once clean, confirm final implementation identity matches the design specification and user task with zero visual/a11y regressions.
+2. Close internal visual review (`INTERNAL_VISUAL_REVIEW: PASS | BLOCKED | LIMITED_BY_EVIDENCE`), keeping `HUMAN_UI_ACCEPTANCE: PENDING` whenever human sign-off is required (any later material UI edit invalidates a prior human `PASS`).
 3. A formal independent release/readiness verdict belongs to `evidence-audit` when requested.
