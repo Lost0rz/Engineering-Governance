@@ -1,6 +1,10 @@
 ---
 name: agent-handoff
-description: Move a real task or review result between agents/contexts when an existing Issue or PR link and brief delta is insufficient.
+description: >-
+  Move a real task or review result between separate agents, machines, or
+  sessions (Web, CLI, desktop) when an existing Issue or PR link plus brief
+  delta is insufficient. Do not use for same-session work or as an approval
+  ceremony.
 ---
 
 # Agent Handoff

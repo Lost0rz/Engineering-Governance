@@ -36,7 +36,7 @@ The AGENTS.md format informs predictable repository-level guidance kept separate
 
 ## GitHub Spec Kit — `github/spec-kit`
 
-Spec Kit informs the conditional separation of intent/specification, technical planning, actionable tasks, implementation, and convergence. Engineering Governance adopts the idea that ambiguity/consistency gates should be added when needed, while rejecting a mandatory artifact chain for every small task and preserving `CURRENT_TASK.md` as the single execution authorization.
+Spec Kit informs the conditional separation of intent/specification, technical planning, actionable tasks, implementation, and convergence. Engineering Governance adopts the idea that ambiguity/consistency gates should be added when needed, while rejecting a mandatory artifact chain for every small task and keeping actual task intent and host permissions as the execution boundary.
 
 ## Superpowers — `obra/superpowers`
 

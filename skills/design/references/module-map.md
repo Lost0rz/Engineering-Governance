@@ -1,85 +1,38 @@
 # Design internal module map
 
-`design` is the single externally routed Engineering Governance Skill for bounded UI/UX/frontend visual-design work. The sources below are internal modules/references behind that stable capability boundary; they are not peer top-level Skills and do not create independent project authority.
+`design` is the single externally routed Skill for bounded UI/UX/frontend visual-design work. The sources below are internal modules/references behind that capability boundary; they are not peer top-level Skills and do not create independent project authority.
 
 ## Design modes
 
-Design does not force every request through one full pipeline.
-
-- `AUDIT_ONLY` — context + actual interface audit + findings; stop before design/implementation unless separately requested.
-- `DESIGN_SPEC` — audit + reasoning/pattern/specification + pre-build gate; stop before implementation.
+- `MICRO_POLISH` — localized component, spacing, copy, or interaction-state tweak directly against project tokens/components; skips upstream spec synthesis.
+- `AUDIT_ONLY` — context + actual interface audit + findings; stops before design/implementation.
+- `DESIGN_SPEC` — audit + reasoning/pattern/specification + pre-build gate; stops before implementation.
 - `DESIGN_IMPLEMENT` — full design-to-implementation/review/visual-acceptance loop.
 - `FINAL_REVIEW` — review/correct an existing implementation without reopening upstream design direction unless a material defect requires it.
-
-The active mode determines which modules/stages are actually needed.
 
 ## Active modules
 
 ### 1. Anthropic `frontend-design` — design reasoning
+Source: `anthropic/frontend-design.md`. Owns subject/product grounding, deliberate visual direction, typography, composition, hierarchy, anti-generic-AI critique, and plan-before-build reasoning for material `DESIGN_SPEC` / `DESIGN_IMPLEMENT` work.
 
-Source: `references/anthropic/frontend-design.md`
+### 2. `shadcn-admin`-informed patterns — conditional admin composition
+Source: `shadcn-admin/admin-patterns.md`. Conditional layer for admin/back-office/productivity page families (shell, header/CTA, toolbar/filter, table/form/dialog composition, responsive reflow). Owns interaction composition, never backend state semantics.
 
-Responsibilities:
-
-- subject/product grounding before aesthetic choices;
-- deliberate visual direction, typography, composition and hierarchy;
-- anti-template / anti-generic-AI guidance;
-- plan-before-build reasoning and self-critique.
-
-Use for material `DESIGN_SPEC` / `DESIGN_IMPLEMENT` work unless an accepted bounded design direction already exists and the task explicitly starts later in the pipeline.
-
-### 2. shadcn-admin-informed patterns — conditional admin composition
-
-Source: `references/shadcn-admin/admin-patterns.md`
-
-Responsibilities:
-
-- classify admin/back-office/productivity page families;
-- choose shell, header/CTA, toolbar/search/filter, table/form/settings/editor/dialog and state composition;
-- reduce mechanical vertical card stacking and clarify interaction workflows;
-- define responsive reflow and mapping to existing project components.
-
-This layer is conditional. It owns frontend interaction/page composition, not backend business/state semantics.
-
-### 3. awesome-design-md-informed synthesis — bounded visual-system specification
-
-Source: `references/awesome-design-md/design-spec-synthesis.md`
-
-Responsibilities:
-
-- convert design intent + page composition into a concrete implementation-ready visual system;
-- specify visual character, semantic color roles, typography, spacing/layout, surfaces, components/states, responsive behavior, Do/Don't rules and implementation guidance;
-- optionally support a durable project `DESIGN.md` only when project-wide design-system authority is explicitly in scope.
-
-External brand design documents are inspiration/reference only. Existing target-project brand/design-system authority wins.
+### 3. `awesome-design-md`-informed synthesis — bounded visual-system specification
+Source: `awesome-design-md/design-spec-synthesis.md`. Converts design intent and page composition into implementation-ready tokens, typography, spacing, surface, state, and Do/Don't rules. Target-project design authority always wins over external inspiration.
 
 ### 4. Microsoft `frontend-design-review`-informed review — final Design audit
-
-Source: `references/microsoft/final-review.md`
-
-Responsibilities:
-
-- review a concrete prototype/implementation after the design direction/specification exists;
-- consume rendered evidence before the review when the environment supports it;
-- evaluate frictionless insight-to-action, quality craft, trustworthy building, design-system compliance, accessibility and responsive quality;
-- classify findings as Blocking / Major / Minor;
-- require correction, re-render and re-review for open Blocking/Major findings when rendering is supported.
-
-Only the review function is adapted here. Microsoft's creative-frontend mode is intentionally not used as a competing upstream design-direction stage because Anthropic owns that responsibility in this capability.
+Source: `microsoft/final-review.md`. Review-only evaluation of concrete prototype/implementation and rendered evidence (Blocking / Major / Minor). Microsoft's creative mode is intentionally excluded because Anthropic owns upstream direction.
 
 ## Ordered composition
 
 For `DESIGN_IMPLEMENT` when rendered evidence is supported:
 
-`project/profile context intake → actual interface audit → Anthropic reasoning → admin patterns when applicable → visual-system/design-spec synthesis → pre-build gate → implementation/prototype → rendered evidence capture → Microsoft final review → corrective pass → re-render → Microsoft re-review as needed → final visual acceptance`
-
-For other modes, stop at the mode's declared boundary instead of forcing the remaining stages.
+`project/profile context intake → actual interface audit → Anthropic reasoning → admin patterns when applicable → design-spec synthesis → pre-build gate → implementation/prototype → rendered evidence capture → Microsoft final review → corrective pass → re-render → Microsoft re-review as needed → final visual acceptance`
 
 ## Evidence-triggered cross-Skill composition
 
-Design remains primary owner after entry, but it is not isolated. A separate Engineering Governance Skill may be called when a concrete unresolved dependency materially affects the current Design decision.
-
-Before such a call, identify:
+Before crossing to another Skill for a material unresolved dependency, declare:
 
 ```text
 UNRESOLVED_DEPENDENCY:
@@ -89,41 +42,14 @@ EXPECTED_RETURN:
 RESUME_STAGE:
 ```
 
-Typical legitimate calls:
-
-- `domain-navigation` — relevant authority/source/symbol/state-owner/runtime/test route is genuinely unclear;
-- `solution-design` — the route is known but material business/state/API/data-flow ownership remains unresolved;
-- `agent-handoff` — a bounded transfer crosses execution contexts;
-- `evidence-audit` — a separate formal readiness/acceptance verdict is explicitly required;
-- `execution-orchestrator` — decomposition/delegation materially improves execution;
-- `incident-doctor` — a blocking evidence gap prevents a safe next action.
-
-Do not call another Skill for general enrichment, completeness, a second opinion with no unresolved dependency, or merely because it is installed.
-
-After the bounded result returns, resume at `RESUME_STAGE`. Do not restart the whole Design pipeline solely because another capability was consulted.
-
-## Design vs Solution Design
-
-```text
-Interaction workflow
-How users see, understand, navigate, edit, act and receive feedback.
-Owner: design
-
-Business/state workflow
-Canonical state transitions, state/data ownership, API/data-flow responsibility,
-persistence semantics and implementation boundaries.
-Owner: solution-design when materially ambiguous
-```
-
-Both may participate only when both material problems actually exist.
+Typical calls: `domain-navigation` (unclear source/state owner/test route), `solution-design` (ambiguous `BUSINESS_STATE_WORKFLOW` — see [SKILL.md](../SKILL.md)), `agent-handoff`, `evidence-audit`, `execution-orchestrator`, or `incident-doctor`. After receiving the bounded answer, resume `RESUME_STAGE` without restarting the whole Design pipeline.
 
 ## Authority rules
 
-- Project Profile / Project Instructions are compact derived context and pointers, not canonical authority.
-- Target-project product, business, content, data/state, design-system and brand authorities win over every generic module here.
-- No module may invent Figma, Storybook, tokens, runtime/render evidence, backend intent or permissions that do not exist.
-- A reference pattern never becomes authority merely because it is bundled in the Plugin.
+- Project Profile is compact derived context, not canonical authority.
+- Target-project product, business, data/state, design-system, and brand authorities win over generic modules.
+- Never invent Figma, Storybook, tokens, render evidence, backend intent, or host permissions.
 
 ## Deferred capability
 
-A separate general-purpose UX heuristic research module remains optional/deferred. Do not add it merely to increase module count; first evaluate the quality of the active closed loop on real project work.
+A separate general-purpose UX heuristic research module remains optional/deferred until real project work proves a material gap.

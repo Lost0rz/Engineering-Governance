@@ -8,6 +8,7 @@ import re
 import shlex
 import subprocess
 import sys
+import time
 import unicodedata
 from pathlib import Path
 
@@ -16,6 +17,7 @@ PLAN = "EG_CI_PLAN_V1"
 SHA = re.compile(r"[0-9a-f]{40,64}\Z")
 ID = re.compile(r"[a-z][a-z0-9_-]{0,47}\Z")
 STAGES = ("draft", "focused", "milestone", "ready", "release", "none")
+TIER_ORDER = {"V1": 1, "V2": 2, "V3": 3}
 
 
 class RouteError(ValueError):
@@ -65,11 +67,11 @@ def changes(repo, base, head, include_worktree=False):
         raise RouteError("WORKTREE_HEAD_MISMATCH")
 
     records = []
-    if base != head:
-        records.append(git(repo, "diff", "--name-status", "-z", "-M", base + "..." + head))
     if include_worktree:
-        records.append(git(repo, "diff", "--name-status", "-z", "-M", "--cached"))
-        records.append(git(repo, "diff", "--name-status", "-z", "-M"))
+        compare_ref = git(repo, "merge-base", base, head).decode().strip() if base != head else base
+        records.append(git(repo, "diff", "--name-status", "-z", "-M", compare_ref))
+    elif base != head:
+        records.append(git(repo, "diff", "--name-status", "-z", "-M", base + "..." + head))
 
     paths = []
     for data in records:
@@ -109,11 +111,11 @@ def changes(repo, base, head, include_worktree=False):
 def nonregular_changes(repo, base, head, include_worktree=False):
     """Identify special Git modes; a symlink named *.md is not ordinary prose."""
     commands = []
-    if base != head:
-        commands.append(("diff", "--raw", "-z", "-M", base + "..." + head))
     if include_worktree:
-        commands.extend((("diff", "--raw", "-z", "-M", "--cached"),
-                         ("diff", "--raw", "-z", "-M")))
+        compare_ref = git(repo, "merge-base", base, head).decode().strip() if base != head else base
+        commands.append(("diff", "--raw", "-z", "-M", compare_ref))
+    elif base != head:
+        commands.append(("diff", "--raw", "-z", "-M", base + "..." + head))
     special = set()
     for command in commands:
         raw = git(repo, *command)
@@ -161,8 +163,6 @@ def nonregular_changes(repo, base, head, include_worktree=False):
     return sorted(special)
 
 
-
-
 def _import_only_python(old: bytes, new: bytes) -> bool:
     """Conservative hint: only top-level import targets changed, never behavior proof."""
     if old == new or max(len(old), len(new)) > 512_000:
@@ -202,6 +202,7 @@ def _import_only_python(old: bytes, new: bytes) -> bool:
                 return False
             if [a.asname for a in left.names] != [a.asname for a in right.names]:
                 return False
+
     # Keep every top-level statement in place. Import target paths may change,
     # but binding names, relative import levels and execution order may not.
     # Dropping import nodes would misclassify a moved import as harmless.
@@ -225,6 +226,7 @@ def _import_only_python(old: bytes, new: bytes) -> bool:
     return (normalized(before) == normalized(after) and
             any(ast.dump(x) != ast.dump(y) for x, y in zip(imports_before, imports_after)))
 
+
 def python_import_only_paths(repo, base, head, include_worktree=False):
     """Return proven syntax-limited import edits; all uncertainty routes broadly.
 
@@ -233,12 +235,12 @@ def python_import_only_paths(repo, base, head, include_worktree=False):
     non-Python changes never qualify. The accepted catalog must separately
     opt in and nominate actual alternative tests before this affects routing.
     """
+    old_ref = git(repo, "merge-base", base, head).decode().strip() if base != head else base
     commands = []
-    if base != head:
-        commands.append(("diff", "--raw", "-z", "-M", base + "..." + head))
     if include_worktree:
-        commands.extend((("diff", "--raw", "-z", "-M", "--cached"),
-                         ("diff", "--raw", "-z", "-M")))
+        commands.append(("diff", "--raw", "-z", "-M", old_ref))
+    elif base != head:
+        commands.append(("diff", "--raw", "-z", "-M", base + "..." + head))
     statuses = {}
     for command in commands:
         raw = git(repo, *command)
@@ -266,7 +268,6 @@ def python_import_only_paths(repo, base, head, include_worktree=False):
             i += count + 1
     if not statuses:
         return []
-    old_ref = git(repo, "merge-base", base, head).decode().strip() if base != head else base
     eligible_paths = []
     for path, flags in sorted(statuses.items()):
         if not path.endswith(".py") or not all(flags):
@@ -369,6 +370,16 @@ def validate(config):
             raise RouteError("MISSING_PATHS")
         for pattern in pats:
             match(pattern, "example.py")
+        if type(t.get("include_docs", False)) is not bool:
+            raise RouteError("INVALID_INCLUDE_DOCS")
+        excludes = t.get("exclude_paths", [])
+        if (not isinstance(excludes, list) or len(excludes) > 24
+                or any(not isinstance(pat, str) for pat in excludes)
+                or len(set(excludes)) != len(excludes)
+                or any(pat in ("**", "*") for pat in excludes)):
+            raise RouteError("INVALID_EXCLUDE_PATHS")
+        for pat in excludes:
+            match(pat, "example.py")
     docs = config.get("documentation_paths", [])
     if not isinstance(docs, list):
         raise RouteError("INVALID_DOCUMENTATION_PATHS")
@@ -455,6 +466,14 @@ def select(config, changed, stage, base, head, digest, focused="",
     unknown = []
     substitutions = {}
     import_only = set(import_only_paths or []) & set(changed)
+    nonregular = set(nonregular_paths or [])
+    doc_patterns = config.get("documentation_paths", [])
+
+    def is_doc_exempt(path):
+        return (path != config_path and path not in nonregular
+                and descriptive_doc(path)
+                and any(match(pat, path) for pat in doc_patterns))
+
     if stage in ("draft", "none"):
         selected = []
     elif stage == "focused":
@@ -463,11 +482,19 @@ def select(config, changed, stage, base, head, digest, focused="",
         selected = config["tests"][:]
     else:
         hits = set()
+        covered_paths = set()
         for test in config["tests"]:
-            matching = [path for path in changed if any(
-                match(pattern, path) for pattern in test["paths"])]
+            excludes = test.get("exclude_paths", [])
+            include_docs = test.get("include_docs", False)
+            matching = [
+                path for path in changed
+                if (include_docs or not is_doc_exempt(path))
+                and any(match(pattern, path) for pattern in test["paths"])
+                and not any(match(ex, path) for ex in excludes)
+            ]
             if not matching:
                 continue
+            covered_paths.update(matching)
             alternatives = test.get("import_only_alternatives", [])
             if (stage in ("ready", "milestone") and alternatives and
                     all(path in import_only for path in matching)):
@@ -477,11 +504,10 @@ def select(config, changed, stage, base, head, digest, focused="",
                 hits.update(alternatives)
             else:
                 hits.add(test["id"])
-        unknown = [path for path in changed if path != config_path
-                   and not any(match(pat, path) for t in config["tests"] for pat in t["paths"])
-                   and (path in (nonregular_paths or []) or
-                        not (descriptive_doc(path) and any(
-                            match(pat, path) for pat in config.get("documentation_paths", []))))]
+        unknown = [
+            path for path in changed
+            if path != config_path and path not in covered_paths and not is_doc_exempt(path)
+        ]
         if unknown:
             hits.update(config.get("fallback_tests", []))
         selected = [t for t in config["tests"] if t["id"] in hits]
@@ -543,33 +569,163 @@ def select(config, changed, stage, base, head, digest, focused="",
             "config_source": "ACCEPTED_BASE" if base != "LOCAL" else "LOCAL_FILE"}
 
 
+def tracked_files(repo, ref=""):
+    """Return tracked repository paths at ref (or index when ref is omitted)."""
+    if ref:
+        tree_sha = git(repo, "rev-parse", "--verify", "--end-of-options", ref + "^{tree}").decode().strip()
+        raw = git(repo, "ls-tree", "-r", "--name-only", "-z", tree_sha)
+    else:
+        raw = git(repo, "ls-files", "-z")
+    try:
+        paths = [p.decode("utf-8", "strict") for p in raw.split(b"\0") if p]
+    except UnicodeError as exc:
+        raise RouteError("INVALID_PATH_ENCODING") from exc
+    if any(not safe_path(p) for p in paths):
+        raise RouteError("UNSAFE_PATH")
+    return sorted(set(paths))
+
+
+def inspect_catalog_coverage(config, tracked, config_path=".github/ci-capabilities.json"):
+    """Detect dead glob patterns and unmapped tracked files without executing tests."""
+    validate(config)
+    doc_patterns = config.get("documentation_paths", [])
+    dead_patterns = []
+    dead_exclude_patterns = []
+    for test in config["tests"]:
+        for pat in test["paths"]:
+            if not any(match(pat, p) for p in tracked):
+                dead_patterns.append({"test_id": test["id"], "pattern": pat})
+        for pat in test.get("exclude_paths", []):
+            if not any(match(pat, p) for p in tracked):
+                dead_exclude_patterns.append({"test_id": test["id"], "pattern": pat})
+
+    def is_doc_exempt(path):
+        return (path != config_path and descriptive_doc(path)
+                and any(match(pat, path) for pat in doc_patterns))
+
+    covered = set()
+    for path in tracked:
+        doc_exempt = is_doc_exempt(path)
+        for test in config["tests"]:
+            if ((test.get("include_docs", False) or not doc_exempt)
+                    and any(match(pat, path) for pat in test["paths"])
+                    and not any(match(ex, path) for ex in test.get("exclude_paths", []))):
+                covered.add(path)
+    unmapped = [
+        path for path in tracked
+        if path != config_path and path not in covered and not is_doc_exempt(path)
+    ]
+    return {
+        "contract": CONTRACT,
+        "tracked_file_count": len(tracked),
+        "covered_file_count": len(covered),
+        "dead_patterns": dead_patterns,
+        "dead_exclude_patterns": dead_exclude_patterns,
+        "unmapped_tracked_paths": unmapped,
+    }
+
+
 def discover(repo):
     # Scan tracked paths, not the full filesystem: node_modules and model
     # caches can be enormous on a developer workstation.
-    raw = git(repo, "ls-files", "-z")
-    tracked = [p.decode("utf-8", "replace") for p in raw.split(b"\0") if p]
-    candidates = [("Package.swift", "Swift"), ("package.json", "Node"),
-                  ("pyproject.toml", "Python")]
-    languages = [label for file, label in candidates
-                 if any(p == file or p.endswith("/" + file) for p in tracked)]
-    return {"detected": sorted(set(languages)), "action":
-            "Review actual test commands and runner labels; commit accepted .github/ci-capabilities.json"}
+    tracked = tracked_files(repo)
+    candidates = [
+        ("Package.swift", "Swift"),
+        ("package.json", "Node"),
+        ("pyproject.toml", "Python"),
+        ("setup.py", "Python"),
+        ("pytest.ini", "Python"),
+        ("Cargo.toml", "Rust"),
+        ("go.mod", "Go"),
+        ("pom.xml", "JVM"),
+        ("build.gradle", "JVM"),
+        ("build.gradle.kts", "JVM"),
+        ("Gemfile", "Ruby"),
+    ]
+    languages = set()
+    manifests = []
+    for p in tracked:
+        matched = False
+        for filename, label in candidates:
+            if p == filename or p.endswith("/" + filename):
+                languages.add(label)
+                matched = True
+        if p.endswith((".sln", ".csproj")):
+            languages.add("DotNet")
+            matched = True
+        if matched:
+            manifests.append(p)
+    workflows = [
+        p for p in tracked
+        if p.startswith(".github/workflows/") and p.endswith((".yml", ".yaml"))
+    ]
+    return {
+        "detected": sorted(languages),
+        "manifests": sorted(manifests)[:32],
+        "workflows": sorted(workflows),
+        "action": "Review actual test commands and runner labels; commit accepted .github/ci-capabilities.json",
+    }
 
 
-def execute_local(result, config, repo):
+def topological_order(selected_tests, config):
+    """Order selected tests so prerequisites and lighter tiers run before heavy dependents."""
+    by_id = {t["id"]: t for t in selected_tests}
+    catalog_index = {t["id"]: idx for idx, t in enumerate(config["tests"])}
+    deps = {
+        t["id"]: {d for d in t.get("requires", []) if d in by_id}
+        for t in selected_tests
+    }
+    dependents = {t["id"]: [] for t in selected_tests}
+    for tid, reqs in deps.items():
+        for dep in reqs:
+            dependents[dep].append(tid)
+    ready = {tid for tid, reqs in deps.items() if not reqs}
+    ordered = []
+    while ready:
+        nxt = min(ready, key=lambda tid: (TIER_ORDER[by_id[tid]["tier"]], catalog_index[tid]))
+        ready.remove(nxt)
+        ordered.append(by_id[nxt])
+        for child in dependents[nxt]:
+            deps[child].discard(nxt)
+            if not deps[child]:
+                ready.add(child)
+    return ordered
+
+
+def execute_local(result, config, repo, keep_going=False):
     """Explicit local execution only; plan mode never runs commands."""
     selected = set(result["selected_test_ids"])
+    ordered = topological_order(
+        [t for t in config["tests"] if t["id"] in selected],
+        config,
+    )
     outcomes = []
-    for test in config["tests"]:
-        if test["id"] not in selected:
+    failed_ids = set()
+    for test in ordered:
+        if keep_going and any(dep in failed_ids for dep in test.get("requires", [])):
+            outcomes.append({
+                "id": test["id"],
+                "outcome": "DEPENDENCY_FAILED",
+                "exit_code": 2,
+                "duration_ms": 0,
+            })
+            failed_ids.add(test["id"])
             continue
         workdir = (repo / test.get("cwd", ".")).resolve()
         if not workdir.is_relative_to(repo.resolve()):
-            outcomes.append({"id": test["id"], "outcome": "CWD_OUTSIDE_WORKSPACE",
-                             "exit_code": 2})
-            break
+            outcomes.append({
+                "id": test["id"],
+                "outcome": "CWD_OUTSIDE_WORKSPACE",
+                "exit_code": 2,
+                "duration_ms": 0,
+            })
+            failed_ids.add(test["id"])
+            if not keep_going:
+                break
+            continue
         code = 0
         detail = "PASS"
+        started = time.monotonic()
         for argv in test.get("setup", []) + [test["command"]]:
             try:
                 p = subprocess.run(argv, cwd=workdir, stdout=sys.stderr,
@@ -585,9 +741,17 @@ def execute_local(result, config, repo):
                 if detail == "PASS":
                     detail = "FAILED"
                 break
-        outcomes.append({"id": test["id"], "outcome": detail, "exit_code": code})
+        duration_ms = int((time.monotonic() - started) * 1000)
+        outcomes.append({
+            "id": test["id"],
+            "outcome": detail,
+            "exit_code": code,
+            "duration_ms": duration_ms,
+        })
         if code:
-            break
+            failed_ids.add(test["id"])
+            if not keep_going:
+                break
     result["executed_tests"] = outcomes
     if any(item["exit_code"] for item in outcomes):
         result["test_status"] = "FAILED"
@@ -601,7 +765,7 @@ def execute_local(result, config, repo):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("mode", choices=("plan", "discover", "run", "import-only"))
+    p.add_argument("mode", choices=("plan", "discover", "run", "import-only", "check-catalog"))
     p.add_argument("--repo-root", type=Path, required=True)
     p.add_argument("--base", default="")
     p.add_argument("--head", default="")
@@ -612,6 +776,8 @@ def main():
     p.add_argument("--default-branch", default="", help="Host-declared default branch when origin/HEAD is unavailable")
     p.add_argument("--stage", choices=STAGES, default="ready")
     p.add_argument("--worktree", action="store_true", help="Include staged, unstaged and untracked changes in local mode")
+    p.add_argument("--keep-going", action="store_true", help="Continue running independent lanes after a local test failure")
+    p.add_argument("--require-complete-mapping", action="store_true", help="Fail check-catalog if any tracked non-doc file is unmapped")
     p.add_argument("--source-trust", choices=("internal", "fork"), default="internal")
     p.add_argument("--focused", default="")
     p.add_argument("--output", type=Path)
@@ -621,6 +787,30 @@ def main():
     try:
         if args.mode == "discover":
             result = discover(args.repo_root)
+        elif args.mode == "check-catalog":
+            if args.config_ref:
+                resolved_ref = git(
+                    args.repo_root, "rev-parse", "--verify", "--end-of-options",
+                    args.config_ref + "^{commit}",
+                ).decode().strip()
+                cfg, digest = load(args.repo_root, resolved_ref, args.config_path, "base")
+                tracked = tracked_files(args.repo_root, resolved_ref)
+            else:
+                cfg, digest = load(args.repo_root, "", args.config_path, "file")
+                tracked = tracked_files(args.repo_root)
+            summary = inspect_catalog_coverage(cfg, tracked, args.config_path)
+            summary["config_sha256"] = digest
+            if summary["dead_patterns"] or summary["dead_exclude_patterns"]:
+                raise RouteError(
+                    "DEAD_TEST_PATH_PATTERN: "
+                    + json.dumps(summary["dead_patterns"] + summary["dead_exclude_patterns"])
+                )
+            if args.require_complete_mapping and summary["unmapped_tracked_paths"]:
+                raise RouteError(
+                    "UNMAPPED_TRACKED_PATHS: " + json.dumps(summary["unmapped_tracked_paths"])
+                )
+            summary["status"] = "VALID"
+            result = summary
         elif args.mode == "import-only":
             # Read-only Git evidence for trusted specialist selectors. Do not
             # load project-owned commands or execute candidate repository code.
@@ -699,7 +889,7 @@ def main():
                 result["proposed_catalog_status"] = "VALIDATED_NOT_EXECUTED"
                 result["proposed_config_sha256"] = proposed_digest
             if args.mode == "run":
-                exit_code = execute_local(result, cfg, args.repo_root)
+                exit_code = execute_local(result, cfg, args.repo_root, keep_going=args.keep_going)
         if args.output:
             args.output.write_text(json.dumps(result, sort_keys=True, indent=2) + "\n")
         if args.github_output and args.mode == "plan":

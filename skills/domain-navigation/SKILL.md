@@ -1,11 +1,15 @@
 ---
 name: domain-navigation
-description: Use conditionally when semantic routing is missing or stale, or an affected Domain/capability, ownership, authority, code location, symbol, runtime entry, dependency, or relevant test is unclear. Usually invoked from governed work to establish a focused evidence-backed route; do not authorize tasks, diagnose incidents, or modify product code.
+description: >-
+  Locate unclear domain ownership, canonical source, symbol, dependency,
+  runtime entry, or relevant test route in unfamiliar or multi-repo codebases.
+  Do not use when target files are already known, or to authorize tasks, diagnose
+  incidents, or edit product code.
 ---
 
 # Domain Navigation
 
-Use only when the route from the current task/explicit target to the relevant semantic authority/source/test/runtime evidence is unclear or stale. Return the verified route or unresolved gap to the caller, normally Project Governance; when called by Incident Doctor, return to Doctor.
+Use only when the route from the current task/explicit target to the relevant semantic authority/source/test/runtime evidence is unclear or stale. Return the verified route or unresolved gap to the caller.
 
 ## Boundary
 

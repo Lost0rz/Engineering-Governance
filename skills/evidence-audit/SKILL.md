@@ -1,6 +1,10 @@
 ---
 name: evidence-audit
-description: Perform a requested formal evidence, code, PR, CI, release or post-change review using current source and host facts. Routine status checks need no formal audit.
+description: >-
+  Perform a requested formal read-only evidence, code, PR, CI, or release
+  readiness verdict bound to current source and host facts. Do not use for
+  quick advisory status checks, active corrective edits, or as a substitute for
+  human UI acceptance.
 ---
 
 # Evidence Audit

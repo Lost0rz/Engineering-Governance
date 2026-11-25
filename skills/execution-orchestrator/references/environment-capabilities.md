@@ -13,6 +13,8 @@ Resolve a capability only when it can change the current execution decision. Com
 
 ## Resolution order
 
+Explicit user/host orchestration and model-routing rules (for example, global `AGENTS.md` / `GEMINI.md` delegation policies) take highest precedence over generic defaults. Otherwise resolve in this order:
+
 1. current environment authoritative runtime metadata, when exposed;
 2. current environment authoritative configuration for the relevant Sub Agent/default/role, when exposed;
 3. current platform-managed default/capability, when it is the owning source;

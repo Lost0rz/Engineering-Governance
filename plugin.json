@@ -2,12 +2,14 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-governance",
   "version": "0.10.3",
-  "description": "Reusable AI engineering Skill routing, practical work methods, optional Issue collaboration and proportionate verification. User/host permissions govern actual writes.",
+  "description": "Modular AI engineering Skills with direct specialist routing (design, architecture, debugging, audit, navigation, profile), proportional verification, and portable CI test routing. Host permissions govern actual writes.",
+  "repository": "https://github.com/Lost0rz/Engineering-Governance",
+  "license": "MIT",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Engineering Governance",
-        "shortDescription": "Engineering Skills, optional issue plans and focused verification."
+        "shortDescription": "Direct specialist engineering Skills, proportional checks, and portable CI routing."
       }
     }
   }

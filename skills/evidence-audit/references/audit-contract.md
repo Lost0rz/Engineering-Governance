@@ -4,8 +4,8 @@
 
 Keep two read-only purposes distinct:
 
-- **ADVISORY_READ_ONLY_INSPECTION** — report current evidence/status without a formal acceptance/readiness claim. It may remain under Project Governance and does not require a new AUDIT task solely because evidence is viewed.
-- **FORMAL_ACCEPTANCE_OR_READINESS** — return an Evidence Audit verdict for an explicit boundary. If the active task already authorizes that acceptance, use it; if this is a materially distinct engineering purpose, Project Governance authorizes the corresponding AUDIT/VERIFY task purpose.
+- **ADVISORY_READ_ONLY_INSPECTION** — report current evidence/status without a formal acceptance/readiness claim.
+- **FORMAL_ACCEPTANCE_OR_READINESS** — return an Evidence Audit verdict for an explicit boundary. Reuse the active task scope when applicable, or establish a separate read-only audit boundary from the user request.
 
 Neither purpose grants corrective mutation.
 
@@ -23,7 +23,7 @@ The required level follows user/task/risk requirements; do not force expensive i
 
 Every material finding names supporting evidence: requirement/authority, path/symbol/diff, test result, CI run/job, PR/host gate, release/provenance record, artifact hash or runtime observation.
 
-Classify governance authority risk G0–G3 separately from verification evidence tier V0–V3 and audit independence. A valid-looking local risk-grant snapshot cannot prove live host authority or credential separation; missing required host evidence remains UNKNOWN.
+Report governance risk (`G0` read-only, `G1` localized, `G2` multi-module, `G3` privilege/security/destructive) separately from verification depth (`V0` doc/format, `V1` focused, `V2` integration, `V3` broad/security/release) and audit independence. A local test pass or plan snapshot cannot establish live host authority; missing required host evidence remains `UNKNOWN`.
 
 Do not substitute confidence, prior summaries or matching names for underlying evidence when available.
 
@@ -68,7 +68,7 @@ Name the observed merge commit/tree, package/build/install/deploy/runtime identi
 
 ## 6. Semantic evidence vs host gates
 
-Semantic test/CI/review/audit evidence may remain valid across proven `CONTROL_ONLY_DRIFT` when semantic-tree equivalence/task conditions permit reuse. Live repository-host gates are separate and are reread at the boundary they govern.
+Semantic test/CI/review evidence may be reused only when non-semantic or documentation-only edits have proven tree/behavior equivalence for the tested scope. Live repository-host gates are separate and must be reread for the literal PR/commit/release identity being accepted.
 
 ## 7. Findings and boundary disposition
 
@@ -87,15 +87,8 @@ State the exact boundary. `CODE_DIFF PASS` does not imply `PR_MERGE PASS`; sourc
 
 ## 9. Reviewer finding validation
 
-A reviewer/agent suggestion is a claim. Verify it before corrective mutation. If valid but outside current task purpose, return to Project Governance for reconciliation/corrective authorization.
+A reviewer/agent suggestion is a claim. Verify it before corrective mutation. If valid but outside the active task boundary, pause and obtain authorization from the user/task owner before mutating unrelated code.
 
 ## 10. Read-only rule
 
-Evidence Audit may report stale controls:
-
-```text
-CONTROL_ALIGNMENT_OBSERVATION: STALE
-CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
-```
-
-It does not update controls/source merely to make an audit clean.
+Evidence Audit may report stale documentation or alignment drift, but must not mutate code or docs merely to make an audit clean.

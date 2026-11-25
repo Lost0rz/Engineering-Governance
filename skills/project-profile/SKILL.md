@@ -1,6 +1,9 @@
 ---
 name: project-profile
-description: Use when creating, rebuilding, shrinking, or auditing a project's compact durable context/profile so an agent can quickly understand what the project is and where authoritative facts live. Do not use for current task/status, detailed Domain-to-code mapping, or generic engineering workflow.
+description: >-
+  Create, shrink, rebuild, or audit a project's compact durable context and
+  authority index. Do not use merely to read an existing profile, track live
+  task/PR status, or map detailed code symbols (domain-navigation).
 ---
 
 # Project Profile
@@ -10,7 +13,7 @@ Create, shrink, rebuild or audit a **compact derived context and authority index
 ## Minimal route
 
 - **Reuse an existing Profile:** consume it directly as derived orientation; no Project Profile invocation or contract reload is necessary.
-- **Create/rebuild/change:** read [profile-contract.md](references/profile-contract.md) and [the template](assets/templates/PROJECT_PROFILE.md) once; verify only task-relevant project authorities. A repository/project-managed write needs current Project Governance authorization.
+- **Create/rebuild/change:** read [profile-contract.md](references/profile-contract.md) and [the template](assets/templates/PROJECT_PROFILE.md) once; verify only task-relevant project authorities. A repository/project-managed write needs current trusted user/task and host write authorization.
 - **Audit only:** read the candidate Profile and claim-relevant owning sources; return findings without changing a file. Refresh only stale durable claims when authorized.
 - **Request about Profile format:** explain succinctly without scanning every project source.
 

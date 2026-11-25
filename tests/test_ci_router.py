@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "skills/project-governance/scripts/ci-router.py"
 spec = importlib.util.spec_from_file_location("eg_ci_router", SCRIPT)
 ci = importlib.util.module_from_spec(spec)
@@ -864,6 +864,255 @@ class GeneralRouterTests(unittest.TestCase):
         self.assertIn("fromJSON(needs.route.outputs.matrix)", flow)
         self.assertIn("matrix.runner", flow)
         self.assertIn("EG_CI_SELECTED_VERIFICATION_COMPLETE", flow)
+
+
+class RouterOptimizationTests(unittest.TestCase):
+    def test_documentation_paths_exempt_inside_module_wildcards_unless_include_docs(self):
+        cfg = catalog()
+        cfg["documentation_paths"] = ["docs/**", "apps/web/docs/**", "apps/web/README.md"]
+        plan = ci.select(
+            cfg,
+            ["apps/web/docs/guide.md", "apps/web/README.md"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+        )
+        self.assertEqual(plan["selected_test_ids"], [])
+        self.assertEqual(plan["unmapped_paths"], [])
+        self.assertEqual(plan["coverage"], "NO_TESTS_REQUIRED")
+        self.assertFalse(plan["review_required"])
+
+        # Explicit include_docs opts a lane back in for matching doc paths.
+        cfg["tests"][1]["include_docs"] = True
+        opted_in = ci.select(
+            cfg,
+            ["apps/web/docs/guide.md"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+        )
+        self.assertEqual(opted_in["selected_test_ids"], ["node-unit"])
+
+    def test_exclude_paths_fail_closed_when_excluded_from_all_lanes_and_validate_schema(self):
+        cfg = catalog()
+        cfg["tests"][1]["exclude_paths"] = ["apps/web/generated/**"]
+        plan = ci.select(
+            cfg,
+            ["apps/web/generated/schema.ts"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+        )
+        self.assertEqual(plan["unmapped_paths"], ["apps/web/generated/schema.ts"])
+        self.assertEqual(plan["selected_test_ids"], ["smoke"])
+        self.assertTrue(plan["review_required"])
+        self.assertEqual(plan["coverage"], "PARTIAL_UNMAPPED")
+
+        # Valid code outside exclude_paths still runs node-unit normally.
+        normal = ci.select(
+            cfg,
+            ["apps/web/src/app.tsx", "apps/web/generated/schema.ts"],
+            "ready",
+            "a" * 40,
+            "b" * 40,
+            "digest",
+        )
+        self.assertIn("node-unit", normal["selected_test_ids"])
+        self.assertEqual(normal["unmapped_paths"], ["apps/web/generated/schema.ts"])
+
+        for bad_excl in (["**"], ["*"], "apps/web/**", ["a/**", "a/**"], [123]):
+            with self.subTest(exclude=bad_excl):
+                bad = catalog()
+                bad["tests"][0]["exclude_paths"] = bad_excl
+                with self.assertRaises(ci.RouteError):
+                    ci.validate(bad)
+
+        bad_inc = catalog()
+        bad_inc["tests"][0]["include_docs"] = "yes"
+        with self.assertRaises(ci.RouteError):
+            ci.validate(bad_inc)
+
+    def test_check_catalog_detects_dead_globs_and_unmapped_files(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / ".github").mkdir()
+            (repo / "src").mkdir()
+            (repo / "docs").mkdir()
+            (repo / "src/app.py").write_text("print('ok')\n")
+            (repo / "docs/guide.md").write_text("# guide\n")
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "documentation_paths": ["docs/**"],
+                "tests": [
+                    {
+                        "id": "unit",
+                        "tier": "V1",
+                        "paths": ["src/**"],
+                        "runner": ["ubuntu-latest"],
+                        "command": [sys.executable, "-c", "pass"],
+                    }
+                ],
+            }
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            git("add", "-A")
+            git("commit", "-qm", "init")
+
+            ok = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "check-catalog",
+                    "--repo-root",
+                    d,
+                    "--require-complete-mapping",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(ok.returncode, 0, ok.stderr)
+            summary = json.loads(ok.stdout)
+            self.assertEqual(summary["status"], "VALID")
+            self.assertEqual(summary["dead_patterns"], [])
+            self.assertEqual(summary["unmapped_tracked_paths"], [])
+
+            # Add an unmapped non-doc tracked file.
+            (repo / "extra").mkdir()
+            (repo / "extra/worker.py").write_text("x = 1\n")
+            git("add", "-A")
+            unmapped = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "check-catalog",
+                    "--repo-root",
+                    d,
+                    "--require-complete-mapping",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(unmapped.returncode, 2)
+            self.assertIn("UNMAPPED_TRACKED_PATHS", unmapped.stderr)
+
+            # Dead glob pattern fails check-catalog even without --require-complete-mapping.
+            cfg["tests"][0]["paths"].append("missing_dir/**")
+            (repo / ".github/ci-capabilities.json").write_text(json.dumps(cfg))
+            dead = subprocess.run(
+                [sys.executable, str(SCRIPT), "check-catalog", "--repo-root", d],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(dead.returncode, 2)
+            self.assertIn("DEAD_TEST_PATH_PATTERN", dead.stderr)
+
+    def test_execute_local_topological_order_duration_and_keep_going(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            cfg = {
+                "contract": "EG_CI_CAPABILITIES_V1",
+                "tests": [
+                    {
+                        "id": "heavy-v3",
+                        "tier": "V3",
+                        "paths": ["src/**"],
+                        "requires": ["fast-v1"],
+                        "runner": ["ubuntu-latest"],
+                        "command": [sys.executable, "-c", "print('heavy')"],
+                    },
+                    {
+                        "id": "independent-v2",
+                        "tier": "V2",
+                        "paths": ["src/**"],
+                        "runner": ["ubuntu-latest"],
+                        "command": [sys.executable, "-c", "print('indep')"],
+                    },
+                    {
+                        "id": "fast-v1",
+                        "tier": "V1",
+                        "paths": ["src/**"],
+                        "runner": ["ubuntu-latest"],
+                        "command": [sys.executable, "-c", "print('fast')"],
+                    },
+                ],
+            }
+            plan = ci.select(cfg, ["src/a.py"], "ready", "a" * 40, "b" * 40, "digest")
+            self.assertEqual(ci.execute_local(plan, cfg, repo), 0)
+            self.assertEqual(
+                [item["id"] for item in plan["executed_tests"]],
+                ["fast-v1", "independent-v2", "heavy-v3"],
+            )
+            self.assertTrue(all("duration_ms" in item and item["duration_ms"] >= 0 for item in plan["executed_tests"]))
+
+            # Failing fast-v1 with keep_going=True marks dependent heavy-v3 as DEPENDENCY_FAILED
+            # while still running independent-v2.
+            cfg["tests"][2]["command"] = [sys.executable, "-c", "raise SystemExit(1)"]
+            plan2 = ci.select(cfg, ["src/a.py"], "ready", "a" * 40, "b" * 40, "digest")
+            self.assertEqual(ci.execute_local(plan2, cfg, repo, keep_going=True), 1)
+            by_id = {item["id"]: item for item in plan2["executed_tests"]}
+            self.assertEqual(by_id["fast-v1"]["outcome"], "FAILED")
+            self.assertEqual(by_id["independent-v2"]["outcome"], "PASS")
+            self.assertEqual(by_id["heavy-v3"]["outcome"], "DEPENDENCY_FAILED")
+
+    def test_worktree_net_zero_revert_reports_no_false_changes(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            git("config", "user.name", "tests")
+            git("config", "user.email", "tests@example.invalid")
+            (repo / "backend").mkdir()
+            f = repo / "backend/mod.py"
+            f.write_text("from old.a import x\n\ndef run():\n    return x()\n")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            base = git("rev-parse", "HEAD")
+
+            f.write_text("from new.a import x\n\ndef run():\n    return x() + 1\n")
+            git("add", "-A")
+            git("commit", "-qm", "branch commit")
+            head = git("rev-parse", "HEAD")
+
+            # Revert file in working tree back to base content.
+            f.write_text("from old.a import x\n\ndef run():\n    return x()\n")
+            self.assertEqual(ci.changes(repo, base, head, include_worktree=True), [])
+            self.assertEqual(ci.python_import_only_paths(repo, base, head, include_worktree=True), [])
+
+    def test_discover_detects_multiple_languages_manifests_and_workflows(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+
+            def git(*args):
+                return subprocess.check_output(
+                    ["git", "-C", d, *args], stderr=subprocess.DEVNULL
+                ).decode().strip()
+
+            git("init", "-q")
+            (repo / "Cargo.toml").write_text("[package]\nname='x'\n")
+            (repo / "go.mod").write_text("module example.com/x\n")
+            (repo / ".github/workflows").mkdir(parents=True)
+            (repo / ".github/workflows/ci.yml").write_text("name: ci\n")
+            git("add", "-A")
+            info = ci.discover(repo)
+            self.assertEqual(info["detected"], ["Go", "Rust"])
+            self.assertEqual(info["manifests"], ["Cargo.toml", "go.mod"])
+            self.assertEqual(info["workflows"], [".github/workflows/ci.yml"])
 
 
 if __name__ == "__main__":

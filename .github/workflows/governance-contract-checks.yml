@@ -1,14 +1,14 @@
 name: Governance Contract Checks
 
 # Draft PR iterations do not execute CI. Ready PRs validate accepted-base
-# affected scope; manual dispatch chooses a focused or full stage explicitly.
+# affected scope via ci-router.py; manual dispatch chooses focused/affected/full/none.
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
     inputs:
       validation_scope:
-        description: "Manual checks: one suite, affected workflow contracts, full, or none"
+        description: "Manual checks: one suite, affected workflow/packaging contracts, full, or none"
         type: choice
         required: true
         default: focused
@@ -24,8 +24,8 @@ on:
         default: test_workflow_contracts.py
         options:
           - test_workflow_contracts.py
-          - test_verification_plan.py
           - test_ci_router.py
+          - test_plugin_packaging.py
       package_preview:
         description: "Build optional preview independently of test scope"
         type: boolean
@@ -46,10 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out exact PR or selected manual ref
+      - name: Check out tested revision (PR merge tree or manual ref)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -65,46 +65,60 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           MANUAL_SCOPE: ${{ inputs.validation_scope }}
+          IS_FORK: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           set -euo pipefail
-          SELECTOR="skills/project-governance/scripts/verification-plan.py"
+          ROUTER="skills/project-governance/scripts/ci-router.py"
+          CATALOG=".github/ci-capabilities.json"
           PLAN_PATH="$RUNNER_TEMP/verification-plan.json"
           fallback_full() {
-            echo "::warning::Cannot verify base selector/diff; running full contracts, not claiming a selection PASS."
+            echo "::warning::Cannot verify base router/catalog; running full contracts, not claiming a selection PASS."
             {
-              echo "tier=V3"
-              echo "run_policy=false"
-              echo "run_affected=false"
+              echo "use_plan=false"
               echo "run_full=true"
               echo "scope_status=SCOPE_GATE_FALLBACK_FULL"
             } >> "$GITHUB_OUTPUT"
-            echo '{"contract":"VERIFICATION_PLAN_V1","tier":"V3","scope_status":"SCOPE_GATE_FALLBACK_FULL","test_status":"TESTS_PENDING","full_suite_claim":false}' > "$PLAN_PATH"
+            echo '{"contract":"EG_CI_PLAN_V1","stage":"ready","coverage":"SCOPE_GATE_FALLBACK_FULL","test_status":"TESTS_PENDING","full_suite_claim":false}' > "$PLAN_PATH"
           }
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             case "$MANUAL_SCOPE" in
               focused|affected|full|none) ;;
               *) echo "::error::Invalid explicit manual test scope"; exit 2;;
             esac
-            echo "tier=MANUAL" >> "$GITHUB_OUTPUT"
-            echo "run_policy=false" >> "$GITHUB_OUTPUT"
-            echo "run_affected=false" >> "$GITHUB_OUTPUT"
-            echo "run_full=false" >> "$GITHUB_OUTPUT"
-            echo "scope_status=MANUAL_SCOPE_SELECTED" >> "$GITHUB_OUTPUT"
+            {
+              echo "use_plan=false"
+              echo "run_full=$([[ "$MANUAL_SCOPE" == "full" ]] && echo true || echo false)"
+              echo "scope_status=MANUAL_SCOPE_SELECTED"
+            } >> "$GITHUB_OUTPUT"
             printf '{"contract":"MANUAL_SCOPE_V1","scope":"%s","test_status":"TESTS_PENDING"}\n' "$MANUAL_SCOPE" > "$PLAN_PATH"
-          elif [[ -z "${BASE_SHA:-}" || -z "${HEAD_SHA:-}" ]] || ! git cat-file -e "$BASE_SHA:$SELECTOR" 2>/dev/null; then
+          elif [[ -z "${BASE_SHA:-}" || -z "${HEAD_SHA:-}" ]] || \
+               ! git cat-file -e "$BASE_SHA:$ROUTER" 2>/dev/null || \
+               ! git cat-file -e "$BASE_SHA:$CATALOG" 2>/dev/null; then
             fallback_full
           else
-            git show "$BASE_SHA:$SELECTOR" > "$RUNNER_TEMP/trusted-verification-plan.py"
-            if ! python3 "$RUNNER_TEMP/trusted-verification-plan.py" \
+            git show "$BASE_SHA:$ROUTER" > "$RUNNER_TEMP/trusted-ci-router.py"
+            source_trust=internal
+            if [[ "${IS_FORK:-false}" == "true" ]]; then
+              source_trust=fork
+            fi
+            if python3 "$RUNNER_TEMP/trusted-ci-router.py" plan \
               --repo-root "$GITHUB_WORKSPACE" \
               --base "$BASE_SHA" --head "$HEAD_SHA" \
-              --output "$PLAN_PATH" --github-output "$GITHUB_OUTPUT"; then
+              --config-ref "$BASE_SHA" --config-path "$CATALOG" --config-source base \
+              --source-trust "$source_trust" --stage ready \
+              --output "$PLAN_PATH"; then
+              {
+                echo "use_plan=true"
+                echo "run_full=false"
+                echo "scope_status=TRUSTED_PLAN_READY"
+              } >> "$GITHUB_OUTPUT"
+            else
               fallback_full
             fi
           fi
           cat "$PLAN_PATH" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Static source, manifest and host policy checks
+      - name: Static source, manifest, catalog and host policy checks
         run: |
           python3 - <<'PY'
           import json
@@ -112,28 +126,22 @@ jobs:
           root = Path(".")
           workflows = sorted(p.name for p in (root / ".github/workflows").glob("*.yml"))
           assert workflows == ["ci-router-reusable.yml", "governance-contract-checks.yml"], workflows
-          pkg = json.loads((root / "plugin.json").read_text())
+          pkg = json.loads((root / "plugin.json").read_text(encoding="utf-8"))
           assert pkg["name"] == "engineering-governance"
-          json.loads((root / ".agents/plugins/marketplace.json").read_text())
-          policy = json.loads((root / "skills/project-governance/assets/control-policy.json").read_text())
+          json.loads((root / ".agents/plugins/marketplace.json").read_text(encoding="utf-8"))
+          policy = json.loads((root / "skills/project-governance/assets/control-policy.json").read_text(encoding="utf-8"))
           assert policy["contract"] == "CONTROL_POLICY_V2"
           assert policy["require_host_authority_for_writes"] is True
           assert policy["unattended_grants"] == "NOT_PROVIDED_BY_PLUGIN"
           assert policy["issue_role"] == "OPTIONAL_PLANNING_AND_CROSS_CONTEXT_EVIDENCE"
+          assert (root / "rules/AGENTS.md").is_file()
           assert (root / ".github/ISSUE_TEMPLATE/task-plan.md").is_file()
           assert not (root / ".github/ISSUE_TEMPLATE/execution-spec.yml").exists()
           PY
+          python3 skills/project-governance/scripts/ci-router.py check-catalog --repo-root . --require-complete-mapping
 
-      - name: Compile current test modules
-        if: steps.scope.outputs.run_full == 'true' || inputs.validation_scope == 'full'
-        run: python3 -m compileall -q skills/project-governance/scripts
-
-      - name: PR V1 policy and routing contracts
-        if: steps.scope.outputs.run_policy == 'true'
-        run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_workflow_contracts.py' -v
-
-      - name: PR V2 affected contracts
-        if: steps.scope.outputs.run_affected == 'true'
+      - name: Execute planned PR checks
+        if: steps.scope.outputs.use_plan == 'true'
         shell: bash
         env:
           PLAN_PATH: ${{ runner.temp }}/verification-plan.json
@@ -144,22 +152,25 @@ jobs:
           import os
           from pathlib import Path
           from subprocess import run
-          p = json.loads(Path(os.environ["PLAN_PATH"]).read_text())
-          allowed = {"test_workflow_contracts.py", "test_verification_plan.py"}
-          suites = p["affected_suites"]
-          assert p["policy_source"] == "TRUSTED_BASE" and p["tier"] == "V2"
-          assert p["selected"] == ["static_scope", "affected_contracts"]
-          assert isinstance(suites, list) and suites and len(set(suites)) == len(suites)
-          assert set(suites).issubset(allowed)
-          for suite in suites:
-              run(["python3", "-m", "unittest", "discover", "-s",
-                   "skills/project-governance/scripts", "-p", suite, "-v"], check=True)
-          print("V2_AFFECTED_CHECKS_PASS")
+
+          plan = json.loads(Path(os.environ["PLAN_PATH"]).read_text(encoding="utf-8"))
+          assert plan["contract"] == "EG_CI_PLAN_V1"
+          assert plan["config_source"] == "ACCEPTED_BASE"
+          assert not plan["review_required"], f"Unmapped or fork-blocked paths: {plan}"
+          if not plan["run_tests"]:
+              print("NO_TESTS_REQUIRED")
+          else:
+              for item in plan["matrix"]["include"]:
+                  print(f"::group::Run {item['id']} ({item['tier']})")
+                  run(["bash", "-c", item["script"]], check=True)
+                  print("::endgroup::")
           PY
 
-      - name: PR V3 full contracts
+      - name: Compile and run full contracts
         if: steps.scope.outputs.run_full == 'true'
-        run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v
+        run: |
+          python3 -m compileall -q skills/project-governance/scripts scripts tests
+          python3 -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Manual focused suite
         if: github.event_name == 'workflow_dispatch' && inputs.validation_scope == 'focused'
@@ -169,18 +180,16 @@ jobs:
         run: |
           set -euo pipefail
           case "$FOCUSED_SUITE" in
-            test_workflow_contracts.py|test_verification_plan.py|test_ci_router.py) ;;
+            test_workflow_contracts.py|test_ci_router.py|test_plugin_packaging.py) ;;
             *) echo "::error::Focused suite not in allowed list"; exit 2;;
           esac
-          python3 -m unittest discover -s skills/project-governance/scripts -p "$FOCUSED_SUITE" -v
+          python3 -m unittest discover -s tests -p "$FOCUSED_SUITE" -v
 
-      - name: Manual affected workflow contracts
+      - name: Manual affected workflow and packaging contracts
         if: github.event_name == 'workflow_dispatch' && inputs.validation_scope == 'affected'
-        run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_workflow_contracts.py' -v
-
-      - name: Manual full regression
-        if: github.event_name == 'workflow_dispatch' && inputs.validation_scope == 'full'
-        run: python3 -m unittest discover -s skills/project-governance/scripts -p 'test_*.py' -v
+        run: |
+          python3 -m unittest discover -s tests -p 'test_workflow_contracts.py' -v
+          python3 -m unittest discover -s tests -p 'test_plugin_packaging.py' -v
 
       - name: Report scope and intentionally skipped checks
         if: steps.scope.outputs.run_full != 'true' && inputs.validation_scope != 'full'
@@ -188,54 +197,7 @@ jobs:
 
       - name: Build versioned Web preview package
         if: github.event_name == 'workflow_dispatch' && inputs.package_preview == true
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-          import zipfile
-
-          repo = Path(".")
-          original = json.loads((repo / "plugin.json").read_text(encoding="utf-8"))
-          assert original["name"] == "engineering-governance"
-          version = original["version"]  # single canonical version owner
-          assert version and isinstance(version, str)
-
-          codex_manifest = {
-              "interface": {
-                  "displayName": "Engineering Governance",
-                  "shortDescription": original["extensions"]["com.openai"]["interface"]["shortDescription"],
-                  "longDescription": original["description"],
-                  "developerName": "Workspace upload",
-                  "category": "Other",
-                  "capabilities": [],
-                  "defaultPrompt": None,
-              },
-              "name": original["name"],
-              "version": version,
-              "description": original["description"],
-              "author": {"name": "Workspace upload"},
-              "keywords": [],
-              "skills": "./skills",
-          }
-          head = os.popen("git rev-parse HEAD").read().strip()
-          assert len(head) == 40 and all(c in "0123456789abcdef" for c in head)
-          out = Path("dist") / f"engineering-governance-web-preview-{version}-{head[:12]}.zip"
-          out.parent.mkdir(exist_ok=True)
-          entries = sorted(list(Path("skills").rglob("*")) + list(Path("references").rglob("*")))
-          entries = [path for path in entries if path.is_file()
-                     and "__pycache__" not in path.parts and path.suffix != ".pyc"
-                     and not path.name.endswith("_ACCEPTANCE.md")]
-          with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
-              archive.writestr("plugin.json", json.dumps(original, indent=2, ensure_ascii=False) + "\n")
-              archive.writestr(".codex-plugin/plugin.json", json.dumps(codex_manifest, indent=2, ensure_ascii=False) + "\n")
-              for path in entries:
-                  archive.write(path, path.as_posix())
-              archive.writestr("PREVIEW_SOURCE_SHA.txt", head + "\n")
-          print(f"WEB_PREVIEW_PACKAGE={out}")
-          print(f"WEB_PREVIEW_SOURCE_SHA={head}")
-          print(f"WEB_PREVIEW_FILE_COUNT={len(entries) + 3}")
-          PY
+        run: python3 scripts/package-plugin.py --output-dir dist
 
       - name: Upload Web preview package (artifact only; no release)
         if: github.event_name == 'workflow_dispatch' && inputs.package_preview == true

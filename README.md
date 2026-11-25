@@ -1,37 +1,43 @@
 # Engineering Governance
 
-Reusable AI engineering **workflow, methods and proportional verification**, not a mandatory Issue/approval system. Project-specific source, runtime and business constraints remain with their project.
+Modular AI engineering **Skills, methods, and proportional verification**—packaged as a standard, toggleable plugin rather than a mandatory approval chain. Project-specific source, runtime, and business constraints stay with each project.
 
-## Working method
+## Direct-entry Skill routing
 
-Understand → route to the needed specialist → implement → test affected behavior at sensible milestones → deliver observed evidence.
+Start from the requested outcome and enter the matching specialist Skill directly when the domain is clear; use `project-governance` for general engineering tasks, portable CI routing, and delivery coordination. Do not load unused Skills as a checklist.
 
-| Skill | Responsibility |
-| --- | --- |
-| `project-governance` | Default engineering task, safety and delivery |
-| `design` | UI/UX and visual design |
-| `solution-design` | Architecture, API and state ownership |
-| `evidence-audit` | Formal evidence/readiness audit |
-| `incident-doctor` | Blocking fault diagnosis |
-| `domain-navigation` | Unclear source or test owner |
-| `execution-orchestrator` | Useful delegation and parallelism |
-| `agent-handoff` | Real cross-context transfer |
-| `project-profile` | Derived project context |
+| Capability bundle / focus | Skill | Primary use |
+| --- | --- | --- |
+| **Core engineering & CI** | `project-governance` | General implementation, proportional verification, PR delivery, portable CI routing (`ci-router.py`) |
+| **Specialist methods** | `design` | UI/UX, `MICRO_POLISH` tweaks, interface audits, specs, implementation, visual review |
+| | `solution-design` | Ambiguous architecture, API contracts, data flow, and state ownership |
+| | `incident-doctor` | Evidence-gated diagnosis and minimal probes for blocking failures |
+| | `evidence-audit` | Formal read-only code, PR, CI, or release readiness verdicts |
+| **Context & orchestration** | `domain-navigation` | Unclear source, symbol, dependency, runtime entry, or test owner |
+| | `project-profile` | Create, shrink, rebuild, or audit a compact derived project index |
+| | `execution-orchestrator` | Intra-session plan-to-execute handoffs, batching, and Sub Agent decomposition |
+| | `agent-handoff` | Structured cross-context transfer when an Issue/PR link is insufficient |
 
 Routing details: [global routing](skills/project-governance/references/global-routing.md).
 
-## Task coordination
+## Task coordination and permissions
 
-Work can start from an authenticated current user instruction or use an existing Issue/PR plan. Issues are optional collaboration, not approvals. Anyone with real GitHub write capability and authorized task intent may create/update them; comments and fixed fields are not required.
+Work can start from an authenticated current user instruction or an optional Issue/PR plan. Issues, PR descriptions, and handoff cards provide **context**, not write credentials; the real execution host authenticates user intent and enforces tool/GitHub permissions.
 
-Write permission comes from the real execution host. G3-like privilege/security/destructive changes require a separate responsible decision. Routine scope-preserving code adjustments do not.
+- **G0–G2**: read-only inspection, localized fixes, and bounded multi-module changes proceed directly inside the task scope.
+- **G3**: materially new privileges, credentials, security boundaries, destructive data changes, or irreversible production effects require an explicit owner decision.
 
-## Testing and installation
+## Verification and portable CI routing
 
-[Verification tiers](skills/project-governance/references/verification-tiers.md) select test scope. Draft development does not auto-run broad GitHub CI; targeted checks are available and readiness/integration runs broader affected or full checks when justified. Plugin preview/build is separate.
+[Verification tiers](skills/project-governance/references/verification-tiers.md) scale test depth (`V0`–`V3`) with impact. Draft iterations avoid heavy CI; targeted checks run during implementation, and broader checks run at integration or release boundaries.
 
-Portable cross-repository CI uses the [shared router](skills/project-governance/references/ci-routing.md): a single released policy in this repository plus a small trusted test-capabilities file and caller workflow per consumer repository. The installed Web/Desktop/local Skill can plan or help adopt the route; an authorized GitHub Actions event actually starts the Runner.
+Cross-repository CI uses the [shared router](skills/project-governance/references/ci-routing.md): `skills/project-governance/scripts/ci-router.py` paired with a reviewed `.github/ci-capabilities.json` and thin caller workflow per consumer repository. This repository itself uses `.github/ci-capabilities.json` and `.github/workflows/governance-contract-checks.yml` via `ci-router.py`.
 
-In v0.10.3 the reusable CI workflow supports an optional trusted `control_runner` JSON label array for its Route and Result jobs (default `ubuntu-latest`). Individual test capabilities still choose their own Runner, and project-owned Browser/Cross-repo workflows remain separate. See [CI routing](skills/project-governance/references/ci-routing.md).
+## Standard plugin installation and toggling
 
-The current source [policy](skills/project-governance/assets/control-policy.json) is not an execution token. The installed Web/Desktop/local version and actual host permissions must be verified independently.
+Build a clean runtime plugin directory or Web preview archive with `python3 scripts/package-plugin.py` (packages `plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `rules/AGENTS.md`, and `skills/**` without repository tests or historical `archive/**`).
+
+- **Antigravity**: install or symlink into a standard `plugins/engineering-governance/` customization root (or declare in `plugins.json`); toggle anytime via the Settings UI or `agy plugin enable|disable engineering-governance`. You can also consume individual specialist folders under `skills/` à la carte via `skills.json` (`include_only`).
+- **Codex / Claude Code**: install via `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, or `.claude-plugin/plugin.json` and enable/disable through the host plugin controls.
+
+See [adoption](skills/project-governance/references/adoption.md). Source commit, CI status, packaged artifact, and installed host behavior remain separate observable claims.

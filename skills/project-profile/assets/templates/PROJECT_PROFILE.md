@@ -31,7 +31,7 @@ Primary/mirror role: <PRIMARY | MIRROR | single surface | UNKNOWN>
 [Grounded durable project-specific priorities, anti-goals, risk cues, or product constraints. Do not promote current-stage delivery priorities/non-goals into permanent identity. Do not copy detailed MUST/MUST-NOT execution rules from `AGENTS.md`.]
 
 ## Engineering Governance
-Engineering work uses Engineering Governance. Default entry: `project-governance`. Conditional capabilities follow the reusable routing contract.
+Engineering work routes directly to matching specialist Skills (`design`, `solution-design`, `incident-doctor`, `evidence-audit`, `domain-navigation`, `project-profile`) or uses `project-governance` for general engineering, CI routing, and delivery coordination.
 
 <!-- Do not append per-Skill triggers, Skill catalogs, Handoff/verification/incident/PR/worktree procedure, or routing explanations unless the user explicitly asked for routing documentation rather than a Project Profile. -->
 <!-- Before returning: every substantive claim must be grounded + durable + correctly classified + deduped. If a detailed Domain/navigation authority exists, Authority map must be pointer-only; Environment must contain roles/pointers only. -->

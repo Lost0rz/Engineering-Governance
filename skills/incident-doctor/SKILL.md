@@ -1,11 +1,15 @@
 ---
 name: incident-doctor
-description: Use when a real failure, unexplained behavior, or unsafe ambiguity blocks safe progress and current evidence is insufficient for the next safe decision; do not use for ordinary bugs whose evidence already supports safe action.
+description: >-
+  Evidence-gated root-cause diagnosis and minimal probes when a real failure,
+  unexplained behavior, or unsafe ambiguity blocks safe next action. Do not use
+  for ordinary bugs whose error output, diff, or test failure already supports a
+  direct fix.
 ---
 
 # Incident Doctor
 
-Use this Skill only when all three conditions hold: a real failure/unexplained unsafe ambiguity exists; it blocks safe progress; and current evidence is insufficient for the next safe decision. A known defect with sufficient evidence remains normal authorized Project Governance work.
+Use this Skill only when all three conditions hold: a real failure/unexplained unsafe ambiguity exists; it blocks safe progress; and current evidence is insufficient for the next safe decision. A known defect with sufficient evidence remains normal authorized implementation work.
 
 ## Read only the needed contract
 
@@ -20,14 +24,14 @@ Start with [Evidence gate](references/evidence-gate.md) for a genuine blocked de
 ## Workflow
 
 1. Apply the hard evidence gate and review existing evidence first.
-2. Name the one missing fact and blocked decision. If current evidence is already sufficient, leave Doctor and return to the authorized flow.
+2. Name the one missing fact and blocked decision. If current evidence is already sufficient, leave Doctor and return to normal implementation.
 3. Use systematic techniques only as needed: recent-change comparison, working-vs-broken comparison, backward data-flow tracing, single-hypothesis minimum tests, and condition-based waiting.
 4. Add only the minimum probe whose possible results can change the blocked decision. Keep reports, observations, interpretations, hypotheses, findings, and root-cause claims distinct.
-5. If source/authority/test location is unclear, use Domain Navigation only for that bounded discovery and then return here.
+5. If source/authority/test location is unclear, locate it directly (or consult `domain-navigation` if available) and then return here.
 6. Define a minimum evidence-supported fault/fix boundary. Diagnosis is evidence, not execution authorization.
-7. If the active task does not authorize the behavior change/side effects, return to Project Governance for reconciliation before mutation.
-8. After an authorized fix, use risk-proportional regression verification and retire/promote diagnostic probes explicitly.
+7. If the required fix exceeds the current authorized task scope or introduces privilege, security, or irreversible data risk (`G3`), pause and confirm with the user before mutating.
+8. After an authorized fix, scale regression verification (`V1` focused -> `V3` broad) to actual impact and retire/promote diagnostic probes explicitly.
 
-Use Project Governance's G0–G3 scale for authority risk and its V0–V3 scale for verification evidence; do not infer one from the other. A probe or incident record does not grant execution permissions; the active trusted user task and host tools remain the authority.
+Keep authority risk (`G0`–`G3`) distinct from verification depth (`V0`–`V3`); do not infer one from the other. A probe or incident record does not grant execution permissions; the active trusted user task and host tools remain the authority.
 
 Incident Doctor does not create a diagnostic platform, permanent observability expansion, broad redesign authority, automatic remediation, or a universal rule that every bug must undergo root-cause ceremony.

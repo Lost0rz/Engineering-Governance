@@ -13,11 +13,11 @@ A file path is a routing hint, **not** a risk verdict. For a normative Markdown 
 
 ## CI selection
 
-`VERIFICATION_PLAN_V1` is implemented by `scripts/verification-plan.py`. CI obtains the complete base/head diff, including rename origins, and runs the selector from the trusted **base**, not PR-supplied policy. The plan lists the source identities, selected/skipped suites, reasons and `TESTS_PENDING`. Untrusted or unverifiable selection receives conservative testing; skipped work is reported as skipped, never PASS.
+`EG_CI_CAPABILITIES_V1` / `EG_CI_PLAN_V1` is implemented by [ci-router.py](../scripts/ci-router.py) and configured in `.github/ci-capabilities.json`. CI evaluates the tested PR merge revision against the trusted **base**, loading both the router script and capability catalog from that accepted base rather than PR-supplied edits. The plan lists source identities, selected lanes, `unmapped_paths`, and `NOT_RUN` until executed. Untrusted, unmapped, or unverifiable selections fall back safely; skipped work is never reported as PASS.
 
-For this repository, descriptive history can use V0; README/notes use V1; active Skill/contract Markdown uses affected V2 suites; trusted executable policy, CI/selector and unknown executable owners use V3. The chosen tier does **not** authorize writes, packaging or merge.
+For this repository, `archive/**` and `examples/**` descriptive files can use V0; Skill/contract/template prose uses V1 (`workflow-contracts`); packaging/manifest/reference updates add V2 (`packaging-contracts` / `router-contracts`); router scripts, workflows, policy JSON, and tests use V3 (`full-governance-suite`). The chosen tier does **not** authorize writes, packaging or merge.
 
-**Build preview** is an independently requested `workflow_dispatch.package_preview` action; publishing/installing/releasing requires its own observable evidence.
+**Build preview** is an independently requested `workflow_dispatch.package_preview` action using `scripts/package-plugin.py`; publishing/installing/releasing requires its own observable evidence.
 
 ## Cadence and acceptance
 

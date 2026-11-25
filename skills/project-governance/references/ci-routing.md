@@ -4,9 +4,9 @@ The installed `project-governance` Skill guides test selection and initial adopt
 
 ## First adoption without a bootstrap deadlock
 
-1. Inspect existing workflows, product tests and Runner labels. Use `ci-router.py discover --repo-root PROJECT` as a **hint**, not an automatic command authority.
-2. **Phase A:** add a minimal reviewed [ci-capabilities.json](../assets/examples/ci-capabilities.example.json) to the project's default branch while its existing CI is still operational. This file owns test commands, paths, optional `requires` dependencies, labels and relevant setup. New executable commands are not taken from a PR-supplied copy.
-3. **Phase B:** after the config is accepted on the default branch, adopt the small [caller](../assets/examples/ci-caller.example.yml), and retire overlapping old heavy triggers in the same change. Keep genuine release/deployment jobs project-owned.
+1. Inspect existing workflows, product tests and Runner labels. Use `ci-router.py discover --repo-root PROJECT` as a **hint** (it reports detected languages, manifests and existing workflows), not an automatic command authority.
+2. **Phase A:** add a minimal reviewed [ci-capabilities.json](../assets/examples/ci-capabilities.example.json) to the project's default branch while its existing CI is still operational. This file owns test commands, paths, optional `exclude_paths`, optional `include_docs`, optional `requires` dependencies, labels and relevant setup. Run `ci-router.py check-catalog --repo-root PROJECT` to catch dead glob patterns before committing. New executable commands are not taken from a PR-supplied copy.
+3. **Phase B:** after the config is accepted on the default branch, adopt the small [caller](../assets/examples/ci-caller.example.yml) (which includes PR `concurrency` cancellation so redundant pushes do not queue stale self-hosted runs), and retire overlapping old heavy triggers in the same change. Keep genuine release/deployment jobs project-owned.
 4. Check Ready scope, manual focused tests, true Runner labels, required-check identity and rollback. New/updated catalog commands are used by CI **only after acceptance into the trusted base**. When adding or changing a test lane, select `test_ci_router.py` in the Engineering Governance project's existing manual focused CI (or the applicable consumer test ID after adoption) rather than running full CI merely because the catalog was edited.
 
 There is no per-Issue, writer handoff, comment or special approver requirement. Ordinary updates to the catalog use the same repository write permissions as other project files; CI syntax-checks the proposed catalog but executes **only accepted-base** commands. A config-only update is not blocked merely because the file changed.
@@ -14,12 +14,13 @@ There is no per-Issue, writer handoff, comment or special approver requirement. 
 ## Local agent or desktop invocation
 
     python3 ci-router.py discover --repo-root PROJECT
+    python3 ci-router.py check-catalog --repo-root PROJECT --require-complete-mapping
     HEAD_SHA=$(git -C PROJECT rev-parse HEAD)
     python3 ci-router.py plan --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --config-source file --stage milestone
-    python3 ci-router.py run --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --trusted-ref refs/remotes/origin/main --stage milestone
+    python3 ci-router.py run --repo-root PROJECT --base "$HEAD_SHA" --head "$HEAD_SHA" --worktree --trusted-ref refs/remotes/origin/main --stage milestone --keep-going
     python3 ci-router.py run --repo-root PROJECT --base BASE --head HEAD --trusted-ref refs/remotes/origin/main --stage focused --focused TEST_ID
 
-`plan --worktree` includes staged, unstaged and untracked changes without committing; `run` includes them automatically so its scope matches the code actually executed. Worktree comparison is rejected in GitHub-output mode. `plan` never starts tests. For local `run`, select the accepted default branch with `--trusted-ref refs/remotes/origin/<default-branch>`; the router verifies it against `origin/HEAD`. If a checkout has no `origin/HEAD`, supply `--default-branch <default-branch>` from the host's repository settings (for example, `--default-branch main`). Do not use a task branch as a trusted test-command source. The router also checks the supplied HEAD equals the current checkout. Test logs go to stderr and one JSON result goes to stdout. `file` mode is planning only; actual host execution permission is still required.
+`plan --worktree` includes staged, unstaged and untracked net edits relative to the comparison baseline without committing; `run` includes them automatically so its scope matches the code actually executed. Worktree comparison is rejected in GitHub-output mode. `plan` never starts tests. Local `run` executes selected lanes in topological order (`requires` prerequisites and lighter tiers `V1` → `V2` → `V3` first), records `duration_ms` per lane, and supports `--keep-going` to continue independent lanes while marking failed-dependency lanes `DEPENDENCY_FAILED`. For local `run`, select the accepted default branch with `--trusted-ref refs/remotes/origin/<default-branch>`; the router verifies it against `origin/HEAD`. If a checkout has no `origin/HEAD`, supply `--default-branch <default-branch>` from the host's repository settings (for example, `--default-branch main`). Do not use a task branch as a trusted test-command source. The router also checks the supplied HEAD equals the current checkout. Test logs go to stderr and one JSON result goes to stdout. `file` mode is planning only; actual host execution permission is still required.
 
 ## Read-only specialist import evidence
 
@@ -52,9 +53,9 @@ This optimization is intentionally narrow and **disabled unless the trusted cata
 
 This only governs suites called through the Engineering Governance capability catalog. Separate project-owned Browser/real-provider/cross-repo workflow selectors need their own scoped path rules or migration into the catalog; installing this router alone does not suppress those workflows.
 
-V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites but does **not** serialize GitHub matrix jobs. Tests needing execution order should use one project-owned command or setup step. Documentation exemptions apply only to descriptive text file types, ordinary Git file modes and **bounded** patterns (for example `docs/**`); `**` and ambiguous root-wide wildcard patterns are rejected.
+V1/V2/V3 describe evidence depth, not permission. The current highest selected tier is reported; `requires` co-selects related suites locally in dependency order, while GitHub Actions runs independent matrix jobs unless tests share one project-owned command or setup step. Documentation exemptions apply **before** module path matching for descriptive text files under **bounded** `documentation_paths` patterns (for example `docs/**` or `apps/web/docs/**`) when file modes are ordinary regular files (a lane may still opt in via `"include_docs": true`); `**` and ambiguous root-wide wildcard patterns remain rejected. Lanes may also declare `"exclude_paths"` to carve out specific subdirectories or non-code files without masking unmapped source files.
 
-Unmapped files stay visible as `PARTIAL_UNMAPPED`. `fallback_tests` selects a smoke lane but **does not automatically pass Ready**. Only an accepted-base `fallback_satisfies_ready: true` may establish `FALLBACK_COVERED`, and even then the result is not `FULL_SUITE_PASS`. Without credible coverage the Ready check fails rather than silently skipping tests.
+Unmapped files stay visible as `PARTIAL_UNMAPPED`. `fallback_tests` selects a smoke lane but **does not automatically pass Ready**. Only an accepted-base `fallback_satisfies_ready: true` may establish `FALLBACK_COVERED`, and even then the result is not `FULL_SUITE_PASS`. Without credible coverage the Ready check fails rather than silently skipping tests. Run `ci-router.py check-catalog --repo-root PROJECT` regularly to detect dead `paths`/`exclude_paths` globs after refactors.
 
 ## Configuring the CI control Runner
 
@@ -66,7 +67,7 @@ Example trusted caller input:
 
 ~~~yaml
 with:
-  control_runner: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && '["ubuntu-latest"]' || '["self-hosted","merloom-ci","macOS","ARM64","mac-mini-ci"]' }}
+  control_runner: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && '["ubuntu-latest"]' || '["self-hosted","macOS","ARM64","mac-mini-ci"]' }}
 ~~~
 
 The expression uses the GitHub Actions caller context; the [canonical caller example](../assets/examples/ci-caller.example.yml) includes the same syntax. In a dedicated same-repository-only environment, a literal JSON label array is sufficient.
