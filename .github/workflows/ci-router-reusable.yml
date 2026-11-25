@@ -53,15 +53,76 @@ jobs:
           persist-credentials: false
           path: project
 
-      # Caller must pin the matching published workflow and router release.
-      # No commands are loaded from the PR version of capabilities.json.
+      - name: Resolve pinned Governance router ref
+        id: router_ref
+        shell: bash
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          set -euo pipefail
+          ref="${WORKFLOW_REF##*@}"
+          if [[ ! "$ref" =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|[0-9a-f]{40})$ ]]; then
+            echo "::error::Reusable workflow must be pinned to an immutable release tag or 40-char commit SHA (got: $ref)"
+            exit 2
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      # Check out the exact immutable tag or SHA invoked by the caller.
       - name: Checkout pinned Governance router
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: v0.10.3
+          ref: ${{ steps.router_ref.outputs.ref }}
           persist-credentials: false
           path: governance
+
+      - name: Hydrate base catalog and Python diff blobs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SERVER_URL: ${{ github.server_url }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CAPABILITIES_PATH: ${{ inputs.capabilities_path }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          COMPARISON_BASE: ${{ inputs.comparison_base }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${GH_TOKEN:-}" ]] || [[ "$(git -C project config --get remote.origin.promisor || true)" != "true" ]]; then
+            exit 0
+          fi
+          oids_file="$RUNNER_TEMP/eg-hydrate-oids.txt"
+          : > "$oids_file"
+          candidates=()
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]] && git -C project rev-parse --verify -q "HEAD^2" >/dev/null; then
+            candidates+=("$(git -C project rev-parse HEAD^1)")
+          fi
+          for ref in "${BASE_SHA:-}" "${HEAD_SHA:-}" "${COMPARISON_BASE:-}" "refs/remotes/origin/${DEFAULT_BRANCH:-}"; do
+            if [[ -n "$ref" ]] && git -C project rev-parse --verify -q "$ref^{commit}" >/dev/null; then
+              candidates+=("$ref")
+            fi
+          done
+          for c in "${candidates[@]}"; do
+            git -C project rev-parse --verify -q "$c:$CAPABILITIES_PATH" >> "$oids_file" || true
+          done
+          DIFF_BASE="${COMPARISON_BASE:-${BASE_SHA:-}}"
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]] && git -C project rev-parse --verify -q "HEAD^2" >/dev/null; then
+            DIFF_BASE="$(git -C project rev-parse HEAD^1)"
+          fi
+          if [[ -n "$DIFF_BASE" && -n "${HEAD_SHA:-}" && "$DIFF_BASE" != "$HEAD_SHA" ]] && \
+             git -C project rev-parse --verify -q "$DIFF_BASE^{commit}" >/dev/null && \
+             git -C project rev-parse --verify -q "$HEAD_SHA^{commit}" >/dev/null; then
+            OLD_REF="$(git -C project merge-base "$DIFF_BASE" "$HEAD_SHA")"
+            git -C project diff-tree -r -M --no-commit-id --diff-filter=M "$OLD_REF" "$HEAD_SHA" -- '*.py' \
+              | awk '{print $3; print $4}' >> "$oids_file" || true
+          fi
+          grep -E '^[0-9a-f]{40,64}$' "$oids_file" | grep -vx '0\{40,64\}' | sort -u > "${oids_file}.uniq" || true
+          mv "${oids_file}.uniq" "$oids_file"
+          if [[ -s "$oids_file" ]]; then
+            AUTH_B64="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')"
+            git -C project -c "http.${SERVER_URL%/}/.extraheader=AUTHORIZATION: basic ${AUTH_B64}" cat-file --batch < "$oids_file" >/dev/null
+          fi
+          rm -f "$oids_file"
 
       - name: Plan affected tests
         id: select
@@ -98,7 +159,19 @@ jobs:
           fi
           # Trust commands from the accepted base, not the PR's new config.
           CONFIG_REF="$BASE_SHA"
-          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            test -n "$BASE_SHA" && test -n "$HEAD_SHA"
+            if git -C project rev-parse --verify -q "HEAD^2" >/dev/null; then
+              MERGE_P1="$(git -C project rev-parse HEAD^1)"
+              MERGE_P2="$(git -C project rev-parse HEAD^2)"
+              if [[ "$MERGE_P2" != "$HEAD_SHA" ]] || ! git -C project merge-base --is-ancestor "$BASE_SHA" "$MERGE_P1"; then
+                echo "::error::PR merge tree parents do not match pull_request base/head identity."
+                exit 2
+              fi
+              BASE_SHA="$MERGE_P1"
+              CONFIG_REF="$MERGE_P1"
+            fi
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             test -n "$DEFAULT_BRANCH"
             # fetch-depth=0 retrieves origin/*; no private repo credentials needed.
             TRUSTED_DEFAULT="refs/remotes/origin/$DEFAULT_BRANCH"
@@ -130,7 +203,11 @@ jobs:
             exit 2
           fi
           test -n "$BASE_SHA" && test -n "$CONFIG_REF"
-          python3 governance/skills/project-governance/scripts/ci-router.py plan \
+          ROUTER_BIN="governance/skills/ci-governance/scripts/ci-router.py"
+          if [[ ! -f "$ROUTER_BIN" ]]; then
+            ROUTER_BIN="governance/skills/project-governance/scripts/ci-router.py"
+          fi
+          python3 "$ROUTER_BIN" plan \
             --repo-root project --base "$BASE_SHA" --head "$HEAD_SHA" \
             --config-ref "$CONFIG_REF" --config-path "$CAPABILITIES_PATH" --config-source base \
             --source-trust "$source_trust" --stage "$stage" --focused "$FOCUSED_TEST" \
@@ -142,7 +219,19 @@ jobs:
           print("### Engineering Governance selected tests")
           for key in ("base", "head", "stage", "coverage", "config_ref", "config_sha256"):
               print("- " + key + ": " + str(p[key]))
+          changed = p.get("changed_paths", [])
+          preview = ", ".join(changed[:20]) + (f" ... (+{len(changed) - 20} more)" if len(changed) > 20 else "")
+          print(f"- Changed paths ({len(changed)}): " + (preview or "NONE"))
           print("- Selected: " + (", ".join(p["selected_test_ids"]) or "NONE"))
+          if p.get("superseded_test_ids"):
+              print("- Superseded: " + ", ".join(p["superseded_test_ids"]))
+          if p.get("import_only_substitutions"):
+              subs = [f"{k} -> {'+'.join(v.get('alternatives', []))}" for k, v in p["import_only_substitutions"].items()]
+              print("- Import-only substitutions: " + ", ".join(subs))
+          if p.get("retired_doc_paths"):
+              retired = p["retired_doc_paths"]
+              rprev = ", ".join(retired[:10]) + (f" ... (+{len(retired) - 10} more)" if len(retired) > 10 else "")
+              print(f"- Retired doc paths ({len(retired)}): " + rprev)
           if p["capabilities_changed"]:
               print("- Capabilities: PR format checked; accepted-base commands used.")
               print("- New commands must be evaluated after they enter the trusted baseline.")

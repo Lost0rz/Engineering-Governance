@@ -1,101 +1,54 @@
-# Audit contract
+# Audit contract — formal readiness, CI & release provenance
+
+Load when `evidence-audit` performs `DEEP_PROVENANCE_OR_CI_AUDIT` (`CI`, `RELEASE_PROVENANCE`, `POST_CHANGE`, or multi-claim verification). Routine `CODE_DIFF` / `PR_MERGE` audits can run directly from [SKILL.md](../SKILL.md).
 
 ## 1. Advisory inspection vs formal verdict
 
-Keep two read-only purposes distinct:
+- **Advisory status inspection** summarizes current state without claiming acceptance and needs no `evidence-audit` ceremony.
+- **Formal acceptance verdict** evaluates an explicit target boundary (`CODE_DIFF`, `PR_MERGE`, `CI`, `RELEASE_PROVENANCE`, or `POST_CHANGE`) and remains strictly read-only.
 
-- **ADVISORY_READ_ONLY_INSPECTION** — report current evidence/status without a formal acceptance/readiness claim. It may remain under Project Governance and does not require a new AUDIT task solely because evidence is viewed.
-- **FORMAL_ACCEPTANCE_OR_READINESS** — return an Evidence Audit verdict for an explicit boundary. If the active task already authorizes that acceptance, use it; if this is a materially distinct engineering purpose, Project Governance authorizes the corresponding AUDIT/VERIFY task purpose.
+## 2. Identity binding & audit independence
 
-Neither purpose grants corrective mutation.
+Bind every verdict to the exact target being claimed (`repo`, `base`/`head` or merge commit SHA, PR number, workflow run/job ID, or artifact SHA256) and state `AUDIT_INDEPENDENCE` (`SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN`). Never transfer `PASS` from an older commit unless semantic equivalence is explicitly established, and never count an implementation self-check as independent or human acceptance.
 
-## 2. Audit purpose and independence
+Keep action risk (`G0`–`G3`) separate from verification depth (`V0`–`V3`).
 
-Implementation self-check remains useful verification but is not automatically independent acceptance. When independence is material, declare:
+## 3. Audit profile checklists
 
-```text
-AUDIT_INDEPENDENCE: SELF_CHECK | FRESH_CONTEXT | SEPARATE_AGENT | HUMAN
-```
+- **`CODE_DIFF`:** verify target behavior, diff bounds, canonical owner preservation, and executed tests (explicitly flag weakened assertions in `tests/**` or unreviewed `.github/**` edits).
+- **`PR_MERGE`:** evaluate both semantic diff evidence and **current live repository-host gates** (branch protection, required checks, reviews, mergeability) for the literal PR head/base.
+- **`CI`:** verify workflow trigger/event, parent-commit alignment on merge trees, actual job matrix coverage, `fork_safe` boundaries, and skipped checks (`no status reported` is never `PASS`).
+- **`RELEASE_PROVENANCE`:** verify source commit/tag, builder workflow, deterministic artifact hash, bundle contents (including required upstream licenses/provenance, excluding dev tests/archives), and manifest version match.
+- **`POST_CHANGE`:** bind observed merge/deploy commit and actual installed runtime state; source tests alone never prove deployed or installed host behavior.
 
-The required level follows user/task/risk requirements; do not force expensive independence for every local check.
+## 4. Semantic evidence vs live host gates
 
-## 3. Evidence before verdict
+Semantic test/review evidence may remain valid across non-semantic doc-only edits with proven behavior equivalence, whereas live repository-host gates (required checks, approvals, merge state) must be reread fresh for the literal head identity.
 
-Every material finding names supporting evidence: requirement/authority, path/symbol/diff, test result, CI run/job, PR/host gate, release/provenance record, artifact hash or runtime observation.
+## 5. Environment threat profiles (`SERVICE_OR_UNTRUSTED_INPUT` vs `SANDBOXED_APP`)
 
-Classify governance authority risk G0–G3 separately from verification evidence tier V0–V3 and audit independence. A valid-looking local risk-grant snapshot cannot prove live host authority or credential separation; missing required host evidence remains UNKNOWN.
+Select the threat boundary from project `AGENTS.md` (defaulting to `SERVICE_OR_UNTRUSTED_INPUT` when unspecified):
 
-Do not substitute confidence, prior summaries or matching names for underlying evidence when available.
+- **`SERVICE_OR_UNTRUSTED_INPUT` (default):** applies to backends, web APIs, multi-tenant services, CI routers, and package builders. Untrusted network inputs, auth/tenant boundaries, cross-fork PR payloads, symlink/path traversal, and replay/race hazards count as reachable trigger paths.
+- **`SANDBOXED_APP` (project `AGENTS.md` opt-in for iOS / macOS / sandboxed client apps):**
+  - Valid mutation sources are strictly **the App itself**, **real OS/environment lifecycle events** (network drop/switch/slowdown, app suspend/kill/force-quit, sleep/wake, app/page switch, rapid multi-tap, rotation/split-screen/external display, low battery/disk full, clock skew, push/deep-link arrival, version upgrade/migration, slow/errored/quota-exhausted upstream APIs, realistic max user data volume), and **prior App versions**.
+  - **Theoretical ("Godzilla") cap -> `MINOR` (`P2`):** local file bit-rot/manual truncation/permission tampering outside the App's own write/cleanup code, local root/jailbreak/malicious sibling processes, hypothetical callers with zero call sites, `>10x` unrealistic scale, or test-double-only states unreachable by real App code.
+  - **Preserved product gates (never cut):** consent & privacy scrubbing before data leaves the device, zero data/settings loss on update, confirmation on irreversible billing/deletion, and expiring rollback flags. Projects may append domain-specific real environment events in `AGENTS.md` (tightening examples only, never relaxing the midline).
 
-## 4. Common identity and coverage envelope
+## 6. Collateral checklist, severity governance & convergence
 
-Before a formal verdict establish as applicable:
+### Collateral & root-vs-leaf check (mandatory first step before single-point findings)
+1. Did other views, shared state, counters, or lists shift unexpectedly?
+2. How many codepaths manage this symptom—did the change patch only one leaf?
+3. Were existing flags, invariants, or prior fixes bypassed or negated?
+4. Did latency, background cadence, or upstream call volume regress?
+5. Does upgrading from older persisted versions/settings remain intact?
+6. Is this a canonical root fix, or a stacked patch/extra state machine likely to spawn the next bug?
 
-```text
-TASK_ID
-AUDIT_PROFILE
-AUDIT_INDEPENDENCE
-TARGET
-EXPECTED_AUTHORITY_OR_REQUIREMENT
-BASE_HEAD_RANGE_OR_ARTIFACT_ID
-DELIVERY_SEMANTIC_IDENTITY
-LITERAL_HOST_IDENTITY
-EVIDENCE_FRESHNESS
-KNOWN_EQUIVALENCE_OR_PROVENANCE
-REQUIRED_CLAIMS
-OBSERVED_EVIDENCE
-UNVERIFIED_REQUIRED_CLAIMS
-```
+### Severity governance (`BLOCKING == P0`, `IMPORTANT == P1`, `MINOR == P2`, `BACKLOG_NOTE`)
+- `BLOCKING` (`P0`) -> `STOP`; `IMPORTANT` (`P1`) -> `STOP` unless the responsible owner explicitly accepts deferral. Every `P0`/`P1` must state **(a) reachable trigger path**, **(b) observable user/caller impact**, and **(c) trigger condition/frequency**; missing any one auto-downgrades to `MINOR` (`P2`) with a 1-line reason, while `>=3` independent low-probability conditions or sub-ms races without a user path log 1 line under `BACKLOG_NOTE` (`NO_FIX`).
+- Required claim lacking evidence (`UNKNOWN`) -> `STOP`.
+- Implementers cannot self-downgrade findings without orchestrator/owner sign-off; surface `OPEN_QUESTION` when user reachability is genuinely uncertain. Escalate any `MINOR` (`P2`) hit by real users or recurring across `>=3` audits back to `IMPORTANT` (`P1`).
+- **Anti-overtightening & 2-round convergence:** stop adding local checksums, locks, or extra retry state machines for pathless theoretical races; close review/rework loops (`PASS_WITH_FOLLOWUPS`) once two consecutive passes yield only `MINOR` (`P2`) or `BACKLOG_NOTE` items, listing every check, surface, and scenario audited.
 
-Evidence proves the identity/claim it actually observed. A required claim with insufficient evidence remains `UNKNOWN`.
-
-## 5. Audit profiles
-
-### CODE_DIFF
-Determine whether a bounded source change satisfies accepted requirements and preserves canonical authority/interfaces. Inspect diff, relevant surrounding authority, tests/checks and regression boundary. Do not inflate into repository-wide health review without need.
-
-### PR_MERGE
-Evaluate both semantic implementation evidence for the audited Delivery/Semantic identity and **current live repository-host gates** for the literal PR/base/head identity.
-
-### CI
-Verify expected repository/ref/head or merge ref, workflow/job identity, trigger/context, actual conclusion, relevant step coverage and artifact/result identity. `no status reported` is not `PASS`.
-
-### RELEASE_PROVENANCE
-Check source commit/tag, producer/workflow, artifact identity/hash, package contents/version and provenance chain as material.
-
-### POST_CHANGE
-Name the observed merge commit/tree, package/build/install/deploy/runtime identity and proposition being verified. Do not infer installed/runtime behavior solely from source success without provenance/equivalence.
-
-## 6. Semantic evidence vs host gates
-
-Semantic test/CI/review/audit evidence may remain valid across proven `CONTROL_ONLY_DRIFT` when semantic-tree equivalence/task conditions permit reuse. Live repository-host gates are separate and are reread at the boundary they govern.
-
-## 7. Findings and boundary disposition
-
-- `BLOCKING` -> `STOP`.
-- `IMPORTANT` -> `STOP` when correction is required before the boundary; otherwise follow-up only when responsible authority explicitly accepts/defers it.
-- `MINOR` -> may coexist with `PASS_WITH_FOLLOWUPS`.
-- required `UNKNOWN` -> `STOP`.
-
-## 8. Verdict
-
-- `PASS` — all required claims supported and no blocking/required-before-boundary issue remains.
-- `PASS_WITH_FOLLOWUPS` — required claims supported and only explicitly non-blocking/deferred items remain.
-- `STOP` — blocking defect, required-before-boundary issue, required unknown, identity mismatch or applicable host gate blocks acceptance.
-
-State the exact boundary. `CODE_DIFF PASS` does not imply `PR_MERGE PASS`; source audit does not imply installed-runtime acceptance.
-
-## 9. Reviewer finding validation
-
-A reviewer/agent suggestion is a claim. Verify it before corrective mutation. If valid but outside current task purpose, return to Project Governance for reconciliation/corrective authorization.
-
-## 10. Read-only rule
-
-Evidence Audit may report stale controls:
-
-```text
-CONTROL_ALIGNMENT_OBSERVATION: STALE
-CONTROL_MUTATION: NOT_AUTHORIZED_READ_ONLY
-```
-
-It does not update controls/source merely to make an audit clean.
+Audit findings never authorize unapproved writes or status-only commits; report stale projections or alignment drift without mutating files.

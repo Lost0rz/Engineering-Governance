@@ -13,36 +13,19 @@ A top-level Skill is justified only when it has all of:
 5. negative/near-miss guidance preventing routine overuse;
 6. positive guidance strong enough to avoid material under-use.
 
-A topic, checklist, template or reference section alone does not justify a Skill.
+A topic, checklist, template, or small rule fragment does not justify a separate Skill or a separate micro-reference file. Keep routine sub-modes inline in `SKILL.md` (`<= 50` lines total) and consolidate deep reference contracts into cohesive files (`>= 28` lines) so agents never pay multi-round file-read taxes for tiny rules.
 
-`project-profile` qualifies because its requested output is a compact derived context/index produced by classification across project authorities; it neither owns normal engineering execution nor duplicates Domain Navigation.
+## 3-Tier Lightweight Routing Pyramid
 
-`design` qualifies because bounded UI/UX/frontend visual-design choices require a distinct design process and quality criteria while remaining separate from `solution-design` engineering architecture/state-ownership decisions and from Project Governance task authority.
+- **L0 (Frontmatter):** `name` and `description` must provide orthogonal positive triggers and explicit `Do not...` exclusions so hosts enter **one** matching domain directly without an intermediate router hop.
+- **L1 (`SKILL.md` Fast Route):** begin with a `## Fast route` mode table where common modes require `NONE` extra reference reads.
+- **L2 (`references/*.md`):** load at most one consolidated reference for the selected deep sub-mode. Never place nested `SKILL.md` files inside `references/`.
 
-## Description / progressive disclosure
+## Composition & authority discipline
 
-Frontmatter primarily answers **when to use this Skill**. Keep `SKILL.md` focused on trigger, authority boundary, core workflow and supporting references. Put detailed matrices/templates/examples under `references/` or `assets/`.
+- A Skill may consult another only for an unresolved cross-domain dependency, then resume. Do not create recursive peer meshes.
+- Runtime orchestration, model selection, and actual write authorization remain host-owned (`AGENTS.md`, host permissions, explicit user delegation rules). Derived profiles (`PROJECT_PROFILE.md`), domain maps (`DOMAIN_MAP.md`), and handoff cards never grant credentials or override canonical source truth.
 
-## Composition
+## Route-quality scenarios & verification
 
-A Skill may call another only for a bounded dependency. Preserve project task/control authority and return to the caller. Do not create recursive peer meshes or multiple implicit controllers.
-
-Task purpose and execution context remain separate. Runtime configuration remains environment-owned unless accepted project authority explicitly makes it portable.
-
-## Route-quality scenarios
-
-Every materially changed trigger/routing contract defines positive scenarios and negative/near-miss scenarios. Over-triggering is a defect. Materially suppressing safe useful capability can also be a defect.
-
-Project Profile must not trigger merely because a project exists; normal development still enters Project Governance. Domain Navigation must not be replaced by a summary Profile. Design must not trigger merely because an engineering task contains the word “design”; Solution Design remains the route for architecture/state-ownership ambiguity.
-
-## Authority discipline
-
-No Skill may create a hidden replacement for project `AGENTS.md`, accepted product/domain/data/runtime truth, the current user task or the actual GitHub Issue/PR evidence. Shared plans and derived artifacts do not grant credentials or define additional approval stages.
-
-Derived Profile/Domain projections and transport/evidence artifacts remain non-authoritative. Environment-specific runtime observations remain evidence about that environment, not reusable Plugin defaults.
-
-## Verification of Skill changes
-
-During construction use bounded static checks for names/frontmatter/references/contradictions. For multi-Skill architecture work, freeze the full source architecture before expensive installed/runtime acceptance when the task defines that cadence.
-
-Final acceptance exercises positive/negative routing, cross-Skill composition, authority preservation, task-vs-context separation, environment configuration isolation, and any new artifact/transport lifecycle semantics. Do not prove only that each Skill file loads independently.
+Every materially changed routing contract must remain consistent with [tests/routing_golden_cases.json](../tests/routing_golden_cases.json) and pass [tests/test_workflow_contracts.py](../tests/test_workflow_contracts.py) (frontmatter positive/negative checks, `SKILL.md` line budget, non-fragmented references, link integrity, and upstream license provenance).

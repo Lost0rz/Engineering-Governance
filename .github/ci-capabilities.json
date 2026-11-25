@@ -1,0 +1,150 @@
+{
+  "contract": "EG_CI_CAPABILITIES_V1",
+  "documentation_paths": [
+    "archive/**",
+    "examples/**"
+  ],
+  "fallback_tests": [
+    "full-governance-suite"
+  ],
+  "fallback_satisfies_ready": false,
+  "tests": [
+    {
+      "id": "workflow-contracts",
+      "tier": "V1",
+      "paths": [
+        "README.md",
+        "AGENTS.md",
+        "rules/**",
+        "skills/**",
+        "references/**",
+        ".github/ISSUE_TEMPLATE/**"
+      ],
+      "exclude_paths": [
+        "skills/ci-governance/scripts/**",
+        "skills/engineering-workflow/assets/control-policy.json"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "fork_safe": true,
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_workflow_contracts.py",
+        "-v"
+      ],
+      "timeout_minutes": 5
+    },
+    {
+      "id": "packaging-contracts",
+      "tier": "V2",
+      "paths": [
+        "plugin.json",
+        ".agents/**",
+        "rules/**",
+        "skills/**",
+        "references/**",
+        "scripts/**"
+      ],
+      "exclude_paths": [
+        "skills/ci-governance/scripts/**"
+      ],
+      "requires": [
+        "workflow-contracts"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "fork_safe": true,
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_plugin_packaging.py",
+        "-v"
+      ],
+      "timeout_minutes": 5
+    },
+    {
+      "id": "router-contracts",
+      "tier": "V2",
+      "paths": [
+        ".github/ci-capabilities.json",
+        "skills/ci-governance/**"
+      ],
+      "requires": [
+        "workflow-contracts"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "fork_safe": true,
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_ci_router.py",
+        "-v"
+      ],
+      "timeout_minutes": 10
+    },
+    {
+      "id": "full-governance-suite",
+      "tier": "V3",
+      "paths": [
+        ".gitignore",
+        "skills/ci-governance/scripts/**",
+        "skills/engineering-workflow/assets/control-policy.json",
+        ".github/workflows/**",
+        "scripts/**",
+        "tests/**"
+      ],
+      "supersedes": [
+        "workflow-contracts",
+        "packaging-contracts",
+        "router-contracts"
+      ],
+      "runner": [
+        "ubuntu-latest"
+      ],
+      "fork_safe": true,
+      "setup": [
+        [
+          "python3",
+          "-m",
+          "compileall",
+          "-q",
+          "skills/ci-governance/scripts",
+          "scripts",
+          "tests"
+        ]
+      ],
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "timeout_minutes": 10
+    }
+  ]
+}

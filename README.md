@@ -1,37 +1,34 @@
 # Engineering Governance
 
-Reusable AI engineering **workflow, methods and proportional verification**, not a mandatory Issue/approval system. Project-specific source, runtime and business constraints remain with their project.
+Modular AI engineering **Skills, methods, and proportional verification**—structured as a **3-tier lightweight routing pyramid** packaged as a standard, toggleable plugin. Project-specific source, runtime, and business constraints stay with each project.
 
-## Working method
+## 3-Tier Lightweight Routing (7 Orthogonal Domains)
 
-Understand → route to the needed specialist → implement → test affected behavior at sensible milestones → deliver observed evidence.
+1. **L0 (Frontmatter trigger):** the host sees only Skill names and descriptions (`Do` + `Do not` boundaries) and enters **one** matching domain directly—no intermediate two-hop router.
+2. **L1 (`SKILL.md` Fast Route, <=50 lines):** every `SKILL.md` routes straight to an inline fast path (**0 extra file reads** for routine tasks) or names a deep sub-mode.
+3. **L2 (Single deep reference):** read at most one consolidated `references/*.md` file only when the deep sub-mode explicitly calls for it.
 
-| Skill | Responsibility |
-| --- | --- |
-| `project-governance` | Default engineering task, safety and delivery |
-| `design` | UI/UX and visual design |
-| `solution-design` | Architecture, API and state ownership |
-| `evidence-audit` | Formal evidence/readiness audit |
-| `incident-doctor` | Blocking fault diagnosis |
-| `domain-navigation` | Unclear source or test owner |
-| `execution-orchestrator` | Useful delegation and parallelism |
-| `agent-handoff` | Real cross-context transfer |
-| `project-profile` | Derived project context |
+| Domain Skill | Primary ownership | Inline fast-path modes | Deep reference modes |
+| --- | --- | --- | --- |
+| [`engineering-workflow`](skills/engineering-workflow/SKILL.md) | G1/G2 coding, batching, handoffs, workspaces, PR delivery | `DIRECT_BUILD` | `DELEGATE_OR_HANDOFF`, `DELIVERY_OR_WORKSPACE` |
+| [`ci-governance`](skills/ci-governance/SKILL.md) | Portable CI routing (`ci-router.py`), catalog hygiene, Actions | `SELECT_AND_RUN`, `VALIDATE_CATALOG` | `ONBOARD_OR_CONFIGURE` |
+| [`ui-design`](skills/ui-design/SKILL.md) | UI/UX polish, audits, token flows, visual specs, review | `MICRO_POLISH`, `AUDIT_ONLY`, `FLOW_WITH_TOKENS` | `FULL_DESIGN_SYSTEM`, `FINAL_REVIEW` |
+| [`architecture`](skills/architecture/SKILL.md) | SSOT state ownership, API contracts, concurrency, migrations | `BOUNDARY_DECISION` | `CONTRACT_OR_MIGRATION` |
+| [`incident-doctor`](skills/incident-doctor/SKILL.md) | Evidence-gated diagnosis and minimal probes for blocking faults | `EVIDENCE_GATE` | `PROBE_AND_TECHNIQUES`, `INCIDENT_RECORD` |
+| [`evidence-audit`](skills/evidence-audit/SKILL.md) | Collateral-first code review, `P0`–`P2` severity calibration (`SANDBOXED_APP`/`SERVICE`), PR/CI/release verdicts | `DIFF_OR_PR_AUDIT` | `DEEP_PROVENANCE_OR_CI_AUDIT` |
+| [`codebase-context`](skills/codebase-context/SKILL.md) | Source/test route discovery (`LOCATE_ROUTE`), profiles, domain maps | `LOCATE_ROUTE` | `PROJECT_PROFILE`, `DOMAIN_MAP` |
 
-Routing details: [global routing](skills/project-governance/references/global-routing.md).
+## Risk & Verification Layering
 
-## Task coordination
+- **Action risk (`G0`–`G3`):** `G0` read-only; `G1` localized recoverable fix; `G2` cross-module/contract edit (verify caller compatibility + `V2` integration); `G3` privilege, secrets, security trust, destructive data, or irreversible prod effects (pause for explicit owner confirmation).
+- **Test cadence (`V0`–`V3`):** `ci-router.py` separates `draft` (deferred), `focused` (single lane), `milestone` (`V1`/`V2` fast feedback), `ready` (`V1`–`V3` with `supersedes` deduplication), and `release` (complete catalog).
 
-Work can start from an authenticated current user instruction or use an existing Issue/PR plan. Issues are optional collaboration, not approvals. Anyone with real GitHub write capability and authorized task intent may create/update them; comments and fixed fields are not required.
+## Standard Toggleable Plugin Installation
 
-Write permission comes from the real execution host. G3-like privilege/security/destructive changes require a separate responsible decision. Routine scope-preserving code adjustments do not.
+Build a deterministic, symlink-safe runtime archive or standalone directory with `python3 scripts/package-plugin.py` (packages `plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `rules/AGENTS.md`, and `skills/**` without repo tests or `archive/**`):
 
-## Testing and installation
+- **Standardized setup & new Agent onboarding:** follow [`references/AGENT_INSTALLATION.md`](references/AGENT_INSTALLATION.md) for host-specific configurations, the 3-mode decision tree for onboarding any new Agent without re-running full benchmarks, project `AGENTS.md` threat-profile initialization, and the 30-second smoke check.
+- **Antigravity:** place under `plugins/engineering-governance/` or declare in `plugins.json`; toggle via Settings UI or `agy plugin enable|disable engineering-governance`. Individual skills can also be mounted selectively via `skills.json` (`include_only`).
+- **Codex / Claude Code:** install via `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, or `.claude-plugin/plugin.json`.
 
-[Verification tiers](skills/project-governance/references/verification-tiers.md) select test scope. Draft development does not auto-run broad GitHub CI; targeted checks are available and readiness/integration runs broader affected or full checks when justified. Plugin preview/build is separate.
-
-Portable cross-repository CI uses the [shared router](skills/project-governance/references/ci-routing.md): a single released policy in this repository plus a small trusted test-capabilities file and caller workflow per consumer repository. The installed Web/Desktop/local Skill can plan or help adopt the route; an authorized GitHub Actions event actually starts the Runner.
-
-In v0.10.3 the reusable CI workflow supports an optional trusted `control_runner` JSON label array for its Route and Result jobs (default `ubuntu-latest`). Individual test capabilities still choose their own Runner, and project-owned Browser/Cross-repo workflows remain separate. See [CI routing](skills/project-governance/references/ci-routing.md).
-
-The current source [policy](skills/project-governance/assets/control-policy.json) is not an execution token. The installed Web/Desktop/local version and actual host permissions must be verified independently.
+Source commit, CI state, packaged artifact, and installed runtime remain distinct observable claims.

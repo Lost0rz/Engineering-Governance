@@ -1,0 +1,186 @@
+[
+  {
+    "id": "workflow-direct-bugfix",
+    "prompt": "Fix the off-by-one pagination offset bug in backend/orders.py and run the orders unit test.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["architecture", "incident-doctor", "ci-governance"],
+    "expected_submode": "DIRECT_BUILD",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "workflow-non-visual-frontend-fix",
+    "prompt": "Fix the timezone bug in frontend/src/utils/formatDate.ts that formats UTC dates off by one day.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["ui-design"],
+    "expected_submode": "DIRECT_BUILD",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "workflow-delegate-parallel",
+    "prompt": "Split this 3-service refactor across disjoint parallel workers and coordinate verification without write conflicts.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["ci-governance", "architecture"],
+    "expected_submode": "DELEGATE_OR_HANDOFF",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "workflow-cross-context-card",
+    "prompt": "Package a structured handoff card with exact target, delta, and return contract for an external desktop session.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["evidence-audit"],
+    "expected_submode": "DELEGATE_OR_HANDOFF",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "workflow-delivery-pr-status",
+    "prompt": "Push the current authorized feature branch to origin, verify remote ref readback, and inspect PR status.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["evidence-audit", "ci-governance"],
+    "expected_submode": "DELIVERY_OR_WORKSPACE",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ci-select-and-run-local",
+    "prompt": "Run ci-router.py locally for my uncommitted changes at milestone stage to execute fast affected tests.",
+    "expected_primary_skill": "ci-governance",
+    "forbidden_first_hop": ["engineering-workflow", "evidence-audit"],
+    "expected_submode": "SELECT_AND_RUN",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ci-validate-catalog",
+    "prompt": "Check .github/ci-capabilities.json for dead path globs, symlink escapes, or unmapped source files.",
+    "expected_primary_skill": "ci-governance",
+    "forbidden_first_hop": ["evidence-audit", "codebase-context"],
+    "expected_submode": "VALIDATE_CATALOG",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ci-onboard-repo",
+    "prompt": "Scaffold .github/ci-capabilities.json and adopt the GitHub Actions reusable CI router workflow for this repository.",
+    "expected_primary_skill": "ci-governance",
+    "forbidden_first_hop": ["engineering-workflow", "architecture"],
+    "expected_submode": "ONBOARD_OR_CONFIGURE",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ui-micro-polish",
+    "prompt": "Tighten the spacing, alignment, and focus ring state on the existing filter bar buttons.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["engineering-workflow", "architecture"],
+    "expected_submode": "MICRO_POLISH",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ui-audit-only",
+    "prompt": "Audit the settings screen UI hierarchy and accessibility without changing any code.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["engineering-workflow", "evidence-audit"],
+    "expected_submode": "AUDIT_ONLY",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "ui-flow-with-tokens",
+    "prompt": "Add a new filter drawer and table bulk-action toolbar inside our existing admin design system tokens.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["architecture", "engineering-workflow"],
+    "expected_submode": "FLOW_WITH_TOKENS",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ui-full-design-system",
+    "prompt": "Create a brand-new visual aesthetic direction and full design specification for the redesigned landing experience.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["architecture"],
+    "expected_submode": "FULL_DESIGN_SYSTEM",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "ui-final-review",
+    "prompt": "Perform a final visual critique and polish on the newly implemented modal screenshots.",
+    "expected_primary_skill": "ui-design",
+    "forbidden_first_hop": ["evidence-audit"],
+    "expected_submode": "FINAL_REVIEW",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "arch-boundary-ssot",
+    "prompt": "Should draft invoice state live in local client store or backend PostgreSQL as canonical source of truth?",
+    "expected_primary_skill": "architecture",
+    "forbidden_first_hop": ["ui-design", "engineering-workflow"],
+    "expected_submode": "BOUNDARY_DECISION",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "arch-contract-migration",
+    "prompt": "Design a backward-compatible database schema migration and webhook idempotency contract for zero-downtime rollout.",
+    "expected_primary_skill": "architecture",
+    "forbidden_first_hop": ["ui-design", "engineering-workflow"],
+    "expected_submode": "CONTRACT_OR_MIGRATION",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "incident-blocking-unknown",
+    "prompt": "Production workers silently hang after 10 minutes with no stack trace and conflicting logs; isolate the missing fact.",
+    "expected_primary_skill": "incident-doctor",
+    "forbidden_first_hop": ["evidence-audit", "architecture"],
+    "expected_submode": "EVIDENCE_GATE",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "incident-negative-known-test-fail",
+    "prompt": "Test test_price_rounding failed with AssertionError: expected 10.00 got 10.01 in pricing.py:42; please fix it.",
+    "expected_primary_skill": "engineering-workflow",
+    "forbidden_first_hop": ["incident-doctor"],
+    "expected_submode": "DIRECT_BUILD",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "audit-pr-merge",
+    "prompt": "Give a formal read-only PR merge readiness verdict for PR #74 checking CI gates, diff coverage, and blockers.",
+    "expected_primary_skill": "evidence-audit",
+    "forbidden_first_hop": ["ui-design", "ci-governance"],
+    "expected_submode": "DIFF_OR_PR_AUDIT",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "audit-release-provenance",
+    "prompt": "Audit the built v0.11.0 release artifact against tag SHA, reproducible zip hash, and required license provenance.",
+    "expected_primary_skill": "evidence-audit",
+    "forbidden_first_hop": ["engineering-workflow", "ci-governance"],
+    "expected_submode": "DEEP_PROVENANCE_OR_CI_AUDIT",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "context-locate-route",
+    "prompt": "In this unfamiliar monorepo, locate where token refresh authority lives and which tests verify it.",
+    "expected_primary_skill": "codebase-context",
+    "forbidden_first_hop": ["incident-doctor", "architecture"],
+    "expected_submode": "LOCATE_ROUTE",
+    "max_extra_reads": 0
+  },
+  {
+    "id": "context-project-profile",
+    "prompt": "Create a compact durable PROJECT_PROFILE.md indexing this repository's domains and authorities.",
+    "expected_primary_skill": "codebase-context",
+    "forbidden_first_hop": ["engineering-workflow"],
+    "expected_submode": "PROJECT_PROFILE",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "audit-sandboxed-app-severity",
+    "prompt": "Review this macOS/iOS sandboxed app fix: check collateral side effects first and triage P0-P2 bug severities without hypothetical attacker modeling.",
+    "expected_primary_skill": "evidence-audit",
+    "forbidden_first_hop": ["engineering-workflow", "incident-doctor"],
+    "expected_submode": "DIFF_OR_PR_AUDIT",
+    "max_extra_reads": 1
+  },
+  {
+    "id": "audit-collateral-code-review",
+    "prompt": "Do a formal read-only code review checking whether this state fix only patched one leaf symptom and broke sibling callers.",
+    "expected_primary_skill": "evidence-audit",
+    "forbidden_first_hop": ["engineering-workflow", "architecture"],
+    "expected_submode": "DIFF_OR_PR_AUDIT",
+    "max_extra_reads": 0
+  }
+]

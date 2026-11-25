@@ -4,25 +4,25 @@ This repository records public work that informed its design. Most references be
 
 ## Anthropic `frontend-design`
 
-The v0.6.8 `design` capability intentionally bundles Anthropic's `frontend-design` Skill as its active design-reasoning source module. The imported Skill body is preserved under `skills/design/references/anthropic/frontend-design.md`; source identity and modification status are recorded in `skills/design/references/anthropic/PROVENANCE.md`, and Apache License 2.0 terms are bundled alongside it.
+The v0.6.8 `ui-design` capability intentionally bundles Anthropic's `frontend-design` Skill as its active design-reasoning source module. The imported Skill body is preserved under `skills/ui-design/references/anthropic/frontend-design.md`; source identity and modification status are recorded in `skills/ui-design/references/anthropic/PROVENANCE.md`, and Apache License 2.0 terms are bundled alongside it.
 
-This is source material inside the routed `design` capability, not a hidden runtime dependency and not a separately installed Plugin.
+This is source material inside the routed `ui-design` capability, not a hidden runtime dependency and not a separately installed Plugin.
 
 ## `satnaing/shadcn-admin`
 
-Engineering Governance v0.7.0 uses `satnaing/shadcn-admin` as an upstream reference for admin/back-office page-pattern composition. The local `skills/design/references/shadcn-admin/admin-patterns.md` is a new concise synthesis informed by the upstream project's reusable dashboard/admin structure, responsive/accessibility focus and representative feature families such as dashboard, settings, tasks and users.
+Engineering Governance v0.7.0 uses `satnaing/shadcn-admin` as an upstream reference for admin/back-office page-pattern composition. The local `skills/ui-design/references/shadcn-admin/admin-patterns.md` is a new concise synthesis informed by the upstream project's reusable dashboard/admin structure, responsive/accessibility focus and representative feature families such as dashboard, settings, tasks and users.
 
 The upstream React/TypeScript application is not vendored and its Shadcn visual defaults are not target-project authority. The target project's actual workflow, component library, tokens and brand remain authoritative. MIT provenance/license records are kept adjacent to the local adapted module.
 
 ## `VoltAgent/awesome-design-md`
 
-Engineering Governance v0.7.0 uses `VoltAgent/awesome-design-md` as an upstream reference for converting design decisions into plain-text visual-system guidance suitable for coding/design agents. The local `skills/design/references/awesome-design-md/design-spec-synthesis.md` adapts the useful DESIGN.md structure into an authority-safe synthesis workflow covering visual character, semantic color roles, typography, layout/spacing, surfaces, components/states, responsive rules, Do/Don't constraints and implementation guidance.
+Engineering Governance v0.7.0 uses `VoltAgent/awesome-design-md` as an upstream reference for converting design decisions into plain-text visual-system guidance suitable for coding/design agents. The local `skills/ui-design/references/awesome-design-md/design-spec-synthesis.md` adapts the useful DESIGN.md structure into an authority-safe synthesis workflow covering visual character, semantic color roles, typography, layout/spacing, surfaces, components/states, responsive rules, Do/Don't constraints and implementation guidance.
 
 Upstream brand DESIGN.md files, extracted brand tokens, previews and assets are not vendored. External brands remain optional inspiration; the target project's design authority wins. MIT provenance/license records are kept adjacent to the local adapted module.
 
 ## Microsoft `frontend-design-review`
 
-Engineering Governance v0.7.0 adapts the Design Review function of `microsoft/skills` `.github/skills/frontend-design-review/` as the final internal review layer under `design`. The local `skills/design/references/microsoft/final-review.md` uses the upstream review concepts of user-task focus, design-system compliance where evidence exists, Frictionless / Quality Craft / Trustworthy pillars, severity-prioritized findings and corrective re-review.
+Engineering Governance v0.7.0 adapts the Design Review function of `microsoft/skills` `.github/skills/frontend-design-review/` as the final internal review layer under `ui-design`. The local `skills/ui-design/references/microsoft/final-review.md` uses the upstream review concepts of user-task focus, design-system compliance where evidence exists, Frictionless / Quality Craft / Trustworthy pillars, severity-prioritized findings and corrective re-review.
 
 Microsoft's Creative Frontend Design mode is intentionally not used as a competing downstream aesthetic-direction stage because Anthropic already owns upstream design reasoning in this capability. Figma/Storybook/token assumptions are evidence-conditional and may never be fabricated. MIT provenance/license records are kept adjacent to the local adapted module.
 
@@ -36,7 +36,7 @@ The AGENTS.md format informs predictable repository-level guidance kept separate
 
 ## GitHub Spec Kit — `github/spec-kit`
 
-Spec Kit informs the conditional separation of intent/specification, technical planning, actionable tasks, implementation, and convergence. Engineering Governance adopts the idea that ambiguity/consistency gates should be added when needed, while rejecting a mandatory artifact chain for every small task and preserving `CURRENT_TASK.md` as the single execution authorization.
+Spec Kit informs the conditional separation of intent/specification, technical planning, actionable tasks, implementation, and convergence. Engineering Governance adopts the idea that ambiguity/consistency gates should be added when needed, while rejecting a mandatory artifact chain for every small task and keeping actual task intent and host permissions as the execution boundary.
 
 ## Superpowers — `obra/superpowers`
 
@@ -44,7 +44,7 @@ Superpowers informs several v0.6.0 mechanisms: explicit separation of design/pla
 
 ## OpenAI Agents SDK — `openai/openai-agents-python`
 
-The Agents SDK informs the distinction between manager/orchestrator patterns and explicit handoff patterns, including the idea that handoff context can be filtered/controlled. Engineering Governance uses this concept to separate `execution-orchestrator` from `agent-handoff`; project authority is still reread from project controls rather than transferred by a peer agent.
+The Agents SDK informs the distinction between manager/orchestrator patterns and explicit handoff patterns, including the idea that handoff context can be filtered/controlled. Engineering Governance uses this concept to distinguish orchestration and handoff patterns inside `engineering-workflow`; project authority is still reread from project controls rather than transferred by a peer agent.
 
 ## Microsoft Agent Framework
 
