@@ -126,7 +126,11 @@ class WorkflowContractTests(unittest.TestCase):
         ):
             with self.subTest(path=path):
                 self.assertFalse((ROOT / path).exists())
-        scripts = sorted(p.name for p in (ROOT / "skills/ci-governance/scripts").iterdir())
+        scripts = sorted(
+            p.name
+            for p in (ROOT / "skills/ci-governance/scripts").iterdir()
+            if p.name not in ("__pycache__", ".DS_Store") and not p.name.endswith((".pyc", ".pyo"))
+        )
         self.assertEqual(scripts, ["ci-router.py"])
 
     def test_no_self_granted_writer_permission(self):
