@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
 import shutil
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path, PurePosixPath
 
@@ -300,8 +302,18 @@ class WorkflowContractTests(unittest.TestCase):
     def test_release_pin_and_marketplace_commit_match_manifest(self):
         version = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8"))["version"]
         reusable = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")
-        self.assertIn("${{ github.workflow_ref }}", reusable)
-        self.assertIn("${{ steps.router_ref.outputs.ref }}", reusable)
+        self.assertNotIn("github.workflow_ref", reusable)
+        for value in (
+            "${{ job.workflow_ref }}",
+            "${{ job.workflow_sha }}",
+            "${{ job.workflow_repository }}",
+            "${{ job.workflow_file_path }}",
+            "steps.router_ref.outputs.ref",
+            "steps.router_ref.outputs.sha",
+            "git -C governance rev-parse HEAD",
+        ):
+            with self.subTest(value=value):
+                self.assertIn(value, reusable)
         caller = (ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml").read_text(encoding="utf-8")
         self.assertIn(f"@v{version}", caller)
         doc = (ROOT / "skills/ci-governance/references/ci-routing.md").read_text(encoding="utf-8")
@@ -327,6 +339,111 @@ class WorkflowContractTests(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(anc.returncode, 0, f"Marketplace ref {pinned_ref} is not an ancestor of HEAD")
+
+    def test_reusable_workflow_ref_resolver_behavior(self):
+        workflow_lines = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(
+            encoding="utf-8"
+        ).splitlines()
+        router_id = next(i for i, line in enumerate(workflow_lines) if line.strip() == "id: router_ref")
+        run_line = next(
+            i for i in range(router_id + 1, len(workflow_lines))
+            if workflow_lines[i].strip() == "run: |"
+        )
+        script_indent = len(workflow_lines[run_line]) - len(workflow_lines[run_line].lstrip()) + 2
+        script_lines = []
+        for line in workflow_lines[run_line + 1:]:
+            if line.strip() and len(line) - len(line.lstrip()) < script_indent:
+                break
+            script_lines.append(line[script_indent:] if line.strip() else "")
+        script = "\n".join(script_lines).rstrip() + "\n"
+        self.assertIn("WORKFLOW_REF", script)
+        bash = shutil.which("bash")
+        self.assertIsNotNone(bash, "bash is required to verify the reusable workflow resolver")
+
+        workflow_sha = "a" * 40
+        workflow_repo = "Lost0rz/Engineering-Governance"
+        workflow_path = ".github/workflows/ci-router-reusable.yml"
+
+        def run_case(ref: str, *, expected_ref: str | None = None, sha: str = workflow_sha,
+                     repo: str = workflow_repo, path: str = workflow_path) -> subprocess.CompletedProcess[str]:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                output_path = Path(temp_dir) / "github-output.txt"
+                output_path.write_text("", encoding="utf-8")
+                env = os.environ.copy()
+                env.update({
+                    "WORKFLOW_REF": ref,
+                    "WORKFLOW_SHA": sha,
+                    "WORKFLOW_REPO": repo,
+                    "WORKFLOW_PATH": path,
+                    "GITHUB_OUTPUT": str(output_path),
+                })
+                proc = subprocess.run(
+                    [bash, "-c", script],
+                    capture_output=True,
+                    text=True,
+                    env=env,
+                    check=False,
+                )
+                if expected_ref is not None:
+                    self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+                    self.assertEqual(
+                        output_path.read_text(encoding="utf-8").splitlines(),
+                        [f"ref={expected_ref}", f"sha={sha}"],
+                    )
+                else:
+                    self.assertEqual(proc.returncode, 2, proc.stdout + proc.stderr)
+                return proc
+
+        prefix = "Lost0rz/Engineering-Governance/.github/workflows/ci-router-reusable.yml"
+        run_case(f"{prefix}@refs/tags/v0.11.1", expected_ref="v0.11.1")
+        lower_prefix = "lost0rz/engineering-governance/.github/workflows/ci-router-reusable.yml"
+        run_case(
+            f"{lower_prefix}@refs/tags/v0.11.1",
+            expected_ref="v0.11.1",
+            repo="lost0rz/engineering-governance",
+        )
+        run_case(f"{prefix}@v0.11.1", expected_ref="v0.11.1")
+        run_case(f"{prefix}@{workflow_sha}", expected_ref=workflow_sha)
+
+        for ref in (
+            f"{prefix}@refs/heads/main",
+            f"{prefix}@refs/heads/ci/probe-eg-v0110-reusable",
+            f"{prefix}@refs/heads/foo@v0.11.1",
+            f"{prefix}@refs/pull/123/merge",
+            f"{prefix}@refs/tags/v0.11.1-rc1",
+            f"{prefix}@refs/tags/latest",
+        ):
+            with self.subTest(ref=ref):
+                run_case(ref)
+
+        run_case(f"{prefix}@{'b' * 40}")
+        run_case(
+            "Lost0rz/gift/.github/workflows/ci.yml@refs/tags/v0.11.1",
+            repo="Lost0rz/gift",
+            path=".github/workflows/ci.yml",
+        )
+        run_case(
+            f"evil/Engineering-Governance/.github/workflows/ci-router-reusable.yml@refs/tags/v0.11.1"
+        )
+        run_case(
+            f"{prefix}@refs/tags/v0.11.1",
+            path=".github/workflows/other.yml",
+        )
+        run_case(
+            f"{prefix}@refs/tags/v0.11.1",
+            path=".GITHUB/workflows/ci-router-reusable.yml",
+        )
+        run_case(
+            "Lost0rz/Engineering-Governance/.github/workflows/other.yml@refs/tags/v0.11.1"
+        )
+        run_case(
+            "Lost0rz/Engineering-Governance/.GITHUB/workflows/ci-router-reusable.yml@refs/tags/v0.11.1"
+        )
+        run_case(prefix)
+
+        for invalid_sha in ("", "a" * 39, "A" * 40, "g" * 40):
+            with self.subTest(workflow_sha=invalid_sha):
+                run_case(f"{prefix}@v0.11.1", sha=invalid_sha)
 
     def test_control_runner_and_concurrency_in_caller_example(self):
         workflow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text(encoding="utf-8")

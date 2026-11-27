@@ -57,22 +57,66 @@ jobs:
         id: router_ref
         shell: bash
         env:
-          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_REF: ${{ job.workflow_ref }}
+          WORKFLOW_SHA: ${{ job.workflow_sha }}
+          WORKFLOW_REPO: ${{ job.workflow_repository }}
+          WORKFLOW_PATH: ${{ job.workflow_file_path }}
         run: |
           set -euo pipefail
-          ref="${WORKFLOW_REF##*@}"
-          if [[ ! "$ref" =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|[0-9a-f]{40})$ ]]; then
-            echo "::error::Reusable workflow must be pinned to an immutable release tag or 40-char commit SHA (got: $ref)"
+          expected_repo="lost0rz/engineering-governance"
+          expected_path=".github/workflows/ci-router-reusable.yml"
+          workflow_repo_lower="$(printf '%s' "$WORKFLOW_REPO" | tr '[:upper:]' '[:lower:]')"
+          if [[ "$workflow_repo_lower" != "$expected_repo" ]] || [[ "$WORKFLOW_PATH" != "$expected_path" ]]; then
+            echo "::error::Reusable workflow repository/path mismatch (got: $WORKFLOW_REPO $WORKFLOW_PATH)"
             exit 2
           fi
-          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          if [[ ! "$WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Reusable workflow SHA must be a lowercase 40-char commit SHA (got: $WORKFLOW_SHA)"
+            exit 2
+          fi
+          if [[ "$WORKFLOW_REF" != *@* ]]; then
+            echo "::error::Reusable workflow ref is missing @ (got: $WORKFLOW_REF)"
+            exit 2
+          fi
+          ref_prefix="${WORKFLOW_REF%%@*}"
+          raw_ref="${WORKFLOW_REF#*@}"
+          suffix="/.github/workflows/ci-router-reusable.yml"
+          if [[ "$ref_prefix" != *"$suffix" ]]; then
+            echo "::error::Reusable workflow ref path mismatch (got: $ref_prefix)"
+            exit 2
+          fi
+          ref_repo="${ref_prefix%$suffix}"
+          ref_repo_lower="$(printf '%s' "$ref_repo" | tr '[:upper:]' '[:lower:]')"
+          if [[ "$ref_repo_lower" != "$expected_repo" ]]; then
+            echo "::error::Reusable workflow ref repository mismatch (got: $ref_repo)"
+            exit 2
+          fi
+          if [[ "$raw_ref" =~ ^refs/tags/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            ref="${BASH_REMATCH[1]}"
+          elif [[ "$raw_ref" =~ ^(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            ref="${BASH_REMATCH[1]}"
+          elif [[ "$raw_ref" =~ ^([0-9a-f]{40})$ ]]; then
+            if [[ "$raw_ref" != "$WORKFLOW_SHA" ]]; then
+              echo "::error::Reusable workflow SHA ref does not match job.workflow_sha ($WORKFLOW_SHA)."
+              exit 2
+            fi
+            ref="$raw_ref"
+          else
+            echo "::error::Reusable workflow must be pinned to an immutable release tag or 40-char commit SHA (got: $raw_ref from $WORKFLOW_REF)"
+            exit 2
+          fi
+          echo "Resolved Governance router: repo=$WORKFLOW_REPO path=$WORKFLOW_PATH ref=$ref sha=$WORKFLOW_SHA"
+          {
+            echo "ref=$ref"
+            echo "sha=$WORKFLOW_SHA"
+          } >> "$GITHUB_OUTPUT"
 
       # Check out the exact immutable tag or SHA invoked by the caller.
       - name: Checkout pinned Governance router
         uses: actions/checkout@v4
         with:
           repository: Lost0rz/Engineering-Governance
-          ref: ${{ steps.router_ref.outputs.ref }}
+          ref: ${{ steps.router_ref.outputs.sha }}
           persist-credentials: false
           path: governance
 
@@ -137,6 +181,8 @@ jobs:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           COMPARISON_BASE: ${{ inputs.comparison_base }}
           IS_FORK: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+          GOVERNANCE_REF: ${{ steps.router_ref.outputs.ref }}
+          GOVERNANCE_SHA: ${{ steps.router_ref.outputs.sha }}
         run: |
           set -euo pipefail
           if [[ "$STAGE_REQUEST" == "auto" ]]; then
@@ -203,6 +249,10 @@ jobs:
             exit 2
           fi
           test -n "$BASE_SHA" && test -n "$CONFIG_REF"
+          if [[ "$(git -C governance rev-parse HEAD)" != "$GOVERNANCE_SHA" ]]; then
+            echo "::error::Checked-out Governance router commit does not match job.workflow_sha ($GOVERNANCE_SHA)."
+            exit 2
+          fi
           ROUTER_BIN="governance/skills/ci-governance/scripts/ci-router.py"
           if [[ ! -f "$ROUTER_BIN" ]]; then
             ROUTER_BIN="governance/skills/project-governance/scripts/ci-router.py"
@@ -214,9 +264,11 @@ jobs:
             --output "$RUNNER_TEMP/eg-ci-plan.json" \
             --github-output "$GITHUB_OUTPUT"
           python3 - "$RUNNER_TEMP/eg-ci-plan.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
-          import json, sys
+          import json, os, sys
           p = json.load(open(sys.argv[1]))
           print("### Engineering Governance selected tests")
+          print("- Governance ref: " + os.environ.get("GOVERNANCE_REF", ""))
+          print("- Governance sha: " + os.environ.get("GOVERNANCE_SHA", ""))
           for key in ("base", "head", "stage", "coverage", "config_ref", "config_sha256"):
               print("- " + key + ": " + str(p[key]))
           changed = p.get("changed_paths", [])

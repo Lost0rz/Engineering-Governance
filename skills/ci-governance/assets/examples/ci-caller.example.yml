@@ -33,7 +33,7 @@ jobs:
   governed:
     # Draft changes do not launch tests or consume self-hosted runner time.
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
-    uses: Lost0rz/Engineering-Governance/.github/workflows/ci-router-reusable.yml@v0.11.0
+    uses: Lost0rz/Engineering-Governance/.github/workflows/ci-router-reusable.yml@v0.11.1
     with:
       capabilities_path: .github/ci-capabilities.json
       # Replace the labels below with your project Runner labels. Fork PRs
