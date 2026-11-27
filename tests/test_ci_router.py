@@ -859,8 +859,16 @@ class GeneralRouterTests(unittest.TestCase):
         flow = (ROOT / ".github/workflows/ci-router-reusable.yml").read_text()
         self.assertIn("workflow_call:", flow)
         published_version = json.loads((ROOT / "plugin.json").read_text())["version"]
-        self.assertIn("${{ github.workflow_ref }}", flow)
-        self.assertIn("ref: ${{ steps.router_ref.outputs.ref }}", flow)
+        self.assertNotIn("github.workflow_ref", flow)
+        for value in (
+            "${{ job.workflow_ref }}",
+            "${{ job.workflow_sha }}",
+            "${{ job.workflow_repository }}",
+            "${{ job.workflow_file_path }}",
+            "ref: ${{ steps.router_ref.outputs.sha }}",
+        ):
+            with self.subTest(value=value):
+                self.assertIn(value, flow)
         caller = (ROOT / "skills/ci-governance/assets/examples/ci-caller.example.yml").read_text()
         self.assertIn(f"@v{published_version}", caller)
         self.assertIn("--config-source base", flow)

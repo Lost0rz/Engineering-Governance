@@ -1,4 +1,4 @@
-# Engineering Governance 多 Agent 标准化安装与配置指南（v0.11.0）
+# Engineering Governance 多 Agent 标准化安装与配置指南（v0.11.1）
 
 本指南沉淀 `Engineering Governance` 插件在不同 AI Agent 宿主与业务项目中的**标准化安装、挂载与新 Agent 快速接入流程**。所有 7 域路由边界（L0）、`SKILL.md` 速查路线（L1 <= 50 行）、23 条黄金路由用例及打包安全性均已由本仓自动化契约锁死；后续新补充 Agent 接入时，只需严格按本规范完成挂载并执行末尾“30 秒冒烟核验”，**无需重复运行多轮子 Agent 全量基准测试**。
 
@@ -24,7 +24,7 @@
 
 ```bash
 git -C <EG_REPO> fetch --tags origin
-git -C <EG_REPO> checkout v0.11.0
+git -C <EG_REPO> checkout v0.11.1
 
 python3 <EG_REPO>/scripts/package-plugin.py \
   --repo-root <EG_REPO> \
@@ -34,11 +34,11 @@ python3 <EG_REPO>/scripts/package-plugin.py \
 
 执行后：
 - `<PLUGINS_PARENT_DIR>/engineering-governance/` 为可直接挂载、权限确定（脚本 `0755`、文本 `0644`）且带 `PREVIEW_SOURCE_SHA.txt` 的独立插件目录。
-- `<EG_REPO>/dist/engineering-governance-web-preview-0.11.0-<sha12>.zip` 为可直接上传/分发的确定性压缩包。
+- `<EG_REPO>/dist/engineering-governance-web-preview-0.11.1-<sha12>.zip` 为可直接上传/分发的确定性压缩包。
 
 ### 方式 B：直接获取 GitHub Release 确定性归档包
 
-从上游 Release `v0.11.0` 下载 `engineering-governance-web-preview-0.11.0-<sha12>.zip` 并校验 SHA256：
+从上游 Release `v0.11.1` 下载 `engineering-governance-web-preview-0.11.1-<sha12>.zip` 并校验 SHA256：
 - 若目标宿主支持上传插件包（如 Codex Web），直接上传该 `.zip`；
 - 若为本地插件目录，直接解压至 `<PLUGINS_PARENT_DIR>/engineering-governance`。
 
@@ -81,7 +81,7 @@ agy plugin disable engineering-governance
 ### 3.2 OpenAI Codex（CLI / Desktop / Web）
 
 - **Marketplace 接入**：直接引用本仓内置 `.agents/plugins/marketplace.json`（其中 `source.ref` 已锁定为通过全部校验的 40 位 Commit SHA）。
-- **Web 端上传**：直接上传 Release `v0.11.0` 产物 `engineering-governance-web-preview-0.11.0-<sha12>.zip`（压缩包内 `.codex-plugin/plugin.json` 已映射 `"skills": "./skills"`）。
+- **Web 端上传**：直接上传 Release `v0.11.1` 产物 `engineering-governance-web-preview-0.11.1-<sha12>.zip`（压缩包内 `.codex-plugin/plugin.json` 已映射 `"skills": "./skills"`）。
 - **本地目录接入**：将 `<PLUGINS_PARENT_DIR>/engineering-governance/skills/` 挂载/复制到 `~/.codex/skills/`（或项目 `.agents/skills/`），并将 [rules/AGENTS.md](../rules/AGENTS.md) 中的轻路由守则合入全局指令。
 
 ### 3.3 Claude Code（CLI / IDE）
@@ -115,7 +115,7 @@ agy plugin disable engineering-governance
    - 后端服务、Web API、多租户系统、CLI、CI 脚本 / 打包器：保留默认 `Audit threat profile: SERVICE_OR_UNTRUSTED_INPUT`；
    - iOS / macOS / 桌面沙箱客户端应用：显式声明 `Audit threat profile: SANDBOXED_APP`（开启客户端真事件边界、防“哥斯拉”理论攻击过度收紧与两轮复审收敛）。
 2. **可选：接入便携式增量 CI 路由**：
-   参照 [ci-routing.md](../skills/ci-governance/references/ci-routing.md) 与 [ci-caller.example.yml](../skills/ci-governance/assets/examples/ci-caller.example.yml)（固定引用 `@v0.11.0`）完成初始化与全文件映射自检：
+   参照 [ci-routing.md](../skills/ci-governance/references/ci-routing.md) 与 [ci-caller.example.yml](../skills/ci-governance/assets/examples/ci-caller.example.yml)（固定引用 `@v0.11.1`）完成初始化与全文件映射自检：
 
 ```bash
 python3 <PLUGINS_PARENT_DIR>/engineering-governance/skills/ci-governance/scripts/ci-router.py discover --repo-root <PROJECT_ROOT>
@@ -130,7 +130,7 @@ python3 <PLUGINS_PARENT_DIR>/engineering-governance/skills/ci-governance/scripts
 新补充 Agent 按第 3/4 节完成配置后，只需依次通过以下 **3 项轻量核验** 即可确认配置完全就绪：
 
 1. **产物版本与同源 SHA 核验**：
-   确认插件目录 `plugin.json` 中 `"version"` 为 `"0.11.0"`，且 `PREVIEW_SOURCE_SHA.txt` 与对应发布 Tag 的 40 位 Commit SHA 完全一致：
+   确认插件目录 `plugin.json` 中 `"version"` 为 `"0.11.1"`，且 `PREVIEW_SOURCE_SHA.txt` 与对应发布 Tag 的 40 位 Commit SHA 完全一致：
    ```bash
    cat <PLUGINS_PARENT_DIR>/engineering-governance/PREVIEW_SOURCE_SHA.txt
    ```
@@ -149,6 +149,6 @@ python3 <PLUGINS_PARENT_DIR>/engineering-governance/skills/ci-governance/scripts
 
 ## 7. 平滑升级、停用与回滚规范
 
-- **升级到新发布版本**：在源码仓拉取目标 Tag（如 `v0.11.0`）后，直接复用同一 `--stage-dir <PLUGINS_PARENT_DIR>/engineering-governance` 执行 [package-plugin.py](../scripts/package-plugin.py)。脚本会校验证明身份的 `PREVIEW_SOURCE_SHA.txt` / `plugin.json` 并安全原地替换插件内容，同时保留用户在宿主 `config.json` 中的启停配置。
+- **升级到新发布版本**：在源码仓拉取目标 Tag（如 `v0.11.1`）后，直接复用同一 `--stage-dir <PLUGINS_PARENT_DIR>/engineering-governance` 执行 [package-plugin.py](../scripts/package-plugin.py)。脚本会校验证明身份的 `PREVIEW_SOURCE_SHA.txt` / `plugin.json` 并安全原地替换插件内容，同时保留用户在宿主 `config.json` 中的启停配置。
 - **临时停用**：使用宿主原生的插件开关（如 `agy plugin disable engineering-governance`）或移除 `plugins.json` 注册项即可即时卸载，不改动任何业务代码仓库。
 - **回滚**：在源码仓切回上一稳定 Tag（例如 `git -C <EG_REPO> checkout v0.10.3`），重新执行一次 `--stage-dir` 构建覆盖即可，详情规则另见 [README.md](../README.md) 与 [SKILL_ENGINEERING.md](SKILL_ENGINEERING.md)。
