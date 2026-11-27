@@ -42,7 +42,7 @@ concurrency:
 jobs:
   contracts:
     name: Python governance contracts
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -234,3 +234,11 @@ jobs:
           path: dist/engineering-governance-web-preview-*.zip
           if-no-files-found: error
           retention-days: 7
+
+  reusable_probe_mutable:
+    if: github.event_name == 'workflow_dispatch'
+    uses: Lost0rz/Engineering-Governance/.github/workflows/ci-router-reusable.yml@fix/reusable-workflow-ref-v0111
+    with:
+      capabilities_path: .github/ci-capabilities.json
+      control_runner: '["ubuntu-latest"]'
+      stage: none
